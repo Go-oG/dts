@@ -1,6 +1,6 @@
 name: dts
 description: "A Dart port of the JTS Topology Suite, a Java library for creating and manipulating vector geometry"
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/Go-oG/dts
 
 environment:

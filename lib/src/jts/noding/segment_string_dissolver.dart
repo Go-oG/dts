@@ -29,8 +29,7 @@ class SegmentStringDissolver {
     if (existing == null) {
       add(oca, segString);
     } else if (_merger != null) {
-      bool isSameOrientation =
-          CoordinateArrays.equals(existing.getCoordinates(), segString.getCoordinates());
+      bool isSameOrientation = CoordinateArrays.equals(existing.getCoordinates(), segString.getCoordinates());
       _merger!.merge(existing, segString, isSameOrientation);
     }
   }

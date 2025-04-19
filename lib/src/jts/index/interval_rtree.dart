@@ -118,11 +118,11 @@ class IntervalRTreeLeafNode<T> extends IntervalRTreeNode<T> {
 }
 
 class IntervalRTreeBranchNode<T> extends IntervalRTreeNode<T> {
-  final IntervalRTreeNode? _node1;
-  final IntervalRTreeNode? _node2;
+  final IntervalRTreeNode _node1;
+  final IntervalRTreeNode _node2;
 
   IntervalRTreeBranchNode(this._node1, this._node2) {
-    buildExtent(_node1!, _node2!);
+    buildExtent(_node1, _node2);
   }
 
   void buildExtent(IntervalRTreeNode n1, IntervalRTreeNode n2) {
@@ -136,7 +136,7 @@ class IntervalRTreeBranchNode<T> extends IntervalRTreeNode<T> {
       return;
     }
 
-    _node1?.query(queryMin, queryMax, visitor);
-    _node2?.query(queryMin, queryMax, visitor);
+    _node1.query(queryMin, queryMax, visitor);
+    _node2.query(queryMin, queryMax, visitor);
   }
 }
