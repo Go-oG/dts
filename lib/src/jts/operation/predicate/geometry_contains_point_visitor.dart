@@ -6,22 +6,21 @@ import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/geom/util/short_circuited_geometry_visitor.dart';
 
-
 class GeometryContainsPointVisitor extends ShortCircuitedGeometryVisitor {
   late CoordinateSequence _rectSeq;
 
   late Envelope rectEnv;
 
-     bool _containsPoint = false;
+  bool _containsPoint = false;
 
-    GeometryContainsPointVisitor(Polygon rectangle) {
+  GeometryContainsPointVisitor(Polygon rectangle) {
     _rectSeq = rectangle.getExteriorRing().getCoordinateSequence();
     rectEnv = rectangle.getEnvelopeInternal();
-    }
+  }
 
-    bool containsPoint() {
-        return _containsPoint;
-    }
+  bool containsPoint() {
+    return _containsPoint;
+  }
 
   @override
   void visit(Geometry geom) {
@@ -30,26 +29,26 @@ class GeometryContainsPointVisitor extends ShortCircuitedGeometryVisitor {
     }
 
     Envelope elementEnv = geom.getEnvelopeInternal();
-    if (!rectEnv.intersects6(elementEnv)) {
+    if (!rectEnv.intersects(elementEnv)) {
       return;
     }
 
     Coordinate rectPt = Coordinate();
-        for (int i = 0; i < 4; i++) {
-            _rectSeq.getCoordinate2(i, rectPt);
-      if (!elementEnv.contains(rectPt)) {
+    for (int i = 0; i < 4; i++) {
+      _rectSeq.getCoordinate2(i, rectPt);
+      if (!elementEnv.containsCoordinate(rectPt)) {
         continue;
       }
 
       if (SimplePointInAreaLocator.containsPointInPolygon(rectPt, geom)) {
-                _containsPoint = true;
-                return;
-            }
-        }
+        _containsPoint = true;
+        return;
+      }
     }
+  }
 
   @override
   bool isDone() {
     return _containsPoint;
-    }
+  }
 }

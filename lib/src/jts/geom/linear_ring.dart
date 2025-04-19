@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 
 import 'coordinate.dart';
 import 'coordinate_sequence.dart';
@@ -12,10 +12,10 @@ class LinearRing extends LineString {
   static const int MINIMUM_VALID_SIZE = 3;
 
   LinearRing(Array<Coordinate>? points, PrecisionModel precisionModel, int SRID)
-    : this.of(points, GeometryFactory.of2(precisionModel, SRID));
+      : this.of(points, GeometryFactory.from(precisionModel, SRID));
 
   LinearRing.of(Array<Coordinate>? points, GeometryFactory factory)
-    : this.of2(factory.coordinateSequenceFactory.create(points), factory);
+      : this.of2(factory.csFactory.create(points), factory);
 
   LinearRing.of2(super.points, super.factory) : super.of() {
     validateConstruction();
@@ -25,7 +25,8 @@ class LinearRing extends LineString {
     if ((!isEmpty()) && (!super.isClosed())) {
       throw IllegalArgumentException("Points of LinearRing do not form a closed linestring");
     }
-    if ((getCoordinateSequence().size() >= 1) && (getCoordinateSequence().size() < MINIMUM_VALID_SIZE)) {
+    if ((getCoordinateSequence().size() >= 1) &&
+        (getCoordinateSequence().size() < MINIMUM_VALID_SIZE)) {
       throw IllegalArgumentException(
         "${("Invalid number of points in LinearRing (found ${getCoordinateSequence().size()} - must be 0 or >= $MINIMUM_VALID_SIZE")})",
       );
@@ -34,7 +35,7 @@ class LinearRing extends LineString {
 
   @override
   int getBoundaryDimension() {
-    return Dimension.FALSE;
+    return Dimension.False;
   }
 
   @override
@@ -64,6 +65,6 @@ class LinearRing extends LineString {
   LinearRing reverseInternal() {
     CoordinateSequence seq = points.copy();
     CoordinateSequences.reverse(seq);
-    return factory.createLinearRing3(seq);
+    return factory.createLinearRing2(seq);
   }
 }

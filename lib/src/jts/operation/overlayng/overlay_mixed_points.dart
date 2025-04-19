@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
@@ -16,7 +16,8 @@ import 'overlay_ng.dart';
 import 'overlay_util.dart';
 
 class OverlayMixedPoints {
-  static Geometry overlay(OverlayOpCode opCode, Geometry geom0, Geometry geom1, PrecisionModel? pm) {
+  static Geometry overlay(
+      OverlayOpCode opCode, Geometry geom0, Geometry geom1, PrecisionModel? pm) {
     return OverlayMixedPoints(opCode, geom0, geom1, pm).getResult();
   }
 
@@ -100,7 +101,8 @@ class OverlayMixedPoints {
     if (_geomNonPointDim == 2) {
       resultPolyList = extractPolygons(_geomNonPoint);
     }
-    return OverlayUtil.createResultGeometry(resultPolyList, resultLineList, resultPointList, geometryFactory);
+    return OverlayUtil.createResultGeometry(
+        resultPolyList, resultLineList, resultPointList, geometryFactory);
   }
 
   Geometry computeDifference(Array<Coordinate> coords) {
@@ -117,7 +119,7 @@ class OverlayMixedPoints {
       return points.get(0);
     }
     Array<Point> pointsArray = GeometryFactory.toPointArray(points);
-    return geometryFactory.createMultiPoint3(pointsArray);
+    return geometryFactory.createMultiPoint2(pointsArray);
   }
 
   List<Point> findPoints(bool isCovered, Array<Coordinate> coords) {

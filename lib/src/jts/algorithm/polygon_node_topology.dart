@@ -6,7 +6,8 @@ import 'orientation.dart';
 final class PolygonNodeTopology {
   PolygonNodeTopology._();
 
-  static bool isCrossing(Coordinate nodePt, Coordinate a0, Coordinate a1, Coordinate b0, Coordinate b1) {
+  static bool isCrossing(
+      Coordinate nodePt, Coordinate a0, Coordinate a1, Coordinate b0, Coordinate b1) {
     Coordinate aLo = a0;
     Coordinate aHi = a1;
     if (_isAngleGreater(nodePt, aLo, aHi)) {
@@ -106,8 +107,8 @@ final class PolygonNodeTopology {
   }
 
   static int _quadrant(Coordinate origin, Coordinate p) {
-    double dx = p.getX() - origin.getX();
-    double dy = p.getY() - origin.getY();
+    double dx = p.x - origin.x;
+    double dy = p.y - origin.y;
     return Quadrant.quadrant(dx, dy);
   }
 }

@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -22,7 +22,7 @@ class PointwisePrecisionReducerTransformer extends GeometryTransformer {
     }
 
     Array<Coordinate> coordsReduce = reducePointwise(coordinates);
-    return factory.coordinateSequenceFactory.create(coordsReduce);
+    return factory.csFactory.create(coordsReduce);
   }
 
   Array<Coordinate> reducePointwise(CoordinateSequence coordinates) {

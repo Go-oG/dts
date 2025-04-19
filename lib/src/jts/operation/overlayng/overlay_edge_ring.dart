@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -90,7 +90,7 @@ class OverlayEdgeRing {
     if (ring != null) {
       return;
     }
-    ring = geometryFactory.createLinearRing2(ringPts);
+    ring = geometryFactory.createLinearRings(ringPts);
     isHole = Orientation.isCCW(ring!.getCoordinates());
   }
 
@@ -102,7 +102,8 @@ class OverlayEdgeRing {
     OverlayEdgeRing? minContainingRing;
     for (OverlayEdgeRing edgeRing in erList) {
       if (edgeRing.contains(this)) {
-        if ((minContainingRing == null) || minContainingRing.getEnvelope().contains3(edgeRing.getEnvelope())) {
+        if ((minContainingRing == null) ||
+            minContainingRing.getEnvelope().contains(edgeRing.getEnvelope())) {
           minContainingRing = edgeRing;
         }
       }

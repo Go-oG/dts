@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/util/assert.dart';
 
 import 'coordinate.dart';
@@ -16,8 +16,8 @@ class Point extends BaseGeometry<Point> implements Puntal {
   late CoordinateSequence _coordinates;
 
   Point(Coordinate? coordinate, PrecisionModel precisionModel, int srid)
-    : super(GeometryFactory.of2(precisionModel, srid)) {
-    init(factory.coordinateSequenceFactory.create(coordinate != null ? Array.of(coordinate) : Array(0)));
+      : super(GeometryFactory.from(precisionModel, srid)) {
+    init(factory.csFactory.create(coordinate != null ? Array.of(coordinate) : Array(0)));
   }
 
   Point.of(CoordinateSequence? coordinates, GeometryFactory factory) : super(factory) {
@@ -25,7 +25,7 @@ class Point extends BaseGeometry<Point> implements Puntal {
   }
 
   void init(CoordinateSequence? coordinates) {
-    coordinates ??= factory.coordinateSequenceFactory.create(Array(0));
+    coordinates ??= factory.csFactory.create(Array(0));
     Assert.isTrue(coordinates.size() <= 1);
     _coordinates = coordinates;
   }
@@ -57,7 +57,7 @@ class Point extends BaseGeometry<Point> implements Puntal {
 
   @override
   int getBoundaryDimension() {
-    return Dimension.FALSE;
+    return Dimension.False;
   }
 
   double getX() {
@@ -95,7 +95,7 @@ class Point extends BaseGeometry<Point> implements Puntal {
       return Envelope();
     }
     Envelope env = Envelope();
-    env.expandToInclude2(_coordinates.getX(0), _coordinates.getY(0));
+    env.expandToIncludePoint(_coordinates.getX(0), _coordinates.getY(0));
     return env;
   }
 

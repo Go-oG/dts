@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 
 import '../geom/coordinate.dart';
@@ -137,11 +137,11 @@ class HalfEdge {
   }
 
   double directionX() {
-    return directionPt().getX() - _orig.getX();
+    return directionPt().x - _orig.x;
   }
 
   double directionY() {
-    return directionPt().getY() - _orig.getY();
+    return directionPt().y - _orig.y;
   }
 
   Coordinate directionPt() {
@@ -207,10 +207,12 @@ class HalfEdge {
     HalfEdge ePrev = this;
     do {
       HalfEdge eNext = ePrev.oNext()!;
-      if (((eNext.compareTo(ePrev) > 0) && (eAdd.compareTo(ePrev) >= 0)) && (eAdd.compareTo(eNext) <= 0)) {
+      if (((eNext.compareTo(ePrev) > 0) && (eAdd.compareTo(ePrev) >= 0)) &&
+          (eAdd.compareTo(eNext) <= 0)) {
         return ePrev;
       }
-      if ((eNext.compareTo(ePrev) <= 0) && ((eAdd.compareTo(eNext) <= 0) || (eAdd.compareTo(ePrev) >= 0))) {
+      if ((eNext.compareTo(ePrev) <= 0) &&
+          ((eAdd.compareTo(eNext) <= 0) || (eAdd.compareTo(ePrev) >= 0))) {
         return ePrev;
       }
       ePrev = eNext;

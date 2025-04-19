@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/index/quadtree/quad_tree.dart';
@@ -19,15 +19,15 @@ class LineSegmentIndex {
   }
 
   void add(LineSegment seg) {
-    _index.insert(Envelope.of3(seg.p0, seg.p1), seg);
+    _index.insert(Envelope.fromCoordinate(seg.p0, seg.p1), seg);
   }
 
   void remove(LineSegment seg) {
-    _index.remove(Envelope.of3(seg.p0, seg.p1), seg);
+    _index.remove(Envelope.fromCoordinate(seg.p0, seg.p1), seg);
   }
 
   List<LineSegment> query(LineSegment querySeg) {
-    Envelope env = Envelope.of3(querySeg.p0, querySeg.p1);
+    Envelope env = Envelope.fromCoordinate(querySeg.p0, querySeg.p1);
     final visitor = LineSegmentVisitor(querySeg);
     _index.each(env, visitor);
     return visitor.getItems();

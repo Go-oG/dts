@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/position.dart';
@@ -108,10 +108,10 @@ class OffsetCurveBuilder {
 
   void computePointCurve(Coordinate pt, OffsetSegmentGenerator segGen) {
     switch (bufParams.getEndCapStyle()) {
-      case BufferParameters.CAP_ROUND:
+      case BufferParameters.kCapRound:
         segGen.createCircle(pt);
         break;
-      case BufferParameters.CAP_SQUARE:
+      case BufferParameters.kCapSquare:
         segGen.createSquare(pt);
         break;
     }
@@ -138,7 +138,8 @@ class OffsetCurveBuilder {
     segGen.closeRing();
   }
 
-  void computeSingleSidedBufferCurve(Array<Coordinate> inputPts, bool isRightSide, OffsetSegmentGenerator segGen) {
+  void computeSingleSidedBufferCurve(
+      Array<Coordinate> inputPts, bool isRightSide, OffsetSegmentGenerator segGen) {
     double distTol = simplifyTolerance(_distance);
     if (isRightSide) {
       segGen.addSegments(inputPts, true);
@@ -163,7 +164,8 @@ class OffsetCurveBuilder {
     segGen.closeRing();
   }
 
-  void computeOffsetCurve(Array<Coordinate> inputPts, bool isRightSide, OffsetSegmentGenerator segGen) {
+  void computeOffsetCurve(
+      Array<Coordinate> inputPts, bool isRightSide, OffsetSegmentGenerator segGen) {
     double distTol = simplifyTolerance(Math.abs(_distance));
     if (isRightSide) {
       Array<Coordinate> simp2 = BufferInputLineSimplifier.simplify2(inputPts, -distTol);

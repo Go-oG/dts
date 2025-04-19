@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/util/geometry_combiner.dart';
@@ -46,7 +46,7 @@ class UnionInteracting {
     bool interactsWithAny = false;
     for (int i = 0; i < g1.getNumGeometries(); i++) {
       Geometry elem1 = g1.getGeometryN(i);
-      bool interacts = elem1.getEnvelopeInternal().intersects6(elem0.getEnvelopeInternal());
+      bool interacts = elem1.getEnvelopeInternal().intersects(elem0.getEnvelopeInternal());
       if (interacts) _interacts1[i] = true;
 
       if (interacts) interactsWithAny = true;

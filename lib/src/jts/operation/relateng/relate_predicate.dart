@@ -72,7 +72,7 @@ class _Intersects extends BasicPredicate {
 
   @override
   void init2(Envelope envA, Envelope envB) {
-    require(envA.intersects6(envB));
+    require(envA.intersects(envB));
   }
 
   @override
@@ -284,8 +284,8 @@ class _Crosses extends IMPredicate {
   @override
   void init(int dimA, int dimB) {
     super.init(dimA, dimB);
-    bool isBothPointsOrAreas =
-        ((dimA == Dimension.P) && (dimB == Dimension.P)) || ((dimA == Dimension.A) && (dimB == Dimension.A));
+    bool isBothPointsOrAreas = ((dimA == Dimension.P) && (dimB == Dimension.P)) ||
+        ((dimA == Dimension.A) && (dimB == Dimension.A));
     require(!isBothPointsOrAreas);
   }
 
@@ -294,11 +294,13 @@ class _Crosses extends IMPredicate {
     if ((dimA == Dimension.L) && (dimB == Dimension.L)) {
       if (getDimension(Location.interior, Location.interior) > Dimension.P) return true;
     } else if (dimA < dimB) {
-      if (isIntersects(Location.interior, Location.interior) && isIntersects(Location.interior, Location.exterior)) {
+      if (isIntersects(Location.interior, Location.interior) &&
+          isIntersects(Location.interior, Location.exterior)) {
         return true;
       }
     } else if (dimA > dimB) {
-      if (isIntersects(Location.interior, Location.interior) && isIntersects(Location.exterior, Location.interior)) {
+      if (isIntersects(Location.interior, Location.interior) &&
+          isIntersects(Location.exterior, Location.interior)) {
         return true;
       }
     }
@@ -324,14 +326,14 @@ class _EqualsTopo extends IMPredicate {
 
   @override
   void init2(Envelope envA, Envelope envB) {
-    setValueIf(true, envA.isNull() && envB.isNull());
+    setValueIf(true, envA.isNull && envB.isNull);
     require(envA.equals(envB));
   }
 
   @override
   bool isDetermined() {
-    bool isEitherExteriorIntersects =
-        ((isIntersects(Location.interior, Location.exterior) || isIntersects(Location.boundary, Location.exterior)) ||
+    bool isEitherExteriorIntersects = ((isIntersects(Location.interior, Location.exterior) ||
+                isIntersects(Location.boundary, Location.exterior)) ||
             isIntersects(Location.exterior, Location.interior)) ||
         isIntersects(Location.exterior, Location.boundary);
     return isEitherExteriorIntersects;
@@ -358,7 +360,8 @@ class _Overlaps extends IMPredicate {
   @override
   bool isDetermined() {
     if ((dimA == Dimension.A) || (dimA == Dimension.P)) {
-      if ((isIntersects(Location.interior, Location.interior) && isIntersects(Location.interior, Location.exterior)) &&
+      if ((isIntersects(Location.interior, Location.interior) &&
+              isIntersects(Location.interior, Location.exterior)) &&
           isIntersects(Location.exterior, Location.interior)) {
         return true;
       }

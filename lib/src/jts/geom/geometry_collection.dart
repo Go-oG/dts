@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/util/assert.dart';
 import 'package:quiver/collection.dart';
 
@@ -21,7 +21,7 @@ class GeometryCollection<T extends BaseGeometry> extends BaseGeometry<GeometryCo
   GeometryCollectionDimension? _geomCollDim;
 
   GeometryCollection.of(Array<T>? geometries, PrecisionModel precisionModel, int srid)
-    : this(geometries, GeometryFactory.of2(precisionModel, srid));
+      : this(geometries, GeometryFactory.from(precisionModel, srid));
 
   GeometryCollection(Array<T>? geometries, GeometryFactory factory) : super(factory) {
     this.geometries = geometries ?? Array(0);
@@ -78,7 +78,7 @@ class GeometryCollection<T extends BaseGeometry> extends BaseGeometry<GeometryCo
 
   @override
   int getBoundaryDimension() {
-    int dimension = Dimension.FALSE;
+    int dimension = Dimension.False;
     for (int i = 0; i < geometries.length; i++) {
       dimension = Math.max(dimension, (geometries[i]).getBoundaryDimension()).toInt();
     }
@@ -213,7 +213,7 @@ class GeometryCollection<T extends BaseGeometry> extends BaseGeometry<GeometryCo
   Envelope computeEnvelopeInternal() {
     Envelope envelope = Envelope();
     for (int i = 0; i < geometries.length; i++) {
-      envelope.expandToInclude3(geometries[i].getEnvelopeInternal());
+      envelope.expandToInclude(geometries[i].getEnvelopeInternal());
     }
     return envelope;
   }
@@ -259,7 +259,7 @@ class GeometryCollection<T extends BaseGeometry> extends BaseGeometry<GeometryCo
 }
 
 class GeometryCollectionDimension {
-  int _dimension = Dimension.FALSE;
+  int _dimension = Dimension.False;
 
   bool _hasP = false;
 

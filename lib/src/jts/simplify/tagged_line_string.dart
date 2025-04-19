@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
@@ -96,7 +96,7 @@ class TaggedLineString {
   }
 
   LinearRing asLinearRing() {
-    return _parentLine.factory.createLinearRing2(extractCoordinates(_resultSegs));
+    return _parentLine.factory.createLinearRings(extractCoordinates(_resultSegs));
   }
 
   static Array<Coordinate> extractCoordinates(List<LineSegment> segs) {

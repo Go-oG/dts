@@ -42,7 +42,7 @@ class VoronoiDiagramBuilder {
     _diagramEnv = clipEnv;
     if (_diagramEnv == null) {
       _diagramEnv = DelaunayTriangulationBuilder.envelope(siteCoords.rawList);
-      double expandBy = _diagramEnv!.getDiameter();
+      double expandBy = _diagramEnv!.diameter;
       _diagramEnv!.expandBy(expandBy);
     }
     final vertices = DelaunayTriangulationBuilder.toVertices(siteCoords.rawList);
@@ -69,9 +69,9 @@ class VoronoiDiagramBuilder {
     for (int i = 0; i < geom.getNumGeometries(); i++) {
       Geometry g = geom.getGeometryN(i);
       Geometry? result;
-      if (clipEnv.contains3(g.getEnvelopeInternal())) {
+      if (clipEnv.contains(g.getEnvelopeInternal())) {
         result = g;
-      } else if (clipEnv.intersects6(g.getEnvelopeInternal())) {
+      } else if (clipEnv.intersects(g.getEnvelopeInternal())) {
         result = clipPoly.intersection(g);
         result?.userData = g.userData;
       }

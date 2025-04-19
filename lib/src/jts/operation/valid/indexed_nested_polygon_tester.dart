@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -49,7 +49,7 @@ final class IndexedNestedPolygonTester {
         Polygon possibleOuterPoly = multiPoly.getGeometryN(polyIndex);
         if (poly == possibleOuterPoly) continue;
 
-        if (!possibleOuterPoly.getEnvelopeInternal().covers3(poly.getEnvelopeInternal())) continue;
+        if (!possibleOuterPoly.getEnvelopeInternal().covers(poly.getEnvelopeInternal())) continue;
 
         nestedPt = findNestedPoint(shell, possibleOuterPoly, getLocator(polyIndex));
         if (nestedPt != null) return true;
@@ -58,7 +58,8 @@ final class IndexedNestedPolygonTester {
     return false;
   }
 
-  Coordinate? findNestedPoint(LinearRing shell, Polygon possibleOuterPoly, IndexedPointInAreaLocator locator) {
+  Coordinate? findNestedPoint(
+      LinearRing shell, Polygon possibleOuterPoly, IndexedPointInAreaLocator locator) {
     Coordinate shellPt0 = shell.getCoordinateN(0);
     int loc0 = locator.locate(shellPt0);
     if (loc0 == Location.exterior) return null;
@@ -84,7 +85,7 @@ final class IndexedNestedPolygonTester {
 
     for (int i = 0; i < poly.getNumInteriorRing(); i++) {
       LinearRing hole = poly.getInteriorRingN(i);
-      if (hole.getEnvelopeInternal().covers3(shell.getEnvelopeInternal()) &&
+      if (hole.getEnvelopeInternal().covers(shell.getEnvelopeInternal()) &&
           PolygonTopologyAnalyzer.isRingNested(shell, hole)) {
         return null;
       }

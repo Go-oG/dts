@@ -11,10 +11,10 @@ import 'double_bits.dart';
 
 class Quadtree<T> implements SpatialIndex<T> {
   static Envelope ensureExtent(Envelope itemEnv, double minExtent) {
-    double minx = itemEnv.getMinX();
-    double maxx = itemEnv.getMaxX();
-    double miny = itemEnv.getMinY();
-    double maxy = itemEnv.getMaxY();
+    double minx = itemEnv.minX;
+    double maxx = itemEnv.maxX;
+    double miny = itemEnv.minY;
+    double maxy = itemEnv.maxY;
     if ((minx != maxx) && (miny != maxy)) {
       return itemEnv;
     }
@@ -27,7 +27,7 @@ class Quadtree<T> implements SpatialIndex<T> {
       miny = miny - (minExtent / 2.0);
       maxy = maxy + (minExtent / 2.0);
     }
-    return Envelope.of4(minx, maxx, miny, maxy);
+    return Envelope.fromLRTB(minx, maxx, miny, maxy);
   }
 
   Root<T>? _root;
@@ -90,12 +90,12 @@ class Quadtree<T> implements SpatialIndex<T> {
   }
 
   void collectStats(Envelope itemEnv) {
-    double delX = itemEnv.getWidth();
+    double delX = itemEnv.width;
     if ((delX < minExtent) && (delX > 0.0)) {
       minExtent = delX;
     }
 
-    double delY = itemEnv.getHeight();
+    double delY = itemEnv.height;
     if ((delY < minExtent) && (delY > 0.0)) {
       minExtent = delY;
     }
@@ -109,19 +109,19 @@ class Quadtree<T> implements SpatialIndex<T> {
 abstract class NodeBase<T> {
   static int getSubnodeIndex(Envelope env, double centreX, double centreY) {
     int subnodeIndex = -1;
-    if (env.getMinX() >= centreX) {
-      if (env.getMinY() >= centreY) subnodeIndex = 3;
+    if (env.minX >= centreX) {
+      if (env.minY >= centreY) subnodeIndex = 3;
 
-      if (env.getMaxY() <= centreY) {
+      if (env.maxY <= centreY) {
         subnodeIndex = 1;
       }
     }
-    if (env.getMaxX() <= centreX) {
-      if (env.getMinY() >= centreY) {
+    if (env.maxX <= centreX) {
+      if (env.minY >= centreY) {
         subnodeIndex = 2;
       }
 
-      if (env.getMaxY() <= centreY) {
+      if (env.maxY <= centreY) {
         subnodeIndex = 0;
       }
     }
@@ -271,7 +271,7 @@ class Root<T> extends NodeBase<T> {
       return;
     }
     final node = subnode.get(index);
-    if ((node == null) || (!node.getEnvelope().contains3(itemEnv))) {
+    if ((node == null) || (!node.getEnvelope().contains(itemEnv))) {
       final largerNode = QuadNode.createExpanded(node, itemEnv);
       subnode[index] = largerNode;
     }
@@ -279,9 +279,9 @@ class Root<T> extends NodeBase<T> {
   }
 
   void insertContained(QuadNode<T> tree, Envelope itemEnv, T item) {
-    Assert.isTrue(tree.getEnvelope().contains3(itemEnv));
-    bool isZeroX = IntervalSize.isZeroWidth(itemEnv.getMinX(), itemEnv.getMaxX());
-    bool isZeroY = IntervalSize.isZeroWidth(itemEnv.getMinY(), itemEnv.getMaxY());
+    Assert.isTrue(tree.getEnvelope().contains(itemEnv));
+    bool isZeroX = IntervalSize.isZeroWidth(itemEnv.minX, itemEnv.maxX);
+    bool isZeroY = IntervalSize.isZeroWidth(itemEnv.minY, itemEnv.maxY);
     NodeBase node;
     if (isZeroX || isZeroY) {
       node = tree.find(itemEnv);
@@ -304,9 +304,9 @@ class QuadNode<T> extends NodeBase<T> {
   }
 
   static QuadNode<T> createExpanded<T>(QuadNode<T>? node, Envelope addEnv) {
-    Envelope expandEnv = Envelope.of2(addEnv);
+    Envelope expandEnv = Envelope.from(addEnv);
     if (node != null) {
-      expandEnv.expandToInclude3(node.env);
+      expandEnv.expandToInclude(node.env);
     }
 
     final largerNode = createNode<T>(expandEnv);
@@ -326,8 +326,8 @@ class QuadNode<T> extends NodeBase<T> {
   int level;
 
   QuadNode(this.env, this.level) {
-    _centrex = (env.getMinX() + env.getMaxX()) / 2;
-    _centrey = (env.getMinY() + env.getMaxY()) / 2;
+    _centrex = (env.minX + env.maxX) / 2;
+    _centrey = (env.minY + env.maxY) / 2;
   }
 
   Envelope getEnvelope() {
@@ -340,7 +340,7 @@ class QuadNode<T> extends NodeBase<T> {
       return false;
     }
 
-    return env.intersects6(searchEnv);
+    return env.intersects(searchEnv);
   }
 
   QuadNode<T> getNode(Envelope searchEnv) {
@@ -367,7 +367,7 @@ class QuadNode<T> extends NodeBase<T> {
   }
 
   void insertNode(QuadNode<T> node) {
-    Assert.isTrue(env.contains3(node.env));
+    Assert.isTrue(env.contains(node.env));
     int index = NodeBase.getSubnodeIndex(node.env, _centrex, _centrey);
     if (node.level == (level - 1)) {
       subnode[index] = node;
@@ -392,31 +392,31 @@ class QuadNode<T> extends NodeBase<T> {
     double maxy = 0.0;
     switch (index) {
       case 0:
-        minx = env.getMinX();
+        minx = env.minX;
         maxx = _centrex;
-        miny = env.getMinY();
+        miny = env.minY;
         maxy = _centrey;
         break;
       case 1:
         minx = _centrex;
-        maxx = env.getMaxX();
-        miny = env.getMinY();
+        maxx = env.maxX;
+        miny = env.minY;
         maxy = _centrey;
         break;
       case 2:
-        minx = env.getMinX();
+        minx = env.minX;
         maxx = _centrex;
         miny = _centrey;
-        maxy = env.getMaxY();
+        maxy = env.maxY;
         break;
       case 3:
         minx = _centrex;
-        maxx = env.getMaxX();
+        maxx = env.maxX;
         miny = _centrey;
-        maxy = env.getMaxY();
+        maxy = env.maxY;
         break;
     }
-    Envelope sqEnv = Envelope.of4(minx, maxx, miny, maxy);
+    Envelope sqEnv = Envelope.fromLRTB(minx, maxx, miny, maxy);
     return QuadNode(sqEnv, level - 1);
   }
 
@@ -427,8 +427,8 @@ class QuadNode<T> extends NodeBase<T> {
 
 class _Key {
   static int computeQuadLevel(Envelope env) {
-    double dx = env.getWidth();
-    double dy = env.getHeight();
+    double dx = env.width;
+    double dy = env.height;
     double dMax = (dx > dy) ? dx : dy;
     int level = DoubleBits.exponent(dMax) + 1;
     return level;
@@ -456,15 +456,13 @@ class _Key {
     return env;
   }
 
-  Coordinate getCentre() {
-    return Coordinate((env.getMinX() + env.getMaxX()) / 2, (env.getMinY() + env.getMaxY()) / 2);
-  }
+  Coordinate getCentre() => env.centre()!;
 
   void computeKey(Envelope itemEnv) {
     level = computeQuadLevel(itemEnv);
     env = Envelope();
     computeKey2(level, itemEnv);
-    while (!env.contains3(itemEnv)) {
+    while (!env.contains(itemEnv)) {
       level += 1;
       computeKey2(level, itemEnv);
     }
@@ -472,8 +470,8 @@ class _Key {
 
   void computeKey2(int level, Envelope itemEnv) {
     double quadSize = DoubleBits.powerOf2(level);
-    _pt.x = Math.floor(itemEnv.getMinX() / quadSize) * quadSize;
-    _pt.y = Math.floor(itemEnv.getMinY() / quadSize) * quadSize;
-    env.init4(_pt.x, _pt.x + quadSize, _pt.y, _pt.y + quadSize);
+    _pt.x = Math.floor(itemEnv.minX / quadSize) * quadSize;
+    _pt.y = Math.floor(itemEnv.minY / quadSize) * quadSize;
+    env.initWithLRTB(_pt.x, _pt.x + quadSize, _pt.y, _pt.y + quadSize);
   }
 }

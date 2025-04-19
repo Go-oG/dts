@@ -75,7 +75,7 @@ class GeometryPrecisionReducer {
   }
 
   GeometryFactory createFactory(GeometryFactory inputFactory, PrecisionModel pm) {
-    GeometryFactory newFactory = GeometryFactory(pm, inputFactory.srid, inputFactory.coordinateSequenceFactory);
+    GeometryFactory newFactory = GeometryFactory(pm, inputFactory.srid, inputFactory.csFactory);
     return newFactory;
   }
 }

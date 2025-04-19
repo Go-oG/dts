@@ -1,7 +1,7 @@
 import 'dart:collection';
 import 'dart:core';
 
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/algorithm/polygon_node_topology.dart';
@@ -210,7 +210,8 @@ class PolygonHoleJoiner {
     _joinedPts.addAll(newSection);
   }
 
-  List<Coordinate> createHoleSection(Array<Coordinate> holeCoords, int holeJoinIndex, Coordinate? joinPt) {
+  List<Coordinate> createHoleSection(
+      Array<Coordinate> holeCoords, int holeJoinIndex, Coordinate? joinPt) {
     List<Coordinate> section = <Coordinate>[];
     bool isNonTouchingHole = joinPt != null;
     if (isNonTouchingHole) {
@@ -234,7 +235,7 @@ class PolygonHoleJoiner {
     for (int i = 0; i < poly.getNumInteriorRing(); i++) {
       holes.add(poly.getInteriorRingN(i));
     }
-    holes.sort2(EnvelopeComparator());
+    holes.sort(EnvelopeComparator().compare);
     return holes;
   }
 

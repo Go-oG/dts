@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -20,7 +20,7 @@ class LineLimiter {
     _sections = [];
     for (int i = 0; i < pts.length; i++) {
       Coordinate p = pts[i];
-      if (_limitEnv.intersects(p)) {
+      if (_limitEnv.intersectsCoordinate(p)) {
         addPoint(p);
       } else {
         addOutside(p);
@@ -56,7 +56,7 @@ class LineLimiter {
 
       return false;
     }
-    return _limitEnv.intersects2(_lastOutside!, p);
+    return _limitEnv.intersectsCoordinates(_lastOutside!, p);
   }
 
   bool isSectionOpen() {

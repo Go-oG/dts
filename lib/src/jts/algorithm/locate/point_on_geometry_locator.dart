@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/point_location.dart';
 import 'package:dts/src/jts/algorithm/ray_crossing_counter.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -24,7 +24,7 @@ class SimplePointInAreaLocator implements PointOnGeometryLocator {
       return Location.exterior;
     }
 
-    if (!geom.getEnvelopeInternal().intersects(p)) {
+    if (!geom.getEnvelopeInternal().intersectsCoordinate(p)) {
       return Location.exterior;
     }
 
@@ -84,7 +84,7 @@ class SimplePointInAreaLocator implements PointOnGeometryLocator {
   }
 
   static int _locatePointInRing(Coordinate p, LinearRing ring) {
-    if (!ring.getEnvelopeInternal().intersects(p)) {
+    if (!ring.getEnvelopeInternal().intersectsCoordinate(p)) {
       return Location.exterior;
     }
 

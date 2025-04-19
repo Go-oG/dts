@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/math/math.dart';
 
 import '../../geom/coordinate.dart';
@@ -77,7 +77,7 @@ class VertexSequencePackedRtree {
   static Envelope computeNodeEnvelope(Array<Envelope> bounds, int start, int end) {
     Envelope env = Envelope();
     for (int i = start; i < end; i++) {
-      env.expandToInclude3(bounds[i]);
+      env.expandToInclude(bounds[i]);
     }
     return env;
   }
@@ -85,7 +85,7 @@ class VertexSequencePackedRtree {
   static Envelope computeItemEnvelope(Array<Coordinate> items, int start, int end) {
     Envelope env = Envelope();
     for (int i = start; i < end; i++) {
-      env.expandToInclude(items[i]);
+      env.expandToIncludeCoordinate(items[i]);
     }
     return env;
   }
@@ -103,7 +103,7 @@ class VertexSequencePackedRtree {
     Envelope? nodeEnv = _bounds[boundsIndex];
     if (nodeEnv == null) return;
 
-    if (!queryEnv.intersects6(nodeEnv)) {
+    if (!queryEnv.intersects(nodeEnv)) {
       return;
     }
 
@@ -139,7 +139,7 @@ class VertexSequencePackedRtree {
       }
 
       Coordinate p = _items[index];
-      if ((!_isRemoved[index]) && queryEnv.contains(p)) resultList.add(index);
+      if ((!_isRemoved[index]) && queryEnv.containsCoordinate(p)) resultList.add(index);
     }
   }
 

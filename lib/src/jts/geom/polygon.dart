@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/area.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 
@@ -18,10 +18,10 @@ class Polygon extends BaseGeometry<Polygon> implements Polygonal {
   late Array<LinearRing> holes;
 
   Polygon.of(LinearRing? shell, PrecisionModel precisionModel, int SRID)
-    : this.of2(shell, Array<LinearRing>(0), precisionModel, SRID);
+      : this.of2(shell, Array<LinearRing>(0), precisionModel, SRID);
 
   Polygon.of2(LinearRing? shell, Array<LinearRing>? holes, PrecisionModel precisionModel, int SRID)
-    : this(shell, holes, GeometryFactory.of2(precisionModel, SRID));
+      : this(shell, holes, GeometryFactory.from(precisionModel, SRID));
 
   Polygon(LinearRing? shell, Array<LinearRing>? holes, GeometryFactory factory) : super(factory) {
     this.shell = shell ?? factory.createLinearRing();
@@ -96,10 +96,10 @@ class Polygon extends BaseGeometry<Polygon> implements Polygonal {
     Envelope env = getEnvelopeInternal();
     for (int i = 0; i < 5; i++) {
       double x = seq.getX(i);
-      if (!((x == env.getMinX()) || (x == env.getMaxX()))) return false;
+      if (!((x == env.minX) || (x == env.maxX))) return false;
 
       double y = seq.getY(i);
-      if (!((y == env.getMinY()) || (y == env.getMaxY()))) return false;
+      if (!((y == env.minY) || (y == env.maxY))) return false;
     }
     double prevX = seq.getX(0);
     double prevY = seq.getY(0);
@@ -163,7 +163,7 @@ class Polygon extends BaseGeometry<Polygon> implements Polygonal {
     for (int i = 0; i < holes.length; i++) {
       rings[i + 1] = holes[i];
     }
-    if (rings.length <= 1) return factory.createLinearRing3(rings[0].getCoordinateSequence());
+    if (rings.length <= 1) return factory.createLinearRing2(rings[0].getCoordinateSequence());
 
     return factory.createMultiLineString2(rings);
   }

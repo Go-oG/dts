@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/location.dart';
@@ -24,10 +24,10 @@ final class RayCrossingCounter {
     Coordinate p1 = Coordinate();
     Coordinate p2 = Coordinate();
     for (int i = 1; i < ring.size(); i++) {
-      p1.x = ring.getOrdinate(i, CoordinateSequence.X);
-      p1.y = ring.getOrdinate(i, CoordinateSequence.Y);
-      p2.x = ring.getOrdinate(i - 1, CoordinateSequence.X);
-      p2.y = ring.getOrdinate(i - 1, CoordinateSequence.Y);
+      p1.x = ring.getOrdinate(i, CoordinateSequence.kX);
+      p1.y = ring.getOrdinate(i, CoordinateSequence.kY);
+      p2.x = ring.getOrdinate(i - 1, CoordinateSequence.kX);
+      p2.y = ring.getOrdinate(i - 1, CoordinateSequence.kY);
       counter.countSegment(p1, p2);
       if (counter.isOnSegment()) {
         return counter.getLocation();

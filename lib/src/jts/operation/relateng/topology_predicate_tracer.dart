@@ -1,22 +1,22 @@
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/location.dart';
+import 'package:flutter/foundation.dart';
 
 import 'impredicate.dart';
 import 'topology_predicate.dart';
 
 class TopologyPredicateTracer {
   static TopologyPredicate trace(TopologyPredicate pred) {
-        return PredicateTracer(pred);
-    }
+    return _PredicateTracer(pred);
+  }
 
-    TopologyPredicateTracer();
-
+  TopologyPredicateTracer();
 }
 
-class PredicateTracer implements TopologyPredicate {
+class _PredicateTracer implements TopologyPredicate {
   final TopologyPredicate _pred;
 
-  PredicateTracer(this._pred);
+  _PredicateTracer(this._pred);
 
   @override
   String name() {
@@ -57,13 +57,14 @@ class PredicateTracer implements TopologyPredicate {
 
   @override
   void updateDimension(int locA, int locB, int dimension) {
-    String desc = ("A:${Location.toLocationSymbol(locA)}/B:${Location.toLocationSymbol(locB)} -> $dimension");
+    String desc =
+        ("A:${Location.toLocationSymbol(locA)}/B:${Location.toLocationSymbol(locB)} -> $dimension");
     String ind = "";
     bool isChanged = isDimChanged(locA, locB, dimension);
     if (isChanged) {
       ind = " <<< ";
     }
-    print(desc + ind);
+    debugPrint(desc + ind);
     _pred.updateDimension(locA, locB, dimension);
     if (isChanged) {
       checkValue("IM entry");
@@ -72,34 +73,26 @@ class PredicateTracer implements TopologyPredicate {
 
   bool isDimChanged(int locA, int locB, int dimension) {
     if (_pred is IMPredicate) {
-      return _pred.isDimChanged(locA, locB, dimension);
+      return (_pred as IMPredicate).isDimChanged(locA, locB, dimension);
     }
     return false;
   }
 
   void checkValue(String source) {
     if (_pred.isKnown()) {
-      print("${name()} = ${_pred.value()} based on $source");
+      debugPrint("${name()} = ${_pred.value()} based on $source");
     }
   }
 
   @override
-  void finish() {
-    _pred.finish();
-  }
+  void finish() => _pred.finish();
 
   @override
-  bool isKnown() {
-    return _pred.isKnown();
-  }
+  bool isKnown() => _pred.isKnown();
 
   @override
-  bool value() {
-    return _pred.value();
-  }
+  bool value() => _pred.value();
 
   @override
-  String toString() {
-    return _pred.toString();
-  }
+  String toString() => _pred.toString();
 }

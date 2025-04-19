@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/point_location.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -20,40 +20,46 @@ class QuadEdgeTriangle {
   }
 
   static bool contains2(Array<Vertex> tri, Coordinate pt) {
-    Array<Coordinate> ring =
-        [tri[0].getCoordinate(), tri[1].getCoordinate(), tri[2].getCoordinate(), tri[0].getCoordinate()].toArray();
+    Array<Coordinate> ring = [
+      tri[0].getCoordinate(),
+      tri[1].getCoordinate(),
+      tri[2].getCoordinate(),
+      tri[0].getCoordinate()
+    ].toArray();
     return PointLocation.isInRing(pt, ring);
   }
 
   static bool contains3(Array<QuadEdge> tri, Coordinate pt) {
-    Array<Coordinate> ring =
-        [
-          tri[0].orig().getCoordinate(),
-          tri[1].orig().getCoordinate(),
-          tri[2].orig().getCoordinate(),
-          tri[0].orig().getCoordinate(),
-        ].toArray();
+    Array<Coordinate> ring = [
+      tri[0].orig().getCoordinate(),
+      tri[1].orig().getCoordinate(),
+      tri[2].orig().getCoordinate(),
+      tri[0].orig().getCoordinate(),
+    ].toArray();
     return PointLocation.isInRing(pt, ring);
   }
 
   static Geometry toPolygon2(Array<Vertex> v) {
-    Array<Coordinate> ringPts =
-        [v[0].getCoordinate(), v[1].getCoordinate(), v[2].getCoordinate(), v[0].getCoordinate()].toArray();
+    Array<Coordinate> ringPts = [
+      v[0].getCoordinate(),
+      v[1].getCoordinate(),
+      v[2].getCoordinate(),
+      v[0].getCoordinate()
+    ].toArray();
     GeometryFactory fact = GeometryFactory.empty();
-    LinearRing ring = fact.createLinearRing2(ringPts);
+    LinearRing ring = fact.createLinearRings(ringPts);
     return fact.createPolygon(ring);
   }
 
   static Geometry toPolygon(Array<QuadEdge> e) {
-    Array<Coordinate> ringPts =
-        [
-          e[0].orig().getCoordinate(),
-          e[1].orig().getCoordinate(),
-          e[2].orig().getCoordinate(),
-          e[0].orig().getCoordinate(),
-        ].toArray();
+    Array<Coordinate> ringPts = [
+      e[0].orig().getCoordinate(),
+      e[1].orig().getCoordinate(),
+      e[2].orig().getCoordinate(),
+      e[0].orig().getCoordinate(),
+    ].toArray();
     GeometryFactory fact = GeometryFactory.empty();
-    LinearRing ring = fact.createLinearRing2(ringPts);
+    LinearRing ring = fact.createLinearRings(ringPts);
     Polygon tri = fact.createPolygon(ring);
     return tri;
   }
@@ -141,7 +147,7 @@ class QuadEdgeTriangle {
   }
 
   Polygon getGeometry(GeometryFactory fact) {
-    LinearRing ring = fact.createLinearRing2(getCoordinates());
+    LinearRing ring = fact.createLinearRings(getCoordinates());
     Polygon tri = fact.createPolygon(ring);
     return tri;
   }

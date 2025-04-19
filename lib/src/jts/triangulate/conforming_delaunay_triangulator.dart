@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/convex_hull.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -21,7 +21,7 @@ class ConformingDelaunayTriangulator {
   static Envelope computeVertexEnvelope(List<Vertex> vertices) {
     Envelope env = Envelope();
     for (Iterator i = vertices.iterator; i.moveNext();) {
-      env.expandToInclude(i.current.getCoordinate());
+      env.expandToIncludeCoordinate(i.current.getCoordinate());
     }
     return env;
   }
@@ -99,12 +99,12 @@ class ConformingDelaunayTriangulator {
   void computeBoundingBox() {
     Envelope vertexEnv = computeVertexEnvelope(_initialVertices);
     Envelope segEnv = computeVertexEnvelope(_segVertices);
-    Envelope allPointsEnv = Envelope.of2(vertexEnv);
-    allPointsEnv.expandToInclude3(segEnv);
-    double deltaX = allPointsEnv.getWidth() * 0.2;
-    double deltaY = allPointsEnv.getHeight() * 0.2;
+    Envelope allPointsEnv = Envelope.from(vertexEnv);
+    allPointsEnv.expandToInclude(segEnv);
+    double deltaX = allPointsEnv.width * 0.2;
+    double deltaY = allPointsEnv.height * 0.2;
     double delta = Math.maxD(deltaX, deltaY);
-    _computeAreaEnv = Envelope.of2(allPointsEnv);
+    _computeAreaEnv = Envelope.from(allPointsEnv);
     _computeAreaEnv.expandBy(delta);
   }
 
@@ -214,7 +214,7 @@ class ConformingDelaunayTriangulator {
 
       _splitPt = _splitFinder.findSplitPoint(seg, encroachPt);
       ConstraintVertex splitVertex = createVertex2(_splitPt, seg);
-      ConstraintVertex insertedVertex = insertSite2(splitVertex);
+      insertSite2(splitVertex);
 
       Segment s1 = Segment.of2(
         seg.getStartX(),
@@ -250,7 +250,7 @@ class ConformingDelaunayTriangulator {
     Coordinate q = seg.getEnd();
     Coordinate midPt = Coordinate((p.x + q.x) / 2.0, (p.y + q.y) / 2.0);
     double segRadius = p.distance(midPt);
-    Envelope env = Envelope.of(midPt);
+    Envelope env = Envelope.fromCoordinate(midPt);
     env.expandBy(segRadius);
     List result = _kdt.query2(env);
 

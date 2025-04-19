@@ -6,17 +6,17 @@ class RingHullIndex {
   List<RingHull> hulls = [];
 
   void add(RingHull ringHull) {
-        hulls.add(ringHull);
+    hulls.add(ringHull);
   }
 
   List<RingHull> query(Envelope queryEnv) {
     List<RingHull> result = [];
     for (RingHull hull in hulls) {
       Envelope envHull = hull.getEnvelope();
-      if (queryEnv.intersects6(envHull)) {
+      if (queryEnv.intersects(envHull)) {
         result.add(hull);
-            }
-        }
-        return result;
+      }
     }
+    return result;
+  }
 }

@@ -29,7 +29,7 @@ class InputExtracter implements GeometryFilter {
 
   List<Point> points = [];
 
-  int dimension = Dimension.FALSE;
+  int dimension = Dimension.False;
 
   bool isEmpty() {
     return (_polygons.isEmpty && lines.isEmpty) && points.isEmpty;

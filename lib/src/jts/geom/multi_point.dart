@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/point.dart';
 
 import 'coordinate.dart';
@@ -11,7 +11,7 @@ import 'puntal.dart';
 
 class MultiPoint extends GeometryCollection<Point> implements Puntal {
   MultiPoint.of(Array<Point>? points, PrecisionModel precisionModel, int SRID)
-    : this(points, GeometryFactory.of2(precisionModel, SRID));
+      : this(points, GeometryFactory.from(precisionModel, SRID));
 
   MultiPoint(super.points, super.factory);
 
@@ -27,7 +27,7 @@ class MultiPoint extends GeometryCollection<Point> implements Puntal {
 
   @override
   int getBoundaryDimension() {
-    return Dimension.FALSE;
+    return Dimension.False;
   }
 
   @override

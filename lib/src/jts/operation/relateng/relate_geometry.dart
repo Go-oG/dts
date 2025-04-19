@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/boundary_node_rule.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -35,7 +35,7 @@ class RelateGeometry {
 
   late Envelope _geomEnv;
 
-  int _geomDim = Dimension.FALSE;
+  int _geomDim = Dimension.False;
 
   Set<Coordinate>? _uniquePoints;
 
@@ -180,7 +180,7 @@ class RelateGeometry {
 
   int getDimensionReal() {
     if (_isGeomEmpty) {
-      return Dimension.FALSE;
+      return Dimension.False;
     }
 
     if ((getDimension() == 1) && _isLineZeroLen) {
@@ -230,7 +230,8 @@ class RelateGeometry {
   }
 
   bool isSelfNodingRequired() {
-    if ((((geom is Point) || (geom is MultiPoint)) || (geom is Polygon)) || (geom is MultiPolygon)) {
+    if ((((geom is Point) || (geom is MultiPoint)) || (geom is Polygon)) ||
+        (geom is MultiPolygon)) {
       return false;
     }
 
@@ -295,7 +296,8 @@ class RelateGeometry {
     return segStrings;
   }
 
-  void extractSegmentStrings2(bool isA, Envelope? env, Geometry geom, List<RelateSegmentString> segStrings) {
+  void extractSegmentStrings2(
+      bool isA, Envelope? env, Geometry geom, List<RelateSegmentString> segStrings) {
     MultiPolygon? parentPolygonal;
     if (geom is MultiPolygon) {
       parentPolygonal = geom;
@@ -321,20 +323,22 @@ class RelateGeometry {
       return;
     }
 
-    bool doExtract = (env == null) || env.intersects6(geom.getEnvelopeInternal());
+    bool doExtract = (env == null) || env.intersects(geom.getEnvelopeInternal());
     if (!doExtract) {
       return;
     }
     _elementId++;
     if (geom is LineString) {
-      RelateSegmentString ss = RelateSegmentString.createLine(geom.getCoordinates(), isA, _elementId, this);
+      RelateSegmentString ss =
+          RelateSegmentString.createLine(geom.getCoordinates(), isA, _elementId, this);
       segStrings.add(ss);
     } else if (geom is Polygon) {
       Polygon poly = geom;
       Geometry parentPoly = (parentPolygonal != null) ? parentPolygonal : poly;
       extractRingToSegmentString(isA, poly.getExteriorRing(), 0, env, parentPoly, segStrings);
       for (int i = 0; i < poly.getNumInteriorRing(); i++) {
-        extractRingToSegmentString(isA, poly.getInteriorRingN(i), i + 1, env, parentPoly, segStrings);
+        extractRingToSegmentString(
+            isA, poly.getInteriorRingN(i), i + 1, env, parentPoly, segStrings);
       }
     }
   }
@@ -351,13 +355,14 @@ class RelateGeometry {
       return;
     }
 
-    if ((env != null) && (!env.intersects6(ring.getEnvelopeInternal()))) {
+    if ((env != null) && (!env.intersects(ring.getEnvelopeInternal()))) {
       return;
     }
 
     bool requireCW = ringId == 0;
     Array<Coordinate> pts = orient(ring.getCoordinates(), requireCW);
-    RelateSegmentString ss = RelateSegmentString.createRing(pts, isA, _elementId, ringId, parentPoly, this);
+    RelateSegmentString ss =
+        RelateSegmentString.createRing(pts, isA, _elementId, ringId, parentPoly, this);
     segStrings.add(ss);
   }
 

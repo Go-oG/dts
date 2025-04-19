@@ -45,10 +45,10 @@ class FastOverlayFilter {
   }
 
   bool isEnvelopeIntersects(Geometry a, Geometry b) {
-    return a.getEnvelopeInternal().intersects6(b.getEnvelopeInternal());
+    return a.getEnvelopeInternal().intersects(b.getEnvelopeInternal());
   }
 
   bool isEnvelopeCovers(Geometry a, Geometry b) {
-    return a.getEnvelopeInternal().covers3(b.getEnvelopeInternal());
+    return a.getEnvelopeInternal().covers(b.getEnvelopeInternal());
   }
 }

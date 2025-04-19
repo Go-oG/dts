@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/distance/discrete_frechet_distance.dart';
 import 'package:dts/src/jts/algorithm/distance/discrete_hausdorff_distance.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -39,8 +39,8 @@ class FrechetSimilarityMeasure implements SimilarityMeasure {
       return 1;
     }
 
-    Envelope env = Envelope.of2(g1.getEnvelopeInternal());
-    env.expandToInclude3(g2.getEnvelopeInternal());
+    Envelope env = Envelope.from(g1.getEnvelopeInternal());
+    env.expandToInclude(g2.getEnvelopeInternal());
     double envDiagSize = HausdorffSimilarityMeasure.diagonalSize(env);
     return 1 - (frechetDistance / envDiagSize);
   }
@@ -49,29 +49,28 @@ class FrechetSimilarityMeasure implements SimilarityMeasure {
 class HausdorffSimilarityMeasure implements SimilarityMeasure {
   HausdorffSimilarityMeasure();
 
-  static const double _DENSIFY_FRACTION = 0.25;
+  static const double _densifyFraction = 0.25;
 
   @override
   double measure(Geometry g1, Geometry g2) {
-    double distance = DiscreteHausdorffDistance.distanceS2(g1, g2, _DENSIFY_FRACTION);
+    double distance = DiscreteHausdorffDistance.distanceS2(g1, g2, _densifyFraction);
     if (distance == 0.0) {
       return 1.0;
     }
 
-    Envelope env = Envelope.of2(g1.getEnvelopeInternal());
-    env.expandToInclude3(g2.getEnvelopeInternal());
+    Envelope env = Envelope.from(g1.getEnvelopeInternal());
+    env.expandToInclude(g2.getEnvelopeInternal());
     double envSize = diagonalSize(env);
     double measure = 1 - (distance / envSize);
     return measure;
   }
 
   static double diagonalSize(Envelope env) {
-    if (env.isNull()) {
+    if (env.isNull) {
       return 0.0;
     }
-
-    double width = env.getWidth();
-    double hgt = env.getHeight();
+    double width = env.width;
+    double hgt = env.height;
     return Math.sqrt((width * width) + (hgt * hgt));
   }
 }

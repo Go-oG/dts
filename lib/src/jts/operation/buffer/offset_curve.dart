@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/distance.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
@@ -30,7 +30,8 @@ class OffsetCurve {
     return oc.getCurve();
   }
 
-  static Geometry? getCurve3(Geometry geom, double distance, int quadSegs, int joinStyle, double mitreLimit) {
+  static Geometry? getCurve3(
+      Geometry geom, double distance, int quadSegs, int joinStyle, double mitreLimit) {
     BufferParameters bufferParams = BufferParameters.empty();
     if (quadSegs >= 0) bufferParams.setQuadrantSegments(quadSegs);
 
@@ -113,7 +114,8 @@ class OffsetCurve {
     return geom;
   }
 
-  static Array<Coordinate>? rawOffset(LineString line, double distance, [BufferParameters? bufParams]) {
+  static Array<Coordinate>? rawOffset(LineString line, double distance,
+      [BufferParameters? bufParams]) {
     bufParams ??= BufferParameters.empty();
     Array<Coordinate> pts = line.getCoordinates();
     Array<Coordinate> cleanPts = CoordinateArrays.removeRepeatedOrInvalidPoints(pts);
@@ -231,7 +233,7 @@ class OffsetCurve {
     Array<Coordinate> bufferPts,
     Array<double> rawCurvePos,
   ) {
-    Envelope matchEnv = Envelope.of3(raw0, raw1);
+    Envelope matchEnv = Envelope.fromCoordinate(raw0, raw1);
     matchEnv.expandBy(_matchDistance);
     MatchCurveSegmentAction matchAction = MatchCurveSegmentAction(
       raw0,
@@ -259,7 +261,8 @@ class OffsetCurve {
       double location = rawCurveLoc[sectionStart];
       int lastIndex = prev(sectionEnd, rawCurveLoc.length);
       double lastLoc = rawCurveLoc[lastIndex];
-      OffsetCurveSection section = OffsetCurveSection.create(ringPts, sectionStart, sectionEnd, location, lastLoc);
+      OffsetCurveSection section =
+          OffsetCurveSection.create(ringPts, sectionStart, sectionEnd, location, lastLoc);
       sections.add(section);
       sectionStart = findSectionStart(rawCurveLoc, sectionEnd);
       if ((sectionCount++) > ringPts.length) {
@@ -352,7 +355,8 @@ class MatchCurveSegmentAction extends MonotoneChainSelectAction {
 
   @override
   void select2(MonotoneChain mc, int segIndex) {
-    double frac = segmentMatchFrac(_bufferRingPts[segIndex], _bufferRingPts[segIndex + 1], _raw0, _raw1, matchDistance);
+    double frac = segmentMatchFrac(
+        _bufferRingPts[segIndex], _bufferRingPts[segIndex + 1], _raw0, _raw1, matchDistance);
     if (frac < 0) return;
 
     double location = _rawCurveIndex + frac;
@@ -363,14 +367,16 @@ class MatchCurveSegmentAction extends MonotoneChainSelectAction {
     }
   }
 
-  double segmentMatchFrac(Coordinate buf0, Coordinate buf1, Coordinate raw0, Coordinate raw1, double matchDistance) {
+  double segmentMatchFrac(
+      Coordinate buf0, Coordinate buf1, Coordinate raw0, Coordinate raw1, double matchDistance) {
     if (!isMatch(buf0, buf1, raw0, raw1, matchDistance)) return -1;
 
     LineSegment seg = LineSegment(raw0, raw1);
     return seg.segmentFraction(buf0);
   }
 
-  bool isMatch(Coordinate buf0, Coordinate buf1, Coordinate raw0, Coordinate raw1, double matchDistance) {
+  bool isMatch(
+      Coordinate buf0, Coordinate buf1, Coordinate raw0, Coordinate raw1, double matchDistance) {
     double bufSegLen = buf0.distance(buf1);
     if (_rawLen <= bufSegLen) {
       if (matchDistance < Distance.pointToSegment(raw0, buf0, buf1)) return false;

@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
@@ -51,14 +51,13 @@ class SierpinskiCarpetBuilder extends GeometricShapeBuilder {
   }
 
   LinearRing createSquareHole(double x, double y, double width) {
-    final pts =
-        [
-          Coordinate(x, y),
-          Coordinate(x + width, y),
-          Coordinate(x + width, y + width),
-          Coordinate(x, y + width),
-          Coordinate(x, y),
-        ].toArray();
-    return geomFactory.createLinearRing2(pts);
+    final pts = [
+      Coordinate(x, y),
+      Coordinate(x + width, y),
+      Coordinate(x + width, y + width),
+      Coordinate(x, y + width),
+      Coordinate(x, y),
+    ].toArray();
+    return geomFactory.createLinearRings(pts);
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:math';
 
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -39,13 +39,13 @@ class RandomPointsBuilder extends GeometricShapeBuilder {
       }
       pts[i++] = p;
     }
-    return geomFactory.createMultiPointFromCoords(pts);
+    return geomFactory.createMultiPoint5(pts);
   }
 
   bool isInExtent(Coordinate p) {
     if (_extentLocator != null) return _extentLocator!.locate(p) != Location.exterior;
 
-    return getExtent()!.contains(p);
+    return getExtent()!.containsCoordinate(p);
   }
 
   @override
@@ -57,8 +57,8 @@ class RandomPointsBuilder extends GeometricShapeBuilder {
 
   Coordinate createRandomCoord(Envelope env) {
     var random = Random();
-    double x = env.getMinX() + (env.getWidth() * random.nextDouble());
-    double y = env.getMinY() + (env.getHeight() * random.nextDouble());
+    double x = env.minX + (env.width * random.nextDouble());
+    double y = env.minY + (env.height * random.nextDouble());
     return createCoord(x, y);
   }
 }

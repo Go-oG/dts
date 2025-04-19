@@ -1,36 +1,36 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/angle.dart';
 
 class BufferParameters {
-  static const int CAP_ROUND = 1;
+  static const int kCapRound = 1;
 
-  static const int CAP_FLAT = 2;
+  static const int kCapFlat = 2;
 
-  static const int CAP_SQUARE = 3;
+  static const int kCapSquare = 3;
 
-  static const int JOIN_ROUND = 1;
+  static const int kJoinRound = 1;
 
-  static const int JOIN_MITRE = 2;
+  static const int kJoinMitre = 2;
 
-  static const int JOIN_BEVEL = 3;
+  static const int kJoinBevel = 3;
 
-  static const int DEFAULT_QUADRANT_SEGMENTS = 8;
+  static const int kDefaultQuadrantSegments = 8;
 
-  static const double DEFAULT_MITRE_LIMIT = 5.0;
+  static const double kDefaultMitreLimit = 5.0;
 
-  static const double DEFAULT_SIMPLIFY_FACTOR = 0.01;
+  static const double kDefaultSimplifyFactor = 0.01;
 
-  int _quadrantSegments = DEFAULT_QUADRANT_SEGMENTS;
+  int _quadrantSegments = kDefaultQuadrantSegments;
 
-  int _endCapStyle = CAP_ROUND;
+  int _endCapStyle = kCapRound;
 
-  int _joinStyle = JOIN_ROUND;
+  int _joinStyle = kJoinRound;
 
-  double _mitreLimit = DEFAULT_MITRE_LIMIT;
+  double _mitreLimit = kDefaultMitreLimit;
 
   bool _isSingleSided = false;
 
-  double _simplifyFactor = DEFAULT_SIMPLIFY_FACTOR;
+  double _simplifyFactor = kDefaultSimplifyFactor;
 
   BufferParameters.empty();
 

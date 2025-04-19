@@ -1,14 +1,14 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 
 import 'coordinate.dart';
 import 'coordinate_arrays.dart';
 import 'envelope.dart';
 
 abstract class CoordinateSequence {
-  static const int X = 0;
-  static const int Y = 1;
-  static const int Z = 2;
-  static const int M = 3;
+  static const int kX = 0;
+  static const int kY = 1;
+  static const int kZ = 2;
+  static const int kM = 3;
 
   int getDimension();
 
@@ -25,7 +25,7 @@ abstract class CoordinateSequence {
   }
 
   Coordinate createCoordinate() {
-    return Coordinates.create2(getDimension(), getMeasures());
+    return Coordinates.createWithMeasure(getDimension(), getMeasures());
   }
 
   Coordinate getCoordinate(int i);
@@ -175,7 +175,8 @@ class CoordinateSequences {
     }
   }
 
-  static void copy(CoordinateSequence src, int srcPos, CoordinateSequence dest, int destPos, int length) {
+  static void copy(
+      CoordinateSequence src, int srcPos, CoordinateSequence dest, int destPos, int length) {
     for (int i = 0; i < length; i++) {
       copyCoord(src, srcPos + i, dest, destPos + i);
     }
@@ -194,25 +195,30 @@ class CoordinateSequences {
 
     if (n <= 3) return false;
 
-    return (seq.getOrdinate(0, CoordinateSequence.X) == seq.getOrdinate(n - 1, CoordinateSequence.X)) &&
-        (seq.getOrdinate(0, CoordinateSequence.Y) == seq.getOrdinate(n - 1, CoordinateSequence.Y));
+    return (seq.getOrdinate(0, CoordinateSequence.kX) ==
+            seq.getOrdinate(n - 1, CoordinateSequence.kX)) &&
+        (seq.getOrdinate(0, CoordinateSequence.kY) ==
+            seq.getOrdinate(n - 1, CoordinateSequence.kY));
   }
 
-  static CoordinateSequence ensureValidRing(CoordinateSequenceFactory fact, CoordinateSequence seq) {
+  static CoordinateSequence ensureValidRing(
+      CoordinateSequenceFactory fact, CoordinateSequence seq) {
     int n = seq.size();
     if (n == 0) return seq;
 
     if (n <= 3) return createClosedRing(fact, seq, 4);
 
-    bool isClosed =
-        (seq.getOrdinate(0, CoordinateSequence.X) == seq.getOrdinate(n - 1, CoordinateSequence.X)) &&
-        (seq.getOrdinate(0, CoordinateSequence.Y) == seq.getOrdinate(n - 1, CoordinateSequence.Y));
+    bool isClosed = (seq.getOrdinate(0, CoordinateSequence.kX) ==
+            seq.getOrdinate(n - 1, CoordinateSequence.kX)) &&
+        (seq.getOrdinate(0, CoordinateSequence.kY) ==
+            seq.getOrdinate(n - 1, CoordinateSequence.kY));
     if (isClosed) return seq;
 
     return createClosedRing(fact, seq, n + 1);
   }
 
-  static CoordinateSequence createClosedRing(CoordinateSequenceFactory fact, CoordinateSequence seq, int size) {
+  static CoordinateSequence createClosedRing(
+      CoordinateSequenceFactory fact, CoordinateSequence seq, int size) {
     CoordinateSequence newseq = fact.create3(size, seq.getDimension());
     int n = seq.size();
     copy(seq, 0, newseq, 0, n);
@@ -223,7 +229,8 @@ class CoordinateSequences {
     return newseq;
   }
 
-  static CoordinateSequence extend(CoordinateSequenceFactory fact, CoordinateSequence seq, int size) {
+  static CoordinateSequence extend(
+      CoordinateSequenceFactory fact, CoordinateSequence seq, int size) {
     CoordinateSequence newseq = fact.create3(size, seq.getDimension());
     int n = seq.size();
     copy(seq, 0, newseq, 0, n);
@@ -315,8 +322,8 @@ class CoordinateSequences {
 
   static int indexOf(Coordinate coordinate, CoordinateSequence seq) {
     for (int i = 0; i < seq.size(); i++) {
-      if ((coordinate.x == seq.getOrdinate(i, CoordinateSequence.X)) &&
-          (coordinate.y == seq.getOrdinate(i, CoordinateSequence.Y))) {
+      if ((coordinate.x == seq.getOrdinate(i, CoordinateSequence.kX)) &&
+          (coordinate.y == seq.getOrdinate(i, CoordinateSequence.kY))) {
         return i;
       }
     }
@@ -333,10 +340,11 @@ class CoordinateArraySequence extends CoordinateSequence {
   late Array<Coordinate> _coordinates;
 
   CoordinateArraySequence(Array<Coordinate>? coordinates)
-    : this.of2(coordinates, CoordinateArrays.dimension(coordinates), CoordinateArrays.measures(coordinates));
+      : this.of2(coordinates, CoordinateArrays.dimension(coordinates),
+            CoordinateArrays.measures(coordinates));
 
   CoordinateArraySequence.of(Array<Coordinate>? coordinates, int dimension)
-    : this.of2(coordinates, dimension, CoordinateArrays.measures(coordinates));
+      : this.of2(coordinates, dimension, CoordinateArrays.measures(coordinates));
 
   CoordinateArraySequence.of2(Array<Coordinate>? coordinates, this._dimension, this._measures) {
     if (coordinates == null) {
@@ -421,7 +429,7 @@ class CoordinateArraySequence extends CoordinateSequence {
   @override
   double getZ(int index) {
     if (hasZ()) {
-      return _coordinates[index].getZ();
+      return _coordinates[index].z;
     } else {
       return double.nan;
     }
@@ -439,9 +447,9 @@ class CoordinateArraySequence extends CoordinateSequence {
   @override
   double getOrdinate(int index, int ordinateIndex) {
     switch (ordinateIndex) {
-      case CoordinateSequence.X:
+      case CoordinateSequence.kX:
         return _coordinates[index].x;
-      case CoordinateSequence.Y:
+      case CoordinateSequence.kY:
         return _coordinates[index].y;
       default:
         return _coordinates[index].getOrdinate(ordinateIndex);
@@ -472,10 +480,10 @@ class CoordinateArraySequence extends CoordinateSequence {
   @override
   void setOrdinate(int index, int ordinateIndex, double value) {
     switch (ordinateIndex) {
-      case CoordinateSequence.X:
+      case CoordinateSequence.kX:
         _coordinates[index].x = value;
         break;
-      case CoordinateSequence.Y:
+      case CoordinateSequence.kY:
         _coordinates[index].y = value;
         break;
       default:
@@ -491,7 +499,7 @@ class CoordinateArraySequence extends CoordinateSequence {
   @override
   Envelope expandEnvelope(Envelope env) {
     for (int i = 0; i < _coordinates.length; i++) {
-      env.expandToInclude(_coordinates[i]);
+      env.expandToIncludeCoordinate(_coordinates[i]);
     }
     return env;
   }
@@ -602,7 +610,7 @@ abstract class PackedCoordinateSequence extends CoordinateSequence {
     coord.x = getOrdinate(i, 0);
     coord.y = getOrdinate(i, 1);
     if (hasZ()) {
-      coord.setZ(getZ(i));
+      coord.z = (getZ(i));
     }
     if (hasM()) {
       coord.setM(getM(i));
@@ -690,9 +698,10 @@ class PDouble extends PackedCoordinateSequence {
   }
 
   PDouble.of2(Array<Coordinate>? coordinates, int dimension)
-    : this.of3(coordinates, dimension, Math.max(0, dimension - 3).toInt());
+      : this.of3(coordinates, dimension, Math.max(0, dimension - 3).toInt());
 
-  PDouble.of3(Array<Coordinate>? coordinates, int dimension, int measures) : super(dimension, measures) {
+  PDouble.of3(Array<Coordinate>? coordinates, int dimension, int measures)
+      : super(dimension, measures) {
     coordinates ??= Array();
     coords = Array(coordinates.length * this.dimension);
     for (int i = 0; i < coordinates.length; i++) {
@@ -767,7 +776,7 @@ class PDouble extends PackedCoordinateSequence {
   Envelope expandEnvelope(Envelope env) {
     for (int i = 0; i < coords.length; i += dimension) {
       if ((i + 1) < coords.length) {
-        env.expandToInclude2(coords[i], coords[i + 1]);
+        env.expandToIncludePoint(coords[i], coords[i + 1]);
       }
     }
     return env;

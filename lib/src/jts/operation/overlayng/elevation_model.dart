@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -6,14 +6,14 @@ import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/math/math.dart';
 
 class ElevationModel {
-  static const int _DEFAULT_CELL_NUM = 3;
+  static const int _kDefaultCellNum = 3;
 
   static ElevationModel create(Geometry geom1, Geometry? geom2) {
     Envelope extent = geom1.getEnvelopeInternal().copy();
     if (geom2 != null) {
-      extent.expandToInclude3(geom2.getEnvelopeInternal());
+      extent.expandToInclude(geom2.getEnvelopeInternal());
     }
-    ElevationModel model = ElevationModel(extent, _DEFAULT_CELL_NUM, _DEFAULT_CELL_NUM);
+    ElevationModel model = ElevationModel(extent, _kDefaultCellNum, _kDefaultCellNum);
     model.add(geom1);
 
     if (geom2 != null) {
@@ -42,8 +42,8 @@ class ElevationModel {
   double _averageZ = double.nan;
 
   ElevationModel(this._extent, int numCellX, int numCellY) {
-    _cellSizeX = _extent.getWidth() / numCellX;
-    _cellSizeY = _extent.getHeight() / numCellY;
+    _cellSizeX = _extent.width / numCellX;
+    _cellSizeY = _extent.height / numCellY;
     _numCellX = numCellX;
     _numCellY = numCellY;
     if (_cellSizeX <= 0.0) {
@@ -117,12 +117,12 @@ class ElevationModel {
   ElevationCell? getCell(double x, double y, bool isCreateIfMissing) {
     int ix = 0;
     if (_numCellX > 1) {
-      ix = (x - _extent.getMinX()) ~/ _cellSizeX;
+      ix = (x - _extent.minX) ~/ _cellSizeX;
       ix = MathUtil.clamp(ix, 0, _numCellX - 1);
     }
     int iy = 0;
     if (_numCellY > 1) {
-      iy = (y - _extent.getMinY()) ~/ _cellSizeY;
+      iy = (y - _extent.minY) ~/ _cellSizeY;
       iy = MathUtil.clamp(iy, 0, _numCellY - 1);
     }
     var cell = _cells[ix].get(iy);
@@ -170,8 +170,8 @@ class _CoordinateSequenceFilter implements CoordinateSequenceFilter {
       _hasZ = false;
       return;
     }
-    double z = seq.getOrdinate(i, Coordinate.Z);
-    parent.add2(seq.getOrdinate(i, Coordinate.X), seq.getOrdinate(i, Coordinate.Y), z);
+    double z = seq.getOrdinate(i, Coordinate.kZ);
+    parent.add2(seq.getOrdinate(i, Coordinate.kX), seq.getOrdinate(i, Coordinate.kY), z);
   }
 
   @override
@@ -197,8 +197,8 @@ class _CoordinateSequenceFilter2 implements CoordinateSequenceFilter {
       return;
     }
     if (Double.isNaN(seq.getZ(i))) {
-      double z = parent.getZ(seq.getOrdinate(i, Coordinate.X), seq.getOrdinate(i, Coordinate.Y));
-      seq.setOrdinate(i, Coordinate.Z, z);
+      double z = parent.getZ(seq.getOrdinate(i, Coordinate.kX), seq.getOrdinate(i, Coordinate.kY));
+      seq.setOrdinate(i, Coordinate.kZ, z);
     }
   }
 

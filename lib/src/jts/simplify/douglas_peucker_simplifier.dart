@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -58,9 +58,10 @@ class DPTransformer extends GeometryTransformer {
     if (inputPts.isEmpty) {
       newPts = Array(0);
     } else {
-      newPts = DouglasPeuckerLineSimplifier.simplify2(inputPts, distanceTolerance, isPreserveEndpoint);
+      newPts =
+          DouglasPeuckerLineSimplifier.simplify2(inputPts, distanceTolerance, isPreserveEndpoint);
     }
-    return factory.coordinateSequenceFactory.create(newPts);
+    return factory.csFactory.create(newPts);
   }
 
   @override

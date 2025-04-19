@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/distance.dart';
 import 'package:dts/src/jts/algorithm/point_locator.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -71,8 +71,10 @@ class DistanceOp {
 
   Array<Coordinate> nearestPoints() {
     computeMinDistance();
-    Array<Coordinate> nearestPts =
-        [_minDistanceLocation![0].getCoordinate(), _minDistanceLocation![1].getCoordinate()].toArray();
+    Array<Coordinate> nearestPts = [
+      _minDistanceLocation![0].getCoordinate(),
+      _minDistanceLocation![1].getCoordinate()
+    ].toArray();
     return nearestPts;
   }
 
@@ -162,7 +164,8 @@ class DistanceOp {
     }
   }
 
-  void computeContainmentDistance2(GeometryLocation ptLoc, Polygon poly, Array<GeometryLocation> locPtPoly) {
+  void computeContainmentDistance2(
+      GeometryLocation ptLoc, Polygon poly, Array<GeometryLocation> locPtPoly) {
     Coordinate pt = ptLoc.getCoordinate();
     if (Location.exterior != _ptLocator.locate(pt, poly)) {
       minDistance = 0.0;
@@ -206,7 +209,8 @@ class DistanceOp {
     updateMinDistance(locGeom, false);
   }
 
-  void computeMinDistanceLines(List<LineString> lines0, List<LineString> lines1, Array<GeometryLocation?> locGeom) {
+  void computeMinDistanceLines(
+      List<LineString> lines0, List<LineString> lines1, Array<GeometryLocation?> locGeom) {
     for (int i = 0; i < lines0.size; i++) {
       LineString line0 = lines0[i];
       for (int j = 0; j < lines1.size; j++) {
@@ -219,7 +223,8 @@ class DistanceOp {
     }
   }
 
-  void computeMinDistancePoints(List<Point> points0, List<Point> points1, Array<GeometryLocation?> locGeom) {
+  void computeMinDistancePoints(
+      List<Point> points0, List<Point> points1, Array<GeometryLocation?> locGeom) {
     for (int i = 0; i < points0.size; i++) {
       Point pt0 = points0[i];
       if (pt0.isEmpty()) {
@@ -245,7 +250,8 @@ class DistanceOp {
     }
   }
 
-  void computeMinDistanceLinesPoints(List<LineString> lines, List<Point> points, Array<GeometryLocation?> locGeom) {
+  void computeMinDistanceLinesPoints(
+      List<LineString> lines, List<Point> points, Array<GeometryLocation?> locGeom) {
     for (int i = 0; i < lines.size; i++) {
       LineString line = lines[i];
       for (int j = 0; j < points.size; j++) {
@@ -270,13 +276,13 @@ class DistanceOp {
     Array<Coordinate> coord0 = line0.getCoordinates();
     Array<Coordinate> coord1 = line1.getCoordinates();
     for (int i = 0; i < (coord0.length - 1); i++) {
-      Envelope segEnv0 = Envelope.of3(coord0[i], coord0[i + 1]);
+      Envelope segEnv0 = Envelope.fromCoordinate(coord0[i], coord0[i + 1]);
       if (segEnv0.distance(line1.getEnvelopeInternal()) > minDistance) {
         continue;
       }
 
       for (int j = 0; j < (coord1.length - 1); j++) {
-        Envelope segEnv1 = Envelope.of3(coord1[j], coord1[j + 1]);
+        Envelope segEnv1 = Envelope.fromCoordinate(coord1[j], coord1[j + 1]);
         if (segEnv0.distance(segEnv1) > minDistance) {
           continue;
         }

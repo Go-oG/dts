@@ -1,6 +1,6 @@
 import 'dart:collection';
 
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -45,7 +45,7 @@ class ConformingDelaunayTriangulationBuilder {
     Envelope siteEnv = DelaunayTriangulationBuilder.envelope(_siteCoords.rawList);
     List<Segment> segments = [];
     if (_constraintLines != null) {
-      siteEnv.expandToInclude3(_constraintLines!.getEnvelopeInternal());
+      siteEnv.expandToInclude(_constraintLines!.getEnvelopeInternal());
       createVertices(_constraintLines!);
       segments = createConstraintSegments(_constraintLines!);
     }

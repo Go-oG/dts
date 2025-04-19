@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/math/math.dart';
 import 'package:dts/src/jts/util/number_util.dart';
 
@@ -6,10 +6,10 @@ final class Coordinates {
   Coordinates._();
 
   static Coordinate create(int dimension) {
-    return create2(dimension, 0);
+    return createWithMeasure(dimension, 0);
   }
 
-  static Coordinate create2(int dimension, int measures) {
+  static Coordinate createWithMeasure(int dimension, int measures) {
     if (dimension == 2) {
       return CoordinateXY();
     } else if ((dimension == 3) && (measures == 0)) {
@@ -65,10 +65,10 @@ final class Coordinates {
 const double _nullOrdinate = double.nan;
 
 class Coordinate implements Comparable<Coordinate> {
-  static const int X = 0;
-  static const int Y = 1;
-  static const int Z = 2;
-  static const int M = 3;
+  static const int kX = 0;
+  static const int kY = 1;
+  static const int kZ = 2;
+  static const int kM = 3;
 
   double x;
   double y;
@@ -76,36 +76,12 @@ class Coordinate implements Comparable<Coordinate> {
 
   Coordinate([this.x = 0, this.y = 0, this.z = _nullOrdinate]);
 
-  Coordinate.of(Coordinate c) : this(c.x, c.y, c.getZ());
+  Coordinate.of(Coordinate c) : this(c.x, c.y, c.z);
 
   void setCoordinate(Coordinate other) {
     x = other.x;
     y = other.y;
-    z = other.getZ();
-  }
-
-  double getX() {
-    return x;
-  }
-
-  void setX(double x) {
-    this.x = x;
-  }
-
-  double getY() {
-    return y;
-  }
-
-  void setY(double y) {
-    this.y = y;
-  }
-
-  double getZ() {
-    return z;
-  }
-
-  void setZ(double z) {
-    this.z = z;
+    z = other.z;
   }
 
   double getM() {
@@ -113,31 +89,31 @@ class Coordinate implements Comparable<Coordinate> {
   }
 
   void setM(double m) {
-    throw IllegalArgumentException("Invalid ordinate index: $M");
+    throw IllegalArgumentException("Invalid ordinate index: $kM");
   }
 
   double getOrdinate(int ordinateIndex) {
     switch (ordinateIndex) {
-      case X:
+      case kX:
         return x;
-      case Y:
+      case kY:
         return y;
-      case Z:
-        return getZ();
+      case kZ:
+        return z;
     }
     throw IllegalArgumentException("Invalid ordinate index: $ordinateIndex");
   }
 
   void setOrdinate(int ordinateIndex, double value) {
     switch (ordinateIndex) {
-      case X:
+      case kX:
         x = value;
         break;
-      case Y:
+      case kY:
         y = value;
         break;
-      case Z:
-        setZ(value);
+      case kZ:
+        z = value;
         break;
       default:
         throw IllegalArgumentException("Invalid ordinate index: $ordinateIndex");
@@ -166,7 +142,7 @@ class Coordinate implements Comparable<Coordinate> {
     return true;
   }
 
-  bool equals2D2(Coordinate c, double tolerance) {
+  bool equals2DWithTolerance(Coordinate c, double tolerance) {
     if (!NumberUtil.equalsWithTolerance(x, c.x, tolerance)) {
       return false;
     }
@@ -177,12 +153,12 @@ class Coordinate implements Comparable<Coordinate> {
   }
 
   bool equals3D(Coordinate other) {
-    return ((x == other.x) && (y == other.y)) &&
-        ((getZ() == other.getZ()) || (Double.isNaN(getZ()) && Double.isNaN(other.getZ())));
+    return (x == other.x && y == other.y) &&
+        (z == other.z || (Double.isNaN(z) && Double.isNaN(other.z)));
   }
 
   bool equalInZ(Coordinate c, double tolerance) {
-    return NumberUtil.equalsWithTolerance(getZ(), c.getZ(), tolerance);
+    return NumberUtil.equalsWithTolerance(z, c.z, tolerance);
   }
 
   bool equals(Object other) {
@@ -239,7 +215,7 @@ class Coordinate implements Comparable<Coordinate> {
   double distance3D(Coordinate c) {
     double dx = x - c.x;
     double dy = y - c.y;
-    double dz = getZ() - c.getZ();
+    double dz = z - c.z;
     return Math.sqrt(((dx * dx) + (dy * dy)) + (dz * dz));
   }
 
@@ -263,13 +239,10 @@ class Coordinate implements Comparable<Coordinate> {
 }
 
 class CoordinateXY extends Coordinate {
-  static const int X = 0;
-
-  static const int Y = 1;
-
-  static const int Z = -1;
-
-  static const int M = -1;
+  static const int kX = 0;
+  static const int kY = 1;
+  static const int kZ = -1;
+  static const int kM = -1;
 
   CoordinateXY([double x = 0, double y = 0]) : super(x, y, _nullOrdinate);
 
@@ -284,28 +257,25 @@ class CoordinateXY extends Coordinate {
   Coordinate create() => CoordinateXY();
 
   @override
-  double getZ() {
-    return _nullOrdinate;
-  }
+  set z(double v) =>
+      throw IllegalArgumentException("CoordinateXY dimension 2 does not support z-ordinate");
 
   @override
-  void setZ(double z) {
-    throw IllegalArgumentException("CoordinateXY dimension 2 does not support z-ordinate");
-  }
+  double get z => _nullOrdinate;
 
   @override
   void setCoordinate(Coordinate other) {
     x = other.x;
     y = other.y;
-    z = other.getZ();
+    z = other.z;
   }
 
   @override
   double getOrdinate(int ordinateIndex) {
     switch (ordinateIndex) {
-      case X:
+      case kX:
         return x;
-      case Y:
+      case kY:
         return y;
     }
     return double.nan;
@@ -314,10 +284,10 @@ class CoordinateXY extends Coordinate {
   @override
   void setOrdinate(int ordinateIndex, double value) {
     switch (ordinateIndex) {
-      case X:
+      case kX:
         x = value;
         break;
-      case Y:
+      case kY:
         y = value;
         break;
       default:
@@ -327,10 +297,10 @@ class CoordinateXY extends Coordinate {
 }
 
 class CoordinateXYM extends Coordinate {
-  static const int X = 0;
-  static const int Y = 1;
-  static const int Z = -1;
-  static const int M = 2;
+  static const int kX = 0;
+  static const int kY = 1;
+  static const int kZ = -1;
+  static const int kM = 2;
   late double m;
 
   CoordinateXYM([super.x, super.y, this.m = 0]);
@@ -364,31 +334,28 @@ class CoordinateXYM extends Coordinate {
   }
 
   @override
-  double getZ() {
-    return _nullOrdinate;
-  }
+  double get z => _nullOrdinate;
 
   @override
-  void setZ(double z) {
-    throw IllegalArgumentException("CoordinateXY dimension 2 does not support z-ordinate");
-  }
+  set z(double z) =>
+      throw IllegalArgumentException("CoordinateXY dimension 2 does not support z-ordinate");
 
   @override
   void setCoordinate(Coordinate other) {
     x = other.x;
     y = other.y;
-    z = other.getZ();
+    z = other.z;
     m = other.getM();
   }
 
   @override
   double getOrdinate(int ordinateIndex) {
     switch (ordinateIndex) {
-      case X:
+      case kX:
         return x;
-      case Y:
+      case kY:
         return y;
-      case M:
+      case kM:
         return m;
     }
     throw IllegalArgumentException("Invalid ordinate index: $ordinateIndex");
@@ -397,13 +364,13 @@ class CoordinateXYM extends Coordinate {
   @override
   void setOrdinate(int ordinateIndex, double value) {
     switch (ordinateIndex) {
-      case X:
+      case kX:
         x = value;
         break;
-      case Y:
+      case kY:
         y = value;
         break;
-      case M:
+      case kM:
         m = value;
         break;
       default:
@@ -448,13 +415,13 @@ class CoordinateXYZM extends Coordinate {
   @override
   double getOrdinate(int ordinateIndex) {
     switch (ordinateIndex) {
-      case Coordinate.X:
+      case Coordinate.kX:
         return x;
-      case Coordinate.Y:
+      case Coordinate.kY:
         return y;
-      case Coordinate.Z:
-        return getZ();
-      case Coordinate.M:
+      case Coordinate.kZ:
+        return z;
+      case Coordinate.kM:
         return getM();
     }
     throw IllegalArgumentException("Invalid ordinate index: $ordinateIndex");
@@ -464,23 +431,23 @@ class CoordinateXYZM extends Coordinate {
   void setCoordinate(Coordinate other) {
     x = other.x;
     y = other.y;
-    z = other.getZ();
+    z = other.z;
     _m = other.getM();
   }
 
   @override
   void setOrdinate(int ordinateIndex, double value) {
     switch (ordinateIndex) {
-      case Coordinate.X:
+      case Coordinate.kX:
         x = value;
         break;
-      case Coordinate.Y:
+      case Coordinate.kY:
         y = value;
         break;
-      case Coordinate.Z:
+      case Coordinate.kZ:
         z = value;
         break;
-      case Coordinate.M:
+      case Coordinate.kM:
         _m = value;
         break;
       default:
@@ -537,7 +504,7 @@ class DimensionalComparator implements CComparator<Coordinate> {
       return 0;
     }
 
-    int compZ = compareS(c1.getZ(), c2.getZ());
+    int compZ = compareS(c1.z, c2.z);
     return compZ;
   }
 }

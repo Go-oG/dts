@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/index/array_list_visitor.dart';
 import 'package:dts/src/jts/index/item_visitor.dart';
@@ -35,13 +35,13 @@ class HPRtree<T> implements SpatialIndex<T> {
     }
     _numItems++;
     _itemsToLoad.add(_Item(itemEnv, item));
-    _totalExtent.expandToInclude3(itemEnv);
+    _totalExtent.expandToInclude(itemEnv);
   }
 
   @override
   List<T> query(Envelope searchEnv) {
     build();
-    if (!_totalExtent.intersects6(searchEnv)) {
+    if (!_totalExtent.intersects(searchEnv)) {
       return [];
     }
 
@@ -53,7 +53,7 @@ class HPRtree<T> implements SpatialIndex<T> {
   @override
   void each(Envelope searchEnv, ItemVisitor<T> visitor) {
     build();
-    if (!_totalExtent.intersects6(searchEnv)) {
+    if (!_totalExtent.intersects(searchEnv)) {
       return;
     }
 
@@ -89,14 +89,14 @@ class HPRtree<T> implements SpatialIndex<T> {
   }
 
   static bool intersects(Array<double> bounds, int nodeIndex, Envelope env) {
-    bool isBeyond =
-        (((env.getMaxX() < bounds[nodeIndex]) || (env.getMaxY() < bounds[nodeIndex + 1])) ||
-            (env.getMinX() > bounds[nodeIndex + 2])) ||
-        (env.getMinY() > bounds[nodeIndex + 3]);
+    bool isBeyond = (((env.maxX < bounds[nodeIndex]) || (env.maxY < bounds[nodeIndex + 1])) ||
+            (env.minX > bounds[nodeIndex + 2])) ||
+        (env.minY > bounds[nodeIndex + 3]);
     return !isBeyond;
   }
 
-  void queryNodeChildren(int layerIndex, int blockOffset, Envelope searchEnv, ItemVisitor<T> visitor) {
+  void queryNodeChildren(
+      int layerIndex, int blockOffset, Envelope searchEnv, ItemVisitor<T> visitor) {
     int layerStart = _layerStartIndex![layerIndex];
     int layerEnd = _layerStartIndex![layerIndex + 1];
     for (int i = 0; i < _nodeCapacity; i++) {
@@ -162,10 +162,10 @@ class HPRtree<T> implements SpatialIndex<T> {
 
     for (_Item item in _itemsToLoad) {
       Envelope envelope = item.getEnvelope();
-      _itemBounds[boundsIndex++] = envelope.getMinX();
-      _itemBounds[boundsIndex++] = envelope.getMinY();
-      _itemBounds[boundsIndex++] = envelope.getMaxX();
-      _itemBounds[boundsIndex++] = envelope.getMaxY();
+      _itemBounds[boundsIndex++] = envelope.minX;
+      _itemBounds[boundsIndex++] = envelope.minY;
+      _itemBounds[boundsIndex++] = envelope.maxX;
+      _itemBounds[boundsIndex++] = envelope.maxY;
       _itemValues[valueIndex++] = item.getItem();
     }
     _itemsToLoad = [];
@@ -226,7 +226,7 @@ class HPRtree<T> implements SpatialIndex<T> {
       }
 
       Envelope env = _itemsToLoad.get(itemIndex).getEnvelope();
-      updateNodeBounds(nodeIndex, env.getMinX(), env.getMinY(), env.getMaxX(), env.getMaxY());
+      updateNodeBounds(nodeIndex, env.minX, env.minY, env.maxX, env.maxY);
     }
   }
 
@@ -277,7 +277,7 @@ class HPRtree<T> implements SpatialIndex<T> {
     Array<Envelope> bounds = Array(numNodes);
     for (int i = numNodes - 1; i >= 0; i--) {
       int boundIndex = 4 * i;
-      bounds[i] = Envelope.of4(
+      bounds[i] = Envelope.fromLRTB(
         nodeBounds[boundIndex],
         nodeBounds[boundIndex + 2],
         nodeBounds[boundIndex + 1],
@@ -347,16 +347,16 @@ class _Encoder {
 
   _Encoder(this.level, Envelope extent) {
     int hside = ((Math.pow(2, level)).toInt()) - 1;
-    minx = extent.getMinX();
-    _strideX = extent.getWidth() / hside;
-    miny = extent.getMinY();
-    _strideY = extent.getHeight() / hside;
+    minx = extent.minX;
+    _strideX = extent.width / hside;
+    miny = extent.minY;
+    _strideY = extent.height / hside;
   }
 
   int encode(Envelope env) {
-    double midx = (env.getWidth() / 2) + env.getMinX();
+    double midx = (env.width / 2) + env.minX;
     int x = (((midx - minx) ~/ _strideX));
-    double midy = (env.getHeight() / 2) + env.getMinY();
+    double midy = (env.height / 2) + env.minY;
     int y = (((midy - miny) ~/ _strideY));
     return HilbertCode.encode(level, x, y);
   }

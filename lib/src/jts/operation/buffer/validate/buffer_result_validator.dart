@@ -117,11 +117,11 @@ class BufferResultValidator {
       padding = 0.001;
     }
 
-    Envelope expectedEnv = Envelope.of2(input.getEnvelopeInternal());
+    Envelope expectedEnv = Envelope.from(input.getEnvelopeInternal());
     expectedEnv.expandBy(distance);
-    Envelope bufEnv = Envelope.of2(result.getEnvelopeInternal());
+    Envelope bufEnv = Envelope.from(result.getEnvelopeInternal());
     bufEnv.expandBy(padding);
-    if (!bufEnv.contains3(expectedEnv)) {
+    if (!bufEnv.contains(expectedEnv)) {
       isValid = false;
       _errorMsg = "Buffer envelope is incorrect";
       errorIndicator = input.factory.toGeometry(bufEnv);

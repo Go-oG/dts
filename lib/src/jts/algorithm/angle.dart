@@ -1,5 +1,6 @@
-import 'package:dts/src/jts/geom/coordinate.dart';
 import 'dart:math';
+
+import 'package:dts/src/jts/geom/coordinate.dart';
 
 import 'orientation.dart';
 
@@ -163,8 +164,8 @@ class Angle {
   }
 
   static Coordinate project(Coordinate p, double angle, double dist) {
-    double x = p.getX() + (dist * Angle.cosSnap(angle));
-    double y = p.getY() + (dist * Angle.sinSnap(angle));
+    double x = p.x + (dist * Angle.cosSnap(angle));
+    double y = p.x + (dist * Angle.sinSnap(angle));
     return Coordinate(x, y);
   }
 }

@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 
 import 'edge.dart';
@@ -31,10 +31,10 @@ class EdgeKey implements Comparable<EdgeKey> {
   }
 
   void init(Coordinate p0, Coordinate p1) {
-    _p0x = p0.getX();
-    _p0y = p0.getY();
-    _p1x = p1.getX();
-    _p1y = p1.getY();
+    _p0x = p0.x;
+    _p0y = p0.y;
+    _p1x = p1.x;
+    _p1y = p1.y;
   }
 
   @override

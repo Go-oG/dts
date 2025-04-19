@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 
 import '../geom/coordinate.dart';
 import '../geom/envelope.dart';
@@ -26,7 +26,7 @@ class MonotoneChain<T> {
     if (_env == null) {
       Coordinate p0 = pts[_start];
       Coordinate p1 = pts[_end];
-      _env = Envelope.of3(p0, p1);
+      _env = Envelope.fromCoordinate(p0, p1);
       if (expansionDistance > 0.0) {
         _env!.expandBy(expansionDistance);
       }
@@ -66,7 +66,7 @@ class MonotoneChain<T> {
       mcs.select2(this, start0);
       return;
     }
-    if (!searchEnv.intersects2(p0, p1)) {
+    if (!searchEnv.intersectsCoordinates(p0, p1)) {
       return;
     }
 
@@ -126,7 +126,8 @@ class MonotoneChain<T> {
     }
   }
 
-  bool overlaps(Coordinate p1, Coordinate p2, Coordinate q1, Coordinate q2, double overlapTolerance) {
+  bool overlaps(
+      Coordinate p1, Coordinate p2, Coordinate q1, Coordinate q2, double overlapTolerance) {
     double minq = Math.minD(q1.x, q2.x);
     double maxq = Math.maxD(q1.x, q2.x);
     double minp = Math.minD(p1.x, p2.x);
@@ -154,7 +155,8 @@ class MonotoneChain<T> {
     return true;
   }
 
-  bool overlaps2(int start0, int end0, MonotoneChain mc, int start1, int end1, double overlapTolerance) {
+  bool overlaps2(
+      int start0, int end0, MonotoneChain mc, int start1, int end1, double overlapTolerance) {
     if (overlapTolerance > 0.0) {
       return overlaps(pts[start0], pts[end0], mc.pts[start1], mc.pts[end1], overlapTolerance);
     }

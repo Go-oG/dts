@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/angle.dart';
 import 'package:dts/src/jts/algorithm/hcoordinate.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
@@ -137,10 +137,10 @@ class Triangle {
   static double area3D2(Coordinate a, Coordinate b, Coordinate c) {
     double ux = b.x - a.x;
     double uy = b.y - a.y;
-    double uz = b.getZ() - a.getZ();
+    double uz = b.z - a.z;
     double vx = c.x - a.x;
     double vy = c.y - a.y;
-    double vz = c.getZ() - a.getZ();
+    double vz = c.z - a.z;
     double crossx = (uy * vz) - (uz * vy);
     double crossy = (uz * vx) - (ux * vz);
     double crossz = (ux * vy) - (uy * vx);
@@ -161,7 +161,7 @@ class Triangle {
     double dy = p.y - y0;
     double t = ((d * dx) - (b * dy)) / det;
     double u = (((-c) * dx) + (a * dy)) / det;
-    double z = (v0.getZ() + (t * (v1.getZ() - v0.getZ()))) + (u * (v2.getZ() - v0.getZ()));
+    double z = (v0.z + (t * (v1.z - v0.z))) + (u * (v2.z - v0.z));
     return z;
   }
 

@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/index/item_visitor.dart';
 import 'package:dts/src/jts/util/assert.dart';
 
@@ -46,8 +46,8 @@ abstract class AbstractSTRtree<T, B> {
     Assert.isTrue(childBoundables.isNotEmpty);
     List<AbstractNode<B>> parentBoundables = [];
     parentBoundables.add(createNode(newLevel));
-    final sortedChildBoundables = List.from(childBoundables);
-    sortedChildBoundables.sort2(getComparator());
+    final List<Boundable<B>> sortedChildBoundables = List.from(childBoundables);
+    sortedChildBoundables.sort(getComparator().compare);
 
     for (var childBoundable in sortedChildBoundables) {
       if (lastNode(parentBoundables).getChildBoundables().size == getNodeCapacity()) {
@@ -66,8 +66,8 @@ abstract class AbstractSTRtree<T, B> {
     return a > b
         ? 1
         : a < b
-        ? -1
-        : 0;
+            ? -1
+            : 0;
   }
 
   AbstractNode<B> createHigherLevels(List<Boundable<B>> boundablesOfALevel, int level) {
@@ -134,7 +134,8 @@ abstract class AbstractSTRtree<T, B> {
   }
 
   void insert(B bounds, T item) {
-    Assert.isTrue2(!_built, "Cannot insert items into an STR packed R-tree after it has been built.");
+    Assert.isTrue2(
+        !_built, "Cannot insert items into an STR packed R-tree after it has been built.");
     _itemBoundables!.add(ItemBoundable(bounds, item));
   }
 

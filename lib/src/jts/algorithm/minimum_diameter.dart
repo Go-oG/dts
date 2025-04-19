@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
@@ -178,7 +178,7 @@ class MinimumDiameter {
     Coordinate p1 = minParaLine.lineIntersection(maxPerpLine)!;
     Coordinate p2 = minParaLine.lineIntersection(minPerpLine)!;
     Coordinate p3 = maxParaLine.lineIntersection(minPerpLine)!;
-    LinearRing shell = inputGeom.factory.createLinearRing2([p0, p1, p2, p3, p0].toArray());
+    LinearRing shell = inputGeom.factory.createLinearRings([p0, p1, p2, p3, p0].toArray());
     return inputGeom.factory.createPolygon(shell);
   }
 
@@ -189,25 +189,25 @@ class MinimumDiameter {
     Coordinate? ptMaxY;
     for (var item in pts) {
       Coordinate p = item;
-      if ((ptMinX == null) || (p.getX() < ptMinX.getX())) {
+      if ((ptMinX == null) || (p.x < ptMinX.x)) {
         ptMinX = p;
       }
 
-      if ((ptMaxX == null) || (p.getX() > ptMaxX.getX())) {
+      if ((ptMaxX == null) || (p.x > ptMaxX.x)) {
         ptMaxX = p;
       }
 
-      if ((ptMinY == null) || (p.getY() < ptMinY.getY())) {
+      if ((ptMinY == null) || (p.y < ptMinY.y)) {
         ptMinY = p;
       }
 
-      if ((ptMaxY == null) || (p.getY() > ptMaxY.getY())) {
+      if ((ptMaxY == null) || (p.y > ptMaxY.y)) {
         ptMaxY = p;
       }
     }
     Coordinate p0 = ptMinX!;
     Coordinate p1 = ptMaxX!;
-    if (p0.getX() == p1.getX()) {
+    if (p0.x == p1.x) {
       p0 = ptMinY!;
       p1 = ptMaxY!;
     }

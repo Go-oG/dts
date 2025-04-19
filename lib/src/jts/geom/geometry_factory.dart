@@ -1,7 +1,7 @@
 import 'dart:core' as c;
 import 'dart:core';
 
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 
 import '../util/assert.dart';
 import 'coordinate.dart';
@@ -21,18 +21,18 @@ import 'util/geometry_editor.dart';
 
 final class GeometryFactory {
   final int srid;
-  final PrecisionModel precisionModel;
-  CoordinateSequenceFactory coordinateSequenceFactory;
+  final PrecisionModel pm;
+  CoordinateSequenceFactory csFactory;
 
   GeometryFactory.empty() : this(PrecisionModel(), 0, getDefaultCoordinateSequenceFactory());
 
-  GeometryFactory(this.precisionModel, this.srid, this.coordinateSequenceFactory);
+  GeometryFactory(this.pm, this.srid, this.csFactory);
 
   GeometryFactory.of(CoordinateSequenceFactory coordinateSequenceFactory)
-    : this(PrecisionModel(), 0, coordinateSequenceFactory);
+      : this(PrecisionModel(), 0, coordinateSequenceFactory);
 
-  GeometryFactory.of2(PrecisionModel precisionModel, [int srid = 0])
-    : this(precisionModel, srid, getDefaultCoordinateSequenceFactory());
+  GeometryFactory.from(PrecisionModel precisionModel, [int srid = 0])
+      : this(precisionModel, srid, getDefaultCoordinateSequenceFactory());
 
   static Point createPointFromInternalCoord(Coordinate coord, Geometry exemplar) {
     exemplar.getPrecisionModel().makePrecise(coord);
@@ -79,28 +79,28 @@ final class GeometryFactory {
   }
 
   Geometry toGeometry(Envelope envelope) {
-    if (envelope.isNull()) {
+    if (envelope.isNull) {
       return createPoint();
     }
-    if ((envelope.getMinX() == envelope.getMaxX()) && (envelope.getMinY() == envelope.getMaxY())) {
-      return createPoint2(Coordinate(envelope.getMinX(), envelope.getMinY()));
+    if ((envelope.minX == envelope.maxX) && (envelope.minY == envelope.maxY)) {
+      return createPoint2(Coordinate(envelope.minX, envelope.minY));
     }
-    if ((envelope.getMinX() == envelope.getMaxX()) || (envelope.getMinY() == envelope.getMaxY())) {
+    if ((envelope.minX == envelope.maxX) || (envelope.minY == envelope.maxY)) {
       return createLineString2(
         [
-          Coordinate(envelope.getMinX(), envelope.getMinY()),
-          Coordinate(envelope.getMaxX(), envelope.getMaxY()),
+          Coordinate(envelope.minX, envelope.minY),
+          Coordinate(envelope.maxX, envelope.maxY),
         ].toArray(),
       );
     }
     return createPolygon(
-      createLinearRing2(
+      createLinearRings(
         [
-          Coordinate(envelope.getMinX(), envelope.getMinY()),
-          Coordinate(envelope.getMinX(), envelope.getMaxY()),
-          Coordinate(envelope.getMaxX(), envelope.getMaxY()),
-          Coordinate(envelope.getMaxX(), envelope.getMinY()),
-          Coordinate(envelope.getMinX(), envelope.getMinY()),
+          Coordinate(envelope.minX, envelope.minY),
+          Coordinate(envelope.minX, envelope.maxY),
+          Coordinate(envelope.maxX, envelope.maxY),
+          Coordinate(envelope.maxX, envelope.minY),
+          Coordinate(envelope.minX, envelope.minY),
         ].toArray(),
       ),
       null,
@@ -108,15 +108,15 @@ final class GeometryFactory {
   }
 
   PrecisionModel getPrecisionModel() {
-    return precisionModel;
+    return pm;
   }
 
   Point createPoint() {
-    return createPoint3(coordinateSequenceFactory.create(Array(0)));
+    return createPoint3(csFactory.create(Array(0)));
   }
 
   Point createPoint2(Coordinate? coordinate) {
-    return createPoint3(coordinate != null ? coordinateSequenceFactory.create([coordinate].toArray()) : null);
+    return createPoint3(coordinate != null ? csFactory.create([coordinate].toArray()) : null);
   }
 
   Point createPoint3(CoordinateSequence? coordinates) {
@@ -144,14 +144,14 @@ final class GeometryFactory {
   }
 
   LinearRing createLinearRing() {
-    return createLinearRing3(coordinateSequenceFactory.create(Array<Coordinate>(0)));
+    return createLinearRing2(csFactory.create(Array<Coordinate>(0)));
   }
 
-  LinearRing createLinearRing2(Array<Coordinate>? coordinates) {
-    return createLinearRing3(coordinates != null ? coordinateSequenceFactory.create(coordinates) : null);
+  LinearRing createLinearRings(Array<Coordinate>? coordinates) {
+    return createLinearRing2(coordinates != null ? csFactory.create(coordinates) : null);
   }
 
-  LinearRing createLinearRing3(CoordinateSequence? coordinates) {
+  LinearRing createLinearRing2(CoordinateSequence? coordinates) {
     return LinearRing.of2(coordinates, this);
   }
 
@@ -159,25 +159,21 @@ final class GeometryFactory {
     return MultiPoint(null, this);
   }
 
-  MultiPoint createMultiPoint3(Array<Point> point) {
+  MultiPoint createMultiPoint2(Array<Point> point) {
     return MultiPoint(point, this);
   }
 
-  MultiPoint createMultiPoint2(Array<Coordinate>? coordinates) {
-    return createMultiPoint4(coordinates != null ? coordinateSequenceFactory.create(coordinates) : null);
-  }
-
-  MultiPoint createMultiPointFromCoords(Array<Coordinate>? coordinates) {
-    return createMultiPoint4(coordinates != null ? coordinateSequenceFactory.create(coordinates) : null);
+  MultiPoint createMultiPoint3(Array<Coordinate>? coordinates) {
+    return createMultiPoint4(coordinates != null ? csFactory.create(coordinates) : null);
   }
 
   MultiPoint createMultiPoint4(CoordinateSequence? coordinates) {
     if (coordinates == null) {
-      return createMultiPoint3(Array(0));
+      return createMultiPoint2(Array(0));
     }
     Array<Point> points = Array(coordinates.size());
     for (int i = 0; i < coordinates.size(); i++) {
-      CoordinateSequence ptSeq = coordinateSequenceFactory.create4(
+      CoordinateSequence ptSeq = csFactory.create4(
         1,
         coordinates.getDimension(),
         coordinates.getMeasures(),
@@ -185,7 +181,11 @@ final class GeometryFactory {
       CoordinateSequences.copy(coordinates, i, ptSeq, 0, 1);
       points[i] = createPoint3(ptSeq);
     }
-    return createMultiPoint3(points);
+    return createMultiPoint2(points);
+  }
+
+  MultiPoint createMultiPoint5(Array<Coordinate>? coordinates) {
+    return createMultiPoint4(coordinates != null ? csFactory.create(coordinates) : null);
   }
 
   Polygon createPolygon([LinearRing? shell, Array<LinearRing>? holes]) {
@@ -193,11 +193,11 @@ final class GeometryFactory {
   }
 
   Polygon createPolygon2(CoordinateSequence shell) {
-    return createPolygon(createLinearRing3(shell));
+    return createPolygon(createLinearRing2(shell));
   }
 
   Polygon createPolygon3(Array<Coordinate> shell) {
-    return createPolygon(createLinearRing2(shell));
+    return createPolygon(createLinearRings(shell));
   }
 
   Geometry buildGeometry(List<Geometry> geomList) {
@@ -230,7 +230,7 @@ final class GeometryFactory {
       } else if (geom0 is LineString) {
         return createMultiLineString2(toLineStringArray(geomList.cast()));
       } else if (geom0 is Point) {
-        return createMultiPoint3(toPointArray(geomList.cast()));
+        return createMultiPoint2(toPointArray(geomList.cast()));
       }
       Assert.shouldNeverReachHere2("Unhandled class: ${geom0.runtimeType}");
     }
@@ -238,12 +238,12 @@ final class GeometryFactory {
   }
 
   LineString createLineString([CoordinateSequence? coordinates]) {
-    final v = coordinates ?? coordinateSequenceFactory.create(Array());
+    final v = coordinates ?? csFactory.create(Array());
     return LineString.of(v, this);
   }
 
   LineString createLineString2(Array<Coordinate>? coordinates) {
-    return createLineString(coordinates != null ? coordinateSequenceFactory.create(coordinates) : null);
+    return createLineString(coordinates != null ? csFactory.create(coordinates) : null);
   }
 
   Geometry createEmpty(int dimension) {
@@ -263,7 +263,7 @@ final class GeometryFactory {
 
   Geometry? createGeometry(Geometry g) {
     final editor = GeometryEditor(this);
-    return editor.edit(g, _CoordSeqCloneOp(coordinateSequenceFactory));
+    return editor.edit(g, _CoordSeqCloneOp(csFactory));
   }
 }
 

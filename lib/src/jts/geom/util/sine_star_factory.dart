@@ -9,7 +9,8 @@ import '../geometry.dart';
 import '../linear_ring.dart';
 
 class SineStarFactory extends GeometricShapeFactory {
-  static Geometry create(Coordinate origin, double size, int nPts, int nArms, double armLengthRatio) {
+  static Geometry create(
+      Coordinate origin, double size, int nPts, int nArms, double armLengthRatio) {
     SineStarFactory gsf = SineStarFactory();
     gsf.setCentre(origin);
     gsf.setSize(size);
@@ -38,7 +39,7 @@ class SineStarFactory extends GeometricShapeFactory {
 
   Geometry createSineStar() {
     Envelope env = dim.getEnvelope();
-    double radius = env.getWidth() / 2.0;
+    double radius = env.width / 2.0;
     double armRatio = armLengthRatio;
     if (armRatio < 0.0) armRatio = 0.0;
 
@@ -46,8 +47,8 @@ class SineStarFactory extends GeometricShapeFactory {
 
     double armMaxLen = armRatio * radius;
     double insideRadius = (1 - armRatio) * radius;
-    double centreX = env.getMinX() + radius;
-    double centreY = env.getMinY() + radius;
+    double centreX = env.minX + radius;
+    double centreY = env.minY + radius;
     Array<Coordinate> pts = Array(nPts + 1);
     int iPt = 0;
     for (int i = 0; i < nPts; i++) {
@@ -62,7 +63,7 @@ class SineStarFactory extends GeometricShapeFactory {
       pts[iPt++] = coord(x, y);
     }
     pts[iPt] = Coordinate.of(pts[0]);
-    LinearRing ring = geomFact.createLinearRing2(pts);
+    LinearRing ring = geomFact.createLinearRings(pts);
     return geomFact.createPolygon(ring);
   }
 }

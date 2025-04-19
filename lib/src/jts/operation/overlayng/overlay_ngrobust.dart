@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
@@ -68,14 +68,16 @@ class OverlayNGRobust {
     return null;
   }
 
-  static Geometry? overlaySnapping(Geometry geom0, Geometry geom1, OverlayOpCode opCode, double snapTol) {
+  static Geometry? overlaySnapping(
+      Geometry geom0, Geometry geom1, OverlayOpCode opCode, double snapTol) {
     try {
       return overlaySnapTol(geom0, geom1, opCode, snapTol);
     } catch (ex) {}
     return null;
   }
 
-  static Geometry? overlaySnapBoth(Geometry geom0, Geometry geom1, OverlayOpCode opCode, double snapTol) {
+  static Geometry? overlaySnapBoth(
+      Geometry geom0, Geometry geom1, OverlayOpCode opCode, double snapTol) {
     try {
       Geometry snap0 = snapSelf(geom0, snapTol);
       Geometry snap1 = snapSelf(geom1, snapTol);
@@ -92,7 +94,8 @@ class OverlayNGRobust {
     return ov.getResult();
   }
 
-  static Geometry overlaySnapTol(Geometry geom0, Geometry geom1, OverlayOpCode opCode, double snapTol) {
+  static Geometry overlaySnapTol(
+      Geometry geom0, Geometry geom1, OverlayOpCode opCode, double snapTol) {
     SnappingNoder snapNoder = SnappingNoder(snapTol);
     return OverlayNG.overlay2(geom0, geom1, opCode, snapNoder);
   }
@@ -112,8 +115,8 @@ class OverlayNGRobust {
     if ((geom == null) || geom.isEmpty()) return 0;
 
     Envelope env = geom.getEnvelopeInternal();
-    double magMax = Math.maxD(Math.abs(env.getMaxX()), Math.abs(env.getMaxY()));
-    double magMin = Math.maxD(Math.abs(env.getMinX()), Math.abs(env.getMinY()));
+    double magMax = Math.maxD(Math.abs(env.maxX), Math.abs(env.maxY));
+    double magMin = Math.maxD(Math.abs(env.minX), Math.abs(env.minY));
     return Math.maxD(magMax, magMin);
   }
 

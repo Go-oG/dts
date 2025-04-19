@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
@@ -7,8 +7,6 @@ import 'package:dts/src/jts/shape/geometric_shape_builder.dart';
 import 'hilbert_code.dart';
 
 class HilbertCurveBuilder extends GeometricShapeBuilder {
-  final int _order = -1;
-
   HilbertCurveBuilder(super.geomFactory) {
     extent = null;
   }
@@ -34,8 +32,8 @@ class HilbertCurveBuilder extends GeometricShapeBuilder {
     Array<Coordinate> pts = Array(nPts);
     for (int i = 0; i < nPts; i++) {
       Coordinate pt = HilbertCode.decode(level, i);
-      double x = transform(pt.getX(), scale, baseX);
-      double y = transform(pt.getY(), scale, baseY);
+      double x = transform(pt.x, scale, baseX);
+      double y = transform(pt.y, scale, baseY);
       pts[i] = Coordinate(x, y);
     }
     return geomFactory.createLineString2(pts);

@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -17,7 +17,7 @@ class SnapTransformer extends GeometryTransformer {
   CoordinateSequence? transformCoordinates(CoordinateSequence coords, Geometry? parent) {
     Array<Coordinate> srcPts = coords.toCoordinateArray();
     Array<Coordinate> newPts = snapLine(srcPts, _snapPts);
-    return factory.coordinateSequenceFactory.create(newPts);
+    return factory.csFactory.create(newPts);
   }
 
   Array<Coordinate> snapLine(Array<Coordinate> srcPts, Array<Coordinate> snapPts) {

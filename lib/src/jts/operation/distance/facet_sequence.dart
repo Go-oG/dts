@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/distance.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
@@ -24,7 +24,7 @@ class FacetSequence {
   Envelope getEnvelope() {
     Envelope env = Envelope();
     for (int i = start; i < end; i++) {
-      env.expandToInclude2(_pts.getX(i), _pts.getY(i));
+      env.expandToIncludePoint(_pts.getX(i), _pts.getY(i));
     }
     return env;
   }
@@ -126,7 +126,8 @@ class FacetSequence {
     locs[1] = GeometryLocation(facetSeq._geom, j, Coordinate.of(closestPt[1]));
   }
 
-  double computeDistancePointLine(Coordinate pt, FacetSequence facetSeq, Array<GeometryLocation>? locs) {
+  double computeDistancePointLine(
+      Coordinate pt, FacetSequence facetSeq, Array<GeometryLocation>? locs) {
     double minDistance = double.maxFinite;
     for (int i = facetSeq.start; i < (facetSeq.end - 1); i++) {
       Coordinate q0 = facetSeq._pts.getCoordinate(i);

@@ -1,17 +1,17 @@
 import 'dart:math';
 
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/angle.dart';
 import 'package:dts/src/jts/algorithm/cgalgorithms.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/util/assert.dart';
 
 class Plane3D {
-  static const int XY_PLANE = 1;
+  static const int kXYPlane = 1;
 
-  static const int YZ_PLANE = 2;
+  static const int kYZPlane = 2;
 
-  static const int XZ_PLANE = 3;
+  static const int kXZPlane = 3;
 
   final Vector3D _normal;
 
@@ -22,7 +22,8 @@ class Plane3D {
   double orientedDistance(Coordinate p) {
     Vector3D pb = Vector3D.of2(p, _basePt);
     double pbdDotNormal = pb.dot(_normal);
-    if (Double.isNaN(pbdDotNormal)) throw IllegalArgumentException("3D Coordinate has NaN ordinate");
+    if (Double.isNaN(pbdDotNormal))
+      throw IllegalArgumentException("3D Coordinate has NaN ordinate");
 
     double d = pbdDotNormal / _normal.length();
     return d;
@@ -34,14 +35,14 @@ class Plane3D {
     double zmag = Math.abs(_normal.getZ());
     if (xmag > ymag) {
       if (xmag > zmag) {
-        return YZ_PLANE;
+        return kYZPlane;
       } else {
-        return XY_PLANE;
+        return kXYPlane;
       }
     } else if (zmag > ymag) {
-      return XY_PLANE;
+      return kXYPlane;
     }
-    return XZ_PLANE;
+    return kXZPlane;
   }
 }
 
@@ -49,10 +50,10 @@ class Vector3D {
   static double dot2(Coordinate A, Coordinate B, Coordinate C, Coordinate D) {
     double ABx = B.x - A.x;
     double ABy = B.y - A.y;
-    double ABz = B.getZ() - A.getZ();
+    double ABz = B.z - A.z;
     double CDx = D.x - C.x;
     double CDy = D.y - C.y;
-    double CDz = D.getZ() - C.getZ();
+    double CDz = D.z - C.z;
     return ((ABx * CDx) + (ABy * CDy)) + (ABz * CDz);
   }
 
@@ -65,7 +66,7 @@ class Vector3D {
   }
 
   static double dot3(Coordinate v1, Coordinate v2) {
-    return ((v1.x * v2.x) + (v1.y * v2.y)) + (v1.getZ() * v2.getZ());
+    return ((v1.x * v2.x) + (v1.y * v2.y)) + (v1.z * v2.z);
   }
 
   late double x;
@@ -77,13 +78,13 @@ class Vector3D {
   Vector3D.of(Coordinate v) {
     x = v.x;
     y = v.y;
-    _z = v.getZ();
+    _z = v.z;
   }
 
   Vector3D.of2(Coordinate from, Coordinate to) {
     x = to.x - from.x;
     y = to.y - from.y;
-    _z = to.getZ() - from.getZ();
+    _z = to.z - from.z;
   }
 
   Vector3D(this.x, this.y, this._z);
@@ -121,7 +122,7 @@ class Vector3D {
   }
 
   static double length2(Coordinate v) {
-    return sqrt(((v.x * v.x) + (v.y * v.y)) + (v.getZ() * v.getZ()));
+    return sqrt(((v.x * v.x) + (v.y * v.y)) + (v.z * v.z));
   }
 
   Vector3D normalize() {
@@ -133,7 +134,7 @@ class Vector3D {
 
   static Coordinate normalize2(Coordinate v) {
     double len = length2(v);
-    return Coordinate(v.x / len, v.y / len, v.getZ() / len);
+    return Coordinate(v.x / len, v.y / len, v.z / len);
   }
 
   bool equals(Object o) {
@@ -830,8 +831,6 @@ final class DD implements Comparable<DD> {
 
     return 0;
   }
-
-  static final DD _TEN = DD.valueOf(10.0);
 
   String? getSpecialNumberString() {
     if (isZero()) {

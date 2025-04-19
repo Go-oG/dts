@@ -35,13 +35,13 @@ class PlanarPolygon3D {
     for (int i = 0; i < (n - 1); i++) {
       seq.getCoordinate2(i, p1);
       seq.getCoordinate2(i + 1, p2);
-      sum.x += (p1.y - p2.y) * (p1.getZ() + p2.getZ());
-      sum.y += (p1.getZ() - p2.getZ()) * (p1.x + p2.x);
-      sum.setZ(sum.getZ() + ((p1.x - p2.x) * (p1.y + p2.y)));
+      sum.x += (p1.y - p2.y) * (p1.z + p2.z);
+      sum.y += (p1.z - p2.z) * (p1.x + p2.x);
+      sum.z = (sum.z + ((p1.x - p2.x) * (p1.y + p2.y)));
     }
     sum.x /= n;
     sum.y /= n;
-    sum.setZ(sum.getZ() / n);
+    sum.z = sum.z / n;
     Vector3D norm = Vector3D.create(sum).normalize();
     return norm;
   }
@@ -50,13 +50,13 @@ class PlanarPolygon3D {
     Coordinate a = Coordinate(0, 0, 0);
     int n = seq.size();
     for (int i = 0; i < n; i++) {
-      a.x += seq.getOrdinate(i, CoordinateSequence.X);
-      a.y += seq.getOrdinate(i, CoordinateSequence.Y);
-      a.setZ(a.getZ() + seq.getOrdinate(i, CoordinateSequence.Z));
+      a.x += seq.getOrdinate(i, CoordinateSequence.kX);
+      a.y += seq.getOrdinate(i, CoordinateSequence.kY);
+      a.z = (a.z + seq.getOrdinate(i, CoordinateSequence.kZ));
     }
     a.x /= n;
     a.y /= n;
-    a.setZ(a.getZ() / n);
+    a.z /= n;
     return a;
   }
 
@@ -93,9 +93,9 @@ class PlanarPolygon3D {
 
   static CoordinateSequence project2(CoordinateSequence seq, int facingPlane) {
     switch (facingPlane) {
-      case Plane3D.XY_PLANE:
+      case Plane3D.kXYPlane:
         return AxisPlaneCoordinateSequence.projectToXY(seq);
-      case Plane3D.XZ_PLANE:
+      case Plane3D.kXZPlane:
         return AxisPlaneCoordinateSequence.projectToXZ(seq);
       default:
         return AxisPlaneCoordinateSequence.projectToYZ(seq);
@@ -104,12 +104,12 @@ class PlanarPolygon3D {
 
   static Coordinate project(Coordinate p, int facingPlane) {
     switch (facingPlane) {
-      case Plane3D.XY_PLANE:
+      case Plane3D.kXYPlane:
         return Coordinate(p.x, p.y);
-      case Plane3D.XZ_PLANE:
-        return Coordinate(p.x, p.getZ());
+      case Plane3D.kXZPlane:
+        return Coordinate(p.x, p.z);
       default:
-        return Coordinate(p.y, p.getZ());
+        return Coordinate(p.y, p.z);
     }
   }
 }

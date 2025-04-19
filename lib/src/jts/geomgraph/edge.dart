@@ -1,6 +1,6 @@
 import 'dart:collection';
 
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/boundary_node_rule.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
@@ -27,8 +27,10 @@ class Edge extends GraphComponent {
   static void updateIMS(Label label, IntersectionMatrix im) {
     im.setAtLeastIfValid(label.getLocation2(0, Position.on), label.getLocation2(1, Position.on), 1);
     if (label.isArea()) {
-      im.setAtLeastIfValid(label.getLocation2(0, Position.left), label.getLocation2(1, Position.left), 2);
-      im.setAtLeastIfValid(label.getLocation2(0, Position.right), label.getLocation2(1, Position.right), 2);
+      im.setAtLeastIfValid(
+          label.getLocation2(0, Position.left), label.getLocation2(1, Position.left), 2);
+      im.setAtLeastIfValid(
+          label.getLocation2(0, Position.right), label.getLocation2(1, Position.right), 2);
     }
   }
 
@@ -78,7 +80,7 @@ class Edge extends GraphComponent {
     if (_env == null) {
       _env = Envelope();
       for (int i = 0; i < pts.length; i++) {
-        _env!.expandToInclude(pts[i]);
+        _env!.expandToIncludeCoordinate(pts[i]);
       }
     }
     return _env!;
@@ -334,9 +336,7 @@ class EdgeEnd implements Comparable<EdgeEnd> {
     _node = node;
   }
 
-  Node getNode() {
-    return _node;
-  }
+  Node getNode() => _node;
 
   @override
   int compareTo(EdgeEnd e) {
@@ -614,7 +614,8 @@ abstract class EdgeEndStar {
 
   int getLocation(int geomIndex, Coordinate p, Array<GeometryGraph> geom) {
     if (_ptInAreaLocation[geomIndex] == Location.none) {
-      _ptInAreaLocation[geomIndex] = SimplePointInAreaLocator.locateS(p, geom[geomIndex].getGeometry()!);
+      _ptInAreaLocation[geomIndex] =
+          SimplePointInAreaLocator.locateS(p, geom[geomIndex].getGeometry()!);
     }
     return _ptInAreaLocation[geomIndex];
   }
@@ -654,7 +655,8 @@ abstract class EdgeEndStar {
     int startLoc = Location.none;
     for (var e in edgeList!) {
       Label label = e.getLabel()!;
-      if (label.isArea2(geomIndex) && (label.getLocation2(geomIndex, Position.left) != Location.none)) {
+      if (label.isArea2(geomIndex) &&
+          (label.getLocation2(geomIndex, Position.left) != Location.none)) {
         startLoc = label.getLocation2(geomIndex, Position.left);
       }
     }
@@ -671,14 +673,16 @@ abstract class EdgeEndStar {
         int leftLoc = label.getLocation2(geomIndex, Position.left);
         int rightLoc = label.getLocation2(geomIndex, Position.right);
         if (rightLoc != Location.none) {
-          if (rightLoc != currLoc) throw TopologyException("side location conflict ${e.getCoordinate()}");
+          if (rightLoc != currLoc)
+            throw TopologyException("side location conflict ${e.getCoordinate()}");
 
           if (leftLoc == Location.none) {
             Assert.shouldNeverReachHere2("found single null side (at ${e.getCoordinate()})");
           }
           currLoc = leftLoc;
         } else {
-          Assert.isTrue2(label.getLocation2(geomIndex, Position.left) == Location.none, "found single null side");
+          Assert.isTrue2(label.getLocation2(geomIndex, Position.left) == Location.none,
+              "found single null side");
           label.setLocation2(geomIndex, Position.right, currLoc);
           label.setLocation2(geomIndex, Position.left, currLoc);
         }
@@ -928,7 +932,8 @@ class DirectedEdgeStar extends EdgeEndStar {
     int targetLastDepth = de.getDepth(Position.right);
     int nextDepth = computeDepths2(edgeIndex + 1, edgeList!.length, startDepth);
     int lastDepth = computeDepths2(0, edgeIndex, nextDepth);
-    if (lastDepth != targetLastDepth) throw TopologyException("depth mismatch at ${de.getCoordinate()}");
+    if (lastDepth != targetLastDepth)
+      throw TopologyException("depth mismatch at ${de.getCoordinate()}");
   }
 
   int computeDepths2(int startIndex, int endIndex, int startDepth) {

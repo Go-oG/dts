@@ -32,8 +32,7 @@ class IMPatternMatcher extends IMPredicate {
   }
 
   static bool requireInteraction2(IntersectionMatrix im) {
-    bool requiresInteraction =
-        ((isInteraction(im.get(Location.interior, Location.interior)) ||
+    bool requiresInteraction = ((isInteraction(im.get(Location.interior, Location.interior)) ||
                 isInteraction(im.get(Location.interior, Location.boundary))) ||
             isInteraction(im.get(Location.boundary, Location.interior))) ||
         isInteraction(im.get(Location.boundary, Location.boundary));
@@ -41,7 +40,7 @@ class IMPatternMatcher extends IMPredicate {
   }
 
   static bool isInteraction(int imDim) {
-    return (imDim == Dimension.TRUE) || (imDim >= Dimension.P);
+    return (imDim == Dimension.True) || (imDim >= Dimension.P);
   }
 
   @override
@@ -49,12 +48,12 @@ class IMPatternMatcher extends IMPredicate {
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
         int patternEntry = _patternMatrix.get(i, j);
-        if (patternEntry == Dimension.DONTCARE) {
+        if (patternEntry == Dimension.Dontcare) {
           continue;
         }
 
         int matrixVal = getDimension(i, j);
-        if (patternEntry == Dimension.TRUE) {
+        if (patternEntry == Dimension.True) {
           if (matrixVal < 0) {
             return false;
           }

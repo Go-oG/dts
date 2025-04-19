@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -114,7 +114,7 @@ class KdTree {
         _QueryStackFrame frame = queryStack.removeAt(0);
         currentNode = frame.node;
         isXLevel = frame.isXLevel;
-        if (queryEnv.contains(currentNode.getCoordinate())) {
+        if (queryEnv.containsCoordinate(currentNode.getCoordinate())) {
           visitor.visit(currentNode);
         }
         bool searchRight = currentNode.isRangeOverRight(isXLevel, queryEnv);
@@ -207,7 +207,7 @@ class BestMatchVisitor implements KdNodeVisitor {
   BestMatchVisitor(this.p, this.tolerance);
 
   Envelope queryEnvelope() {
-    Envelope queryEnv = Envelope.of(p);
+    Envelope queryEnv = Envelope.fromCoordinate(p);
     queryEnv.expandBy(tolerance);
     return queryEnv;
   }
@@ -269,9 +269,9 @@ class KdNode {
 
   double splitValue(bool isSplitOnX) {
     if (isSplitOnX) {
-      return _p.getX();
+      return _p.x;
     }
-    return _p.getY();
+    return _p.y;
   }
 
   Coordinate getCoordinate() {
@@ -313,9 +313,9 @@ class KdNode {
   bool isRangeOverLeft(bool isSplitOnX, Envelope env) {
     double envMin;
     if (isSplitOnX) {
-      envMin = env.getMinX();
+      envMin = env.minX;
     } else {
-      envMin = env.getMinY();
+      envMin = env.minY;
     }
     bool isInRange = envMin < splitValue(isSplitOnX);
     return isInRange;
@@ -324,9 +324,9 @@ class KdNode {
   bool isRangeOverRight(bool isSplitOnX, Envelope env) {
     double envMax;
     if (isSplitOnX) {
-      envMax = env.getMaxX();
+      envMax = env.maxX;
     } else {
-      envMax = env.getMaxY();
+      envMax = env.maxY;
     }
 
     return splitValue(isSplitOnX) <= envMax;

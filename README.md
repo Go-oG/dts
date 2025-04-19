@@ -1,39 +1,28 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# JTS Dart Port
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+A Dart port of the [JTS Topology Suite](https://github.com/locationtech/jts), a Java library for creating and manipulating vector geometry.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- **Geometry Types**: Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon, GeometryCollection
+- **Spatial Operations**: Buffer, Convex Hull, Intersection, Union, Difference, Symmetric Difference
+- **Spatial Predicates**: Contains, CoveredBy, Covers, Crosses, Disjoint, Equals, Intersects, Overlaps, Touches, Within
+- **Coordinate System Support**: 2D and 3D coordinates
+- **Precision Models**: Fixed and Floating precision
+- **IO Support**: WKT (Well-Known Text) and WKB (Well-Known Binary) formats
 
-## Getting started
+## Installation
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Add this to your `pubspec.yaml`:
 
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
+```yaml
+dependencies:
+  dts: ^0.0.1
 ```
 
-## Additional information
+License
+BSD 3-Clause License (Same as original JTS)
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+Acknowledgments
+Original JTS authors and LocationTech
+Dart community for tooling support

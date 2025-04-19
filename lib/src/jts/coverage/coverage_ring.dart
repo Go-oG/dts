@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
@@ -78,7 +78,7 @@ class CoverageRing extends BasicSegmentString {
   Envelope getEnvelope(int start, int end) {
     Envelope env = Envelope();
     for (int i = start; i < end; i++) {
-      env.expandToInclude(getCoordinate(i));
+      env.expandToIncludeCoordinate(getCoordinate(i));
     }
     return env;
   }
@@ -212,8 +212,9 @@ class CoverageRing extends BasicSegmentString {
   }
 
   LineString _createLine(int startIndex, int endIndex, GeometryFactory geomFactory) {
-    Array<Coordinate> pts =
-        (endIndex < startIndex) ? _extractSectionWrap(startIndex, endIndex) : _extractSection(startIndex, endIndex);
+    Array<Coordinate> pts = (endIndex < startIndex)
+        ? _extractSectionWrap(startIndex, endIndex)
+        : _extractSection(startIndex, endIndex);
     return geomFactory.createLineString2(pts);
   }
 

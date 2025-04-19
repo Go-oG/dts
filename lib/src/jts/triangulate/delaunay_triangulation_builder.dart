@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
@@ -40,7 +40,7 @@ class DelaunayTriangulationBuilder {
     Envelope env = Envelope();
     for (var i = coords.iterator; i.moveNext();) {
       Coordinate coord = i.current;
-      env.expandToInclude(coord);
+      env.expandToIncludeCoordinate(coord);
     }
     return env;
   }

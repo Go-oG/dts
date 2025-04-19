@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/math/math.dart';
 
 import 'coordinate.dart';
@@ -54,12 +54,12 @@ class CoordinateArrays {
       }
     }
     if (!isConsistent) {
-      Coordinate sample = Coordinates.create2(maxDimension, maxMeasures);
+      Coordinate sample = Coordinates.createWithMeasure(maxDimension, maxMeasures);
       Type type = sample.runtimeType;
       for (int i = 0; i < array.length; i++) {
         Coordinate? coordinate = array[i];
         if ((coordinate != null) && (coordinate.runtimeType != type)) {
-          Coordinate duplicate = Coordinates.create2(maxDimension, maxMeasures);
+          Coordinate duplicate = Coordinates.createWithMeasure(maxDimension, maxMeasures);
           duplicate.setCoordinate(coordinate);
           array[i] = duplicate;
         }
@@ -67,8 +67,9 @@ class CoordinateArrays {
     }
   }
 
-  static Array<Coordinate?> enforceConsistency2(Array<Coordinate?> array, int dimension, int measures) {
-    Coordinate sample = Coordinates.create2(dimension, measures);
+  static Array<Coordinate?> enforceConsistency2(
+      Array<Coordinate?> array, int dimension, int measures) {
+    Coordinate sample = Coordinates.createWithMeasure(dimension, measures);
     Type type = sample.runtimeType;
     bool isConsistent = true;
     for (int i = 0; i < array.length; i++) {
@@ -86,7 +87,7 @@ class CoordinateArrays {
       for (int i = 0; i < copy.length; i++) {
         Coordinate? coordinate = array[i];
         if ((coordinate != null) && (coordinate.runtimeType != type)) {
-          Coordinate duplicate = Coordinates.create2(dimension, measures);
+          Coordinate duplicate = Coordinates.createWithMeasure(dimension, measures);
           duplicate.setCoordinate(coordinate);
           copy[i] = duplicate;
         } else {
@@ -154,7 +155,8 @@ class CoordinateArrays {
     return copy;
   }
 
-  static void copyDeep2(Array<Coordinate> src, int srcStart, Array<Coordinate> dest, int destStart, int length) {
+  static void copyDeep2(
+      Array<Coordinate> src, int srcStart, Array<Coordinate> dest, int destStart, int length) {
     for (int i = 0; i < length; i++) {
       dest[destStart + i] = src[srcStart + i].copy();
     }
@@ -340,7 +342,7 @@ class CoordinateArrays {
   static Envelope envelope(Array<Coordinate> coordinates) {
     Envelope env = Envelope();
     for (int i = 0; i < coordinates.length; i++) {
-      env.expandToInclude(coordinates[i]);
+      env.expandToIncludeCoordinate(coordinates[i]);
     }
     return env;
   }
@@ -348,7 +350,7 @@ class CoordinateArrays {
   static Array<Coordinate> intersection(Array<Coordinate> coordinates, Envelope env) {
     CoordinateList coordList = CoordinateList();
     for (int i = 0; i < coordinates.length; i++) {
-      if (env.intersects(coordinates[i])) coordList.add3(coordinates[i], true);
+      if (env.intersectsCoordinate(coordinates[i])) coordList.add3(coordinates[i], true);
     }
     return coordList.toCoordinateArray();
   }

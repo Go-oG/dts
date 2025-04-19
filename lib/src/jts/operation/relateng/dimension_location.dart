@@ -66,7 +66,7 @@ class DimensionLocation {
       case AREA_BOUNDARY:
         return Dimension.A;
     }
-    return Dimension.FALSE;
+    return Dimension.False;
   }
 
   static int dimension2(int dimLoc, int exteriorDim) {

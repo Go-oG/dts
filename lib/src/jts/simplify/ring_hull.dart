@@ -1,5 +1,4 @@
-import 'package:collection/collection.dart';
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
@@ -52,7 +51,7 @@ class RingHull {
   LinearRing getHull(RingHullIndex? hullIndex) {
     compute(hullIndex);
     Array<Coordinate> hullPts = _vertexRing.getCoordinates();
-    return _inputRing.factory.createLinearRing2(hullPts);
+    return _inputRing.factory.createLinearRings(hullPts);
   }
 
   void init(Array<Coordinate> ring, bool isOuter) {
@@ -75,7 +74,8 @@ class RingHull {
       return;
     }
 
-    RingHullCorner corner = RingHullCorner(i, _vertexRing.getPrev(i), _vertexRing.getNext(i), area(_vertexRing, i));
+    RingHullCorner corner =
+        RingHullCorner(i, _vertexRing.getPrev(i), _vertexRing.getNext(i), area(_vertexRing, i));
     cornerQueue.add(corner);
   }
 
@@ -175,7 +175,7 @@ class RingHull {
   Polygon toGeometry() {
     GeometryFactory fact = GeometryFactory.empty();
     Array<Coordinate> coords = _vertexRing.getCoordinates();
-    return fact.createPolygon(fact.createLinearRing2(coords));
+    return fact.createPolygon(fact.createLinearRings(coords));
   }
 }
 
@@ -211,8 +211,8 @@ class RingHullCorner implements Comparable<RingHullCorner> {
     Coordinate pp = ring.getCoordinate(prev);
     Coordinate p = ring.getCoordinate(index);
     Coordinate pn = ring.getCoordinate(next);
-    Envelope env = Envelope.of3(pp, pn);
-    env.expandToInclude(p);
+    Envelope env = Envelope.fromCoordinate(pp, pn);
+    env.expandToIncludeCoordinate(p);
     return env;
   }
 
@@ -231,7 +231,8 @@ class RingHullCorner implements Comparable<RingHullCorner> {
     Coordinate pp = ring.getCoordinate(prev);
     Coordinate p = ring.getCoordinate(index);
     Coordinate pn = ring.getCoordinate(next);
-    return GeometryFactory.empty().createLineString2([safeCoord(pp), safeCoord(p), safeCoord(pn)].toArray());
+    return GeometryFactory.empty()
+        .createLineString2([safeCoord(pp), safeCoord(p), safeCoord(pn)].toArray());
   }
 
   static Coordinate safeCoord(Coordinate? p) {

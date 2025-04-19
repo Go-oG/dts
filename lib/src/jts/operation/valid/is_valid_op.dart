@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_collection.dart';
@@ -303,7 +303,7 @@ final class IsValidOp {
 
   Coordinate? findHoleOutsideShellPoint(LinearRing hole, LinearRing shell) {
     Coordinate holePt0 = hole.getCoordinateN(0);
-    if (!shell.getEnvelopeInternal().covers3(hole.getEnvelopeInternal())) return holePt0;
+    if (!shell.getEnvelopeInternal().covers(hole.getEnvelopeInternal())) return holePt0;
 
     if (PolygonTopologyAnalyzer.isRingNested(hole, shell)) return null;
 
@@ -330,7 +330,8 @@ final class IsValidOp {
 
   void checkInteriorConnected(PolygonTopologyAnalyzer analyzer) {
     if (analyzer.isInteriorDisconnected()) {
-      logInvalid(TopologyValidationError.DISCONNECTED_INTERIOR, analyzer.getDisconnectionLocation());
+      logInvalid(
+          TopologyValidationError.DISCONNECTED_INTERIOR, analyzer.getDisconnectionLocation());
     }
   }
 }

@@ -1,5 +1,4 @@
-import 'package:collection/collection.dart';
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -86,7 +85,8 @@ class LargestEmptyCircle with InitMixin {
 
   LineString getRadiusLine() {
     _compute();
-    LineString radiusLine = _factory.createLineString2(Array.list([_centerPt!.copy(), _radiusPt!.copy()]));
+    LineString radiusLine =
+        _factory.createLineString2(Array.list([_centerPt!.copy(), _radiusPt!.copy()]));
     return radiusLine;
   }
 
@@ -164,12 +164,11 @@ class LargestEmptyCircle with InitMixin {
   }
 
   void _createInitialGrid(Envelope env, PriorityQueue<_Cell> cellQueue) {
-    double cellSize = Math.maxD(env.getWidth(), env.getHeight());
+    double cellSize = env.longSide;
     double hSide = cellSize / 2.0;
     if (cellSize == 0) {
       return;
     }
-
     Coordinate centre = env.centre()!;
     cellQueue.add(_createCell(centre.x, centre.y, hSide));
   }

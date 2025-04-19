@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -28,7 +28,7 @@ class IndexedPointInPolygonsLocator with InitMixin implements PointOnGeometryLoc
   @override
   int locate(Coordinate p) {
     _init();
-    List<IndexedPointInAreaLocator> results = _index.query(Envelope.of(p));
+    List<IndexedPointInAreaLocator> results = _index.query(Envelope.fromCoordinate(p));
     for (var ptLocater in results) {
       int loc = ptLocater.locate(p);
       if (loc != Location.exterior) {

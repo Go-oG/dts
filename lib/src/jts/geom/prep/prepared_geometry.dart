@@ -82,13 +82,13 @@ class BasicPreparedGeometry<T extends Geometry> implements PreparedGeometry {
   }
 
   bool envelopesIntersect(Geometry g) {
-    if (!_baseGeom.getEnvelopeInternal().intersects6(g.getEnvelopeInternal())) return false;
+    if (!_baseGeom.getEnvelopeInternal().intersects(g.getEnvelopeInternal())) return false;
 
     return true;
   }
 
   bool envelopeCovers(Geometry g) {
-    if (!_baseGeom.getEnvelopeInternal().covers3(g.getEnvelopeInternal())) return false;
+    if (!_baseGeom.getEnvelopeInternal().covers(g.getEnvelopeInternal())) return false;
 
     return true;
   }
@@ -100,7 +100,7 @@ class BasicPreparedGeometry<T extends Geometry> implements PreparedGeometry {
 
   @override
   bool containsProperly(Geometry g) {
-    if (!_baseGeom.getEnvelopeInternal().contains3(g.getEnvelopeInternal())) return false;
+    if (!_baseGeom.getEnvelopeInternal().contains(g.getEnvelopeInternal())) return false;
 
     return _baseGeom.relate2(g, "T**FF*FF*");
   }
@@ -168,7 +168,8 @@ class PreparedLineString extends BasicPreparedGeometry {
   PreparedLineString(super._baseGeom);
 
   FastSegmentSetIntersectionFinder getIntersectionFinder() {
-    _segIntFinder ??= FastSegmentSetIntersectionFinder(SegmentStringUtil.extractSegmentStrings(getGeometry()));
+    _segIntFinder ??=
+        FastSegmentSetIntersectionFinder(SegmentStringUtil.extractSegmentStrings(getGeometry()));
     return _segIntFinder!;
   }
 
@@ -189,7 +190,8 @@ class PreparedPolygon extends BasicPreparedGeometry<Polygon> {
   }
 
   FastSegmentSetIntersectionFinder getIntersectionFinder() {
-    segIntFinder ??= FastSegmentSetIntersectionFinder(SegmentStringUtil.extractSegmentStrings(getGeometry()));
+    segIntFinder ??=
+        FastSegmentSetIntersectionFinder(SegmentStringUtil.extractSegmentStrings(getGeometry()));
     return segIntFinder!;
   }
 

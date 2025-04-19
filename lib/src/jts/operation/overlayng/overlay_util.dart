@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -16,9 +16,9 @@ import 'overlay_graph.dart';
 import 'robust_clip_envelope_computer.dart';
 
 final class OverlayUtil {
-  static const double _safeEnvBufferFactor = 0.1;
-  static const int _safeEnvGridFactor = 3;
-  static const double _areaHeuristicTolerance = 0.1;
+  static const double _kSafeEnvBufferFactor = 0.1;
+  static const int _kSafeEnvGridFactor = 3;
+  static const double _kAreaHeuristicTolerance = 0.1;
 
   static bool isdoubleing(PrecisionModel? pm) {
     if (pm == null) {
@@ -28,7 +28,8 @@ final class OverlayUtil {
     return pm.isdoubleing();
   }
 
-  static Envelope? clippingEnvelope(OverlayOpCode opCode, InputGeometry inputGeom, PrecisionModel? pm) {
+  static Envelope? clippingEnvelope(
+      OverlayOpCode opCode, InputGeometry inputGeom, PrecisionModel? pm) {
     Envelope? resultEnv = resultEnvelope(opCode, inputGeom, pm);
     if (resultEnv == null) {
       return null;
@@ -42,7 +43,8 @@ final class OverlayUtil {
     return safeEnv(clipEnv, pm);
   }
 
-  static Envelope? resultEnvelope(OverlayOpCode opCode, InputGeometry inputGeom, PrecisionModel? pm) {
+  static Envelope? resultEnvelope(
+      OverlayOpCode opCode, InputGeometry inputGeom, PrecisionModel? pm) {
     Envelope? overlapEnv;
     switch (opCode) {
       case OverlayOpCode.intersection:
@@ -69,14 +71,14 @@ final class OverlayUtil {
   static double safeExpandDistance(Envelope env, PrecisionModel? pm) {
     double envExpandDist;
     if (isdoubleing(pm)) {
-      double minSize = Math.minD(env.getHeight(), env.getWidth());
+      double minSize = env.shortSide;
       if (minSize <= 0.0) {
-        minSize = Math.maxD(env.getHeight(), env.getWidth());
+        minSize = env.longSide;
       }
-      envExpandDist = _safeEnvBufferFactor * minSize;
+      envExpandDist = _kSafeEnvBufferFactor * minSize;
     } else {
       double gridSize = 1.0 / pm!.getScale();
-      envExpandDist = _safeEnvGridFactor * gridSize;
+      envExpandDist = _kSafeEnvGridFactor * gridSize;
     }
     return envExpandDist;
   }
@@ -119,19 +121,19 @@ final class OverlayUtil {
   }
 
   static bool isDisjoint(Envelope envA, Envelope envB, PrecisionModel pm) {
-    if (pm.makePrecise2(envB.getMinX()) > pm.makePrecise2(envA.getMaxX())) {
+    if (pm.makePrecise2(envB.minX) > pm.makePrecise2(envA.maxX)) {
       return true;
     }
 
-    if (pm.makePrecise2(envB.getMaxX()) < pm.makePrecise2(envA.getMinX())) {
+    if (pm.makePrecise2(envB.maxX) < pm.makePrecise2(envA.minX)) {
       return true;
     }
 
-    if (pm.makePrecise2(envB.getMinY()) > pm.makePrecise2(envA.getMaxY())) {
+    if (pm.makePrecise2(envB.minY) > pm.makePrecise2(envA.maxY)) {
       return true;
     }
 
-    if (pm.makePrecise2(envB.getMaxY()) < pm.makePrecise2(envA.getMinY())) {
+    if (pm.makePrecise2(envB.maxY) < pm.makePrecise2(envA.minY)) {
       return true;
     }
 
@@ -237,7 +239,8 @@ final class OverlayUtil {
     return p;
   }
 
-  static bool isResultAreaConsistent(Geometry? geom0, Geometry? geom1, OverlayOpCode opCode, Geometry result) {
+  static bool isResultAreaConsistent(
+      Geometry? geom0, Geometry? geom1, OverlayOpCode opCode, Geometry result) {
     if ((geom0 == null) || (geom1 == null)) {
       return true;
     }
@@ -252,26 +255,27 @@ final class OverlayUtil {
     bool isConsistent = true;
     switch (opCode) {
       case OverlayOpCode.intersection:
-        isConsistent =
-            isLess(areaResult, areaA, _areaHeuristicTolerance) && isLess(areaResult, areaB, _areaHeuristicTolerance);
+        isConsistent = isLess(areaResult, areaA, _kAreaHeuristicTolerance) &&
+            isLess(areaResult, areaB, _kAreaHeuristicTolerance);
         break;
       case OverlayOpCode.difference:
-        isConsistent = isDifferenceAreaConsistent(areaA, areaB, areaResult, _areaHeuristicTolerance);
+        isConsistent =
+            isDifferenceAreaConsistent(areaA, areaB, areaResult, _kAreaHeuristicTolerance);
         break;
       case OverlayOpCode.symDifference:
-        isConsistent = isLess(areaResult, areaA + areaB, _areaHeuristicTolerance);
+        isConsistent = isLess(areaResult, areaA + areaB, _kAreaHeuristicTolerance);
         break;
       case OverlayOpCode.union:
-        isConsistent =
-            (isLess(areaA, areaResult, _areaHeuristicTolerance) &&
-                isLess(areaB, areaResult, _areaHeuristicTolerance)) &&
-            isGreater(areaResult, areaA - areaB, _areaHeuristicTolerance);
+        isConsistent = (isLess(areaA, areaResult, _kAreaHeuristicTolerance) &&
+                isLess(areaB, areaResult, _kAreaHeuristicTolerance)) &&
+            isGreater(areaResult, areaA - areaB, _kAreaHeuristicTolerance);
         break;
     }
     return isConsistent;
   }
 
-  static bool isDifferenceAreaConsistent(double areaA, double areaB, double areaResult, double tolFrac) {
+  static bool isDifferenceAreaConsistent(
+      double areaA, double areaB, double areaResult, double tolFrac) {
     if (!isLess(areaResult, areaA, tolFrac)) {
       return false;
     }

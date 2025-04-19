@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 
 import '../../operation/buffer/buffer_op.dart';
 import '../../operation/overlay/overlay_op.dart';
@@ -106,7 +106,7 @@ class GeometryFixer {
     }
     if ((!_isKeepMulti) && (pts.size == 1)) return pts.get(0);
 
-    return factory.createMultiPoint3(GeometryFactory.toPointArray(pts));
+    return factory.createMultiPoint2(GeometryFactory.toPointArray(pts));
   }
 
   Geometry fixLinearRing(LinearRing geom) {
@@ -134,7 +134,7 @@ class GeometryFixer {
     if (ptsFix.length <= 3) {
       return null;
     }
-    LinearRing ring = factory.createLinearRing2(ptsFix);
+    LinearRing ring = factory.createLinearRings(ptsFix);
     if (!ring.isValid()) {
       return factory.createLineString2(ptsFix);
     }
@@ -236,7 +236,8 @@ class GeometryFixer {
     return holes;
   }
 
-  void classifyHoles(Geometry shell, List<Geometry> holesFixed, List<Geometry> holes, List<Geometry> shells) {
+  void classifyHoles(
+      Geometry shell, List<Geometry> holesFixed, List<Geometry> holes, List<Geometry> shells) {
     PreparedGeometry shellPrep = PreparedGeometryFactory.prepare(shell);
     for (Geometry hole in holesFixed) {
       if (shellPrep.intersects(hole)) {

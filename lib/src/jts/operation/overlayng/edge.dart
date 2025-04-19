@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/dimension.dart';
 import 'package:dts/src/jts/geom/location.dart';
@@ -105,7 +105,7 @@ class OEdge {
   }
 
   static int labelDim(int dim, int depthDelta) {
-    if (dim == Dimension.FALSE) return OverlayLabel.DIM_NOT_PART;
+    if (dim == Dimension.False) return OverlayLabel.DIM_NOT_PART;
 
     if (dim == Dimension.L) return OverlayLabel.DIM_LINE;
 
@@ -193,7 +193,8 @@ class OEdge {
   }
 
   static String infoString(int index, int dim, bool isHole, int depthDelta) {
-    return (((index == 0 ? "A:" : "B:") + OverlayLabel.dimensionSymbol(dim)) + ringRoleSymbol(dim, isHole)) +
+    return (((index == 0 ? "A:" : "B:") + OverlayLabel.dimensionSymbol(dim)) +
+            ringRoleSymbol(dim, isHole)) +
         depthDelta.toString();
   }
 

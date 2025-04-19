@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 
@@ -34,7 +34,7 @@ class Orientation {
     Coordinate? upLowPt;
     int iUpHi = 0;
     for (int i = 1; i <= nPts; i++) {
-      double py = ring.getOrdinate(i, Coordinate.Y);
+      double py = ring.getOrdinate(i, Coordinate.kY);
       if ((py > prevY) && (py >= upHiPt.y)) {
         upHiPt = ring.getCoordinate(i);
         iUpHi = i;
@@ -49,12 +49,13 @@ class Orientation {
     int iDownLow = iUpHi;
     do {
       iDownLow = (iDownLow + 1) % nPts;
-    } while ((iDownLow != iUpHi) && (ring.getOrdinate(iDownLow, Coordinate.Y) == upHiPt.y));
+    } while ((iDownLow != iUpHi) && (ring.getOrdinate(iDownLow, Coordinate.kY) == upHiPt.y));
     Coordinate downLowPt = ring.getCoordinate(iDownLow);
     int iDownHi = (iDownLow > 0) ? iDownLow - 1 : nPts - 1;
     Coordinate downHiPt = ring.getCoordinate(iDownHi);
     if (upHiPt.equals2D(downHiPt)) {
-      if ((upLowPt!.equals2D(upHiPt) || downLowPt.equals2D(upHiPt)) || upLowPt.equals2D(downLowPt)) {
+      if ((upLowPt!.equals2D(upHiPt) || downLowPt.equals2D(upHiPt)) ||
+          upLowPt.equals2D(downLowPt)) {
         return false;
       }
 

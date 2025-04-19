@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -6,7 +6,7 @@ import 'package:dts/src/jts/geom/precision_model.dart';
 import 'package:dts/src/jts/math/math.dart';
 
 class PrecisionUtil {
-  static int MAX_ROBUST_DP_DIGITS = 14;
+  static int kMaxRobustDpDigits = 14;
 
   static PrecisionModel robustPM2(Geometry a, Geometry b) {
     double scale = PrecisionUtil.robustScale2(a, b);
@@ -14,7 +14,7 @@ class PrecisionUtil {
   }
 
   static double safeScale(double value) {
-    return precisionScale(value, MAX_ROBUST_DP_DIGITS);
+    return precisionScale(value, kMaxRobustDpDigits);
   }
 
   static double safeScale2(Geometry geom) {
@@ -33,10 +33,10 @@ class PrecisionUtil {
 
   static double maxBoundMagnitude(Envelope env) {
     return MathUtil.max2(
-      Math.abs(env.getMaxX()),
-      Math.abs(env.getMaxY()),
-      Math.abs(env.getMinX()),
-      Math.abs(env.getMinY()),
+      Math.abs(env.maxX),
+      Math.abs(env.maxY),
+      Math.abs(env.minX),
+      Math.abs(env.minY),
     );
   }
 
@@ -54,7 +54,7 @@ class PrecisionUtil {
   }
 
   static double inherentScale2(Geometry geom) {
-    final scaleFilter = InherentScaleFilter();
+    final scaleFilter = _InherentScaleFilter();
     geom.apply(scaleFilter);
     return scaleFilter.getScale();
   }
@@ -107,7 +107,7 @@ class PrecisionUtil {
   }
 }
 
-class InherentScaleFilter implements CoordinateFilter {
+class _InherentScaleFilter implements CoordinateFilter {
   double _scale = 0;
 
   double getScale() {
@@ -116,8 +116,8 @@ class InherentScaleFilter implements CoordinateFilter {
 
   @override
   void filter(Coordinate coord) {
-    updateScaleMax(coord.getX());
-    updateScaleMax(coord.getY());
+    updateScaleMax(coord.x);
+    updateScaleMax(coord.y);
   }
 
   void updateScaleMax(double value) {

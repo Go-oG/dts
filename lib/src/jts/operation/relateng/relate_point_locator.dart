@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/boundary_node_rule.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/algorithm/point_location.dart';
@@ -46,10 +46,9 @@ class RelatePointLocator {
       _lineBoundary = LinearBoundary(_lines!, _boundaryRule);
     }
     if (_polygons != null) {
-      _polyLocator =
-          (isPrepared)
-              ? Array<IndexedPointInAreaLocator>(_polygons!.size)
-              : Array<SimplePointInAreaLocator>(_polygons!.size);
+      _polyLocator = (isPrepared)
+          ? Array<IndexedPointInAreaLocator>(_polygons!.size)
+          : Array<SimplePointInAreaLocator>(_polygons!.size);
     }
   }
 
@@ -102,7 +101,9 @@ class RelatePointLocator {
         return DimensionLocation.locationArea(locPoly);
       }
     }
-    return _lineBoundary!.isBoundary(p) ? DimensionLocation.LINE_BOUNDARY : DimensionLocation.LINE_INTERIOR;
+    return _lineBoundary!.isBoundary(p)
+        ? DimensionLocation.LINE_BOUNDARY
+        : DimensionLocation.LINE_INTERIOR;
   }
 
   int locateNode(Coordinate p, Geometry? parentPolygonal) {
@@ -177,7 +178,7 @@ class RelatePointLocator {
   }
 
   int locateOnLine(Coordinate p, bool isNode, LineString l) {
-    if (!l.getEnvelopeInternal().intersects(p)) {
+    if (!l.getEnvelopeInternal().intersectsCoordinate(p)) {
       return Location.exterior;
     }
 
@@ -221,7 +222,8 @@ class RelatePointLocator {
     PointOnGeometryLocator? locator = _polyLocator![index];
     if (locator == null) {
       Geometry polygonal = _polygons!.get(index);
-      locator = (isPrepared) ? IndexedPointInAreaLocator(polygonal) : SimplePointInAreaLocator(polygonal);
+      locator =
+          (isPrepared) ? IndexedPointInAreaLocator(polygonal) : SimplePointInAreaLocator(polygonal);
       _polyLocator![index] = locator;
     }
     return locator;

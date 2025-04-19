@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
@@ -220,7 +220,7 @@ final class ConvexHull {
     if (coordinates.length == 3) {
       return geomFactory.createLineString2([coordinates[0], coordinates[1]].toArray());
     }
-    LinearRing linearRing = geomFactory.createLinearRing2(coordinates);
+    LinearRing linearRing = geomFactory.createLinearRings(coordinates);
     return geomFactory.createPolygon(linearRing);
   }
 

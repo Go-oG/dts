@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 
 import 'coordinate.dart';
 
@@ -104,7 +104,7 @@ class PrecisionModel implements Comparable<PrecisionModel> {
       internal.x = makePrecise2(external.x);
       internal.y = makePrecise2(external.y);
     }
-    internal.setZ(external.getZ());
+    internal.z = external.z;
   }
 
   Coordinate toInternal(Coordinate external) {

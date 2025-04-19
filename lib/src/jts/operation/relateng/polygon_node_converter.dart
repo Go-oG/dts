@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/dimension.dart';
 
@@ -6,7 +6,7 @@ import 'node_section.dart';
 
 class PolygonNodeConverter {
   static List<NodeSection> convert(List<NodeSection> polySections) {
-    polySections.sort2(NodeSectionEdgeAngleComparator());
+    polySections.sort(NodeSectionEdgeAngleComparator().compare);
     List<NodeSection> sections = extractUnique(polySections);
     if (sections.length == 1) return sections;
 
@@ -22,7 +22,8 @@ class PolygonNodeConverter {
     return convertedSections;
   }
 
-  static int convertShellAndHoles(List<NodeSection> sections, int shellIndex, List<NodeSection> convertedSections) {
+  static int convertShellAndHoles(
+      List<NodeSection> sections, int shellIndex, List<NodeSection> convertedSections) {
     NodeSection shellSection = sections.get(shellIndex);
     Coordinate inVertex = shellSection.getVertex(0);
     int i = next(sections, shellIndex);
@@ -55,7 +56,8 @@ class PolygonNodeConverter {
   }
 
   static NodeSection createSection(NodeSection ns, Coordinate v0, Coordinate v1) {
-    return NodeSection(ns.isA(), Dimension.A, ns.id, 0, ns.getPolygonal(), ns.isNodeAtVertex(), v0, ns.nodePt(), v1);
+    return NodeSection(ns.isA(), Dimension.A, ns.id, 0, ns.getPolygonal(), ns.isNodeAtVertex(), v0,
+        ns.nodePt(), v1);
   }
 
   static List<NodeSection> extractUnique(List<NodeSection> sections) {

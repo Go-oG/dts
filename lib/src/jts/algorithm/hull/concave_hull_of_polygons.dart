@@ -1,6 +1,6 @@
 import 'dart:collection';
 
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -20,7 +20,8 @@ class ConcaveHullOfPolygons {
     return concaveHullByLength2(polygons, maxLength, false, false);
   }
 
-  static Geometry concaveHullByLength2(Geometry polygons, double maxLength, bool isTight, bool isHolesAllowed) {
+  static Geometry concaveHullByLength2(
+      Geometry polygons, double maxLength, bool isTight, bool isHolesAllowed) {
     ConcaveHullOfPolygons hull = ConcaveHullOfPolygons(polygons);
     hull.setMaximumEdgeLength(maxLength);
     hull.setHolesAllowed(isHolesAllowed);
@@ -32,7 +33,8 @@ class ConcaveHullOfPolygons {
     return concaveHullByLengthRatio2(polygons, lengthRatio, false, false);
   }
 
-  static Geometry concaveHullByLengthRatio2(Geometry polygons, double lengthRatio, bool isTight, bool isHolesAllowed) {
+  static Geometry concaveHullByLengthRatio2(
+      Geometry polygons, double lengthRatio, bool isTight, bool isHolesAllowed) {
     ConcaveHullOfPolygons hull = ConcaveHullOfPolygons(polygons);
     hull.setMaximumEdgeLengthRatio(lengthRatio);
     hull.setHolesAllowed(isHolesAllowed);
@@ -146,7 +148,8 @@ class ConcaveHullOfPolygons {
     }
   }
 
-  static double _computeTargetEdgeLength(List<Tri> triList, Array<Coordinate> frameCorners, double edgeLengthRatio) {
+  static double _computeTargetEdgeLength(
+      List<Tri> triList, Array<Coordinate> frameCorners, double edgeLengthRatio) {
     if (edgeLengthRatio == 0) {
       return 0;
     }
@@ -180,8 +183,9 @@ class ConcaveHullOfPolygons {
     return (edgeLengthRatio * (maxEdgeLen - minEdgeLen)) + minEdgeLen;
   }
 
-  static Polygon _createFrame(Envelope polygonsEnv, Array<LinearRing>? polygonRings, GeometryFactory geomFactory) {
-    double diam = polygonsEnv.getDiameter();
+  static Polygon _createFrame(
+      Envelope polygonsEnv, Array<LinearRing>? polygonRings, GeometryFactory geomFactory) {
+    double diam = polygonsEnv.diameter;
     Envelope envFrame = polygonsEnv.copy();
     envFrame.expandBy(_frameExpandFactor * diam);
     Polygon frameOuter = ((geomFactory.toGeometry(envFrame) as Polygon));
@@ -297,7 +301,7 @@ class ConcaveHullOfPolygons {
   bool _isTouchingSinglePolygon(Tri tri) {
     Envelope envTri = _envelope(tri);
     for (LinearRing ring in _polygonRings!) {
-      if (ring.getEnvelopeInternal().intersects6(envTri)) {
+      if (ring.getEnvelopeInternal().intersects(envTri)) {
         if (_hasAllVertices(ring, tri)) {
           return true;
         }
@@ -345,8 +349,8 @@ class ConcaveHullOfPolygons {
   }
 
   static Envelope _envelope(Tri tri) {
-    Envelope env = Envelope.of3(tri.getCoordinate(0), tri.getCoordinate(1));
-    env.expandToInclude(tri.getCoordinate(2));
+    Envelope env = Envelope.fromCoordinate(tri.getCoordinate(0), tri.getCoordinate(1));
+    env.expandToIncludeCoordinate(tri.getCoordinate(2));
     return env;
   }
 

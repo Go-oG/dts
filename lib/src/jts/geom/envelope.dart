@@ -1,16 +1,18 @@
- import 'package:d_util/d_util.dart';
+import 'dart:math';
+
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/math/math.dart';
 
 import 'coordinate.dart';
 
-class Envelope implements Comparable<Envelope> {
+final class Envelope implements Comparable<Envelope> {
   @override
   int get hashCode {
     int result = 17;
-    result = (37 * result) + Coordinate.hashCodeS(_minx);
-    result = (37 * result) + Coordinate.hashCodeS(_maxx);
-    result = (37 * result) + Coordinate.hashCodeS(_miny);
-    result = (37 * result) + Coordinate.hashCodeS(_maxy);
+    result = (37 * result) + Coordinate.hashCodeS(_minX);
+    result = (37 * result) + Coordinate.hashCodeS(_maxX);
+    result = (37 * result) + Coordinate.hashCodeS(_minY);
+    result = (37 * result) + Coordinate.hashCodeS(_maxY);
     return result;
   }
 
@@ -42,335 +44,273 @@ class Envelope implements Comparable<Envelope> {
     return !(maxp < minq);
   }
 
-  late double _minx;
-
-  late double _maxx;
-
-  late double _miny;
-
-  late double _maxy;
+  late double _minX;
+  late double _maxX;
+  late double _minY;
+  late double _maxY;
 
   Envelope() {
-    init();
-  }
-
-  Envelope.of(Coordinate p) {
-    init4(p.x, p.x, p.y, p.y);
-  }
-
-  Envelope.of2(Envelope env) {
-    init5(env);
-  }
-
-  Envelope.of3(Coordinate p1, Coordinate p2) {
-    init4(p1.x, p2.x, p1.y, p2.y);
-  }
-
-  Envelope.of4(double x1, double x2, double y1, double y2) {
-    init4(x1, x2, y1, y2);
-  }
-
-  void init() {
     setToNull();
   }
 
-  void init4(double x1, double x2, double y1, double y2) {
-    if (x1 < x2) {
-      _minx = x1;
-      _maxx = x2;
-    } else {
-      _minx = x2;
-      _maxx = x1;
-    }
-    if (y1 < y2) {
-      _miny = y1;
-      _maxy = y2;
-    } else {
-      _miny = y2;
-      _maxy = y1;
-    }
+  Envelope.from(Envelope env) {
+    initWithLRTB(env._minX, env._maxX, env._minY, env._maxY);
   }
 
-  Envelope copy() {
-    return Envelope.of2(this);
+  Envelope.fromLRTB(double l, double r, double t, double b) {
+    initWithLRTB(l, r, t, b);
   }
 
-  void init3(Coordinate p1, Coordinate p2) {
-    init4(p1.x, p2.x, p1.y, p2.y);
+  Envelope.fromCoordinate(Coordinate p1, [Coordinate? p2]) {
+    p2 ??= p1;
+    initWithLRTB(p1.x, p2.x, p1.y, p2.y);
   }
 
-  void init2(Coordinate p) {
-    init4(p.x, p.x, p.y, p.y);
+  void initWithLRTB(double l, double r, double t, double b) {
+    _minX = min(l, r);
+    _maxX = max(l, r);
+    _minY = min(t, b);
+    _maxY = max(t, b);
   }
 
-  void init5(Envelope env) {
-    _minx = env._minx;
-    _maxx = env._maxx;
-    _miny = env._miny;
-    _maxy = env._maxy;
-  }
+  Envelope copy() => Envelope.from(this);
 
   void setToNull() {
-    _minx = 0;
-    _maxx = -1;
-    _miny = 0;
-    _maxy = -1;
+    _minX = 0;
+    _maxX = -1;
+    _minY = 0;
+    _maxY = -1;
   }
 
-  bool isNull() {
-    return _maxx < _minx;
-  }
+  bool get isNull => _maxX < _minX;
 
-  double getWidth() {
-    if (isNull()) {
+  double get width {
+    if (isNull) {
       return 0;
     }
-    return _maxx - _minx;
+    return _maxX - _minX;
   }
 
-  double getHeight() {
-    if (isNull()) {
+  double get height {
+    if (isNull) {
       return 0;
     }
-    return _maxy - _miny;
+    return _maxY - _minY;
   }
 
-  double getDiameter() {
-    if (isNull()) {
+  double get diameter {
+    if (isNull) {
       return 0;
     }
-    double w = getWidth();
-    double h = getHeight();
-    return MathUtil.hypot(w, h);
+    return MathUtil.hypot(width, height);
   }
 
-  double getMinX() {
-    return _minx;
+  double get longSide => max(width, height);
+
+  double get shortSide => min(width, height);
+
+  double get minX => _minX;
+
+  double get maxX => _maxX;
+
+  double get minY => _minY;
+
+  double get maxY => _maxY;
+
+  double get area => width * height;
+
+  double get minExtent {
+    if (isNull) return 0.0;
+    return min(width, height);
   }
 
-  double getMaxX() {
-    return _maxx;
+  double get maxExtent {
+    if (isNull) return 0.0;
+
+    return max(width, height);
   }
 
-  double getMinY() {
-    return _miny;
+  Coordinate get topLeft => Coordinate(minX, minY);
+
+  Coordinate get topRight => Coordinate(maxX, minY);
+
+  Coordinate get bottomLeft => Coordinate(minX, maxY);
+
+  Coordinate get bottomRight => Coordinate(maxX, maxY);
+
+  void expandBy(double deltaX, [double? deltaY]) {
+    if (isNull) return;
+    deltaY ??= deltaX;
+    _minX -= deltaX;
+    _maxX += deltaX;
+    _minY -= deltaY;
+    _maxY += deltaY;
+    if ((_minX > _maxX) || (_minY > _maxY)) setToNull();
   }
 
-  double getMaxY() {
-    return _maxy;
-  }
-
-  double getArea() {
-    return getWidth() * getHeight();
-  }
-
-  double minExtent() {
-    if (isNull()) return 0.0;
-
-    double w = getWidth();
-    double h = getHeight();
-    return Math.minD(w, h);
-  }
-
-  double maxExtent() {
-    if (isNull()) return 0.0;
-
-    double w = getWidth();
-    double h = getHeight();
-    return Math.maxD(w, h);
-  }
-
-  void expandToInclude(Coordinate p) {
-    expandToInclude2(p.x, p.y);
-  }
-
-  void expandBy(double distance) {
-    expandBy2(distance, distance);
-  }
-
-  void expandBy2(double deltaX, double deltaY) {
-    if (isNull()) return;
-
-    _minx -= deltaX;
-    _maxx += deltaX;
-    _miny -= deltaY;
-    _maxy += deltaY;
-    if ((_minx > _maxx) || (_miny > _maxy)) setToNull();
-  }
-
-  void expandToInclude2(double x, double y) {
-    if (isNull()) {
-      _minx = x;
-      _maxx = x;
-      _miny = y;
-      _maxy = y;
-    } else {
-      if (x < _minx) {
-        _minx = x;
-      }
-      if (x > _maxx) {
-        _maxx = x;
-      }
-      if (y < _miny) {
-        _miny = y;
-      }
-      if (y > _maxy) {
-        _maxy = y;
-      }
-    }
-  }
-
-  void expandToInclude3(Envelope other) {
-    if (other.isNull()) {
+  void expandToInclude(Envelope other) {
+    if (other.isNull) {
       return;
     }
-    if (isNull()) {
-      _minx = other.getMinX();
-      _maxx = other.getMaxX();
-      _miny = other.getMinY();
-      _maxy = other.getMaxY();
+    if (isNull) {
+      _minX = other.minX;
+      _maxX = other.maxX;
+      _minY = other.minY;
+      _maxY = other.maxY;
     } else {
-      if (other._minx < _minx) {
-        _minx = other._minx;
+      if (other._minX < _minX) {
+        _minX = other._minX;
       }
-      if (other._maxx > _maxx) {
-        _maxx = other._maxx;
+      if (other._maxX > _maxX) {
+        _maxX = other._maxX;
       }
-      if (other._miny < _miny) {
-        _miny = other._miny;
+      if (other._minY < _minY) {
+        _minY = other._minY;
       }
-      if (other._maxy > _maxy) {
-        _maxy = other._maxy;
+      if (other._maxY > _maxY) {
+        _maxY = other._maxY;
+      }
+    }
+  }
+
+  void expandToIncludeCoordinate(Coordinate p) => expandToIncludePoint(p.x, p.y);
+
+  void expandToIncludePoint(double x, double y) {
+    if (isNull) {
+      _minX = x;
+      _maxX = x;
+      _minY = y;
+      _maxY = y;
+    } else {
+      if (x < _minX) {
+        _minX = x;
+      }
+      if (x > _maxX) {
+        _maxX = x;
+      }
+      if (y < _minY) {
+        _minY = y;
+      }
+      if (y > _maxY) {
+        _maxY = y;
       }
     }
   }
 
   void translate(double transX, double transY) {
-    if (isNull()) {
+    if (isNull) {
       return;
     }
-    init4(getMinX() + transX, getMaxX() + transX, getMinY() + transY, getMaxY() + transY);
+    initWithLRTB(minX + transX, maxX + transX, minY + transY, maxY + transY);
   }
 
   Coordinate? centre() {
-    if (isNull()) return null;
+    if (isNull) return null;
 
-    return Coordinate((getMinX() + getMaxX()) / 2.0, (getMinY() + getMaxY()) / 2.0);
+    return Coordinate((minX + maxX) / 2.0, (minY + maxY) / 2.0);
   }
 
   Envelope intersection(Envelope env) {
-    if ((isNull() || env.isNull()) || (!intersects6(env))) return Envelope();
+    if ((isNull || env.isNull) || (!intersects(env))) return Envelope();
 
-    double intMinX = Math.maxD(_minx, env._minx);
-    double intMinY = Math.maxD(_miny, env._miny);
-    double intMaxX = Math.minD(_maxx, env._maxx);
-    double intMaxY = Math.minD(_maxy, env._maxy);
-    return Envelope.of4(intMinX, intMaxX, intMinY, intMaxY);
+    double intMinX = Math.maxD(_minX, env._minX);
+    double intMinY = Math.maxD(_minY, env._minY);
+    double intMaxX = Math.minD(_maxX, env._maxX);
+    double intMaxY = Math.minD(_maxY, env._maxY);
+    return Envelope.fromLRTB(intMinX, intMaxX, intMinY, intMaxY);
   }
 
-  bool intersects6(Envelope other) {
-    if (isNull() || other.isNull()) {
+  bool intersects(Envelope other) {
+    if (isNull || other.isNull) {
       return false;
     }
-    return !((((other._minx > _maxx) || (other._maxx < _minx)) || (other._miny > _maxy)) || (other._maxy < _miny));
+    return !((((other._minX > _maxX) || (other._maxX < _minX)) || (other._minY > _maxY)) ||
+        (other._maxY < _minY));
   }
 
-  bool intersects2(Coordinate a, Coordinate b) {
-    if (isNull()) {
+  bool intersectsCoordinate(Coordinate p) => intersectsPoint(p.x, p.y);
+
+  bool intersectsPoint(double x, double y) {
+    if (isNull) return false;
+    return !((((x > _maxX) || (x < _minX)) || (y > _maxY)) || (y < _minY));
+  }
+
+  bool intersectsCoordinates(Coordinate a, Coordinate b) {
+    if (isNull) {
       return false;
     }
-    double envminx = Math.minD(a.x, b.x);
-    if (envminx > _maxx) return false;
+    double envMinX = Math.minD(a.x, b.x);
+    if (envMinX > _maxX) return false;
 
-    double envmaxx = Math.maxD(a.x, b.x);
-    if (envmaxx < _minx) return false;
+    double envMaxX = Math.maxD(a.x, b.x);
+    if (envMaxX < _minX) return false;
 
-    double envminy = Math.minD(a.y, b.y);
-    if (envminy > _maxy) return false;
+    double envMinY = Math.minD(a.y, b.y);
+    if (envMinY > _maxY) return false;
 
-    double envmaxy = Math.maxD(a.y, b.y);
-    if (envmaxy < _miny) return false;
+    double envMaxY = Math.maxD(a.y, b.y);
+    if (envMaxY < _minY) return false;
 
     return true;
   }
 
   bool disjoint(Envelope other) {
-    return !intersects6(other);
+    return !intersects(other);
   }
 
-  bool overlaps3(Envelope other) {
-    return intersects6(other);
+  bool overlaps(Envelope other) {
+    return intersects(other);
   }
 
-  bool intersects(Coordinate p) {
-    return intersects5(p.x, p.y);
+  bool overlapsCoordinate(Coordinate p) {
+    return intersectsCoordinate(p);
   }
 
-  bool overlaps(Coordinate p) {
-    return intersects(p);
-  }
+  bool overlapsPoint(double x, double y) => intersectsPoint(x, y);
 
-  bool intersects5(double x, double y) {
-    if (isNull()) return false;
+  bool contains(Envelope other) => covers(other);
 
-    return !((((x > _maxx) || (x < _minx)) || (y > _maxy)) || (y < _miny));
-  }
+  bool containsCoordinate(Coordinate p) => coversCoordinate(p);
 
-  bool overlaps2(double x, double y) {
-    return intersects5(x, y);
-  }
-
-  bool contains3(Envelope other) {
-    return covers3(other);
-  }
-
-  bool contains(Coordinate p) {
-    return covers(p);
-  }
-
-  bool contains2(double x, double y) {
-    return covers2(x, y);
-  }
+  bool containsPoint(double x, double y) => coversPoint(x, y);
 
   bool containsProperly(Envelope other) {
     if (equals(other)) return false;
 
-    return covers3(other);
+    return covers(other);
   }
 
-  bool covers2(double x, double y) {
-    if (isNull()) return false;
+  bool coversPoint(double x, double y) {
+    if (isNull) return false;
 
-    return (((x >= _minx) && (x <= _maxx)) && (y >= _miny)) && (y <= _maxy);
+    return (((x >= _minX) && (x <= _maxX)) && (y >= _minY)) && (y <= _maxY);
   }
 
-  bool covers(Coordinate p) {
-    return covers2(p.x, p.y);
-  }
+  bool coversCoordinate(Coordinate p) => coversPoint(p.x, p.y);
 
-  bool covers3(Envelope other) {
-    if (isNull() || other.isNull()) {
+  bool covers(Envelope other) {
+    if (isNull || other.isNull) {
       return false;
     }
-    return (((other.getMinX() >= _minx) && (other.getMaxX() <= _maxx)) && (other.getMinY() >= _miny)) &&
-        (other.getMaxY() <= _maxy);
+    return (((other.minX >= _minX) && (other.maxX <= _maxX)) && (other.minY >= _minY)) &&
+        (other.maxY <= _maxY);
   }
 
   double distance(Envelope env) {
-    if (intersects6(env)) return 0;
+    if (intersects(env)) return 0;
 
     double dx = 0.0;
-    if (_maxx < env._minx) {
-      dx = env._minx - _maxx;
-    } else if (_minx > env._maxx) {
-      dx = _minx - env._maxx;
+    if (_maxX < env._minX) {
+      dx = env._minX - _maxX;
+    } else if (_minX > env._maxX) {
+      dx = _minX - env._maxX;
     }
 
     double dy = 0.0;
-    if (_maxy < env._miny) {
-      dy = env._miny - _maxy;
-    } else if (_miny > env._maxy) {
-      dy = _miny - env._maxy;
+    if (_maxY < env._minY) {
+      dy = env._minY - _maxY;
+    } else if (_minY > env._maxY) {
+      dy = _minY - env._maxY;
     }
 
     if (dx == 0.0) return dy;
@@ -384,37 +324,37 @@ class Envelope implements Comparable<Envelope> {
     if (other is! Envelope) {
       return false;
     }
-    if (isNull()) {
-      return other.isNull();
+    if (isNull) {
+      return other.isNull;
     }
-    return (((_maxx == other.getMaxX()) && (_maxy == other.getMaxY())) && (_minx == other.getMinX())) &&
-        (_miny == other.getMinY());
+    return (((_maxX == other.maxX) && (_maxY == other.maxY)) && (_minX == other.minX)) &&
+        (_minY == other.minY);
   }
 
   @override
   int compareTo(Envelope env) {
-    if (isNull()) {
-      if (env.isNull()) return 0;
+    if (isNull) {
+      if (env.isNull) return 0;
 
       return -1;
-    } else if (env.isNull()) {
+    } else if (env.isNull) {
       return 1;
     }
-    if (_minx < env._minx) return -1;
+    if (_minX < env._minX) return -1;
 
-    if (_minx > env._minx) return 1;
+    if (_minX > env._minX) return 1;
 
-    if (_miny < env._miny) return -1;
+    if (_minY < env._minY) return -1;
 
-    if (_miny > env._miny) return 1;
+    if (_minY > env._minY) return 1;
 
-    if (_maxx < env._maxx) return -1;
+    if (_maxX < env._maxX) return -1;
 
-    if (_maxx > env._maxx) return 1;
+    if (_maxX > env._maxX) return 1;
 
-    if (_maxy < env._maxy) return -1;
+    if (_maxY < env._maxY) return -1;
 
-    if (_maxy > env._maxy) return 1;
+    if (_maxY > env._maxY) return 1;
 
     return 0;
   }

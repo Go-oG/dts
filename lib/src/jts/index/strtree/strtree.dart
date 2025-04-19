@@ -1,5 +1,4 @@
-import 'package:collection/collection.dart';
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/index/item_visitor.dart';
 import 'package:dts/src/jts/index/spatial_index.dart';
@@ -25,11 +24,11 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope> implements SpatialIndex<T>
   });
 
   static double centreX(Envelope e) {
-    return avg(e.getMinX(), e.getMaxX());
+    return avg(e.minX, e.maxX);
   }
 
   static double centreY(Envelope e) {
-    return avg(e.getMinY(), e.getMaxY());
+    return avg(e.minY, e.maxY);
   }
 
   static double avg(double a, double b) {
@@ -37,16 +36,18 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope> implements SpatialIndex<T>
   }
 
   static final _intersectsOp = IntersectsOp2<Envelope>((a, b) {
-    return a.intersects6(b);
+    return a.intersects(b);
   });
 
   @override
-  List<AbstractNode<Envelope>> createParentBoundables(List<Boundable<Envelope>> childBoundables, int newLevel) {
+  List<AbstractNode<Envelope>> createParentBoundables(
+      List<Boundable<Envelope>> childBoundables, int newLevel) {
     Assert.isTrue(childBoundables.isNotEmpty);
     int minLeafCount = Math.ceil(childBoundables.size / getNodeCapacity());
     List<Boundable<Envelope>> sortedChildBoundables = List.from(childBoundables);
-    sortedChildBoundables.sort2(_xComparator);
-    Array<List<Boundable<Envelope>>> vv = verticalSlices(sortedChildBoundables, Math.ceil(Math.sqrt(minLeafCount)));
+    sortedChildBoundables.sort(_xComparator.compare);
+    Array<List<Boundable<Envelope>>> vv =
+        verticalSlices(sortedChildBoundables, Math.ceil(Math.sqrt(minLeafCount)));
     return createParentBoundablesFromVerticalSlices(vv, newLevel);
   }
 
@@ -70,7 +71,8 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope> implements SpatialIndex<T>
     return super.createParentBoundables(childBoundables, newLevel);
   }
 
-  Array<List<Boundable<Envelope>>> verticalSlices(List<Boundable<Envelope>> childBoundables, int sliceCount) {
+  Array<List<Boundable<Envelope>>> verticalSlices(
+      List<Boundable<Envelope>> childBoundables, int sliceCount) {
     int sliceCapacity = Math.ceil(childBoundables.size / sliceCount);
     Array<List<Boundable<Envelope>>> slices = Array(sliceCount);
     final i = childBoundables.iterator;
@@ -101,7 +103,7 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope> implements SpatialIndex<T>
 
   @override
   void insert(Envelope bounds, T item) {
-    if (bounds.isNull()) {
+    if (bounds.isNull) {
       return;
     }
     super.insert(bounds, item);
@@ -261,9 +263,9 @@ final class STRtreeNode extends AbstractNode<Envelope> {
     Envelope? bounds;
     for (var childBoundable in getChildBoundables()) {
       if (bounds == null) {
-        bounds = Envelope.of2(childBoundable.getBounds());
+        bounds = Envelope.from(childBoundable.getBounds());
       } else {
-        bounds.expandToInclude3(childBoundable.getBounds());
+        bounds.expandToInclude(childBoundable.getBounds());
       }
     }
     return bounds!;

@@ -1,6 +1,6 @@
 import 'dart:collection';
 
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/point_locator.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
@@ -45,7 +45,7 @@ class PointGeometryUnion {
     if (coords.length == 1) {
       ptComp = geomFact.createPoint2(coords[0]);
     } else {
-      ptComp = geomFact.createMultiPointFromCoords(coords);
+      ptComp = geomFact.createMultiPoint5(coords);
     }
     return GeometryCombiner.combine3(ptComp, _otherGeom);
   }

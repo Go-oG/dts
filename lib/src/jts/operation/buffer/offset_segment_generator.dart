@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/angle.dart';
 import 'package:dts/src/jts/algorithm/distance.dart';
 import 'package:dts/src/jts/algorithm/intersection.dart';
@@ -15,15 +15,13 @@ import 'buffer_parameters.dart';
 import 'offset_segment_string.dart';
 
 class OffsetSegmentGenerator {
-  static const double _OFFSET_SEGMENT_SEPARATION_FACTOR = 0.05;
+  static const double _kOffsetSegmentSeparationFactor = 0.05;
 
-  static const double _INSIDE_TURN_VERTEX_SNAP_DISTANCE_FACTOR = 0.001;
+  static const double _kInsideTurnVertexSnapDistanceFactor = 0.001;
 
-  static const double _CURVE_VERTEX_SNAP_DISTANCE_FACTOR = 1.0E-4;
+  static const double _kCurveVertexSnapDistanceFactor = 1.0E-4;
 
-  static const int _MAX_CLOSING_SEG_LEN_FACTOR = 80;
-
-  double _maxCurveSegmentError = 0.0;
+  static const int _kMaxClosingSegLenFactor = 80;
 
   double _filletAngleQuantum = 0;
 
@@ -63,8 +61,9 @@ class OffsetSegmentGenerator {
       quadSegs = 1;
     }
     _filletAngleQuantum = Angle.piOver2 / quadSegs;
-    if ((bufParams.getQuadrantSegments() >= 8) && (bufParams.getJoinStyle() == BufferParameters.JOIN_ROUND)) {
-      _closingSegLengthFactor = _MAX_CLOSING_SEG_LEN_FACTOR;
+    if ((bufParams.getQuadrantSegments() >= 8) &&
+        (bufParams.getJoinStyle() == BufferParameters.kJoinRound)) {
+      _closingSegLengthFactor = _kMaxClosingSegLenFactor;
     }
 
     init(distance);
@@ -76,10 +75,9 @@ class OffsetSegmentGenerator {
 
   void init(double distance) {
     this.distance = Math.abs(distance);
-    _maxCurveSegmentError = this.distance * (1 - Math.cos(_filletAngleQuantum / 2.0));
     _segList = OffsetSegmentString();
     _segList.setPrecisionModel(precisionModel);
-    _segList.setMinimumVertexDistance(this.distance * _CURVE_VERTEX_SNAP_DISTANCE_FACTOR);
+    _segList.setMinimumVertexDistance(this.distance * _kCurveVertexSnapDistanceFactor);
   }
 
   void initSideSegments(Coordinate s1, Coordinate s2, int side) {
@@ -124,8 +122,7 @@ class OffsetSegmentGenerator {
     }
 
     int orientation = Orientation.index(_s0, _s1, _s2);
-    bool outsideTurn =
-        ((orientation == Orientation.clockwise) && (_side == Position.left)) ||
+    bool outsideTurn = ((orientation == Orientation.clockwise) && (_side == Position.left)) ||
         ((orientation == Orientation.counterClockwise) && (_side == Position.right));
     if (orientation == 0) {
       addCollinear(addStartPoint);
@@ -140,8 +137,8 @@ class OffsetSegmentGenerator {
     li.computeIntersection2(_s0, _s1, _s1, _s2);
     int numInt = li.getIntersectionNum();
     if (numInt >= 2) {
-      if ((bufParams.getJoinStyle() == BufferParameters.JOIN_BEVEL) ||
-          (bufParams.getJoinStyle() == BufferParameters.JOIN_MITRE)) {
+      if ((bufParams.getJoinStyle() == BufferParameters.kJoinBevel) ||
+          (bufParams.getJoinStyle() == BufferParameters.kJoinMitre)) {
         if (addStartPoint) {
           _segList.addPt(_offset0.p1);
         }
@@ -154,16 +151,16 @@ class OffsetSegmentGenerator {
   }
 
   void addOutsideTurn(int orientation, bool addStartPoint) {
-    if (_offset0.p1.distance(_offset1.p0) < (distance * _OFFSET_SEGMENT_SEPARATION_FACTOR)) {
+    if (_offset0.p1.distance(_offset1.p0) < (distance * _kOffsetSegmentSeparationFactor)) {
       double segLen0 = _s0.distance(_s1);
       double segLen1 = _s1.distance(_s2);
       Coordinate offsetPt = (segLen0 > segLen1) ? _offset0.p1 : _offset1.p0;
       _segList.addPt(offsetPt);
       return;
     }
-    if (bufParams.getJoinStyle() == BufferParameters.JOIN_MITRE) {
+    if (bufParams.getJoinStyle() == BufferParameters.kJoinMitre) {
       addMitreJoin(_s1, _offset0, _offset1, distance);
-    } else if (bufParams.getJoinStyle() == BufferParameters.JOIN_BEVEL) {
+    } else if (bufParams.getJoinStyle() == BufferParameters.kJoinBevel) {
       addBevelJoin(_offset0, _offset1);
     } else {
       if (addStartPoint) {
@@ -180,7 +177,7 @@ class OffsetSegmentGenerator {
       _segList.addPt(li.getIntersection(0));
     } else {
       _hasNarrowConcaveAngle = true;
-      if (_offset0.p1.distance(_offset1.p0) < (distance * _INSIDE_TURN_VERTEX_SNAP_DISTANCE_FACTOR)) {
+      if (_offset0.p1.distance(_offset1.p0) < (distance * _kInsideTurnVertexSnapDistanceFactor)) {
         _segList.addPt(_offset0.p1);
       } else {
         _segList.addPt(_offset0.p1);
@@ -226,16 +223,17 @@ class OffsetSegmentGenerator {
     double dy = p1.y - p0.y;
     double angle = Math.atan2(dy, dx);
     switch (bufParams.getEndCapStyle()) {
-      case BufferParameters.CAP_ROUND:
+      case BufferParameters.kCapRound:
         _segList.addPt(offsetL.p1);
-        addDirectedFillet(p1, angle + Angle.piOver2, angle - Angle.piOver2, Orientation.clockwise, distance);
+        addDirectedFillet(
+            p1, angle + Angle.piOver2, angle - Angle.piOver2, Orientation.clockwise, distance);
         _segList.addPt(offsetR.p1);
         break;
-      case BufferParameters.CAP_FLAT:
+      case BufferParameters.kCapFlat:
         _segList.addPt(offsetL.p1);
         _segList.addPt(offsetR.p1);
         break;
-      case BufferParameters.CAP_SQUARE:
+      case BufferParameters.kCapSquare:
         Coordinate squareCapSideOffset = Coordinate();
         squareCapSideOffset.x = Math.abs(distance) * Angle.cosSnap(angle);
         squareCapSideOffset.y = Math.abs(distance) * Angle.sinSnap(angle);
@@ -253,7 +251,8 @@ class OffsetSegmentGenerator {
     }
   }
 
-  void addMitreJoin(Coordinate cornerPt, LineSegment offset0, LineSegment offset1, double distance) {
+  void addMitreJoin(
+      Coordinate cornerPt, LineSegment offset0, LineSegment offset1, double distance) {
     double mitreLimitDistance = bufParams.getMitreLimit() * distance;
     Coordinate? intPt = Intersection.intersection(offset0.p0, offset0.p1, offset1.p0, offset1.p1);
     if ((intPt != null) && (intPt.distance(cornerPt) <= mitreLimitDistance)) {
@@ -268,7 +267,8 @@ class OffsetSegmentGenerator {
     addLimitedMitreJoin(offset0, offset1, distance, mitreLimitDistance);
   }
 
-  void addLimitedMitreJoin(LineSegment offset0, LineSegment offset1, double distance, double mitreLimitDistance) {
+  void addLimitedMitreJoin(
+      LineSegment offset0, LineSegment offset1, double distance, double mitreLimitDistance) {
     Coordinate cornerPt = _seg0.p1;
     double angInterior = Angle.angleBetweenOriented(_seg0.p0, cornerPt, _seg1.p1);
     double angInterior2 = angInterior / 2;
@@ -310,15 +310,15 @@ class OffsetSegmentGenerator {
       if (startAngle <= endAngle) {
         startAngle += Angle.piTimes2;
       }
-    } else if (startAngle >= endAngle)
-      startAngle -= Angle.piTimes2;
+    } else if (startAngle >= endAngle) startAngle -= Angle.piTimes2;
 
     _segList.addPt(p0);
     addDirectedFillet(p, startAngle, endAngle, direction, radius);
     _segList.addPt(p1);
   }
 
-  void addDirectedFillet(Coordinate p, double startAngle, double endAngle, int direction, double radius) {
+  void addDirectedFillet(
+      Coordinate p, double startAngle, double endAngle, int direction, double radius) {
     int directionFactor = (direction == Orientation.clockwise) ? -1 : 1;
     double totalAngle = Math.abs(startAngle - endAngle);
     int nSegs = ((totalAngle / _filletAngleQuantum) + 0.5).toInt();

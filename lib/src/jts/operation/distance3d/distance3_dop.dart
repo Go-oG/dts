@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/cgalgorithms.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
@@ -54,8 +54,10 @@ class Distance3DOp {
 
   Array<Coordinate> nearestPoints() {
     computeMinDistance();
-    Array<Coordinate> nearestPts =
-        [minDistanceLocation![0].getCoordinate(), minDistanceLocation![1].getCoordinate()].toArray();
+    Array<Coordinate> nearestPts = [
+      minDistanceLocation![0].getCoordinate(),
+      minDistanceLocation![1].getCoordinate()
+    ].toArray();
     return nearestPts;
   }
 
@@ -247,7 +249,8 @@ class Distance3DOp {
   void computeMinDistancePolygonLine(PlanarPolygon3D poly, LineString line, bool flip) {
     Coordinate? intPt = intersection(poly, line);
     if (intPt != null) {
-      updateDistance(0, GeometryLocation(poly.getPolygon(), 0, intPt), GeometryLocation(line, 0, intPt), flip);
+      updateDistance(
+          0, GeometryLocation(poly.getPolygon(), 0, intPt), GeometryLocation(line, 0, intPt), flip);
       return;
     }
     computeMinDistanceLineLine(poly.getPolygon().getExteriorRing(), line, flip);
@@ -304,7 +307,8 @@ class Distance3DOp {
         }
       }
       double dist = Math.abs(polyPlane.getPlane().orientedDistance(pt));
-      updateDistance(dist, GeometryLocation(polyPlane.getPolygon(), 0, pt), GeometryLocation(point, 0, pt), flip);
+      updateDistance(dist, GeometryLocation(polyPlane.getPolygon(), 0, pt),
+          GeometryLocation(point, 0, pt), flip);
     }
     computeMinDistanceLinePoint(shell, point, flip);
   }
@@ -314,7 +318,8 @@ class Distance3DOp {
     Array<Coordinate> coord1 = line1.getCoordinates();
     for (int i = 0; i < (coord0.length - 1); i++) {
       for (int j = 0; j < (coord1.length - 1); j++) {
-        double dist = CGAlgorithms3D.distanceSegmentSegment(coord0[i], coord0[i + 1], coord1[j], coord1[j + 1]);
+        double dist = CGAlgorithms3D.distanceSegmentSegment(
+            coord0[i], coord0[i + 1], coord1[j], coord1[j + 1]);
         if (dist < minDistance) {
           minDistance = dist;
           LineSegment seg0 = LineSegment(coord0[i], coord0[i + 1]);
@@ -342,7 +347,8 @@ class Distance3DOp {
       if (dist < minDistance) {
         LineSegment seg = LineSegment(lineCoord[i], lineCoord[i + 1]);
         Coordinate segClosestPoint = seg.closestPoint(coord);
-        updateDistance(dist, GeometryLocation(line, i, segClosestPoint), GeometryLocation(point, 0, coord), flip);
+        updateDistance(dist, GeometryLocation(line, i, segClosestPoint),
+            GeometryLocation(point, 0, coord), flip);
       }
       if (isDone) {
         return;
@@ -374,7 +380,7 @@ class Distance3DOp {
     double f = Math.abs(d0) / (Math.abs(d0) + Math.abs(d1));
     double intx = p0.x + (f * (p1.x - p0.x));
     double inty = p0.y + (f * (p1.y - p0.y));
-    double intz = p0.getZ() + (f * (p1.getZ() - p0.getZ()));
+    double intz = p0.z + (f * (p1.z - p0.z));
     return Coordinate(intx, inty, intz);
   }
 }

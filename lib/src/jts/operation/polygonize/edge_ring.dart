@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -19,7 +19,8 @@ class EdgeRingO {
     EdgeRingO? minContainingRing;
     for (EdgeRingO edgeRing in erList) {
       if (edgeRing.contains(testEr)) {
-        if ((minContainingRing == null) || minContainingRing.getEnvelope().contains3(edgeRing.getEnvelope())) {
+        if ((minContainingRing == null) ||
+            minContainingRing.getEnvelope().contains(edgeRing.getEnvelope())) {
           minContainingRing = edgeRing;
         }
       }
@@ -193,7 +194,7 @@ class EdgeRingO {
 
     getCoordinates();
     try {
-      _ring = factory.createLinearRing2(_ringPts);
+      _ring = factory.createLinearRings(_ringPts);
     } catch (_) {}
     return _ring!;
   }
@@ -284,6 +285,7 @@ class EdgeRingEnvelopeComparator implements CComparator<EdgeRingO> {
 class EdgeRingEnvelopeAreaComparator implements CComparator<EdgeRingO> {
   @override
   int compare(EdgeRingO r0, EdgeRingO r1) {
-    return Double.compare(r0.getRing().getEnvelope().getArea(), r1.getRing().getEnvelope().getArea());
+    return Double.compare(
+        r0.getRing().getEnvelope().getArea(), r1.getRing().getEnvelope().getArea());
   }
 }

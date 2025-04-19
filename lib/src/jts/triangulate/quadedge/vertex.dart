@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/hcoordinate.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/math/math.dart';
@@ -7,19 +7,19 @@ import 'quad_edge.dart';
 import 'triangle_predicate.dart';
 
 class Vertex {
-  static const int LEFT = 0;
+  static const int kLeft = 0;
 
-  static const int RIGHT = 1;
+  static const int kRight = 1;
 
-  static const int BEYOND = 2;
+  static const int kBeyond = 2;
 
-  static const int BEHIND = 3;
+  static const int kBehind = 3;
 
-  static const int BETWEEN = 4;
+  static const int kBetween = 4;
 
-  static const int ORIGIN = 5;
+  static const int kOrigin = 5;
 
-  static const int DESTINATION = 6;
+  static const int kDestination = 6;
 
   late Coordinate p;
 
@@ -43,13 +43,9 @@ class Vertex {
     return p.y;
   }
 
-  double getZ() {
-    return p.getZ();
-  }
+  double getZ() => p.z;
 
-  void setZ(double z) {
-    p.setZ(z);
-  }
+  void setZ(double z) => p.z = z;
 
   Coordinate getCoordinate() {
     return p;
@@ -76,19 +72,19 @@ class Vertex {
     Vertex a = p1.sub(p0);
     Vertex b = p2.sub(p0);
     double sa = a.crossProduct(b);
-    if (sa > 0.0) return LEFT;
+    if (sa > 0.0) return kLeft;
 
-    if (sa < 0.0) return RIGHT;
+    if (sa < 0.0) return kRight;
 
-    if (((a.getX() * b.getX()) < 0.0) || ((a.getY() * b.getY()) < 0.0)) return BEHIND;
+    if (((a.getX() * b.getX()) < 0.0) || ((a.getY() * b.getY()) < 0.0)) return kBehind;
 
-    if (a.magn() < b.magn()) return BEYOND;
+    if (a.magn() < b.magn()) return kBeyond;
 
-    if (p0.equals(p2)) return ORIGIN;
+    if (p0.equals(p2)) return kOrigin;
 
-    if (p1.equals(p2)) return DESTINATION;
+    if (p1.equals(p2)) return kDestination;
 
-    return BETWEEN;
+    return kBetween;
   }
 
   double crossProduct(Vertex v) {
@@ -165,7 +161,7 @@ class Vertex {
   Vertex midPoint(Vertex a) {
     double xm = (p.x + a.getX()) / 2.0;
     double ym = (p.y + a.getY()) / 2.0;
-    double zm = (p.getZ() + a.getZ()) / 2.0;
+    double zm = (p.z + a.getZ()) / 2.0;
     return Vertex.of2(xm, ym, zm);
   }
 
@@ -209,15 +205,15 @@ class Vertex {
     double dy = p.y - y0;
     double t = ((d * dx) - (b * dy)) / det;
     double u = (((-c) * dx) + (a * dy)) / det;
-    double z = (v0.getZ() + (t * (v1.getZ() - v0.getZ()))) + (u * (v2.getZ() - v0.getZ()));
+    double z = v0.z + (t * (v1.z - v0.z)) + (u * (v2.z - v0.z));
     return z;
   }
 
   static double interpolateZ(Coordinate p, Coordinate p0, Coordinate p1) {
     double segLen = p0.distance(p1);
     double ptLen = p.distance(p0);
-    double dz = p1.getZ() - p0.getZ();
-    double pz = p0.getZ() + (dz * (ptLen / segLen));
+    double dz = p1.z - p0.z;
+    double pz = p0.z + (dz * (ptLen / segLen));
     return pz;
   }
 }

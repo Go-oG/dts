@@ -1,6 +1,6 @@
 import 'dart:math';
 
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/precision_model.dart';
@@ -61,7 +61,7 @@ class HotPixelIndex {
   }
 
   void query(Coordinate p0, Coordinate p1, KdNodeVisitor visitor) {
-    Envelope queryEnv = Envelope.of3(p0, p1);
+    Envelope queryEnv = Envelope.fromCoordinate(p0, p1);
     queryEnv.expandBy(1.0 / scaleFactor);
     _index.query3(queryEnv, visitor);
   }

@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -120,7 +120,8 @@ class _InteriorPointPolygon {
       return;
     }
 
-    Assert.isTrue2(0 == (crossings.length % 2), "Interior Point robustness failure: odd number of scanline crossings");
+    Assert.isTrue2(0 == (crossings.length % 2),
+        "Interior Point robustness failure: odd number of scanline crossings");
 
     crossings.sort(Double.compare);
 
@@ -137,8 +138,8 @@ class _InteriorPointPolygon {
   }
 
   static bool _isEdgeCrossingCounted(Coordinate p0, Coordinate p1, double scanY) {
-    double y0 = p0.getY();
-    double y1 = p1.getY();
+    double y0 = p0.y;
+    double y1 = p1.y;
     if (y0 == y1) {
       return false;
     }
@@ -155,25 +156,25 @@ class _InteriorPointPolygon {
   }
 
   static double _intersection(Coordinate p0, Coordinate p1, double Y) {
-    double x0 = p0.getX();
-    double x1 = p1.getX();
+    double x0 = p0.x;
+    double x1 = p1.x;
     if (x0 == x1) {
       return x0;
     }
 
     double segDX = x1 - x0;
-    double segDY = p1.getY() - p0.getY();
+    double segDY = p1.y - p0.y;
     double m = segDY / segDX;
-    double x = x0 + ((Y - p0.getY()) / m);
+    double x = x0 + ((Y - p0.y) / m);
     return x;
   }
 
   static bool _intersectsHorizontalLine(Envelope env, double y) {
-    if (y < env.getMinY()) {
+    if (y < env.minY) {
       return false;
     }
 
-    if (y > env.getMaxY()) {
+    if (y > env.maxY) {
       return false;
     }
 
@@ -181,11 +182,11 @@ class _InteriorPointPolygon {
   }
 
   static bool _intersectsHorizontalLine2(Coordinate p0, Coordinate p1, double y) {
-    if ((p0.getY() > y) && (p1.getY() > y)) {
+    if ((p0.y > y) && (p1.y > y)) {
       return false;
     }
 
-    if ((p0.getY() < y) && (p1.getY() < y)) {
+    if ((p0.y < y) && (p1.y < y)) {
       return false;
     }
 
@@ -208,8 +209,8 @@ class _ScanLineYOrdinateFinder {
   double _loY = -double.maxFinite;
 
   _ScanLineYOrdinateFinder(this._poly) {
-    _hiY = _poly.getEnvelopeInternal().getMaxY();
-    _loY = _poly.getEnvelopeInternal().getMinY();
+    _hiY = _poly.getEnvelopeInternal().maxY;
+    _loY = _poly.getEnvelopeInternal().minY;
     _centreY = InteriorPointArea._avg(_loY, _hiY);
   }
 

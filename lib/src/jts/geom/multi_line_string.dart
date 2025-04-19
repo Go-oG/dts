@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/operation/boundary_op.dart';
 
 import 'dimension.dart';
@@ -11,7 +11,7 @@ import 'precision_model.dart';
 
 class MultiLineString extends GeometryCollection<LineString> implements Lineal {
   MultiLineString.of(Array<LineString> lineStrings, PrecisionModel precisionModel, int srid)
-    : super(lineStrings, GeometryFactory.of2(precisionModel, srid));
+      : super(lineStrings, GeometryFactory.from(precisionModel, srid));
 
   MultiLineString(super.lineStrings, super.factory);
 
@@ -28,7 +28,7 @@ class MultiLineString extends GeometryCollection<LineString> implements Lineal {
   @override
   int getBoundaryDimension() {
     if (isClosed()) {
-      return Dimension.FALSE;
+      return Dimension.False;
     }
     return Dimension.P;
   }

@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -9,7 +9,7 @@ import 'package:quiver/collection.dart';
 import 'snap_transformer.dart';
 
 class GeometrySnapper {
-  static const double _SNAP_PRECISION_FACTOR = 1.0E-9;
+  static const double _kSnapPrecisionFactor = 1.0E-9;
 
   static double computeOverlaySnapTolerance(Geometry g) {
     double snapTolerance = computeSizeBasedSnapTolerance(g);
@@ -23,8 +23,8 @@ class GeometrySnapper {
 
   static double computeSizeBasedSnapTolerance(Geometry g) {
     Envelope env = g.getEnvelopeInternal();
-    double minDimension = Math.minD(env.getHeight(), env.getWidth());
-    double snapTol = minDimension * _SNAP_PRECISION_FACTOR;
+    double minDimension = env.shortSide;
+    double snapTol = minDimension * _kSnapPrecisionFactor;
     return snapTol;
   }
 

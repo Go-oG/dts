@@ -1,5 +1,4 @@
-import 'package:collection/collection.dart';
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/math/math.dart';
 
@@ -42,7 +41,8 @@ class BoundablePair<B> implements Comparable<BoundablePair<B>> {
   }
 
   double maximumDistance() {
-    return EnvelopeDistance.maximumDistance(_boundable1.getBounds() as Envelope, _boundable2.getBounds() as Envelope);
+    return EnvelopeDistance.maximumDistance(
+        _boundable1.getBounds() as Envelope, _boundable2.getBounds() as Envelope);
   }
 
   double distanceF() {
@@ -78,7 +78,7 @@ class BoundablePair<B> implements Comparable<BoundablePair<B>> {
   }
 
   static double area(Boundable b) {
-    return (b.getBounds() as Envelope).getArea();
+    return (b.getBounds() as Envelope).area;
   }
 
   void expandToQueue(PriorityQueue<BoundablePair<B>> priQ, double minDistance) {
@@ -153,10 +153,10 @@ class BoundablePairDistanceComparator implements CComparator<BoundablePair> {
 
 class EnvelopeDistance {
   static double maximumDistance(Envelope env1, Envelope env2) {
-    double minx = Math.minD(env1.getMinX(), env2.getMinX());
-    double miny = Math.minD(env1.getMinY(), env2.getMinY());
-    double maxx = Math.maxD(env1.getMaxX(), env2.getMaxX());
-    double maxy = Math.maxD(env1.getMaxY(), env2.getMaxY());
+    double minx = Math.minD(env1.minX, env2.minX);
+    double miny = Math.minD(env1.minY, env2.minY);
+    double maxx = Math.maxD(env1.maxX, env2.maxX);
+    double maxy = Math.maxD(env1.maxY, env2.maxY);
     return distance(minx, miny, maxx, maxy);
   }
 
@@ -167,14 +167,14 @@ class EnvelopeDistance {
   }
 
   static double minMaxDistance(Envelope a, Envelope b) {
-    double aminx = a.getMinX();
-    double aminy = a.getMinY();
-    double amaxx = a.getMaxX();
-    double amaxy = a.getMaxY();
-    double bminx = b.getMinX();
-    double bminy = b.getMinY();
-    double bmaxx = b.getMaxX();
-    double bmaxy = b.getMaxY();
+    double aminx = a.minX;
+    double aminy = a.minY;
+    double amaxx = a.maxX;
+    double amaxy = a.maxY;
+    double bminx = b.minX;
+    double bminy = b.minY;
+    double bmaxx = b.maxX;
+    double bmaxy = b.maxY;
     double dist = maxDistance(aminx, aminy, aminx, amaxy, bminx, bminy, bminx, bmaxy);
     dist = Math.minD(dist, maxDistance(aminx, aminy, aminx, amaxy, bminx, bminy, bmaxx, bminy));
     dist = Math.minD(dist, maxDistance(aminx, aminy, aminx, amaxy, bmaxx, bmaxy, bminx, bmaxy));

@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/distance.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -36,7 +36,8 @@ class BufferCurveSetBuilder {
 
   bool isInvertOrientation = false;
 
-  BufferCurveSetBuilder(this.inputGeom, this.distance, PrecisionModel precisionModel, BufferParameters bufParams) {
+  BufferCurveSetBuilder(
+      this.inputGeom, this.distance, PrecisionModel precisionModel, BufferParameters bufParams) {
     _curveBuilder = OffsetCurveBuilder(precisionModel, bufParams);
   }
 
@@ -146,7 +147,8 @@ class BufferCurveSetBuilder {
       return;
     }
 
-    addPolygonRingSide(shellCoord, offsetDistance, offsetSide, Location.exterior, Location.interior);
+    addPolygonRingSide(
+        shellCoord, offsetDistance, offsetSide, Location.exterior, Location.interior);
     for (int i = 0; i < p.getNumInteriorRing(); i++) {
       LinearRing hole = p.getInteriorRingN(i);
       Array<Coordinate> holeCoord = clean(hole.getCoordinates());
@@ -164,7 +166,8 @@ class BufferCurveSetBuilder {
     }
   }
 
-  void addPolygonRingSide(Array<Coordinate> coord, double offsetDistance, int side, int cwLeftLoc, int cwRightLoc) {
+  void addPolygonRingSide(
+      Array<Coordinate> coord, double offsetDistance, int side, int cwLeftLoc, int cwRightLoc) {
     if ((offsetDistance == 0.0) && (coord.length < LinearRing.MINIMUM_VALID_SIZE)) {
       return;
     }
@@ -181,7 +184,8 @@ class BufferCurveSetBuilder {
   }
 
   void addLinearRingSides(Array<Coordinate> coord, double distance) {
-    bool isHoleComputed = !isRingFullyEroded2(coord, CoordinateArrays.envelope(coord), true, distance);
+    bool isHoleComputed =
+        !isRingFullyEroded2(coord, CoordinateArrays.envelope(coord), true, distance);
     bool isCCW = isRingCCW(coord);
     bool isShellLeft = !isCCW;
     if (isShellLeft || isHoleComputed) {
@@ -193,7 +197,8 @@ class BufferCurveSetBuilder {
     }
   }
 
-  void addRingSide(Array<Coordinate> coord, double offsetDistance, int side, int leftLoc, int rightLoc) {
+  void addRingSide(
+      Array<Coordinate> coord, double offsetDistance, int side, int leftLoc, int rightLoc) {
     Array<Coordinate> curve = _curveBuilder.getRingCurve(coord, side, offsetDistance)!;
     if (isRingCurveInverted(coord, offsetDistance, curve)) {
       return;
@@ -201,13 +206,14 @@ class BufferCurveSetBuilder {
     addCurve(curve, leftLoc, rightLoc);
   }
 
-  static const int _MAX_INVERTED_RING_SIZE = 9;
+  static const int _maxInvertedRingSize = 9;
 
-  static const int _INVERTED_CURVE_VERTEX_FACTOR = 4;
+  static const int _invertedCurveVertexFactor = 4;
 
-  static const double _NEARNESS_FACTOR = 0.99;
+  static const double _nearnessFactor = 0.99;
 
-  static bool isRingCurveInverted(Array<Coordinate> inputRing, double distance, Array<Coordinate> curveRing) {
+  static bool isRingCurveInverted(
+      Array<Coordinate> inputRing, double distance, Array<Coordinate> curveRing) {
     if (distance == 0.0) {
       return false;
     }
@@ -216,11 +222,11 @@ class BufferCurveSetBuilder {
       return false;
     }
 
-    if (inputRing.length >= _MAX_INVERTED_RING_SIZE) {
+    if (inputRing.length >= _maxInvertedRingSize) {
       return false;
     }
 
-    if (curveRing.length > (_INVERTED_CURVE_VERTEX_FACTOR * inputRing.length)) {
+    if (curveRing.length > (_invertedCurveVertexFactor * inputRing.length)) {
       return false;
     }
 
@@ -231,8 +237,9 @@ class BufferCurveSetBuilder {
     return true;
   }
 
-  static bool hasPointOnBuffer(Array<Coordinate> inputRing, double distance, Array<Coordinate> curveRing) {
-    double distTol = _NEARNESS_FACTOR * Math.abs(distance);
+  static bool hasPointOnBuffer(
+      Array<Coordinate> inputRing, double distance, Array<Coordinate> curveRing) {
+    double distTol = _nearnessFactor * Math.abs(distance);
     for (int i = 0; i < (curveRing.length - 1); i++) {
       Coordinate v = curveRing[i];
       double dist = Distance.pointToSegmentString(v, inputRing);
@@ -251,10 +258,12 @@ class BufferCurveSetBuilder {
   }
 
   static bool isRingFullyEroded(LinearRing ring, bool isHole, double bufferDistance) {
-    return isRingFullyEroded2(ring.getCoordinates(), ring.getEnvelopeInternal(), isHole, bufferDistance);
+    return isRingFullyEroded2(
+        ring.getCoordinates(), ring.getEnvelopeInternal(), isHole, bufferDistance);
   }
 
-  static bool isRingFullyEroded2(Array<Coordinate> ringCoord, Envelope ringEnv, bool isHole, double bufferDistance) {
+  static bool isRingFullyEroded2(
+      Array<Coordinate> ringCoord, Envelope ringEnv, bool isHole, double bufferDistance) {
     if (ringCoord.length < 4) {
       return true;
     }
@@ -265,7 +274,7 @@ class BufferCurveSetBuilder {
 
     bool isErodable = (isHole && (bufferDistance > 0)) || ((!isHole) && (bufferDistance < 0));
     if (isErodable) {
-      double envMinDimension = Math.minD(ringEnv.getHeight(), ringEnv.getWidth());
+      double envMinDimension = ringEnv.shortSide;
       if ((2 * Math.abs(bufferDistance)) > envMinDimension) {
         return true;
       }

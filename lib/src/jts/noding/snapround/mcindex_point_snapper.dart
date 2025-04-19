@@ -33,7 +33,7 @@ class MCIndexPointSnapper {
 
   Envelope getSafeEnvelope(HotPixel hp) {
     double safeTolerance = _SAFE_ENV_EXPANSION_FACTOR / hp.getScaleFactor();
-    Envelope safeEnv = Envelope.of(hp.getCoordinate());
+    Envelope safeEnv = Envelope.fromCoordinate(hp.getCoordinate());
     safeEnv.expandBy(safeTolerance);
     return safeEnv;
   }
@@ -58,7 +58,8 @@ class HotPixelSnapAction extends MonotoneChainSelectAction {
   void select2(MonotoneChain mc, int startIndex) {
     NodedSegmentString ss = mc.context as NodedSegmentString;
     if ((_parentEdge != null) && (ss == _parentEdge)) {
-      if ((startIndex == _hotPixelVertexIndex) || ((startIndex + 1) == _hotPixelVertexIndex)) return;
+      if ((startIndex == _hotPixelVertexIndex) || ((startIndex + 1) == _hotPixelVertexIndex))
+        return;
     }
     _isNodeAdded |= addSnappedNode(_hotPixel, ss, startIndex);
   }

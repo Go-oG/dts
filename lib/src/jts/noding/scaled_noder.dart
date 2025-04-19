@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 
@@ -48,18 +48,18 @@ class ScaledNoder implements Noder {
   List<SegmentString> scale(List<SegmentString> segStrings) {
     List<SegmentString> nodedSegmentStrings = [];
     for (var ss in segStrings) {
-      nodedSegmentStrings.add(NodedSegmentString(scale2(ss.getCoordinates()), ss.getData()));
+      nodedSegmentStrings.add(NodedSegmentString(scaleArray(ss.getCoordinates()), ss.getData()));
     }
     return nodedSegmentStrings;
   }
 
-  Array<Coordinate> scale2(Array<Coordinate> pts) {
+  Array<Coordinate> scaleArray(Array<Coordinate> pts) {
     Array<Coordinate> roundPts = Array(pts.length);
     for (int i = 0; i < pts.length; i++) {
       roundPts[i] = Coordinate(
         Math.round((pts[i].x - _offsetX) * scaleFactor).toDouble(),
         Math.round((pts[i].y - _offsetY) * scaleFactor).toDouble(),
-        pts[i].getZ(),
+        pts[i].z,
       );
     }
     Array<Coordinate> roundPtsNoDup = CoordinateArrays.removeRepeatedPoints(roundPts);
@@ -68,11 +68,11 @@ class ScaledNoder implements Noder {
 
   void rescale(List<SegmentString> segStrings) {
     for (var ss in segStrings) {
-      rescale2(ss.getCoordinates());
+      rescaleArray(ss.getCoordinates());
     }
   }
 
-  void rescale2(Array<Coordinate> pts) {
+  void rescaleArray(Array<Coordinate> pts) {
     for (int i = 0; i < pts.length; i++) {
       pts[i].x = (pts[i].x / scaleFactor) + _offsetX;
       pts[i].y = (pts[i].y / scaleFactor) + _offsetY;

@@ -8,18 +8,17 @@ import 'package:dts/src/jts/geom/polygon.dart';
 
 class RectangleContains {
   static bool containsS(Polygon rectangle, Geometry b) {
-    RectangleContains rc = RectangleContains(rectangle);
-    return rc.contains(b);
+    return RectangleContains(rectangle).contains(b);
   }
 
-  late Envelope rectEnv;
+  late final Envelope rectEnv;
 
   RectangleContains(Polygon rectangle) {
     rectEnv = rectangle.getEnvelopeInternal();
   }
 
   bool contains(Geometry geom) {
-    if (!rectEnv.contains3(geom.getEnvelopeInternal())) return false;
+    if (!rectEnv.contains(geom.getEnvelopeInternal())) return false;
 
     if (isContainedInBoundary(geom)) return false;
 
@@ -45,8 +44,8 @@ class RectangleContains {
   }
 
   bool isPointContainedInBoundary(Coordinate pt) {
-    return (((pt.x == rectEnv.getMinX()) || (pt.x == rectEnv.getMaxX())) || (pt.y == rectEnv.getMinY())) ||
-        (pt.y == rectEnv.getMaxY());
+    return (((pt.x == rectEnv.minX) || (pt.x == rectEnv.maxX)) || (pt.y == rectEnv.minY)) ||
+        (pt.y == rectEnv.maxY);
   }
 
   bool isLineStringContainedInBoundary(LineString line) {
@@ -65,9 +64,9 @@ class RectangleContains {
     if (p0.equals(p1)) return isPointContainedInBoundary(p0);
 
     if (p0.x == p1.x) {
-      if ((p0.x == rectEnv.getMinX()) || (p0.x == rectEnv.getMaxX())) return true;
+      if ((p0.x == rectEnv.minX) || (p0.x == rectEnv.maxX)) return true;
     } else if (p0.y == p1.y) {
-      if ((p0.y == rectEnv.getMinY()) || (p0.y == rectEnv.getMaxY())) return true;
+      if ((p0.y == rectEnv.minY) || (p0.y == rectEnv.maxY)) return true;
     }
     return false;
   }

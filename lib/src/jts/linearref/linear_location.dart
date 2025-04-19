@@ -17,7 +17,7 @@ class LinearLocation implements Comparable<LinearLocation> {
 
     double x = ((p1.x - p0.x) * frac) + p0.x;
     double y = ((p1.y - p0.y) * frac) + p0.y;
-    double z = ((p1.getZ() - p0.getZ()) * frac) + p0.getZ();
+    double z = ((p1.z - p0.z) * frac) + p0.z;
     return Coordinate(x, y, z);
   }
 
@@ -33,9 +33,11 @@ class LinearLocation implements Comparable<LinearLocation> {
 
   LinearLocation.empty();
 
-  LinearLocation.of(int segmentIndex, double segmentFraction) : this(0, segmentIndex, segmentFraction);
+  LinearLocation.of(int segmentIndex, double segmentFraction)
+      : this(0, segmentIndex, segmentFraction);
 
-  LinearLocation.of2(this.componentIndex, this._segmentIndex, this._segmentFraction, bool doNormalize) {
+  LinearLocation.of2(
+      this.componentIndex, this._segmentIndex, this._segmentFraction, bool doNormalize) {
     if (doNormalize) normalize();
   }
 

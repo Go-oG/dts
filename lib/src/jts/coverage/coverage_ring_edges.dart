@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
@@ -94,9 +94,11 @@ class CoverageRingEdges {
     _ringEdgesMap.put(ring, ringEdges);
   }
 
-  void _addBoundaryInnerNodes(LinearRing ring, Set<LineSegment> boundarySegs, Set<Coordinate> nodes) {
+  void _addBoundaryInnerNodes(
+      LinearRing ring, Set<LineSegment> boundarySegs, Set<Coordinate> nodes) {
     CoordinateSequence seq = ring.getCoordinateSequence();
-    bool isBdyLast = CoverageBoundarySegmentFinder.isBoundarySegment(boundarySegs, seq, seq.size() - 2);
+    bool isBdyLast =
+        CoverageBoundarySegmentFinder.isBoundarySegment(boundarySegs, seq, seq.size() - 2);
     bool isBdyPrev = isBdyLast;
     for (int i = 0; i < (seq.size() - 1); i++) {
       bool isBdy = CoverageBoundarySegmentFinder.isBoundarySegment(boundarySegs, seq, i);
@@ -152,7 +154,8 @@ class CoverageRingEdges {
     Map<LineSegment, CoverageEdge> uniqueEdgeMap,
   ) {
     CoverageEdge edge;
-    LineSegment edgeKey = (end == start) ? CoverageEdge.key(ring) : CoverageEdge.key2(ring, start, end);
+    LineSegment edgeKey =
+        (end == start) ? CoverageEdge.key(ring) : CoverageEdge.key2(ring, start, end);
     if (uniqueEdgeMap.containsKey(edgeKey)) {
       edge = uniqueEdgeMap.get(edgeKey)!;
       edge.setPrimary(isPrimary);
@@ -278,7 +281,7 @@ class CoverageRingEdges {
       ptsList.add4(ringEdges.get(i).getCoordinates(), false, dir);
     }
     Array<Coordinate> pts = ptsList.toCoordinateArray();
-    return ring.factory.createLinearRing2(pts);
+    return ring.factory.createLinearRings(pts);
   }
 
   bool _isEdgeDirForward(List<CoverageEdge> ringEdges, int index, Coordinate prevPt) {

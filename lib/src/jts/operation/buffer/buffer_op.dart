@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
@@ -13,23 +13,23 @@ import 'buffer_builder.dart';
 import 'buffer_parameters.dart';
 
 class BufferOp {
-  static const int CAP_ROUND = BufferParameters.CAP_ROUND;
+  static const int kCapRound = BufferParameters.kCapRound;
 
-  static const int CAP_BUTT = BufferParameters.CAP_FLAT;
+  static const int kCapButt = BufferParameters.kCapFlat;
 
-  static const int CAP_FLAT = BufferParameters.CAP_FLAT;
+  static const int kCapFlat = BufferParameters.kCapFlat;
 
-  static const int CAP_SQUARE = BufferParameters.CAP_SQUARE;
+  static const int kCapSquare = BufferParameters.kCapSquare;
 
-  static final int _MAX_PRECISION_DIGITS = 12;
+  static final int _kMaxPrecisionDigits = 12;
 
   static double precisionScaleFactor(Geometry g, double distance, int maxPrecisionDigits) {
     Envelope env = g.getEnvelopeInternal();
     double envMax = MathUtil.max2(
-      Math.abs(env.getMaxX()),
-      Math.abs(env.getMaxY()),
-      Math.abs(env.getMinX()),
-      Math.abs(env.getMinY()),
+      Math.abs(env.maxX),
+      Math.abs(env.maxY),
+      Math.abs(env.minX),
+      Math.abs(env.minY),
     );
     double expandByDistance = (distance > 0.0) ? distance : 0.0;
     double bufEnvMax = envMax + (2 * expandByDistance);
@@ -150,7 +150,7 @@ class BufferOp {
   }
 
   void bufferReducedPrecision() {
-    for (int precDigits = _MAX_PRECISION_DIGITS; precDigits >= 0; precDigits--) {
+    for (int precDigits = _kMaxPrecisionDigits; precDigits >= 0; precDigits--) {
       try {
         bufferReducedPrecision2(precDigits);
       } catch (ex) {

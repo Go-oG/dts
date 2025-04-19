@@ -8,7 +8,6 @@ import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/geom/util/linear_component_extracter.dart';
 import 'package:dts/src/jts/geom/util/short_circuited_geometry_visitor.dart';
 
-
 class RectangleIntersectsSegmentVisitor extends ShortCircuitedGeometryVisitor {
   late Envelope rectEnv;
 
@@ -16,25 +15,25 @@ class RectangleIntersectsSegmentVisitor extends ShortCircuitedGeometryVisitor {
 
   bool hasIntersection = false;
 
-    RectangleIntersectsSegmentVisitor(Polygon rectangle) {
-        rectEnv = rectangle.getEnvelopeInternal();
-        _rectIntersector = RectangleLineIntersector(rectEnv);
-    }
+  RectangleIntersectsSegmentVisitor(Polygon rectangle) {
+    rectEnv = rectangle.getEnvelopeInternal();
+    _rectIntersector = RectangleLineIntersector(rectEnv);
+  }
 
-    bool intersects() {
-        return hasIntersection;
-    }
+  bool intersects() {
+    return hasIntersection;
+  }
 
   @override
   void visit(Geometry geom) {
     Envelope elementEnv = geom.getEnvelopeInternal();
-        if (!rectEnv.intersects6(elementEnv)) {
-          return;
-        }
+    if (!rectEnv.intersects(elementEnv)) {
+      return;
+    }
 
     List<LineString> lines = LinearComponentExtracter.getLines(geom);
     checkIntersectionWithLineStrings(lines);
-    }
+  }
 
   void checkIntersectionWithLineStrings(List<LineString> lines) {
     for (Iterator i = lines.iterator; i.moveNext();) {
@@ -44,24 +43,24 @@ class RectangleIntersectsSegmentVisitor extends ShortCircuitedGeometryVisitor {
         return;
       }
     }
-    }
+  }
 
-     void checkIntersectionWithSegments(LineString testLine) {
-        CoordinateSequence seq1 = testLine.getCoordinateSequence();
-        Coordinate p0 = seq1.createCoordinate();
-        Coordinate p1 = seq1.createCoordinate();
-        for (int j = 1; j < seq1.size(); j++) {
-            seq1.getCoordinate2(j - 1, p0);
-            seq1.getCoordinate2(j, p1);
-            if (_rectIntersector.intersects(p0, p1)) {
-                hasIntersection = true;
-                return;
-            }
-        }
+  void checkIntersectionWithSegments(LineString testLine) {
+    CoordinateSequence seq1 = testLine.getCoordinateSequence();
+    Coordinate p0 = seq1.createCoordinate();
+    Coordinate p1 = seq1.createCoordinate();
+    for (int j = 1; j < seq1.size(); j++) {
+      seq1.getCoordinate2(j - 1, p0);
+      seq1.getCoordinate2(j, p1);
+      if (_rectIntersector.intersects(p0, p1)) {
+        hasIntersection = true;
+        return;
+      }
     }
+  }
 
   @override
   bool isDone() {
     return hasIntersection;
-    }
+  }
 }

@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -22,7 +22,7 @@ class KochSnowflakeBuilder extends GeometricShapeBuilder {
     int level = recursionLevelForSize(numPts);
     LineSegment baseLine = getSquareBaseLine();
     Array<Coordinate> pts = getBoundary(level, baseLine.getCoordinate(0), baseLine.getLength());
-    return geomFactory.createPolygon(geomFactory.createLinearRing2(pts), null);
+    return geomFactory.createPolygon(geomFactory.createLinearRings(pts), null);
   }
 
   static final double _HEIGHT_FACTOR = Math.sin(Math.pi / 3.0);

@@ -1,6 +1,6 @@
 import 'dart:collection';
 
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/boundary_node_rule.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
@@ -71,7 +71,7 @@ class BoundaryOp {
     if (bdyPts.length == 1) {
       return geomFact.createPoint2(bdyPts[0]);
     }
-    return geomFact.createMultiPointFromCoords(bdyPts);
+    return geomFact.createMultiPoint5(bdyPts);
   }
 
   Array<Coordinate> computeBoundaryCoordinates(MultiLineString mLine) {
@@ -116,6 +116,6 @@ class BoundaryOp {
         return geomFact.createMultiPoint();
       }
     }
-    return geomFact.createMultiPoint3([line.getStartPoint()!, line.getEndPoint()!].toArray());
+    return geomFact.createMultiPoint2([line.getStartPoint()!, line.getEndPoint()!].toArray());
   }
 }

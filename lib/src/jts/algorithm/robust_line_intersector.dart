@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 
@@ -136,7 +136,7 @@ class RobustLineIntersector extends LineIntersector {
   static Coordinate _copyWithZ(Coordinate p, double z) {
     Coordinate pCopy = _copy(p);
     if ((!Double.isNaN(z)) && Coordinates.hasZ(pCopy)) {
-      pCopy.setZ(z);
+      pCopy.z = (z);
     }
     return pCopy;
   }
@@ -163,9 +163,9 @@ class RobustLineIntersector extends LineIntersector {
   }
 
   bool _isInSegmentEnvelopes(Coordinate intPt) {
-    Envelope env0 = Envelope.of3(inputLines[0][0], inputLines[0][1]);
-    Envelope env1 = Envelope.of3(inputLines[1][0], inputLines[1][1]);
-    return env0.contains(intPt) && env1.contains(intPt);
+    Envelope env0 = Envelope.fromCoordinate(inputLines[0][0], inputLines[0][1]);
+    Envelope env1 = Envelope.fromCoordinate(inputLines[1][0], inputLines[1][1]);
+    return env0.containsCoordinate(intPt) && env1.containsCoordinate(intPt);
   }
 
   static Coordinate _nearestEndpoint(Coordinate p1, Coordinate p2, Coordinate q1, Coordinate q2) {
@@ -190,15 +190,15 @@ class RobustLineIntersector extends LineIntersector {
   }
 
   static double _zGet(Coordinate p, Coordinate q) {
-    double z = p.getZ();
+    double z = p.z;
     if (Double.isNaN(z)) {
-      z = q.getZ();
+      z = q.z;
     }
     return z;
   }
 
   static double _zGetOrInterpolate(Coordinate p, Coordinate p1, Coordinate p2) {
-    double z = p.getZ();
+    double z = p.z;
     if (!Double.isNaN(z)) {
       return z;
     }
@@ -206,8 +206,8 @@ class RobustLineIntersector extends LineIntersector {
   }
 
   static double _zInterpolate(Coordinate p, Coordinate p1, Coordinate p2) {
-    double p1z = p1.getZ();
-    double p2z = p2.getZ();
+    double p1z = p1.z;
+    double p2z = p2.z;
     if (Double.isNaN(p1z)) {
       return p2z;
     }
@@ -236,7 +236,8 @@ class RobustLineIntersector extends LineIntersector {
     return zInterpolated;
   }
 
-  static double _zInterpolate2(Coordinate p, Coordinate p1, Coordinate p2, Coordinate q1, Coordinate q2) {
+  static double _zInterpolate2(
+      Coordinate p, Coordinate p1, Coordinate p2, Coordinate q1, Coordinate q2) {
     double zp = _zInterpolate(p, p1, p2);
     double zq = _zInterpolate(p, q1, q2);
     if (Double.isNaN(zp)) {

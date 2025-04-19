@@ -1,16 +1,16 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 
 class RingClipper {
-  static const int _BOX_LEFT = 3;
+  static const int _kBoxLeft = 3;
 
-  static const int _BOX_TOP = 2;
+  static const int _kBoxTop = 2;
 
-  static const int _BOX_RIGHT = 1;
+  static const int _kBoxRight = 1;
 
-  static const int _BOX_BOTTOM = 0;
+  static const int _kBoxBottom = 0;
 
   final Envelope _clipEnv;
 
@@ -23,10 +23,10 @@ class RingClipper {
   double _clipEnvMaxX = 0;
 
   RingClipper(this._clipEnv) {
-    _clipEnvMinY = _clipEnv.getMinY();
-    _clipEnvMaxY = _clipEnv.getMaxY();
-    _clipEnvMinX = _clipEnv.getMinX();
-    _clipEnvMaxX = _clipEnv.getMaxX();
+    _clipEnvMinY = _clipEnv.minY;
+    _clipEnvMaxY = _clipEnv.maxY;
+    _clipEnvMinX = _clipEnv.minX;
+    _clipEnvMaxX = _clipEnv.maxX;
   }
 
   Array<Coordinate> clip(Array<Coordinate> pts) {
@@ -69,16 +69,16 @@ class RingClipper {
   Coordinate intersection(Coordinate a, Coordinate b, int edgeIndex) {
     Coordinate intPt;
     switch (edgeIndex) {
-      case _BOX_BOTTOM:
+      case _kBoxBottom:
         intPt = Coordinate(intersectionLineY(a, b, _clipEnvMinY), _clipEnvMinY);
         break;
-      case _BOX_RIGHT:
+      case _kBoxRight:
         intPt = Coordinate(_clipEnvMaxX, intersectionLineX(a, b, _clipEnvMaxX));
         break;
-      case _BOX_TOP:
+      case _kBoxTop:
         intPt = Coordinate(intersectionLineY(a, b, _clipEnvMaxY), _clipEnvMaxY);
         break;
-      case _BOX_LEFT:
+      case _kBoxLeft:
       default:
         intPt = Coordinate(_clipEnvMinX, intersectionLineX(a, b, _clipEnvMinX));
     }
@@ -100,16 +100,16 @@ class RingClipper {
   bool isInsideEdge(Coordinate p, int edgeIndex) {
     bool isInside = false;
     switch (edgeIndex) {
-      case _BOX_BOTTOM:
+      case _kBoxBottom:
         isInside = p.y > _clipEnvMinY;
         break;
-      case _BOX_RIGHT:
+      case _kBoxRight:
         isInside = p.x < _clipEnvMaxX;
         break;
-      case _BOX_TOP:
+      case _kBoxTop:
         isInside = p.y < _clipEnvMaxY;
         break;
-      case _BOX_LEFT:
+      case _kBoxLeft:
       default:
         isInside = p.x > _clipEnvMinX;
     }

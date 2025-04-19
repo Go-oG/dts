@@ -1,9 +1,8 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/position.dart';
 import 'package:dts/src/jts/geom/topology_exception.dart';
-import 'package:dts/src/jts/geomgraph/label.dart';
 import 'package:dts/src/jts/geomgraph/node.dart';
 
 import '../../geomgraph/edge.dart';
@@ -30,7 +29,7 @@ class BufferSubgraph implements Comparable<BufferSubgraph> {
       for (var dirEdge in _dirEdgeList) {
         Array<Coordinate> pts = dirEdge.getEdge().getCoordinates();
         for (int i = 0; i < (pts.length - 1); i++) {
-          edgeEnv.expandToInclude(pts[i]);
+          edgeEnv.expandToIncludeCoordinate(pts[i]);
         }
       }
       env = edgeEnv;
@@ -78,8 +77,6 @@ class BufferSubgraph implements Comparable<BufferSubgraph> {
   void computeDepth(int outsideDepth) {
     clearVisitedEdges();
     DirectedEdge de = _finder.getEdge()!;
-    Node n = de.getNode();
-    Label label = de.label!;
     de.setEdgeDepths(Position.right, outsideDepth);
     copySymDepths(de);
     computeDepths2(de);
@@ -119,7 +116,8 @@ class BufferSubgraph implements Comparable<BufferSubgraph> {
         break;
       }
     }
-    if (startEdge == null) throw TopologyException("unable to find edge to compute depths at ${n.getCoordinate()}");
+    if (startEdge == null)
+      throw TopologyException("unable to find edge to compute depths at ${n.getCoordinate()}");
 
     ((n.getEdges() as DirectedEdgeStar)).computeDepths(startEdge);
     for (var i in ((n.getEdges() as DirectedEdgeStar)).iterator()) {
@@ -137,7 +135,8 @@ class BufferSubgraph implements Comparable<BufferSubgraph> {
 
   void findResultEdges() {
     for (var de in _dirEdgeList) {
-      if (((de.getDepth(Position.right) >= 1) && (de.getDepth(Position.left) <= 0)) && (!de.isInteriorAreaEdge())) {
+      if (((de.getDepth(Position.right) >= 1) && (de.getDepth(Position.left) <= 0)) &&
+          (!de.isInteriorAreaEdge())) {
         de.setInResult(true);
       }
     }

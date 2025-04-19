@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -9,7 +9,7 @@ import 'package:dts/src/jts/geom/triangle.dart';
 import 'package:dts/src/jts/util/assert.dart';
 
 class Tri {
-  static final String _INVALID_TRI_INDEX = "Invalid Tri index";
+  static final String _kInvalidTriIndex = "Invalid Tri index";
 
   static Geometry toGeometry(List<Tri> tris, GeometryFactory geomFact) {
     Array<Geometry> geoms = Array(tris.size);
@@ -79,7 +79,7 @@ class Tri {
         tri2 = tri;
         return;
     }
-    throw IllegalArgumentException(_INVALID_TRI_INDEX);
+    throw IllegalArgumentException(_kInvalidTriIndex);
   }
 
   void setCoordinates(Coordinate p0, Coordinate p1, Coordinate p2) {
@@ -108,7 +108,8 @@ class Tri {
     flip2(tri, index, index1, adj0, adj1, opp0, opp1);
   }
 
-  void flip2(Tri tri, int index0, int index1, Coordinate adj0, Coordinate adj1, Coordinate opp0, Coordinate opp1) {
+  void flip2(Tri tri, int index0, int index1, Coordinate adj0, Coordinate adj1, Coordinate opp0,
+      Coordinate opp1) {
     setCoordinates(opp1, opp0, adj0);
     tri.setCoordinates(opp0, opp1, adj1);
     Array<Tri?> adjacent = getAdjacentTris(tri, index0, index1);
@@ -219,7 +220,7 @@ class Tri {
       case 2:
         return p2;
     }
-    throw IllegalArgumentException(_INVALID_TRI_INDEX);
+    throw IllegalArgumentException(_kInvalidTriIndex);
   }
 
   int getIndex(Coordinate p) {
@@ -251,7 +252,7 @@ class Tri {
       case 2:
         return tri2;
     }
-    throw "IllegalArgumentException $_INVALID_TRI_INDEX";
+    throw "IllegalArgumentException $_kInvalidTriIndex";
   }
 
   bool hasAdjacent() {
@@ -337,8 +338,8 @@ class Tri {
   Coordinate midpoint(int edgeIndex) {
     Coordinate p0 = getCoordinate(edgeIndex);
     Coordinate p1 = getCoordinate(next(edgeIndex));
-    double midX = (p0.getX() + p1.getX()) / 2;
-    double midY = (p0.getY() + p1.getY()) / 2;
+    double midX = (p0.x + p1.x) / 2;
+    double midY = (p0.y + p1.y) / 2;
     return Coordinate(midX, midY);
   }
 
@@ -356,7 +357,7 @@ class Tri {
 
   Polygon toPolygon(GeometryFactory geomFact) {
     return geomFact.createPolygon(
-      geomFact.createLinearRing2([p0.copy(), p1.copy(), p2.copy(), p0.copy()].toArray()),
+      geomFact.createLinearRings([p0.copy(), p1.copy(), p2.copy(), p0.copy()].toArray()),
       null,
     );
   }

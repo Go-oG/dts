@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -24,10 +24,8 @@ class QuadEdgeSubdivision {
     if (triEdge[2].lNext() != triEdge[0]) throw ("Edges do not form a triangle");
   }
 
-  static const double _edgeCoincidenceTolFactor = 1000;
-  static const double _frameSizeFactor = 10.0;
-
-  int _visitedKey = 0;
+  static const double _kEdgeCoincidenceTolFactor = 1000;
+  static const double _kFrameSizeFactor = 10.0;
 
   final List<QuadEdge> _quadEdges = [];
 
@@ -44,21 +42,22 @@ class QuadEdgeSubdivision {
   late QuadEdgeLocator _locator;
 
   QuadEdgeSubdivision(Envelope env, this.tolerance) {
-    _edgeCoincidenceTolerance = tolerance / _edgeCoincidenceTolFactor;
+    _edgeCoincidenceTolerance = tolerance / _kEdgeCoincidenceTolFactor;
     createFrame(env);
     _startingEdge = initSubdiv();
     _locator = LastFoundQuadEdgeLocator(this);
   }
 
   void createFrame(Envelope env) {
-    double deltaX = env.getWidth();
-    double deltaY = env.getHeight();
-    double frameSize = Math.max(deltaX, deltaY) * _frameSizeFactor;
-    _frameVertex[0] = Vertex((env.getMaxX() + env.getMinX()) / 2.0, env.getMaxY() + frameSize);
-    _frameVertex[1] = Vertex(env.getMinX() - frameSize, env.getMinY() - frameSize);
-    _frameVertex[2] = Vertex(env.getMaxX() + frameSize, env.getMinY() - frameSize);
-    _frameEnv = Envelope.of3(_frameVertex[0].getCoordinate(), _frameVertex[1].getCoordinate());
-    _frameEnv.expandToInclude(_frameVertex[2].getCoordinate());
+    double deltaX = env.width;
+    double deltaY = env.height;
+    double frameSize = Math.max(deltaX, deltaY) * _kFrameSizeFactor;
+    _frameVertex[0] = Vertex((env.maxX + env.minX) / 2.0, env.maxY + frameSize);
+    _frameVertex[1] = Vertex(env.minX - frameSize, env.minY - frameSize);
+    _frameVertex[2] = Vertex(env.maxX + frameSize, env.minY - frameSize);
+    _frameEnv =
+        Envelope.fromCoordinate(_frameVertex[0].getCoordinate(), _frameVertex[1].getCoordinate());
+    _frameEnv.expandToIncludeCoordinate(_frameVertex[2].getCoordinate());
   }
 
   QuadEdge initSubdiv() {
@@ -76,7 +75,7 @@ class QuadEdgeSubdivision {
   }
 
   Envelope getEnvelope() {
-    return Envelope.of2(_frameEnv);
+    return Envelope.from(_frameEnv);
   }
 
   List<QuadEdge> getEdges() {
@@ -272,7 +271,6 @@ class QuadEdgeSubdivision {
   }
 
   List<QuadEdge> getPrimaryEdges(bool includeFrame) {
-    _visitedKey++;
     List<QuadEdge> edges = [];
     Stack edgeStack = Stack();
     edgeStack.push(_startingEdge);
@@ -306,14 +304,14 @@ class QuadEdgeSubdivision {
   }
 
   void visitTriangles(TriangleVisitor triVisitor, bool includeFrame) {
-    _visitedKey++;
     Stack<QuadEdge> edgeStack = Stack();
     edgeStack.push(_startingEdge);
     final visitedEdges = <QuadEdge>{};
     while (edgeStack.isNotEmpty) {
       QuadEdge edge = edgeStack.pop();
       if (!visitedEdges.contains(edge)) {
-        Array<QuadEdge>? triEdges = fetchTriangleToVisit(edge, edgeStack, includeFrame, visitedEdges);
+        Array<QuadEdge>? triEdges =
+            fetchTriangleToVisit(edge, edgeStack, includeFrame, visitedEdges);
         if (triEdges != null) {
           triVisitor.visit(triEdges);
         }
@@ -323,7 +321,8 @@ class QuadEdgeSubdivision {
 
   final Array<QuadEdge> _triEdges = Array(3);
 
-  Array<QuadEdge>? fetchTriangleToVisit(QuadEdge edge, Stack edgeStack, bool includeFrame, Set visitedEdges) {
+  Array<QuadEdge>? fetchTriangleToVisit(
+      QuadEdge edge, Stack edgeStack, bool includeFrame, Set visitedEdges) {
     QuadEdge curr = edge;
     int edgeCount = 0;
     bool isFrame = false;
@@ -367,7 +366,8 @@ class QuadEdgeSubdivision {
     int i = 0;
     for (Iterator it = quadEdges.iterator; it.moveNext();) {
       QuadEdge qe = it.current;
-      edges[i++] = geomFact.createLineString2([qe.orig().getCoordinate(), qe.dest().getCoordinate()].toArray());
+      edges[i++] = geomFact
+          .createLineString2([qe.orig().getCoordinate(), qe.dest().getCoordinate()].toArray());
     }
     return geomFact.createMultiLineString2(edges);
   }
@@ -378,7 +378,7 @@ class QuadEdgeSubdivision {
     int i = 0;
     for (var it = triPtsList.iterator; it.moveNext();) {
       Array<Coordinate> triPt = it.current;
-      tris[i++] = geomFact.createPolygon(geomFact.createLinearRing2(triPt));
+      tris[i++] = geomFact.createPolygon(geomFact.createLinearRings(triPt));
     }
     return geomFact.createGeometryCollection2(tris);
   }
@@ -389,7 +389,7 @@ class QuadEdgeSubdivision {
     int i = 0;
     for (var it = triPtsList.iterator; it.moveNext();) {
       Array<Coordinate> triPt = it.current;
-      tris[i++] = geomFact.createPolygon(geomFact.createLinearRing2(triPt));
+      tris[i++] = geomFact.createPolygon(geomFact.createLinearRings(triPt));
     }
     return geomFact.createGeometryCollection2(tris);
   }
@@ -425,7 +425,7 @@ class QuadEdgeSubdivision {
       coordList.add3(coordList.last, true);
     }
     Array<Coordinate> pts = coordList.toCoordinateArray();
-    Polygon cellPoly = geomFact.createPolygon(geomFact.createLinearRing2(pts));
+    Polygon cellPoly = geomFact.createPolygon(geomFact.createLinearRings(pts));
     Vertex v = startQE.orig();
     cellPoly.userData = v.getCoordinate();
     return cellPoly;

@@ -53,7 +53,8 @@ class OPolygonBuilder {
     return maxEdgeRings;
   }
 
-  List<EdgeRing> buildMinimalEdgeRings(List<OMaximalEdgeRing> maxEdgeRings, List shellList, List freeHoleList) {
+  List<EdgeRing> buildMinimalEdgeRings(
+      List<OMaximalEdgeRing> maxEdgeRings, List shellList, List freeHoleList) {
     List<EdgeRing> edgeRings = [];
     for (var er in maxEdgeRings) {
       if (er.getMaxNodeDegree() > 2) {
@@ -108,7 +109,8 @@ class OPolygonBuilder {
     for (var hole in freeHoleList) {
       if (hole.getShell() == null) {
         EdgeRing? shell = findEdgeRingContaining(hole, shellList);
-        if (shell == null) throw TopologyException("unable to assign hole to a shell", hole.getCoordinate(0));
+        if (shell == null)
+          throw TopologyException("unable to assign hole to a shell", hole.getCoordinate(0));
 
         hole.setShell(shell);
       }
@@ -127,14 +129,15 @@ class OPolygonBuilder {
       Envelope tryShellEnv = tryShellRing.getEnvelopeInternal();
       if (tryShellEnv.equals(testEnv)) continue;
 
-      if (!tryShellEnv.contains3(testEnv)) continue;
+      if (!tryShellEnv.contains(testEnv)) continue;
 
-      testPt = CoordinateArrays.ptNotInList(testRing.getCoordinates(), tryShellRing.getCoordinates())!;
+      testPt =
+          CoordinateArrays.ptNotInList(testRing.getCoordinates(), tryShellRing.getCoordinates())!;
       bool isContained = false;
       if (PointLocation.isInRing(testPt, tryShellRing.getCoordinates())) isContained = true;
 
       if (isContained) {
-        if ((minShell == null) || minShellEnv!.contains3(tryShellEnv)) {
+        if ((minShell == null) || minShellEnv!.contains(tryShellEnv)) {
           minShell = tryShell;
           minShellEnv = minShell.getLinearRing()!.getEnvelopeInternal();
         }

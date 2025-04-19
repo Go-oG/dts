@@ -98,7 +98,8 @@ class PolygonBuilder {
     }
   }
 
-  void sortShellsAndHoles(List<EdgeRing> edgeRings, List<EdgeRing> shellList, List<EdgeRing> freeHoleList) {
+  void sortShellsAndHoles(
+      List<EdgeRing> edgeRings, List<EdgeRing> shellList, List<EdgeRing> freeHoleList) {
     for (var er in edgeRings) {
       if (er.isHole()) {
         freeHoleList.add(er);
@@ -132,16 +133,17 @@ class PolygonBuilder {
         continue;
       }
 
-      if (!tryShellEnv.contains3(testEnv)) {
+      if (!tryShellEnv.contains(testEnv)) {
         continue;
       }
 
-      testPt = CoordinateArrays.ptNotInList(testRing.getCoordinates(), tryShellRing.getCoordinates());
+      testPt =
+          CoordinateArrays.ptNotInList(testRing.getCoordinates(), tryShellRing.getCoordinates());
       bool isContained = false;
       if (PointLocation.isInRing(testPt!, tryShellRing.getCoordinates())) isContained = true;
 
       if (isContained) {
-        if ((minShell == null) || minShellEnv!.contains3(tryShellEnv)) {
+        if ((minShell == null) || minShellEnv!.contains(tryShellEnv)) {
           minShell = tryShell;
           minShellEnv = minShell.getLinearRing()?.getEnvelopeInternal();
         }

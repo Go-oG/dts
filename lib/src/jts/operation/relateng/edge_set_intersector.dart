@@ -16,7 +16,8 @@ class OpEdgeSetIntersector {
 
   int idCounter = 0;
 
-  OpEdgeSetIntersector(List<RelateSegmentString> edgesA, List<RelateSegmentString> edgesB, this.envelope) {
+  OpEdgeSetIntersector(
+      List<RelateSegmentString> edgesA, List<RelateSegmentString> edgesB, this.envelope) {
     addEdges(edgesA);
     addEdges(edgesB);
     _index.build();
@@ -31,7 +32,7 @@ class OpEdgeSetIntersector {
   void addToIndex(SegmentString segStr) {
     final segChains = MonotoneChainBuilder.getChains(segStr.getCoordinates(), segStr);
     for (MonotoneChain mc in segChains) {
-      if ((envelope == null) || envelope!.intersects6(mc.getEnvelope())) {
+      if ((envelope == null) || envelope!.intersects(mc.getEnvelope())) {
         mc.id = (idCounter++);
         _index.insert(mc.getEnvelope(), mc);
         _monoChains.add(mc);

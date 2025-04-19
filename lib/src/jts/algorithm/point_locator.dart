@@ -104,7 +104,7 @@ class PointLocator {
   }
 
   int _locateOnLineString(Coordinate p, LineString l) {
-    if (!l.getEnvelopeInternal().intersects(p)) {
+    if (!l.getEnvelopeInternal().intersectsCoordinate(p)) {
       return Location.exterior;
     }
 
@@ -121,7 +121,7 @@ class PointLocator {
   }
 
   int _locateInPolygonRing(Coordinate p, LinearRing ring) {
-    if (!ring.getEnvelopeInternal().intersects(p)) {
+    if (!ring.getEnvelopeInternal().intersectsCoordinate(p)) {
       return Location.exterior;
     }
 

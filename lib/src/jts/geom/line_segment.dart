@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/distance.dart';
 import 'package:dts/src/jts/algorithm/intersection.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
@@ -16,7 +16,8 @@ class LineSegment implements Comparable<LineSegment> {
 
   LineSegment(this.p0, this.p1);
 
-  LineSegment.of2(double x0, double y0, double x1, double y1) : this(Coordinate(x0, y0), Coordinate(x1, y1));
+  LineSegment.of2(double x0, double y0, double x1, double y1)
+      : this(Coordinate(x0, y0), Coordinate(x1, y1));
 
   LineSegment.of(LineSegment ls) : this(ls.p0, ls.p1);
 
@@ -156,8 +157,8 @@ class LineSegment implements Comparable<LineSegment> {
     double offsetx = segx - uy;
     double offsety = segy + ux;
     Coordinate coord = p0.create();
-    coord.setX(offsetx);
-    coord.setY(offsety);
+    coord.x = offsetx;
+    coord.y = offsety;
     return coord;
   }
 
@@ -179,8 +180,7 @@ class LineSegment implements Comparable<LineSegment> {
     double segFrac = projectionFactor(inputPt);
     if (segFrac < 0.0) {
       segFrac = 0.0;
-    } else if ((segFrac > 1.0) || Double.isNaN(segFrac))
-      segFrac = 1.0;
+    } else if ((segFrac > 1.0) || Double.isNaN(segFrac)) segFrac = 1.0;
 
     return segFrac;
   }
@@ -226,18 +226,18 @@ class LineSegment implements Comparable<LineSegment> {
   }
 
   Coordinate reflect(Coordinate p) {
-    double A = p1.getY() - p0.getY();
-    double B = p0.getX() - p1.getX();
-    double C = (p0.getY() * (p1.getX() - p0.getX())) - (p0.getX() * (p1.getY() - p0.getY()));
+    double A = p1.y - p0.y;
+    double B = p0.x - p1.x;
+    double C = (p0.y * (p1.x - p0.x)) - (p0.x * (p1.y - p0.y));
     double A2plusB2 = (A * A) + (B * B);
     double A2subB2 = (A * A) - (B * B);
-    double x = p.getX();
-    double y = p.getY();
+    double x = p.x;
+    double y = p.y;
     double rx = ((((-A2subB2) * x) - (((2 * A) * B) * y)) - ((2 * A) * C)) / A2plusB2;
     double ry = (((A2subB2 * y) - (((2 * A) * B) * x)) - ((2 * B) * C)) / A2plusB2;
     Coordinate coord = p.copy();
-    coord.setX(rx);
-    coord.setY(ry);
+    coord.x = rx;
+    coord.y = ry;
     return coord;
   }
 
@@ -343,7 +343,8 @@ class LineSegment implements Comparable<LineSegment> {
   }
 
   bool equalsTopo(LineSegment other) {
-    return (p0.equals(other.p0) && p1.equals(other.p1)) || (p0.equals(other.p1) && p1.equals(other.p0));
+    return (p0.equals(other.p0) && p1.equals(other.p1)) ||
+        (p0.equals(other.p1) && p1.equals(other.p0));
   }
 
   @override

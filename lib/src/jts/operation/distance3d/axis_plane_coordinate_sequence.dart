@@ -1,26 +1,26 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 
 class AxisPlaneCoordinateSequence extends CoordinateSequence {
   static CoordinateSequence projectToXY(CoordinateSequence seq) {
-    return AxisPlaneCoordinateSequence(seq, _XY_INDEX);
+    return AxisPlaneCoordinateSequence(seq, _kXYIndex);
   }
 
   static CoordinateSequence projectToXZ(CoordinateSequence seq) {
-    return AxisPlaneCoordinateSequence(seq, _XZ_INDEX);
+    return AxisPlaneCoordinateSequence(seq, _kXZIndex);
   }
 
   static CoordinateSequence projectToYZ(CoordinateSequence seq) {
-    return AxisPlaneCoordinateSequence(seq, _YZ_INDEX);
+    return AxisPlaneCoordinateSequence(seq, _kYZIndex);
   }
 
-  static final Array<int> _XY_INDEX = [0, 1].toArray();
+  static final Array<int> _kXYIndex = [0, 1].toArray();
 
-  static final Array<int> _XZ_INDEX = [0, 2].toArray();
+  static final Array<int> _kXZIndex = [0, 2].toArray();
 
-  static final Array<int> _YZ_INDEX = [1, 2].toArray();
+  static final Array<int> _kYZIndex = [1, 2].toArray();
 
   final CoordinateSequence _seq;
 
@@ -45,24 +45,24 @@ class AxisPlaneCoordinateSequence extends CoordinateSequence {
 
   @override
   void getCoordinate2(int index, Coordinate coord) {
-    coord.x = getOrdinate(index, CoordinateSequence.X);
-    coord.y = getOrdinate(index, CoordinateSequence.Y);
-    coord.setZ(getOrdinate(index, CoordinateSequence.Z));
+    coord.x = getOrdinate(index, CoordinateSequence.kX);
+    coord.y = getOrdinate(index, CoordinateSequence.kY);
+    coord.z = getOrdinate(index, CoordinateSequence.kZ);
   }
 
   @override
   double getX(int index) {
-    return getOrdinate(index, CoordinateSequence.X);
+    return getOrdinate(index, CoordinateSequence.kX);
   }
 
   @override
   double getY(int index) {
-    return getOrdinate(index, CoordinateSequence.Y);
+    return getOrdinate(index, CoordinateSequence.kY);
   }
 
   @override
   double getZ(int index) {
-    return getOrdinate(index, CoordinateSequence.Z);
+    return getOrdinate(index, CoordinateSequence.kZ);
   }
 
   @override

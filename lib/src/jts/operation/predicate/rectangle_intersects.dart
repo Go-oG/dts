@@ -8,9 +8,9 @@ import 'rectangle_intersects_segment_visitor.dart';
 
 class RectangleIntersects {
   static bool intersects2(Polygon rectangle, Geometry b) {
-        RectangleIntersects rp = RectangleIntersects(rectangle);
-        return rp.intersects(b);
-    }
+    RectangleIntersects rp = RectangleIntersects(rectangle);
+    return rp.intersects(b);
+  }
 
   final Polygon _rectangle;
 
@@ -21,15 +21,15 @@ class RectangleIntersects {
   }
 
   bool intersects(Geometry geom) {
-    if (!rectEnv.intersects6(geom.getEnvelopeInternal())) {
+    if (!rectEnv.intersects(geom.getEnvelopeInternal())) {
       return false;
     }
 
     final visitor = EnvelopeIntersectsVisitor(rectEnv);
-      visitor.applyTo(geom);
-      if (visitor.intersects()) {
-        return true;
-      }
+    visitor.applyTo(geom);
+    if (visitor.intersects()) {
+      return true;
+    }
 
     final ecpVisitor = GeometryContainsPointVisitor(_rectangle);
     ecpVisitor.applyTo(geom);
@@ -38,11 +38,11 @@ class RectangleIntersects {
     }
 
     final riVisitor = RectangleIntersectsSegmentVisitor(_rectangle);
-      riVisitor.applyTo(geom);
-      if (riVisitor.intersects()) {
-        return true;
-      }
-
-        return false;
+    riVisitor.applyTo(geom);
+    if (riVisitor.intersects()) {
+      return true;
     }
+
+    return false;
+  }
 }

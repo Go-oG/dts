@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/index/item_visitor.dart';
 
 class SortedPackedIntervalRTree<T> {
@@ -36,7 +36,7 @@ class SortedPackedIntervalRTree<T> {
 
   IntervalRTreeNode<T> buildTree() {
     var cc = NodeComparator<T>();
-    _leaves.sort2(cc as CComparator<IntervalRTreeLeafNode<T>>);
+    _leaves.sort(cc.compare);
 
     List<IntervalRTreeNode<T>> src = _leaves;
     List<IntervalRTreeNode<T>> temp = [];
@@ -135,12 +135,8 @@ class IntervalRTreeBranchNode<T> extends IntervalRTreeNode<T> {
     if (!intersects(queryMin, queryMax)) {
       return;
     }
-    if (_node1 != null) {
-      _node1.query(queryMin, queryMax, visitor);
-    }
 
-    if (_node2 != null) {
-      _node2.query(queryMin, queryMax, visitor);
-    }
+    _node1?.query(queryMin, queryMax, visitor);
+    _node2?.query(queryMin, queryMax, visitor);
   }
 }

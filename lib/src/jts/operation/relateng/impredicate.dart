@@ -13,7 +13,7 @@ abstract class IMPredicate extends BasicPredicate {
     return dim0 >= dim1;
   }
 
-  static const int DIM_UNKNOWN = Dimension.DONTCARE;
+  static const int _dimUnknown = Dimension.Dontcare;
 
   int dimA = 0;
 
@@ -50,9 +50,11 @@ abstract class IMPredicate extends BasicPredicate {
 
   bool intersectsExteriorOf(bool isA) {
     if (isA) {
-      return isIntersects(Location.exterior, Location.interior) || isIntersects(Location.exterior, Location.boundary);
+      return isIntersects(Location.exterior, Location.interior) ||
+          isIntersects(Location.exterior, Location.boundary);
     } else {
-      return isIntersects(Location.interior, Location.exterior) || isIntersects(Location.boundary, Location.exterior);
+      return isIntersects(Location.interior, Location.exterior) ||
+          isIntersects(Location.boundary, Location.exterior);
     }
   }
 
@@ -61,7 +63,7 @@ abstract class IMPredicate extends BasicPredicate {
   }
 
   bool isKnown3(int locA, int locB) {
-    return intMatrix.get(locA, locB) != DIM_UNKNOWN;
+    return intMatrix.get(locA, locB) != _dimUnknown;
   }
 
   bool isDimension(int locA, int locB, int dimension) {

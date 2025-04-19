@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/centroid.dart';
 import 'package:dts/src/jts/algorithm/convex_hull.dart';
 import 'package:dts/src/jts/algorithm/interior_point.dart';
@@ -155,7 +155,7 @@ abstract class Geometry implements Comparable<Geometry> {
 
   Envelope getEnvelopeInternal() {
     envelope ??= computeEnvelopeInternal();
-    return Envelope.of2(envelope!);
+    return Envelope.from(envelope!);
   }
 
   void geometryChanged() {
@@ -175,7 +175,7 @@ abstract class Geometry implements Comparable<Geometry> {
   }
 
   bool intersects(Geometry g) {
-    if (!getEnvelopeInternal().intersects6(g.getEnvelopeInternal())) return false;
+    if (!getEnvelopeInternal().intersects(g.getEnvelopeInternal())) return false;
 
     if (isRectangle()) {
       return RectangleIntersects.intersects2(this as Polygon, g);
@@ -187,7 +187,7 @@ abstract class Geometry implements Comparable<Geometry> {
   }
 
   bool crosses(Geometry g) {
-    if (!getEnvelopeInternal().intersects6(g.getEnvelopeInternal())) return false;
+    if (!getEnvelopeInternal().intersects(g.getEnvelopeInternal())) return false;
 
     return relate(g).isCrosses(getDimension(), g.getDimension());
   }

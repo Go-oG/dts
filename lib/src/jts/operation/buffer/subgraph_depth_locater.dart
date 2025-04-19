@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -26,7 +26,7 @@ class SubgraphDepthLocater {
     List<DepthSegment> stabbedSegments = [];
     for (var bsg in _subgraphs) {
       Envelope env = bsg.getEnvelope();
-      if ((stabbingRayLeftPt.y < env.getMinY()) || (stabbingRayLeftPt.y > env.getMaxY())) {
+      if ((stabbingRayLeftPt.y < env.minY) || (stabbingRayLeftPt.y > env.maxY)) {
         continue;
       }
 
@@ -35,7 +35,8 @@ class SubgraphDepthLocater {
     return stabbedSegments;
   }
 
-  void findStabbedSegments3(Coordinate stabbingRayLeftPt, List<DirectedEdge> dirEdges, List stabbedSegments) {
+  void findStabbedSegments3(
+      Coordinate stabbingRayLeftPt, List<DirectedEdge> dirEdges, List stabbedSegments) {
     for (var de in dirEdges) {
       if (!de.isForward) continue;
 
@@ -43,7 +44,8 @@ class SubgraphDepthLocater {
     }
   }
 
-  void findStabbedSegments2(Coordinate stabbingRayLeftPt, DirectedEdge dirEdge, List stabbedSegments) {
+  void findStabbedSegments2(
+      Coordinate stabbingRayLeftPt, DirectedEdge dirEdge, List stabbedSegments) {
     Array<Coordinate> pts = dirEdge.getEdge().getCoordinates();
     for (int i = 0; i < (pts.length - 1); i++) {
       _seg.p0 = pts[i];
@@ -84,7 +86,8 @@ class DepthSegment implements Comparable<DepthSegment> {
 
   @override
   int compareTo(DepthSegment other) {
-    if ((((_upwardSeg.minX() >= other._upwardSeg.maxX()) || (_upwardSeg.maxX() <= other._upwardSeg.minX())) ||
+    if ((((_upwardSeg.minX() >= other._upwardSeg.maxX()) ||
+                (_upwardSeg.maxX() <= other._upwardSeg.minX())) ||
             (_upwardSeg.minY() >= other._upwardSeg.maxY())) ||
         (_upwardSeg.maxY() <= other._upwardSeg.minY())) {
       return _upwardSeg.compareTo(other._upwardSeg);
@@ -98,7 +101,7 @@ class DepthSegment implements Comparable<DepthSegment> {
     return 0;
   }
 
-  int OLDcompareTo(DepthSegment other) {
+  int oldCompareTo(DepthSegment other) {
     if (_upwardSeg.minX() > other._upwardSeg.maxX()) return 1;
 
     if (_upwardSeg.maxX() < other._upwardSeg.minX()) return -1;

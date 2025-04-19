@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/length.dart';
 import 'package:dts/src/jts/geom/point.dart';
 import 'package:dts/src/jts/operation/boundary_op.dart';
@@ -20,8 +20,8 @@ class LineString extends BaseGeometry<LineString> implements Lineal {
   late CoordinateSequence points;
 
   LineString(Array<Coordinate>? points, PrecisionModel precisionModel, int srid)
-    : super(GeometryFactory.of2(precisionModel, srid)) {
-    init(factory.coordinateSequenceFactory.create(points));
+      : super(GeometryFactory.from(precisionModel, srid)) {
+    init(factory.csFactory.create(points));
   }
 
   LineString.of(CoordinateSequence? points, GeometryFactory factory) : super(factory) {
@@ -29,7 +29,7 @@ class LineString extends BaseGeometry<LineString> implements Lineal {
   }
 
   void init(CoordinateSequence? points) {
-    points ??= factory.coordinateSequenceFactory.create(Array(0));
+    points ??= factory.csFactory.create(Array(0));
     if ((points.size() > 0) && (points.size() < _minValidSize)) {
       throw ("Invalid number of points in LineString (found ${points.size()}"
           " - must be 0 or >= $_minValidSize");
@@ -67,7 +67,7 @@ class LineString extends BaseGeometry<LineString> implements Lineal {
   @override
   int getBoundaryDimension() {
     if (isClosed()) {
-      return Dimension.FALSE;
+      return Dimension.False;
     }
     return 0;
   }

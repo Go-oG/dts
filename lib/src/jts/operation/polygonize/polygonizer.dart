@@ -1,4 +1,3 @@
- import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_component_filter.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
@@ -113,7 +112,7 @@ class Polygonizer {
     findShellsAndHoles(validEdgeRingList);
     HoleAssigner.assignHolesToShells2(holeList!, shellList!);
 
-    shellList!.sort2(EdgeRingEnvelopeComparator());
+    shellList!.sort(EdgeRingEnvelopeComparator().compare);
 
     bool includeAll = true;
     if (_extractOnlyPolygonal) {
@@ -180,7 +179,7 @@ class Polygonizer {
   }
 
   List<LineString> extractInvalidLines(List<EdgeRingO> invalidRings) {
-    invalidRings.sort2(EdgeRingEnvelopeAreaComparator());
+    invalidRings.sort(EdgeRingEnvelopeAreaComparator().compare);
     List<LineString> invalidLines = [];
     for (EdgeRingO er in invalidRings) {
       if (isIncludedInvalid(er)) {

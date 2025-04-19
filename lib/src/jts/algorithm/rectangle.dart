@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
@@ -24,11 +24,17 @@ class Rectangle {
     LineSegment oppLine = _createLineForStandardEquation(-dy, dx, oppC);
     LineSegment leftLine = _createLineForStandardEquation(-dx, -dy, leftC);
     LineSegment rightLine = _createLineForStandardEquation(-dx, -dy, rightC);
-    Coordinate? p0 = (rightSidePt.equals2D(baseRightPt)) ? baseRightPt.copy() : baseLine.lineIntersection(rightLine);
-    Coordinate? p1 = (leftSidePt.equals2D(baseLeftPt)) ? baseLeftPt.copy() : baseLine.lineIntersection(leftLine);
-    Coordinate? p2 = (leftSidePt.equals2D(oppositePt)) ? oppositePt.copy() : oppLine.lineIntersection(leftLine);
-    Coordinate? p3 = (rightSidePt.equals2D(oppositePt)) ? oppositePt.copy() : oppLine.lineIntersection(rightLine);
-    LinearRing shell = factory.createLinearRing2([p0!, p1!, p2!, p3!, p0.copy()].toArray());
+    Coordinate? p0 = (rightSidePt.equals2D(baseRightPt))
+        ? baseRightPt.copy()
+        : baseLine.lineIntersection(rightLine);
+    Coordinate? p1 =
+        (leftSidePt.equals2D(baseLeftPt)) ? baseLeftPt.copy() : baseLine.lineIntersection(leftLine);
+    Coordinate? p2 =
+        (leftSidePt.equals2D(oppositePt)) ? oppositePt.copy() : oppLine.lineIntersection(leftLine);
+    Coordinate? p3 = (rightSidePt.equals2D(oppositePt))
+        ? oppositePt.copy()
+        : oppLine.lineIntersection(rightLine);
+    LinearRing shell = factory.createLinearRings([p0!, p1!, p2!, p3!, p0.copy()].toArray());
     return factory.createPolygon(shell);
   }
 

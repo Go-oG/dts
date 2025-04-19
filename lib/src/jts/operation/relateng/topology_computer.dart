@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/polygon_node_topology.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/dimension.dart';
@@ -40,11 +40,11 @@ class TopologyComputer {
       updateDim(Location.exterior, Location.interior, Dimension.A);
     } else if ((dimRealA == Dimension.A) && (dimRealB == Dimension.L)) {
       updateDim(Location.interior, Location.exterior, Dimension.A);
-    } else if ((dimRealA == Dimension.FALSE) || (dimRealB == Dimension.FALSE)) {
-      if (dimRealA != Dimension.FALSE) {
+    } else if ((dimRealA == Dimension.False) || (dimRealB == Dimension.False)) {
+      if (dimRealA != Dimension.False) {
         initExteriorEmpty(RelateGeometry.GEOM_A);
       }
-      if (dimRealB != Dimension.FALSE) {
+      if (dimRealB != Dimension.False) {
         initExteriorEmpty(RelateGeometry.GEOM_B);
       }
     }
@@ -78,7 +78,8 @@ class TopologyComputer {
   }
 
   bool isAreaArea() {
-    return (getDimension(RelateGeometry.GEOM_A) == Dimension.A) && (getDimension(RelateGeometry.GEOM_B) == Dimension.A);
+    return (getDimension(RelateGeometry.GEOM_A) == Dimension.A) &&
+        (getDimension(RelateGeometry.GEOM_B) == Dimension.A);
   }
 
   bool isSelfNodingRequired() {
@@ -151,7 +152,8 @@ class TopologyComputer {
   void updateAreaAreaCross(NodeSection a, NodeSection b) {
     bool isProper = NodeSection.isProper2(a, b);
     if (isProper ||
-        PolygonNodeTopology.isCrossing(a.nodePt(), a.getVertex(0), a.getVertex(1), b.getVertex(0), b.getVertex(1))) {
+        PolygonNodeTopology.isCrossing(
+            a.nodePt(), a.getVertex(0), a.getVertex(1), b.getVertex(0), b.getVertex(1))) {
       updateDim(Location.interior, Location.interior, Dimension.A);
     }
   }
@@ -196,7 +198,8 @@ class TopologyComputer {
     throw ("Unknown target dimension: $dimTarget");
   }
 
-  void addLineEndOnGeometry(bool isLineA, int locLineEnd, int locTarget, int dimTarget, Coordinate? pt) {
+  void addLineEndOnGeometry(
+      bool isLineA, int locLineEnd, int locTarget, int dimTarget, Coordinate? pt) {
     updateDim2(isLineA, locLineEnd, locTarget, Dimension.P);
     if (getGeometry(!isLineA).isEmpty()) {
       return;

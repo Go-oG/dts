@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/algorithm/point_location.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -96,7 +96,7 @@ abstract class EdgeRing {
 
     Array<Coordinate> coord = _pts.toArray();
 
-    _ring = geometryFactory.createLinearRing2(coord);
+    _ring = geometryFactory.createLinearRings(coord);
     _isHole = Orientation.isCCW(_ring!.getCoordinates());
   }
 
@@ -116,7 +116,8 @@ abstract class EdgeRing {
       if (de == null) throw TopologyException("Found null DirectedEdge");
 
       if (de.getEdgeRing() == this) {
-        throw TopologyException("Directed Edge visited twice during ring-building at ${de.getCoordinate()}");
+        throw TopologyException(
+            "Directed Edge visited twice during ring-building at ${de.getCoordinate()}");
       }
 
       edges.add(de);
@@ -193,7 +194,7 @@ abstract class EdgeRing {
   bool containsPoint(Coordinate p) {
     LinearRing shell = getLinearRing()!;
     Envelope env = shell.getEnvelopeInternal();
-    if (!env.contains(p)) return false;
+    if (!env.containsCoordinate(p)) return false;
 
     if (!PointLocation.isInRing(p, shell.getCoordinates())) return false;
 

@@ -32,7 +32,7 @@ class OverlapUnion {
 
   Geometry? union() {
     Envelope overlapEnv = overlapEnvelope(g0, g1);
-    if (overlapEnv.isNull()) {
+    if (overlapEnv.isNull) {
       Geometry g0Copy = g0.copy();
       Geometry g1Copy = g1.copy();
       return GeometryCombiner.combine3(g0Copy, g1Copy);
@@ -73,7 +73,7 @@ class OverlapUnion {
     List<Geometry> intersectingGeoms = [];
     for (int i = 0; i < geom.getNumGeometries(); i++) {
       Geometry elem = geom.getGeometryN(i);
-      if (elem.getEnvelopeInternal().intersects6(env)) {
+      if (elem.getEnvelopeInternal().intersects(env)) {
         intersectingGeoms.add(elem);
       } else {
         Geometry copy = elem.copy();
@@ -120,7 +120,7 @@ class OverlapUnion {
   }
 
   static bool intersects(Envelope env, Coordinate p0, Coordinate p1) {
-    return env.intersects(p0) || env.intersects(p1);
+    return env.intersectsCoordinate(p0) || env.intersectsCoordinate(p1);
   }
 
   static bool containsProperly2(Envelope env, Coordinate p0, Coordinate p1) {
@@ -128,10 +128,9 @@ class OverlapUnion {
   }
 
   static bool containsProperly(Envelope env, Coordinate p) {
-    if (env.isNull()) return false;
+    if (env.isNull) return false;
 
-    return (((p.getX() > env.getMinX()) && (p.getX() < env.getMaxX())) && (p.getY() > env.getMinY())) &&
-        (p.getY() < env.getMaxY());
+    return p.x > env.minX && p.x < env.maxX && p.y > env.minY && p.y < env.maxY;
   }
 
   static void extractBorderSegments(Geometry geom, Envelope env, List<LineSegment> segs) {
@@ -152,7 +151,8 @@ class _CoordinateSequenceFilter implements CoordinateSequenceFilter {
 
     Coordinate p0 = seq.getCoordinate(i - 1);
     Coordinate p1 = seq.getCoordinate(i);
-    bool isBorder = OverlapUnion.intersects(env, p0, p1) && (!OverlapUnion.containsProperly2(env, p0, p1));
+    bool isBorder =
+        OverlapUnion.intersects(env, p0, p1) && (!OverlapUnion.containsProperly2(env, p0, p1));
     if (isBorder) {
       LineSegment seg = LineSegment(p0, p1);
       segs.add(seg);

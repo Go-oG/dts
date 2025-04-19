@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/angle.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -13,7 +13,9 @@ import 'package:dts/src/jts/geom/polygon.dart';
 import 'buffer_parameters.dart';
 
 class VariableBuffer {
-  static const int _MIN_CAP_SEG_LEN_FACTOR = 4;
+  static const int _kMinCapSegLenFactor = 4;
+
+  static const double _kSnapTrigTol = 1.0E-6;
 
   static Geometry buffer(LineString line, double startDistance, double endDistance) {
     Array<double> distance = interpolate(line, startDistance, endDistance);
@@ -21,7 +23,8 @@ class VariableBuffer {
     return vb.getResult();
   }
 
-  static Geometry buffer3(LineString line, double startDistance, double midDistance, double endDistance) {
+  static Geometry buffer3(
+      LineString line, double startDistance, double midDistance, double endDistance) {
     Array<double> distance = interpolate2(line, startDistance, midDistance, endDistance);
     VariableBuffer vb = VariableBuffer(line, distance);
     return vb.getResult();
@@ -51,7 +54,8 @@ class VariableBuffer {
     return values;
   }
 
-  static Array<double> interpolate2(LineString line, double startValue, double midValue, double endValue) {
+  static Array<double> interpolate2(
+      LineString line, double startValue, double midValue, double endValue) {
     startValue = Math.abs(startValue);
     midValue = Math.abs(midValue);
     endValue = Math.abs(endValue);
@@ -107,7 +111,7 @@ class VariableBuffer {
 
   late GeometryFactory geomFactory;
 
-  final int _quadrantSegs = BufferParameters.DEFAULT_QUADRANT_SEGMENTS;
+  final int _quadrantSegs = BufferParameters.kDefaultQuadrantSegments;
 
   VariableBuffer(this._line, this._distance) {
     geomFactory = _line.factory;
@@ -127,7 +131,8 @@ class VariableBuffer {
         if (poly != null) parts.add(poly);
       }
     }
-    GeometryCollection partsGeom = geomFactory.createGeometryCollection2(GeometryFactory.toGeometryArray(parts)!);
+    GeometryCollection partsGeom =
+        geomFactory.createGeometryCollection2(GeometryFactory.toGeometryArray(parts)!);
     Geometry buffer = partsGeom.union()!;
     if (buffer.isEmpty()) {
       return geomFactory.createPolygon();
@@ -199,14 +204,15 @@ class VariableBuffer {
     int indexStart = capAngleIndex(angStart);
     int indexEnd = capAngleIndex(angEnd);
     double capSegLen = (r * 2) * Math.sin((Math.pi / 4) / _quadrantSegs);
-    double minSegLen = capSegLen / _MIN_CAP_SEG_LEN_FACTOR;
+    double minSegLen = capSegLen / _kMinCapSegLenFactor;
     for (int i = indexStart; i >= indexEnd; i--) {
       double ang = capAngle(i);
       Coordinate capPt = projectPolar(p, r, ang);
       bool isCapPointHighQuality = true;
       if ((i == indexStart) && (Orientation.clockwise != Orientation.index(p, t1, capPt))) {
         isCapPointHighQuality = false;
-      } else if ((i == indexEnd) && (Orientation.counterClockwise != Orientation.index(p, t2, capPt))) {
+      } else if ((i == indexEnd) &&
+          (Orientation.counterClockwise != Orientation.index(p, t2, capPt))) {
         isCapPointHighQuality = false;
       }
       if (capPt.distance(t1) < minSegLen) {
@@ -237,10 +243,10 @@ class VariableBuffer {
       LineSegment seg = outerTangent(c2, r2, c1, r1)!;
       return LineSegment(seg.p1, seg.p0);
     }
-    double x1 = c1.getX();
-    double y1 = c1.getY();
-    double x2 = c2.getX();
-    double y2 = c2.getY();
+    double x1 = c1.x;
+    double y1 = c1.y;
+    double x2 = c2.x;
+    double y2 = c2.y;
     double a3 = -Math.atan2(y2 - y1, x2 - x1);
     double dr = r2 - r1;
     double d = Math.sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)));
@@ -257,19 +263,17 @@ class VariableBuffer {
   }
 
   static Coordinate projectPolar(Coordinate p, double r, double ang) {
-    double x = p.getX() + (r * snapTrig(Math.cos(ang)));
-    double y = p.getY() + (r * snapTrig(Math.sin(ang)));
+    double x = p.x + (r * snapTrig(Math.cos(ang)));
+    double y = p.y + (r * snapTrig(Math.sin(ang)));
     return Coordinate(x, y);
   }
 
-  static const double _SNAP_TRIG_TOL = 1.0E-6;
-
   static double snapTrig(double x) {
-    if (x > (1 - _SNAP_TRIG_TOL)) return 1;
+    if (x > (1 - _kSnapTrigTol)) return 1;
 
-    if (x < ((-1) + _SNAP_TRIG_TOL)) return -1;
+    if (x < ((-1) + _kSnapTrigTol)) return -1;
 
-    if (Math.abs(x) < _SNAP_TRIG_TOL) return 0;
+    if (Math.abs(x) < _kSnapTrigTol) return 0;
 
     return x;
   }

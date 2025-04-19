@@ -31,8 +31,7 @@ class RobustClipEnvelopeComputer {
 
     if (g is Polygon) {
       addPolygon(g);
-    } else if (g is GeometryCollection)
-      addCollection(g);
+    } else if (g is GeometryCollection) addCollection(g);
   }
 
   void addCollection(GeometryCollection gc) {
@@ -62,12 +61,12 @@ class RobustClipEnvelopeComputer {
 
   void addSegment(Coordinate p1, Coordinate p2) {
     if (intersectsSegment(_targetEnv, p1, p2)) {
-      clipEnv.expandToInclude(p1);
-      clipEnv.expandToInclude(p2);
+      clipEnv.expandToIncludeCoordinate(p1);
+      clipEnv.expandToIncludeCoordinate(p2);
     }
   }
 
   static bool intersectsSegment(Envelope env, Coordinate p1, Coordinate p2) {
-    return env.intersects2(p1, p2);
+    return env.intersectsCoordinates(p1, p2);
   }
 }

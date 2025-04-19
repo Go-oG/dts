@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 
 import '../coordinate.dart';
 import '../coordinate_sequence.dart';
@@ -20,7 +20,6 @@ class GeometryTransformer {
 
   final bool _pruneEmptyGeometry = true;
   final bool _preserveGeometryCollectionType = true;
-  final bool _preserveCollections = false;
   final bool _preserveType = false;
 
   GeometryTransformer();
@@ -52,7 +51,7 @@ class GeometryTransformer {
   }
 
   CoordinateSequence createCoordinateSequence(Array<Coordinate> coords) {
-    return factory.coordinateSequenceFactory.create(coords);
+    return factory.csFactory.create(coords);
   }
 
   CoordinateSequence copy(CoordinateSequence seq) {
@@ -85,12 +84,12 @@ class GeometryTransformer {
 
   Geometry? transformLinearRing(LinearRing geom, Geometry? parent) {
     final seq = transformCoordinates(geom.getCoordinateSequence(), geom);
-    if (seq == null) return factory.createLinearRing3(null);
+    if (seq == null) return factory.createLinearRing2(null);
 
     int seqSize = seq.size();
     if (((seqSize > 0) && (seqSize < 4)) && (!_preserveType)) return factory.createLineString(seq);
 
-    return factory.createLinearRing3(seq);
+    return factory.createLinearRing2(seq);
   }
 
   Geometry? transformLineString(LineString geom, Geometry? parent) {

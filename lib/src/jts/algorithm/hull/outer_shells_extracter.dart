@@ -1,6 +1,6 @@
 import 'dart:core';
 
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/point_location.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -40,7 +40,7 @@ class OuterShellsExtracter {
   }
 
   bool _covers(LinearRing shellA, LinearRing shellB) {
-    if (!shellA.getEnvelopeInternal().covers3(shellB.getEnvelopeInternal())) {
+    if (!shellA.getEnvelopeInternal().covers(shellB.getEnvelopeInternal())) {
       return false;
     }
 
@@ -68,8 +68,8 @@ class OuterShellsExtracter {
 
 class _EnvelopeAreaComparator {
   int compare(Geometry o1, Geometry o2) {
-    double a1 = o1.getEnvelopeInternal().getArea();
-    double a2 = o2.getEnvelopeInternal().getArea();
+    double a1 = o1.getEnvelopeInternal().area;
+    double a2 = o2.getEnvelopeInternal().area;
     return Double.compare(a1, a2);
   }
 }

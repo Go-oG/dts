@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/angle.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -99,15 +99,15 @@ class PolygonEarClipper {
     int dupApexIndex = _NO_VERTEX_INDEX;
     for (int i = 0; i < result.length; i++) {
       int vertIndex = result[i];
-      if (((vertIndex == cornerIndex) || (vertIndex == (_vertex.length - 1))) || isRemoved(vertIndex)) continue;
+      if (((vertIndex == cornerIndex) || (vertIndex == (_vertex.length - 1))) ||
+          isRemoved(vertIndex)) continue;
 
       Coordinate v = _vertex[vertIndex];
       if (v.equals2D(corner[1])) {
         dupApexIndex = vertIndex;
       } else if (v.equals2D(corner[0]) || v.equals2D(corner[2])) {
         continue;
-      } else if (Triangle.intersects(corner[0], corner[1], corner[2], v))
-        return vertIndex;
+      } else if (Triangle.intersects(corner[0], corner[1], corner[2], v)) return vertIndex;
     }
     if (dupApexIndex != _NO_VERTEX_INDEX) {
       return dupApexIndex;
@@ -144,8 +144,8 @@ class PolygonEarClipper {
   }
 
   static Envelope envelope(Array<Coordinate> corner) {
-    Envelope cornerEnv = Envelope.of3(corner[0], corner[1]);
-    cornerEnv.expandToInclude(corner[2]);
+    Envelope cornerEnv = Envelope.fromCoordinate(corner[0], corner[1]);
+    cornerEnv.expandToIncludeCoordinate(corner[2]);
     return cornerEnv;
   }
 
@@ -215,6 +215,6 @@ class PolygonEarClipper {
       coordList.add3(v, true);
     }
     coordList.closeRing();
-    return fact.createPolygon(fact.createLinearRing2(coordList.toCoordinateArray()));
+    return fact.createPolygon(fact.createLinearRings(coordList.toCoordinateArray()));
   }
 }

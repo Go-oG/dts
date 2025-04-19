@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
@@ -46,7 +46,7 @@ class PrecisionReducerTransformer extends GeometryTransformer {
       }
       coordsReduce = extend(coordsReduce, minSize);
     }
-    return factory.coordinateSequenceFactory.create(coordsReduce);
+    return factory.csFactory.create(coordsReduce);
   }
 
   Array<Coordinate> extend(Array<Coordinate> coords, int minLength) {

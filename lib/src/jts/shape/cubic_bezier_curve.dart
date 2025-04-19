@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/angle.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
@@ -128,7 +128,7 @@ class CubicBezierCurve {
     Array<Coordinate> coords = ring.getCoordinates();
     CoordinateList curvePts = bezierCurve4(coords, true);
     curvePts.closeRing();
-    return _geomFactory.createLinearRing2(curvePts.toCoordinateArray());
+    return _geomFactory.createLinearRings(curvePts.toCoordinateArray());
   }
 
   Polygon bezierPolygon(Polygon poly) {
@@ -180,7 +180,8 @@ class CubicBezierCurve {
     return controlPoints3(coords, isRing, alpha, _skew);
   }
 
-  void addCurve(Coordinate p0, Coordinate p1, Coordinate ctrl0, Coordinate crtl1, CoordinateList curvePts) {
+  void addCurve(
+      Coordinate p0, Coordinate p1, Coordinate ctrl0, Coordinate crtl1, CoordinateList curvePts) {
     double len = p0.distance(p1);
     if (len < _minSegmentLength) {
       curvePts.add(Coordinate.of(p0));
@@ -194,7 +195,8 @@ class CubicBezierCurve {
 
   static const double _CIRCLE_LEN_FACTOR = 3.0 / 8.0;
 
-  static Array<Coordinate> controlPoints3(Array<Coordinate> coords, bool isRing, double alpha, double skew) {
+  static Array<Coordinate> controlPoints3(
+      Array<Coordinate> coords, bool isRing, double alpha, double skew) {
     int N = coords.length;
     int start = 1;
     int end = N - 1;
@@ -252,7 +254,8 @@ class CubicBezierCurve {
   static void setLineEndControlPoints(Array<Coordinate> coords, Array<Coordinate> ctrl) {
     int N = ctrl.length;
     ctrl[0] = mirrorControlPoint(ctrl[1], coords[1], coords[0]);
-    ctrl[N - 1] = mirrorControlPoint(ctrl[N - 2], coords[coords.length - 1], coords[coords.length - 2]);
+    ctrl[N - 1] =
+        mirrorControlPoint(ctrl[N - 2], coords[coords.length - 1], coords[coords.length - 2]);
   }
 
   static Coordinate aimedControlPoint(Coordinate c, Coordinate p1, Coordinate p0) {
@@ -296,9 +299,11 @@ class CubicBezierCurve {
     for (int i = 1; i < (n - 1); i++) {
       Coordinate c = Coordinate();
       double sum = ((param[i][0] + param[i][1]) + param[i][2]) + param[i][3];
-      c.x = (((param[i][0] * p0.x) + (param[i][1] * ctrl1.x)) + (param[i][2] * ctrl2.x)) + (param[i][3] * p1.x);
+      c.x = (((param[i][0] * p0.x) + (param[i][1] * ctrl1.x)) + (param[i][2] * ctrl2.x)) +
+          (param[i][3] * p1.x);
       c.x /= sum;
-      c.y = (((param[i][0] * p0.y) + (param[i][1] * ctrl1.y)) + (param[i][2] * ctrl2.y)) + (param[i][3] * p1.y);
+      c.y = (((param[i][0] * p0.y) + (param[i][1] * ctrl1.y)) + (param[i][2] * ctrl2.y)) +
+          (param[i][3] * p1.y);
       c.y /= sum;
       curve[i] = c;
     }

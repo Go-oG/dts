@@ -1,6 +1,6 @@
 import 'dart:collection';
 
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 
 import 'oriented_coordinate_array.dart';
@@ -29,8 +29,9 @@ class SegmentStringDissolver {
     if (existing == null) {
       add(oca, segString);
     } else if (_merger != null) {
-      bool isSameOrientation = CoordinateArrays.equals(existing.getCoordinates(), segString.getCoordinates());
-      _merger.merge(existing, segString, isSameOrientation);
+      bool isSameOrientation =
+          CoordinateArrays.equals(existing.getCoordinates(), segString.getCoordinates());
+      _merger!.merge(existing, segString, isSameOrientation);
     }
   }
 

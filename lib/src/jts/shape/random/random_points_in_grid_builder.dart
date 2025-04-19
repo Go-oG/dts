@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
@@ -29,8 +29,8 @@ class RandomPointsInGridBuilder extends GeometricShapeBuilder {
       nCells += 1;
     }
 
-    double gridDX = getExtent()!.getWidth() / nCells;
-    double gridDY = getExtent()!.getHeight() / nCells;
+    double gridDX = getExtent()!.width / nCells;
+    double gridDY = getExtent()!.height / nCells;
     double gutterFrac = MathUtil.clamp2(_gutterFraction, 0.0, 1.0);
     double gutterOffsetX = (gridDX * gutterFrac) / 2;
     double gutterOffsetY = (gridDY * gutterFrac) / 2;
@@ -41,12 +41,12 @@ class RandomPointsInGridBuilder extends GeometricShapeBuilder {
     int index = 0;
     for (int i = 0; i < nCells; i++) {
       for (int j = 0; j < nCells; j++) {
-        double orgX = (getExtent()!.getMinX() + (i * gridDX)) + gutterOffsetX;
-        double orgY = (getExtent()!.getMinY() + (j * gridDY)) + gutterOffsetY;
+        double orgX = (getExtent()!.minX + (i * gridDX)) + gutterOffsetX;
+        double orgY = (getExtent()!.minY + (j * gridDY)) + gutterOffsetY;
         pts[index++] = randomPointInCell(orgX, orgY, cellDX, cellDY);
       }
     }
-    return geomFactory.createMultiPointFromCoords(pts);
+    return geomFactory.createMultiPoint5(pts);
   }
 
   Coordinate randomPointInCell(double orgX, double orgY, double xLen, double yLen) {

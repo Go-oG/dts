@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -44,7 +44,8 @@ final class CGAlgorithms {
   static bool isCCW(Array<Coordinate> ring) {
     int nPts = ring.length - 1;
     if (nPts < 3) {
-      throw IllegalArgumentException("Ring has fewer than 4 points, so orientation cannot be determined");
+      throw IllegalArgumentException(
+          "Ring has fewer than 4 points, so orientation cannot be determined");
     }
 
     Coordinate hiPt = ring[0];
@@ -234,13 +235,13 @@ final class CGAlgorithms3D {
   CGAlgorithms3D._();
 
   static double distance(Coordinate p0, Coordinate p1) {
-    if (Double.isNaN(p0.getZ()) || Double.isNaN(p1.getZ())) {
+    if (Double.isNaN(p0.z) || Double.isNaN(p1.z)) {
       return p0.distance(p1);
     }
 
     double dx = p0.x - p1.x;
     double dy = p0.y - p1.y;
-    double dz = p0.getZ() - p1.getZ();
+    double dz = p0.z - p1.z;
     return Math.sqrt(((dx * dx) + (dy * dy)) + (dz * dz));
   }
 
@@ -250,14 +251,13 @@ final class CGAlgorithms3D {
     }
 
     double len2 =
-        (((B.x - A.x) * (B.x - A.x)) + ((B.y - A.y) * (B.y - A.y))) + ((B.getZ() - A.getZ()) * (B.getZ() - A.getZ()));
+        (((B.x - A.x) * (B.x - A.x)) + ((B.y - A.y) * (B.y - A.y))) + ((B.z - A.z) * (B.z - A.z));
     if (Double.isNaN(len2)) {
       throw IllegalArgumentException("Ordinates must not be NaN");
     }
 
-    double r =
-        ((((p.x - A.x) * (B.x - A.x)) + ((p.y - A.y) * (B.y - A.y))) +
-            ((p.getZ() - A.getZ()) * (B.getZ() - A.getZ()))) /
+    double r = ((((p.x - A.x) * (B.x - A.x)) + ((p.y - A.y) * (B.y - A.y))) +
+            ((p.z - A.z) * (B.z - A.z))) /
         len2;
     if (r <= 0.0) {
       return distance(p, A);
@@ -269,10 +269,10 @@ final class CGAlgorithms3D {
 
     double qx = A.x + (r * (B.x - A.x));
     double qy = A.y + (r * (B.y - A.y));
-    double qz = A.getZ() + (r * (B.getZ() - A.getZ()));
+    double qz = A.z + (r * (B.z - A.z));
     double dx = p.x - qx;
     double dy = p.y - qy;
-    double dz = p.getZ() - qz;
+    double dz = p.z - qz;
     return Math.sqrt(((dx * dx) + (dy * dy)) + (dz * dz));
   }
 
@@ -310,19 +310,22 @@ final class CGAlgorithms3D {
     }
     if (s < 0) {
       return distancePointSegment(A, C, D);
-    } else if (s > 1)
+    }
+    if (s > 1) {
       return distancePointSegment(B, C, D);
-    else if (t < 0)
+    }
+    if (t < 0) {
       return distancePointSegment(C, A, B);
-    else if (t > 1) {
+    }
+    if (t > 1) {
       return distancePointSegment(D, A, B);
     }
     double x1 = A.x + (s * (B.x - A.x));
     double y1 = A.y + (s * (B.y - A.y));
-    double z1 = A.getZ() + (s * (B.getZ() - A.getZ()));
+    double z1 = A.z + (s * (B.z - A.z));
     double x2 = C.x + (t * (D.x - C.x));
     double y2 = C.y + (t * (D.y - C.y));
-    double z2 = C.getZ() + (t * (D.getZ() - C.getZ()));
+    double z2 = C.z + (t * (D.z - C.z));
     return distance(Coordinate(x1, y1, z1), Coordinate(x2, y2, z2));
   }
 }
@@ -334,7 +337,8 @@ final class CGAlgorithmsDD {
     return orientationIndex2(p1.x, p1.y, p2.x, p2.y, q.x, q.y);
   }
 
-  static int orientationIndex2(double p1x, double p1y, double p2x, double p2y, double qx, double qy) {
+  static int orientationIndex2(
+      double p1x, double p1y, double p2x, double p2y, double qx, double qy) {
     int index = _orientationIndexFilter(p1x, p1y, p2x, p2y, qx, qy);
     if (index <= 1) {
       return index;
@@ -361,7 +365,8 @@ final class CGAlgorithmsDD {
     return det.signum();
   }
 
-  static int _orientationIndexFilter(double pax, double pay, double pbx, double pby, double pcx, double pcy) {
+  static int _orientationIndexFilter(
+      double pax, double pay, double pbx, double pby, double pcx, double pcy) {
     double detsum;
     double detleft = (pax - pcx) * (pby - pcy);
     double detright = (pay - pcy) * (pbx - pcx);
@@ -412,7 +417,8 @@ final class CGAlgorithmsDD {
     DD w = px.multiply(qy).selfSubtract(qx.multiply(py));
     double xInt = x.selfDivide(w).doubleValue();
     double yInt = y.selfDivide(w).doubleValue();
-    if ((Double.isNaN(xInt) || (Double.isInfinite(xInt) || Double.isNaN(yInt))) || Double.isInfinite(yInt)) {
+    if ((Double.isNaN(xInt) || (Double.isInfinite(xInt) || Double.isNaN(yInt))) ||
+        Double.isInfinite(yInt)) {
       return null;
     }
     return Coordinate(xInt, yInt);

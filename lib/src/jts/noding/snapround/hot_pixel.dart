@@ -1,11 +1,11 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/cgalgorithms.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 
 class HotPixel {
-  static const double _TOLERANCE = 0.5;
+  static const double _kTolerance = 0.5;
 
   final Coordinate _originalPt;
 
@@ -21,11 +21,11 @@ class HotPixel {
     if (_scaleFactor <= 0) throw ("Scale factor must be non-zero");
 
     if (_scaleFactor != 1.0) {
-      _hpx = scaleRound(_originalPt.getX());
-      _hpy = scaleRound(_originalPt.getY());
+      _hpx = scaleRound(_originalPt.x);
+      _hpy = scaleRound(_originalPt.y);
     } else {
-      _hpx = _originalPt.getX();
-      _hpy = _originalPt.getY();
+      _hpx = _originalPt.x;
+      _hpy = _originalPt.y;
     }
   }
 
@@ -60,13 +60,13 @@ class HotPixel {
   bool intersects(Coordinate p) {
     double x = scale(p.x);
     double y = scale(p.y);
-    if (x >= (_hpx + _TOLERANCE)) return false;
+    if (x >= (_hpx + _kTolerance)) return false;
 
-    if (x < (_hpx - _TOLERANCE)) return false;
+    if (x < (_hpx - _kTolerance)) return false;
 
-    if (y >= (_hpy + _TOLERANCE)) return false;
+    if (y >= (_hpy + _kTolerance)) return false;
 
-    if (y < (_hpy - _TOLERANCE)) return false;
+    if (y < (_hpy - _kTolerance)) return false;
 
     return true;
   }
@@ -92,19 +92,19 @@ class HotPixel {
       qx = p0x;
       qy = p0y;
     }
-    double maxx = _hpx + _TOLERANCE;
+    double maxx = _hpx + _kTolerance;
     double segMinx = Math.minD(px, qx);
     if (segMinx >= maxx) return false;
 
-    double minx = _hpx - _TOLERANCE;
+    double minx = _hpx - _kTolerance;
     double segMaxx = Math.maxD(px, qx);
     if (segMaxx < minx) return false;
 
-    double maxy = _hpy + _TOLERANCE;
+    double maxy = _hpy + _kTolerance;
     double segMiny = Math.minD(py, qy);
     if (segMiny >= maxy) return false;
 
-    double miny = _hpy - _TOLERANCE;
+    double miny = _hpy - _kTolerance;
     double segMaxy = Math.maxD(py, qy);
     if (segMaxy < miny) return false;
 
@@ -151,24 +151,24 @@ class HotPixel {
     return false;
   }
 
-  static const int _UPPER_RIGHT = 0;
+  static const int _kUpperRight = 0;
 
-  static const int _UPPER_LEFT = 1;
+  static const int _kUpperLeft = 1;
 
-  static const int _LOWER_LEFT = 2;
+  static const int _kLowerLeft = 2;
 
-  static const int _LOWER_RIGHT = 3;
+  static const int _kLowerRight = 3;
 
   bool intersectsPixelClosure(Coordinate p0, Coordinate p1) {
-    double minx = _hpx - _TOLERANCE;
-    double maxx = _hpx + _TOLERANCE;
-    double miny = _hpy - _TOLERANCE;
-    double maxy = _hpy + _TOLERANCE;
+    double minx = _hpx - _kTolerance;
+    double maxx = _hpx + _kTolerance;
+    double miny = _hpy - _kTolerance;
+    double maxy = _hpy + _kTolerance;
     Array<Coordinate> corner = Array(4);
-    corner[_UPPER_RIGHT] = Coordinate(maxx, maxy);
-    corner[_UPPER_LEFT] = Coordinate(minx, maxy);
-    corner[_LOWER_LEFT] = Coordinate(minx, miny);
-    corner[_LOWER_RIGHT] = Coordinate(maxx, miny);
+    corner[_kUpperRight] = Coordinate(maxx, maxy);
+    corner[_kUpperLeft] = Coordinate(minx, maxy);
+    corner[_kLowerLeft] = Coordinate(minx, miny);
+    corner[_kLowerRight] = Coordinate(maxx, miny);
     LineIntersector li = RobustLineIntersector();
     li.computeIntersection2(p0, p1, corner[0], corner[1]);
     if (li.hasIntersection()) return true;

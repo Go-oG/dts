@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 
 import 'dimension.dart';
 import 'geometry.dart';
@@ -11,7 +11,7 @@ import 'precision_model.dart';
 
 class MultiPolygon extends GeometryCollection<Polygon> implements Polygonal {
   MultiPolygon(Array<Polygon>? polygons, PrecisionModel precisionModel, int SRID)
-    : this.of(polygons, GeometryFactory.of2(precisionModel, SRID));
+      : this.of(polygons, GeometryFactory.from(precisionModel, SRID));
 
   MultiPolygon.of(super.polygons, super.factory);
 

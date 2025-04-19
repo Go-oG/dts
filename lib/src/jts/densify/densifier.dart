@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
@@ -17,7 +17,8 @@ final class Densifier {
     return densifier.getResultGeometry();
   }
 
-  static Array<Coordinate> _densifyPoints(Array<Coordinate> pts, double distanceTolerance, PrecisionModel precModel) {
+  static Array<Coordinate> _densifyPoints(
+      Array<Coordinate> pts, double distanceTolerance, PrecisionModel precModel) {
     LineSegment seg = LineSegment.empty();
     CoordinateList coordList = CoordinateList();
     for (int i = 0; i < (pts.length - 1); i++) {
@@ -35,13 +36,13 @@ final class Densifier {
         double segFract = (j * densifiedSegLen) / len;
         Coordinate p = seg.pointAlong(segFract);
         if ((!Double.isNaN(seg.p0.z)) && (!Double.isNaN(seg.p1.z))) {
-          p.setZ(seg.p0.z + (segFract * (seg.p1.z - seg.p0.z)));
+          p.z = (seg.p0.z + (segFract * (seg.p1.z - seg.p0.z)));
         }
         precModel.makePrecise(p);
         coordList.add3(p, false);
       }
     }
-    if (pts.length > 0) {
+    if (pts.isNotEmpty) {
       coordList.add3(pts[pts.length - 1], false);
     }
 
@@ -83,11 +84,12 @@ class DensifyTransformer extends GeometryTransformer {
   @override
   CoordinateSequence transformCoordinates(CoordinateSequence coords, Geometry? parent) {
     Array<Coordinate> inputPts = coords.toCoordinateArray();
-    Array<Coordinate> newPts = Densifier._densifyPoints(inputPts, distanceTolerance, parent!.getPrecisionModel());
+    Array<Coordinate> newPts =
+        Densifier._densifyPoints(inputPts, distanceTolerance, parent!.getPrecisionModel());
     if ((parent is LineString) && (newPts.length == 1)) {
       newPts = Array<Coordinate>(0);
     }
-    return factory.coordinateSequenceFactory.create(newPts);
+    return factory.csFactory.create(newPts);
   }
 
   @override

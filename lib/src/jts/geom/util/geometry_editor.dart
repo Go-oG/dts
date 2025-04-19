@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -79,8 +79,10 @@ class GeometryEditor {
     return _factory!.createPolygon(shell, holes.toArray());
   }
 
-  GeometryCollection editGeometryCollection(GeometryCollection collection, GeometryEditorOperation operation) {
-    GeometryCollection collectionForType = (operation.edit(collection, _factory!) as GeometryCollection);
+  GeometryCollection editGeometryCollection(
+      GeometryCollection collection, GeometryEditorOperation operation) {
+    GeometryCollection collectionForType =
+        (operation.edit(collection, _factory!) as GeometryCollection);
     List<Geometry> geometries = [];
     for (int i = 0; i < collectionForType.getNumGeometries(); i++) {
       Geometry? geometry = edit(collectionForType.getGeometryN(i), operation);
@@ -90,7 +92,7 @@ class GeometryEditor {
       geometries.add(geometry);
     }
     if (collectionForType.runtimeType == MultiPoint) {
-      return _factory!.createMultiPoint3(geometries.cast<Point>().toArray());
+      return _factory!.createMultiPoint2(geometries.cast<Point>().toArray());
     }
     if (collectionForType.runtimeType == MultiLineString) {
       return _factory!.createMultiLineString2(geometries.cast<LineString>().toArray());
@@ -110,7 +112,7 @@ abstract class CoordinateSequenceOperation implements GeometryEditorOperation {
   @override
   Geometry edit(Geometry geometry, GeometryFactory factory) {
     if (geometry is LinearRing) {
-      return factory.createLinearRing3(edit2(geometry.getCoordinateSequence(), geometry));
+      return factory.createLinearRing2(edit2(geometry.getCoordinateSequence(), geometry));
     }
     if (geometry is LineString) {
       return factory.createLineString(edit2(geometry.getCoordinateSequence(), geometry));
@@ -135,14 +137,15 @@ abstract class CoordinateOperation implements GeometryEditorOperation {
   @override
   Geometry edit(Geometry geometry, GeometryFactory factory) {
     if (geometry is LinearRing) {
-      return factory.createLinearRing2(edit2(geometry.getCoordinates(), geometry));
+      return factory.createLinearRings(edit2(geometry.getCoordinates(), geometry));
     }
     if (geometry is LineString) {
       return factory.createLineString2(edit2(geometry.getCoordinates(), geometry));
     }
     if (geometry is Point) {
       final newCoordinates = edit2(geometry.getCoordinates(), geometry);
-      return factory.createPoint2(newCoordinates != null && newCoordinates.length > 0 ? newCoordinates[0] : null);
+      return factory.createPoint2(
+          newCoordinates != null && newCoordinates.length > 0 ? newCoordinates[0] : null);
     }
     return geometry;
   }

@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
@@ -38,7 +38,7 @@ class EdgeNodingBuilder {
     return noder;
   }
 
-  static Noder createdoubleingPrecisionNoder(bool doValidation) {
+  static Noder createDoubleingPrecisionNoder(bool doValidation) {
     MCIndexNoder mcNoder = MCIndexNoder();
     LineIntersector li = RobustLineIntersector();
     mcNoder.setSegmentIntersector(IntersectionAdder(li));
@@ -67,11 +67,11 @@ class EdgeNodingBuilder {
 
   Noder getNoder() {
     if (_customNoder != null) {
-      return _customNoder;
+      return _customNoder!;
     }
 
     if (OverlayUtil.isdoubleing(pm)) {
-      return createdoubleingPrecisionNoder(_IS_NODING_VALIDATED);
+      return createDoubleingPrecisionNoder(_IS_NODING_VALIDATED);
     }
 
     return createFixedPrecisionNoder(pm);
@@ -131,8 +131,7 @@ class EdgeNodingBuilder {
       addCollection(g, geomIndex);
     else if (g is MultiPolygon)
       addCollection(g, geomIndex);
-    else if (g is GeometryCollection)
-      addGeometryCollection(g, geomIndex, g.getDimension());
+    else if (g is GeometryCollection) addGeometryCollection(g, geomIndex, g.getDimension());
   }
 
   void addCollection(GeometryCollection gc, int geomIndex) {
@@ -186,7 +185,7 @@ class EdgeNodingBuilder {
   Array<Coordinate> clip(LinearRing ring) {
     Array<Coordinate> pts = ring.getCoordinates();
     Envelope env = ring.getEnvelopeInternal();
-    if ((_clipper == null) || _clipEnv!.covers3(env)) {
+    if ((_clipper == null) || _clipEnv!.covers(env)) {
       return removeRepeatedPoints(ring);
     }
     return _clipper!.clip(pts);
@@ -244,7 +243,7 @@ class EdgeNodingBuilder {
       return false;
     }
     Envelope env = line.getEnvelopeInternal();
-    if (_clipEnv!.covers3(env)) {
+    if (_clipEnv!.covers(env)) {
       return false;
     }
     return true;

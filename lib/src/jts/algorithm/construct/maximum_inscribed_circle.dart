@@ -1,7 +1,6 @@
 import 'dart:math';
 
-import 'package:collection/collection.dart';
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -24,7 +23,7 @@ class MaximumInscribedCircle with InitMixin {
   }
 
   static int computeMaximumIterations(Geometry geom, double toleranceDist) {
-    double diam = geom.getEnvelopeInternal().getDiameter();
+    double diam = geom.getEnvelopeInternal().diameter;
     double ncells = diam / toleranceDist;
     int factor = log(ncells).toInt();
     if (factor < 1) {
@@ -135,7 +134,8 @@ class MaximumInscribedCircle with InitMixin {
   }
 
   void _createInitialGrid(Envelope env, PriorityQueue<_Cell> cellQueue) {
-    double cellSize = Math.maxD(env.getWidth(), env.getHeight());
+    double cellSize = env.longSide;
+
     double hSide = cellSize / 2.0;
     if (cellSize == 0) {
       return;
@@ -173,7 +173,7 @@ class _Cell implements Comparable<_Cell> {
   }
 
   Envelope getEnvelope() {
-    return Envelope.of4(x - hSide, x + hSide, y - hSide, y + hSide);
+    return Envelope.fromLRTB(x - hSide, x + hSide, y - hSide, y + hSide);
   }
 
   @override

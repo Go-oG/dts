@@ -67,6 +67,6 @@ abstract class BasicPredicate extends TopologyPredicate {
   }
 
   void requireCovers2(Envelope a, Envelope b) {
-    require(a.covers3(b));
+    require(a.covers(b));
   }
 }

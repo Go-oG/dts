@@ -16,14 +16,14 @@ class CoveragePolygon {
   }
 
   bool intersectsEnv(Envelope env) {
-    return !((((env.getMinX() > _polyEnv.getMaxX()) || (env.getMaxX() < _polyEnv.getMinX())) ||
-            (env.getMinY() > _polyEnv.getMaxY())) ||
-        (env.getMaxY() < _polyEnv.getMinY()));
+    return !((((env.minX > _polyEnv.maxX) || (env.maxX < _polyEnv.minX)) ||
+            (env.minY > _polyEnv.maxY)) ||
+        (env.maxY < _polyEnv.minY));
   }
 
   bool _intersectsEnv(Coordinate p) {
-    return !((((p.x > _polyEnv.getMaxX()) || (p.x < _polyEnv.getMinX())) || (p.y > _polyEnv.getMaxY())) ||
-        (p.y < _polyEnv.getMinY()));
+    return !((((p.x > _polyEnv.maxX) || (p.x < _polyEnv.minX)) || (p.y > _polyEnv.maxY)) ||
+        (p.y < _polyEnv.minY));
   }
 
   bool contains(Coordinate p) {

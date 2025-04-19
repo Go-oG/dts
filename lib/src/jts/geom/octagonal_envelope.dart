@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/point.dart';
 
 import 'coordinate.dart';
@@ -157,10 +157,10 @@ class OctagonalEnvelope {
   }
 
   OctagonalEnvelope expandToInclude4(Envelope env) {
-    expandToInclude3(env.getMinX(), env.getMinY());
-    expandToInclude3(env.getMinX(), env.getMaxY());
-    expandToInclude3(env.getMaxX(), env.getMinY());
-    expandToInclude3(env.getMaxX(), env.getMaxY());
+    expandToInclude3(env.minX, env.minY);
+    expandToInclude3(env.minX, env.maxY);
+    expandToInclude3(env.maxX, env.minY);
+    expandToInclude3(env.maxX, env.maxY);
     return this;
   }
 
@@ -313,7 +313,7 @@ class OctagonalEnvelope {
     }
     coordList.add3(px00, false);
     Array<Coordinate> pts = coordList.toCoordinateArray();
-    return geomFactory.createPolygon(geomFactory.createLinearRing2(pts));
+    return geomFactory.createPolygon(geomFactory.createLinearRings(pts));
   }
 }
 
