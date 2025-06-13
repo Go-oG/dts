@@ -3,7 +3,7 @@ import 'dart:io';
 late List<String> obj;
 
 void main() {
-
+outExportFile(Directory("E:/Code/FlutterProject/chart/e_chart/lib/src"));
 }
 
 void outExportFile(Directory dir) {
@@ -29,8 +29,10 @@ void outExportFile(Directory dir) {
 
   for (var file in fileList) {
     var path = file.absolute.path;
-    path = path.replaceAll("/Users/wzp/Develop/Project/Flutter/dts/lib", "");
+    path = path.replaceAll("E:/Code/FlutterProject/chart/e_chart/lib", "");
     path = path.replaceAll("\\", "/");
+    path=path.substring(1);
+
     path = "export '$path';";
     print(path);
   }
