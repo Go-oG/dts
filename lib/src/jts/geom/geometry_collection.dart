@@ -1,6 +1,7 @@
+import 'dart:collection';
+
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/util/assert.dart';
-import 'package:quiver/collection.dart';
 
 import 'coordinate.dart';
 import 'coordinate_sequence.dart';
@@ -220,9 +221,9 @@ class GeometryCollection<T extends BaseGeometry> extends BaseGeometry<GeometryCo
 
   @override
   int compareToSameClass(Object o) {
-    TreeSet<T> theseElements = TreeSet();
+    Set<T> theseElements = SplayTreeSet();
     theseElements.addAll(geometries.asList());
-    TreeSet<T> otherElements = TreeSet();
+    Set<T> otherElements = SplayTreeSet();
     otherElements.addAll((o as GeometryCollection<T>).geometries.asList());
     return compare(theseElements, otherElements);
   }

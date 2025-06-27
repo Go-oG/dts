@@ -1,4 +1,6 @@
- import 'package:d_util/d_util.dart';
+ import 'dart:collection';
+
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_component_filter.dart';
@@ -11,7 +13,6 @@ import 'package:dts/src/jts/planargraph/graph_component.dart';
 import 'package:dts/src/jts/planargraph/node.dart';
 import 'package:dts/src/jts/planargraph/subgraph.dart';
 import 'package:dts/src/jts/util/assert.dart';
-import 'package:quiver/collection.dart';
 
 import 'line_merge_edge.dart';
 import 'line_merge_graph.dart';
@@ -27,7 +28,7 @@ class LineSequencer {
     if (mls is! MultiLineString) {
       return true;
     }
-    Set prevSubgraphNodes = TreeSet();
+    Set prevSubgraphNodes = SplayTreeSet();
     Coordinate? lastNode;
     List currNodes = [];
     for (int i = 0; i < mls.getNumGeometries(); i++) {

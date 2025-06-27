@@ -1,10 +1,11 @@
+import 'dart:collection';
+
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/polygonal.dart';
 import 'package:dts/src/jts/geom/precision_model.dart';
-import 'package:quiver/collection.dart';
 
 import 'snap_transformer.dart';
 
@@ -68,7 +69,7 @@ class GeometrySnapper {
   }
 
   Array<Coordinate> extractTargetCoordinates(Geometry g) {
-    Set<Coordinate> ptSet = TreeSet();
+    Set<Coordinate> ptSet = SplayTreeSet();
     Array<Coordinate> pts = g.getCoordinates();
     for (int i = 0; i < pts.length; i++) {
       ptSet.add(pts[i]);
