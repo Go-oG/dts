@@ -2,8 +2,8 @@ import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
@@ -360,7 +360,7 @@ class QuadEdgeSubdivision {
     return visitor.getTriangles();
   }
 
-  Geometry getEdges2(GeometryFactory geomFact) {
+  Geometry getEdges2(GeomFactory geomFact) {
     final quadEdges = getPrimaryEdges(false);
     Array<LineString> edges = Array(quadEdges.size);
     int i = 0;
@@ -369,10 +369,10 @@ class QuadEdgeSubdivision {
       edges[i++] = geomFact
           .createLineString2([qe.orig().getCoordinate(), qe.dest().getCoordinate()].toArray());
     }
-    return geomFact.createMultiLineString2(edges);
+    return geomFact.createMultiLineString(edges);
   }
 
-  Geometry getTriangles2(GeometryFactory geomFact) {
+  Geometry getTriangles2(GeomFactory geomFact) {
     final triPtsList = getTriangleCoordinates(false);
     Array<Polygon> tris = Array(triPtsList.size);
     int i = 0;
@@ -380,10 +380,10 @@ class QuadEdgeSubdivision {
       Array<Coordinate> triPt = it.current;
       tris[i++] = geomFact.createPolygon(geomFact.createLinearRings(triPt));
     }
-    return geomFact.createGeometryCollection2(tris);
+    return geomFact.createGeomCollection(tris);
   }
 
-  Geometry getTriangles(bool includeFrame, GeometryFactory geomFact) {
+  Geometry getTriangles(bool includeFrame, GeomFactory geomFact) {
     final triPtsList = getTriangleCoordinates(includeFrame);
     Array<Polygon> tris = Array(triPtsList.size);
     int i = 0;
@@ -391,15 +391,15 @@ class QuadEdgeSubdivision {
       Array<Coordinate> triPt = it.current;
       tris[i++] = geomFact.createPolygon(geomFact.createLinearRings(triPt));
     }
-    return geomFact.createGeometryCollection2(tris);
+    return geomFact.createGeomCollection(tris);
   }
 
-  Geometry getVoronoiDiagram(GeometryFactory geomFact) {
+  Geometry getVoronoiDiagram(GeomFactory geomFact) {
     final vorCells = getVoronoiCellPolygons(geomFact);
-    return geomFact.createGeometryCollection2(GeometryFactory.toGeometryArray(vorCells)!);
+    return geomFact.createGeomCollection(GeomFactory.toGeometryArray(vorCells)!);
   }
 
-  List<Polygon> getVoronoiCellPolygons(GeometryFactory geomFact) {
+  List<Polygon> getVoronoiCellPolygons(GeomFactory geomFact) {
     visitTriangles(TriangleCircumcentreVisitor(), true);
     List<Polygon> cells = [];
     List edges = getVertexUniqueEdges(false);
@@ -410,7 +410,7 @@ class QuadEdgeSubdivision {
     return cells;
   }
 
-  Polygon getVoronoiCellPolygon(QuadEdge qe, GeometryFactory geomFact) {
+  Polygon getVoronoiCellPolygon(QuadEdge qe, GeomFactory geomFact) {
     List<Coordinate> cellPts = [];
     QuadEdge startQE = qe;
     do {

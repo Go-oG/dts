@@ -1,17 +1,13 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 
 class CoordinateList {
   final List<Coordinate> _list = [];
 
-  CoordinateList();
-
-  CoordinateList.of(Array<Coordinate> coord) {
-    add2(coord, true);
-  }
-
-  CoordinateList.of2(Array<Coordinate> coord, bool allowRepeated) {
-    add2(coord, allowRepeated);
+  CoordinateList([Array<Coordinate>? coord, bool allowRepeated = true]) {
+    if (coord != null) {
+      add2(coord, allowRepeated);
+    }
   }
 
   Coordinate getCoordinate(int i) {

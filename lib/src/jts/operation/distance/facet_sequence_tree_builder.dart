@@ -1,6 +1,6 @@
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_component_filter.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_component_filter.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/point.dart';
 import 'package:dts/src/jts/index/strtree/strtree.dart';
@@ -25,7 +25,7 @@ class FacetSequenceTreeBuilder {
   static List<FacetSequence> computeFacetSequences(Geometry g) {
     final List<FacetSequence> sections = [];
     g.apply4(
-      GeometryComponentFilter2((geom) {
+      GeomComponentFilter2((geom) {
         CoordinateSequence? seq;
         if (geom is LineString) {
           seq = geom.getCoordinateSequence();
@@ -39,7 +39,8 @@ class FacetSequenceTreeBuilder {
     return sections;
   }
 
-  static void addFacetSequences(Geometry geom, CoordinateSequence pts, List<FacetSequence> sections) {
+  static void addFacetSequences(
+      Geometry geom, CoordinateSequence pts, List<FacetSequence> sections) {
     int i = 0;
     int size = pts.size();
     while (i <= (size - 1)) {

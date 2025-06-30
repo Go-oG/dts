@@ -5,22 +5,22 @@ import 'coordinate.dart';
 import 'coordinate_sequence.dart';
 import 'dimension.dart';
 import 'envelope.dart';
-import 'geometry.dart';
-import 'geometry_component_filter.dart';
-import 'geometry_factory.dart';
-import 'geometry_filter.dart';
+import 'geom.dart';
+import 'geom_component_filter.dart';
+import 'geom_factory.dart';
+import 'geom_filter.dart';
 import 'precision_model.dart';
 import 'puntal.dart';
 
 class Point extends BaseGeometry<Point> implements Puntal {
   late CoordinateSequence _coordinates;
 
-  Point(Coordinate? coordinate, PrecisionModel precisionModel, int srid)
-      : super(GeometryFactory.from(precisionModel, srid)) {
+  Point(Coordinate? coordinate, PrecisionModel pm, int srid)
+      : super(GeomFactory(pm: pm, srid: srid)) {
     init(factory.csFactory.create(coordinate != null ? Array.of(coordinate) : Array(0)));
   }
 
-  Point.of(CoordinateSequence? coordinates, GeometryFactory factory) : super(factory) {
+  Point.of(CoordinateSequence? coordinates, GeomFactory factory) : super(factory) {
     init(coordinates);
   }
 
@@ -80,13 +80,13 @@ class Point extends BaseGeometry<Point> implements Puntal {
   }
 
   @override
-  GeometryType get geometryType {
-    return GeometryType.point;
+  GeomType get geometryType {
+    return GeomType.point;
   }
 
   @override
   Geometry getBoundary() {
-    return factory.createGeometryCollection();
+    return factory.createGeomCollection();
   }
 
   @override
@@ -130,12 +130,12 @@ class Point extends BaseGeometry<Point> implements Puntal {
   }
 
   @override
-  void apply3(GeometryFilter filter) {
+  void apply3(GeomFilter filter) {
     filter.filter(this);
   }
 
   @override
-  void apply4(GeometryComponentFilter filter) {
+  void apply4(GeomComponentFilter filter) {
     filter.filter(this);
   }
 

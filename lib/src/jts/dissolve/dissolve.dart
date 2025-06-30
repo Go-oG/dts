@@ -1,13 +1,13 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/edgegraph/edge_graph.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 
-import '../geom/geometry_component_filter.dart';
+import '../geom/geom_component_filter.dart';
 
 class DissolveEdgeGraph extends EdgeGraph {
   @override
@@ -33,7 +33,7 @@ class LineDissolver {
 
   Geometry? _result;
 
-  late GeometryFactory factory;
+  late GeomFactory factory;
 
   late final DissolveEdgeGraph _graph;
 
@@ -45,7 +45,7 @@ class LineDissolver {
 
   void add(Geometry geometry) {
     geometry.apply4(
-      GeometryComponentFilter2((e) {
+      GeomComponentFilter2((e) {
         if (e is LineString) {
           _add(e);
         }
@@ -63,7 +63,8 @@ class LineDissolver {
     CoordinateSequence seq = lineString.getCoordinateSequence();
     bool doneStart = false;
     for (int i = 1; i < seq.size(); i++) {
-      DissolveHalfEdge? e = ((_graph.addEdge(seq.getCoordinate(i - 1), seq.getCoordinate(i))) as DissolveHalfEdge?);
+      DissolveHalfEdge? e =
+          ((_graph.addEdge(seq.getCoordinate(i - 1), seq.getCoordinate(i))) as DissolveHalfEdge?);
       if (e == null) {
         continue;
       }

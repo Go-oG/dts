@@ -2,8 +2,8 @@ import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/geom/triangle.dart';
 import 'package:dts/src/jts/util/assert.dart';
@@ -11,13 +11,13 @@ import 'package:dts/src/jts/util/assert.dart';
 class Tri {
   static final String _kInvalidTriIndex = "Invalid Tri index";
 
-  static Geometry toGeometry(List<Tri> tris, GeometryFactory geomFact) {
+  static Geometry toGeometry(List<Tri> tris, GeomFactory geomFact) {
     Array<Geometry> geoms = Array(tris.size);
     int i = 0;
     for (Tri tri in tris) {
       geoms[i++] = tri.toPolygon(geomFact);
     }
-    return geomFact.createGeometryCollection2(geoms);
+    return geomFact.createGeomCollection(geoms);
   }
 
   static double area<T extends Tri>(List<T> triList) {
@@ -355,7 +355,7 @@ class Tri {
     return getCoordinate(edgeIndex).distance(getCoordinate(next(edgeIndex)));
   }
 
-  Polygon toPolygon(GeometryFactory geomFact) {
+  Polygon toPolygon(GeomFactory geomFact) {
     return geomFact.createPolygon(
       geomFact.createLinearRings([p0.copy(), p1.copy(), p2.copy(), p0.copy()].toArray()),
       null,

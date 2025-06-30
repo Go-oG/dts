@@ -5,8 +5,8 @@ import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_collection.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_collection.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/multi_line_string.dart';
@@ -131,17 +131,17 @@ class EdgeNodingBuilder {
       addCollection(g, geomIndex);
     else if (g is MultiPolygon)
       addCollection(g, geomIndex);
-    else if (g is GeometryCollection) addGeometryCollection(g, geomIndex, g.getDimension());
+    else if (g is GeomCollection) addGeometryCollection(g, geomIndex, g.getDimension());
   }
 
-  void addCollection(GeometryCollection gc, int geomIndex) {
+  void addCollection(GeomCollection gc, int geomIndex) {
     for (int i = 0; i < gc.getNumGeometries(); i++) {
       Geometry g = gc.getGeometryN(i);
       add(g, geomIndex);
     }
   }
 
-  void addGeometryCollection(GeometryCollection gc, int geomIndex, int expectedDim) {
+  void addGeometryCollection(GeomCollection gc, int geomIndex, int expectedDim) {
     for (int i = 0; i < gc.getNumGeometries(); i++) {
       Geometry g = gc.getGeometryN(i);
       if (g.getDimension() != expectedDim) {

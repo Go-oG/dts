@@ -5,10 +5,10 @@ import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'coordinate.dart';
 import 'coordinate_sequence.dart';
 import 'envelope.dart';
-import 'geometry.dart';
-import 'geometry_component_filter.dart';
-import 'geometry_factory.dart';
-import 'geometry_filter.dart';
+import 'geom.dart';
+import 'geom_component_filter.dart';
+import 'geom_factory.dart';
+import 'geom_filter.dart';
 import 'linear_ring.dart';
 import 'polygonal.dart';
 import 'precision_model.dart';
@@ -17,13 +17,13 @@ class Polygon extends BaseGeometry<Polygon> implements Polygonal {
   late LinearRing shell;
   late Array<LinearRing> holes;
 
-  Polygon.of(LinearRing? shell, PrecisionModel precisionModel, int SRID)
-      : this.of2(shell, Array<LinearRing>(0), precisionModel, SRID);
+  Polygon.of(LinearRing? shell, PrecisionModel precisionModel, int srid)
+      : this.of2(shell, Array<LinearRing>(0), precisionModel, srid);
 
-  Polygon.of2(LinearRing? shell, Array<LinearRing>? holes, PrecisionModel precisionModel, int SRID)
-      : this(shell, holes, GeometryFactory.from(precisionModel, SRID));
+  Polygon.of2(LinearRing? shell, Array<LinearRing>? holes, PrecisionModel pm, int srid)
+      : this(shell, holes, GeomFactory(pm: pm, srid: srid));
 
-  Polygon(LinearRing? shell, Array<LinearRing>? holes, GeometryFactory factory) : super(factory) {
+  Polygon(LinearRing? shell, Array<LinearRing>? holes, GeomFactory factory) : super(factory) {
     this.shell = shell ?? factory.createLinearRing();
     this.holes = holes ?? Array(0);
 
@@ -129,8 +129,8 @@ class Polygon extends BaseGeometry<Polygon> implements Polygonal {
   }
 
   @override
-  GeometryType get geometryType {
-    return GeometryType.polygon;
+  GeomType get geometryType {
+    return GeomType.polygon;
   }
 
   @override
@@ -165,7 +165,7 @@ class Polygon extends BaseGeometry<Polygon> implements Polygonal {
     }
     if (rings.length <= 1) return factory.createLinearRing2(rings[0].getCoordinateSequence());
 
-    return factory.createMultiLineString2(rings);
+    return factory.createMultiLineString(rings);
   }
 
   @override
@@ -216,12 +216,12 @@ class Polygon extends BaseGeometry<Polygon> implements Polygonal {
   }
 
   @override
-  void apply3(GeometryFilter filter) {
+  void apply3(GeomFilter filter) {
     filter.filter(this);
   }
 
   @override
-  void apply4(GeometryComponentFilter filter) {
+  void apply4(GeomComponentFilter filter) {
     filter.filter(this);
     shell.apply4(filter);
     for (int i = 0; i < holes.length; i++) {

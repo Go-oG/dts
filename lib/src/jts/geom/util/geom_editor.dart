@@ -1,9 +1,9 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_collection.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_collection.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/multi_line_string.dart';
@@ -14,7 +14,7 @@ import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/util/assert.dart';
 
 class GeometryEditor {
-  GeometryFactory? _factory;
+  GeomFactory? _factory;
 
   bool _isUserDataCopied = false;
 
@@ -41,7 +41,7 @@ class GeometryEditor {
   Geometry? editInternal(Geometry geometry, GeometryEditorOperation operation) {
     _factory ??= geometry.factory;
 
-    if (geometry is GeometryCollection) {
+    if (geometry is GeomCollection) {
       return editGeometryCollection(geometry, operation);
     }
     if (geometry is Polygon) {
@@ -79,10 +79,9 @@ class GeometryEditor {
     return _factory!.createPolygon(shell, holes.toArray());
   }
 
-  GeometryCollection editGeometryCollection(
-      GeometryCollection collection, GeometryEditorOperation operation) {
-    GeometryCollection collectionForType =
-        (operation.edit(collection, _factory!) as GeometryCollection);
+  GeomCollection editGeometryCollection(
+      GeomCollection collection, GeometryEditorOperation operation) {
+    GeomCollection collectionForType = (operation.edit(collection, _factory!) as GeomCollection);
     List<Geometry> geometries = [];
     for (int i = 0; i < collectionForType.getNumGeometries(); i++) {
       Geometry? geometry = edit(collectionForType.getGeometryN(i), operation);
@@ -92,25 +91,25 @@ class GeometryEditor {
       geometries.add(geometry);
     }
     if (collectionForType.runtimeType == MultiPoint) {
-      return _factory!.createMultiPoint2(geometries.cast<Point>().toArray());
+      return _factory!.createMultiPoint(geometries.cast<Point>().toArray());
     }
     if (collectionForType.runtimeType == MultiLineString) {
-      return _factory!.createMultiLineString2(geometries.cast<LineString>().toArray());
+      return _factory!.createMultiLineString(geometries.cast<LineString>().toArray());
     }
     if (collectionForType.runtimeType == MultiPolygon) {
       return _factory!.createMultiPolygon(geometries.cast<Polygon>().toArray());
     }
-    return _factory!.createGeometryCollection2(geometries.cast<Geometry>().toArray());
+    return _factory!.createGeomCollection(geometries.cast<Geometry>().toArray());
   }
 }
 
 abstract interface class GeometryEditorOperation {
-  Geometry edit(Geometry geometry, GeometryFactory factory);
+  Geometry edit(Geometry geometry, GeomFactory factory);
 }
 
 abstract class CoordinateSequenceOperation implements GeometryEditorOperation {
   @override
-  Geometry edit(Geometry geometry, GeometryFactory factory) {
+  Geometry edit(Geometry geometry, GeomFactory factory) {
     if (geometry is LinearRing) {
       return factory.createLinearRing2(edit2(geometry.getCoordinateSequence(), geometry));
     }
@@ -128,14 +127,14 @@ abstract class CoordinateSequenceOperation implements GeometryEditorOperation {
 
 class NoOpGeometryOperation implements GeometryEditorOperation {
   @override
-  Geometry edit(Geometry geometry, GeometryFactory factory) {
+  Geometry edit(Geometry geometry, GeomFactory factory) {
     return geometry;
   }
 }
 
 abstract class CoordinateOperation implements GeometryEditorOperation {
   @override
-  Geometry edit(Geometry geometry, GeometryFactory factory) {
+  Geometry edit(Geometry geometry, GeomFactory factory) {
     if (geometry is LinearRing) {
       return factory.createLinearRings(edit2(geometry.getCoordinates(), geometry));
     }

@@ -1,8 +1,8 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 
 import '../geom/coordinate.dart';
-import '../geom/geometry.dart';
+import '../geom/geom.dart';
 import 'linear_location.dart';
 import 'location_index_of_point.dart';
 

@@ -5,8 +5,8 @@ import 'package:dts/src/jts/algorithm/boundary_node_rule.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/dimension.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/multi_line_string.dart';
 import 'package:dts/src/jts/geom/multi_point.dart';
@@ -37,7 +37,7 @@ class BoundaryOp {
   }
 
   final Geometry geom;
-  late final GeometryFactory geomFact;
+  late final GeomFactory geomFact;
   late BoundaryNodeRule _bnRule;
   late Map<Coordinate, Counter> _endpointMap;
 
@@ -71,7 +71,7 @@ class BoundaryOp {
     if (bdyPts.length == 1) {
       return geomFact.createPoint2(bdyPts[0]);
     }
-    return geomFact.createMultiPoint5(bdyPts);
+    return geomFact.createMultiPoint4(bdyPts);
   }
 
   Array<Coordinate> computeBoundaryCoordinates(MultiLineString mLine) {
@@ -116,6 +116,6 @@ class BoundaryOp {
         return geomFact.createMultiPoint();
       }
     }
-    return geomFact.createMultiPoint2([line.getStartPoint()!, line.getEndPoint()!].toArray());
+    return geomFact.createMultiPoint([line.getStartPoint()!, line.getEndPoint()!].toArray());
   }
 }

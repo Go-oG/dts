@@ -58,13 +58,6 @@ class EdgeKey implements Comparable<EdgeKey> {
     return 0;
   }
 
-  bool equals(Object o) {
-    if (o is! EdgeKey) {
-      return false;
-    }
-    return (((_p0x == o._p0x) && (_p0y == o._p0y)) && (_p1x == o._p1x)) && (_p1y == o._p1y);
-  }
-
   @override
   int get hashCode {
     int result = 17;
@@ -77,7 +70,11 @@ class EdgeKey implements Comparable<EdgeKey> {
 
   @override
   bool operator ==(Object other) {
-    return equals(other);
+    if (other is! EdgeKey) {
+      return false;
+    }
+    return (((_p0x == other._p0x) && (_p0y == other._p0y)) && (_p1x == other._p1x)) &&
+        (_p1y == other._p1y);
   }
 
   static int hashCode2(double x) {

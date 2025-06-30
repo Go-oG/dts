@@ -1,7 +1,7 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/operation/polygonize/polygonize_directed_edge.dart';
 import 'package:dts/src/jts/planargraph/directed_edge.dart';
@@ -51,7 +51,7 @@ class PolygonizeGraph extends PlanarGraph {
     }
   }
 
-  GeometryFactory factory;
+  GeomFactory factory;
 
   PolygonizeGraph(this.factory);
 

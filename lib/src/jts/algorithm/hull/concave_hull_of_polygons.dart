@@ -3,9 +3,9 @@ import 'dart:collection';
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_collection.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_collection.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/multi_polygon.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
@@ -61,7 +61,7 @@ class ConcaveHullOfPolygons {
   static const int _notFound = -1;
 
   late final Geometry _inputPolygons;
-  late final GeometryFactory geomFactory;
+  late final GeomFactory geomFactory;
   double _maxEdgeLength = 0.0;
 
   double _maxEdgeLengthRatio = _notSpecified.toDouble();
@@ -184,7 +184,7 @@ class ConcaveHullOfPolygons {
   }
 
   static Polygon _createFrame(
-      Envelope polygonsEnv, Array<LinearRing>? polygonRings, GeometryFactory geomFactory) {
+      Envelope polygonsEnv, Array<LinearRing>? polygonRings, GeomFactory geomFactory) {
     double diam = polygonsEnv.diameter;
     Envelope envFrame = polygonsEnv.copy();
     envFrame.expandBy(_frameExpandFactor * diam);
@@ -368,7 +368,7 @@ class ConcaveHullOfPolygons {
       return _inputPolygons.copy();
     }
     Array<Geometry> geoms = [fillGeometry, _inputPolygons].toArray();
-    GeometryCollection geomColl = geomFactory.createGeometryCollection2(geoms);
+    GeomCollection geomColl = geomFactory.createGeomCollection(geoms);
     Geometry hull = CoverageUnionNG.union(geomColl);
     return hull;
   }

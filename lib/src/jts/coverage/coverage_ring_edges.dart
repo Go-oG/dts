@@ -3,8 +3,8 @@ import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/multi_polygon.dart';
@@ -247,7 +247,7 @@ class CoverageRingEdges {
     if (polyList.size == 1) {
       return polyList.get(0);
     }
-    Array<Polygon> polys = GeometryFactory.toPolygonArray(polyList);
+    Array<Polygon> polys = GeomFactory.toPolygonArray(polyList);
     return geom.factory.createMultiPolygon(polys);
   }
 
@@ -262,7 +262,7 @@ class CoverageRingEdges {
       LinearRing newHole = _buildRing(hole)!;
       holeList.add(newHole);
     }
-    Array<LinearRing> holes = GeometryFactory.toLinearRingArray(holeList);
+    Array<LinearRing> holes = GeomFactory.toLinearRingArray(holeList);
     return polygon.factory.createPolygon(shell, holes);
   }
 

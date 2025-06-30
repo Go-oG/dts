@@ -4,7 +4,7 @@ import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/point_locator.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/geom/dimension.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geom.dart';
 import 'package:dts/src/jts/geom/intersection_matrix.dart';
 import 'package:dts/src/jts/geom/location.dart';
 import 'package:dts/src/jts/geomgraph/edge.dart';

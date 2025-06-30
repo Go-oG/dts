@@ -1,7 +1,7 @@
 import 'package:d_util/d_util.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
-import 'package:dts/src/jts/geom/util/geometry_combiner.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/util/geom_combiner.dart';
 
 class UnionInteracting {
   static Geometry? unionS(Geometry g0, Geometry g1) {
@@ -9,7 +9,7 @@ class UnionInteracting {
     return uue.union();
   }
 
-  late final GeometryFactory geomFactory;
+  late final GeomFactory geomFactory;
 
   Geometry g0;
 

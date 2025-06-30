@@ -1,5 +1,5 @@
 import '../../geom/coordinate.dart';
-import '../../geom/geometry.dart';
+import '../../geom/geom.dart';
 import 'node_section.dart';
 import 'polygon_node_converter.dart';
 import 'relate_node.dart';

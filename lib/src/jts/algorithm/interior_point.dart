@@ -1,8 +1,8 @@
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_collection.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_collection.dart';
 
-import '../geom/geometry_filter.dart';
+import '../geom/geom_filter.dart';
 import 'interior_point_area.dart';
 import 'interior_point_line.dart';
 import 'interior_point_point.dart';
@@ -35,7 +35,7 @@ final class InteriorPoint {
   }
 }
 
-class _DimensionNonEmptyFilter implements GeometryFilter {
+class _DimensionNonEmptyFilter implements GeomFilter {
   int dim = -1;
 
   int getDimension() {
@@ -44,7 +44,7 @@ class _DimensionNonEmptyFilter implements GeometryFilter {
 
   @override
   void filter(Geometry elem) {
-    if (elem is GeometryCollection) {
+    if (elem is GeomCollection) {
       return;
     }
 

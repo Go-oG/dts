@@ -7,7 +7,7 @@ import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/math/math.dart';
 
 import 'coordinate.dart';
-import 'geometry_factory.dart';
+import 'geom_factory.dart';
 import 'line_string.dart';
 
 class LineSegment implements Comparable<LineSegment> {
@@ -163,9 +163,9 @@ class LineSegment implements Comparable<LineSegment> {
   }
 
   double projectionFactor(Coordinate p) {
-    if (p.equals(p0)) return 0.0;
+    if (p == p0) return 0.0;
 
-    if (p.equals(p1)) return 1.0;
+    if (p == p1) return 1.0;
 
     double dx = p1.x - p0.x;
     double dy = p1.y - p0.y;
@@ -186,7 +186,7 @@ class LineSegment implements Comparable<LineSegment> {
   }
 
   Coordinate project(Coordinate p) {
-    if (p.equals(p0) || p.equals(p1)) return p.copy();
+    if (p == p0 || p == p1) return p.copy();
 
     double r = projectionFactor(p);
     return project2(p, r);
@@ -303,25 +303,8 @@ class LineSegment implements Comparable<LineSegment> {
     return Intersection.intersection(p0, p1, line.p0, line.p1);
   }
 
-  LineString? toGeometry(GeometryFactory geomFactory) {
+  LineString? toGeometry(GeomFactory geomFactory) {
     return geomFactory.createLineString2([p0, p1].toArray());
-  }
-
-  bool equals(Object o) {
-    if ((o is! LineSegment)) {
-      return false;
-    }
-    return p0.equals(o.p0) && p1.equals(o.p1);
-  }
-
-  @override
-  int get hashCode {
-    int hash = 17;
-    hash = (hash * 29) + Double.hashCode2(p0.x);
-    hash = (hash * 29) + Double.hashCode2(p0.y);
-    hash = (hash * 29) + Double.hashCode2(p1.x);
-    hash = (hash * 29) + Double.hashCode2(p1.y);
-    return hash;
   }
 
   int OLDhashCode() {
@@ -343,12 +326,24 @@ class LineSegment implements Comparable<LineSegment> {
   }
 
   bool equalsTopo(LineSegment other) {
-    return (p0.equals(other.p0) && p1.equals(other.p1)) ||
-        (p0.equals(other.p1) && p1.equals(other.p0));
+    return (p0 == other.p0 && p1 == other.p1) || (p0 == other.p1 && p1 == other.p0);
+  }
+
+  @override
+  int get hashCode {
+    int hash = 17;
+    hash = (hash * 29) + Double.hashCode2(p0.x);
+    hash = (hash * 29) + Double.hashCode2(p0.y);
+    hash = (hash * 29) + Double.hashCode2(p1.x);
+    hash = (hash * 29) + Double.hashCode2(p1.y);
+    return hash;
   }
 
   @override
   bool operator ==(Object other) {
-    return equals(other);
+    if ((other is! LineSegment)) {
+      return false;
+    }
+    return p0 == other.p0 && p1 == other.p1;
   }
 }

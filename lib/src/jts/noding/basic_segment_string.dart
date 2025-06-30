@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 
 import 'octant.dart';
@@ -38,7 +38,7 @@ class BasicSegmentString extends SegmentString {
 
   @override
   bool isClosed() {
-    return pts[0].equals(pts[pts.length - 1]);
+    return pts[0] == pts[pts.length - 1];
   }
 
   int getSegmentOctant(int index) {

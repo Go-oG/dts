@@ -1,17 +1,17 @@
 import 'package:d_util/d_util.dart';
 
 import 'dimension.dart';
-import 'geometry.dart';
-import 'geometry_collection.dart';
-import 'geometry_factory.dart';
+import 'geom.dart';
+import 'geom_collection.dart';
+import 'geom_factory.dart';
 import 'line_string.dart';
 import 'polygon.dart';
 import 'polygonal.dart';
 import 'precision_model.dart';
 
-class MultiPolygon extends GeometryCollection<Polygon> implements Polygonal {
-  MultiPolygon(Array<Polygon>? polygons, PrecisionModel precisionModel, int SRID)
-      : this.of(polygons, GeometryFactory.from(precisionModel, SRID));
+class MultiPolygon extends GeomCollection<Polygon> implements Polygonal {
+  MultiPolygon(Array<Polygon>? polygons, PrecisionModel pm, int srid)
+      : this.of(polygons, GeomFactory(pm: pm, srid: srid));
 
   MultiPolygon.of(super.polygons, super.factory);
 
@@ -31,8 +31,8 @@ class MultiPolygon extends GeometryCollection<Polygon> implements Polygonal {
   }
 
   @override
-  GeometryType get geometryType {
-    return GeometryType.multiPolygon;
+  GeomType get geometryType {
+    return GeomType.multiPolygon;
   }
 
   @override
@@ -48,7 +48,7 @@ class MultiPolygon extends GeometryCollection<Polygon> implements Polygonal {
         allRings.add(rings.getGeometryN(j) as LineString);
       }
     }
-    return factory.createMultiLineString2(allRings.toArray());
+    return factory.createMultiLineString(allRings.toArray());
   }
 
   @override

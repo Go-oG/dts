@@ -2,8 +2,8 @@ import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/cgalgorithms.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_collection.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_collection.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/point.dart';
@@ -109,7 +109,7 @@ class Distance3DOp {
   }
 
   void computeMinDistanceMultiMulti(Geometry g0, Geometry g1, bool flip) {
-    if (g0 is GeometryCollection) {
+    if (g0 is GeomCollection) {
       int n = g0.getNumGeometries();
       for (int i = 0; i < n; i++) {
         Geometry g = g0.getGeometryN(i);
@@ -132,7 +132,7 @@ class Distance3DOp {
   }
 
   void _computeMinDistanceOneMulti(Geometry g0, Geometry g1, bool flip) {
-    if (g1 is GeometryCollection) {
+    if (g1 is GeomCollection) {
       int n = g1.getNumGeometries();
       for (int i = 0; i < n; i++) {
         Geometry g = g1.getGeometryN(i);
@@ -147,7 +147,7 @@ class Distance3DOp {
   }
 
   void _computeMinDistanceOneMulti2(PlanarPolygon3D poly, Geometry geom, bool flip) {
-    if (geom is GeometryCollection) {
+    if (geom is GeomCollection) {
       int n = geom.getNumGeometries();
       for (int i = 0; i < n; i++) {
         Geometry g = geom.getGeometryN(i);

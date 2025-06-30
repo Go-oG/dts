@@ -5,9 +5,9 @@ import '../../operation/overlay/overlay_op.dart';
 import '../../operation/overlayng/overlay_ngrobust.dart';
 import '../coordinate.dart';
 import '../coordinate_arrays.dart';
-import '../geometry.dart';
-import '../geometry_collection.dart';
-import '../geometry_factory.dart';
+import '../geom.dart';
+import '../geom_collection.dart';
+import '../geom_factory.dart';
 import '../line_string.dart';
 import '../linear_ring.dart';
 import '../multi_line_string.dart';
@@ -31,7 +31,7 @@ class GeometryFixer {
 
   Geometry geom;
 
-  late GeometryFactory factory;
+  late GeomFactory factory;
 
   bool _isKeepCollapsed = false;
 
@@ -70,7 +70,7 @@ class GeometryFixer {
 
     if (geom is MultiPolygon) return fixMultiPolygon(geom);
 
-    if (geom is GeometryCollection) return fixCollection(geom);
+    if (geom is GeomCollection) return fixCollection(geom);
 
     throw "UnsupportedOperationException${geom.runtimeType}";
   }
@@ -106,7 +106,7 @@ class GeometryFixer {
     }
     if ((!_isKeepMulti) && (pts.size == 1)) return pts.get(0);
 
-    return factory.createMultiPoint2(GeometryFactory.toPointArray(pts));
+    return factory.createMultiPoint(GeomFactory.toPointArray(pts));
   }
 
   Geometry fixLinearRing(LinearRing geom) {
@@ -187,9 +187,9 @@ class GeometryFixer {
       if ((!_isKeepMulti) || (fixed.get(0) is! LineString)) return fixed.get(0);
     }
     if (isMixed) {
-      return factory.createGeometryCollection2(GeometryFactory.toGeometryArray(fixed)!);
+      return factory.createGeomCollection(GeomFactory.toGeometryArray(fixed)!);
     }
-    return factory.createMultiLineString2(GeometryFactory.toLineStringArray(fixed.cast()));
+    return factory.createMultiLineString(GeomFactory.toLineStringArray(fixed.cast()));
   }
 
   Geometry fixPolygon(Polygon geom) {
@@ -238,7 +238,7 @@ class GeometryFixer {
 
   void classifyHoles(
       Geometry shell, List<Geometry> holesFixed, List<Geometry> holes, List<Geometry> shells) {
-    PreparedGeometry shellPrep = PreparedGeometryFactory.prepare(shell);
+    PreparedGeom shellPrep = PreparedGeomFactory.prepare(shell);
     for (Geometry hole in holesFixed) {
       if (shellPrep.intersects(hole)) {
         holes.add(hole);
@@ -293,12 +293,12 @@ class GeometryFixer {
     return result;
   }
 
-  Geometry fixCollection(GeometryCollection geom) {
+  Geometry fixCollection(GeomCollection geom) {
     Array<Geometry> geomRep = Array(geom.getNumGeometries());
     for (int i = 0; i < geom.getNumGeometries(); i++) {
       geomRep[i] = fix3(geom.getGeometryN(i), _isKeepCollapsed, _isKeepMulti);
     }
-    return factory.createGeometryCollection2(geomRep);
+    return factory.createGeomCollection(geomRep);
   }
 
   static Geometry fix3(Geometry geom, bool isKeepCollapsed, bool isKeepMulti) {

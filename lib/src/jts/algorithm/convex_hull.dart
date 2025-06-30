@@ -2,8 +2,8 @@ import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/util/assert.dart';
 
@@ -13,7 +13,7 @@ import 'point_location.dart';
 final class ConvexHull {
   static const int _tuningReduceSize = 50;
 
-  final GeometryFactory geomFactory;
+  final GeomFactory geomFactory;
 
   final Array<Coordinate> _inputPts;
 
@@ -47,7 +47,7 @@ final class ConvexHull {
     if (uniquePts == null) {
       return null;
     } else if (uniquePts.isEmpty) {
-      return geomFactory.createGeometryCollection();
+      return geomFactory.createGeomCollection();
     } else if (uniquePts.length == 1) {
       return geomFactory.createPoint2(uniquePts[0]);
     } else {
@@ -231,7 +231,7 @@ final class ConvexHull {
     for (int i = 0; i <= (original.length - 2); i++) {
       Coordinate currentCoordinate = original[i];
       Coordinate nextCoordinate = original[i + 1];
-      if (currentCoordinate.equals(nextCoordinate)) {
+      if (currentCoordinate == nextCoordinate) {
         continue;
       }
       if ((previousDistinctCoordinate != null) &&

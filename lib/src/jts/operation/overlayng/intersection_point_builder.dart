@@ -1,4 +1,4 @@
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/point.dart';
 
 import 'overlay_edge.dart';
@@ -7,7 +7,7 @@ import 'overlay_label.dart';
 import 'overlay_ng.dart';
 
 class IntersectionPointBuilder {
-  GeometryFactory geometryFactory;
+  GeomFactory geometryFactory;
 
   final OverlayGraph _graph;
 

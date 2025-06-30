@@ -2,7 +2,7 @@ import 'package:dts/src/jts/algorithm/point_location.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/geom/topology_exception.dart';
@@ -16,7 +16,7 @@ import 'maximal_edge_ring.dart';
 import 'minimal_edge_ring.dart';
 
 class OPolygonBuilder {
-  GeometryFactory geometryFactory;
+  GeomFactory geometryFactory;
 
   List<EdgeRing> shellList = [];
 
@@ -127,7 +127,7 @@ class OPolygonBuilder {
     for (var tryShell in shellList) {
       LinearRing tryShellRing = tryShell.getLinearRing()!;
       Envelope tryShellEnv = tryShellRing.getEnvelopeInternal();
-      if (tryShellEnv.equals(testEnv)) continue;
+      if (tryShellEnv == testEnv) continue;
 
       if (!tryShellEnv.contains(testEnv)) continue;
 

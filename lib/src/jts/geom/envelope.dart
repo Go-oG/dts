@@ -6,21 +6,6 @@ import 'package:dts/src/jts/math/math.dart';
 import 'coordinate.dart';
 
 final class Envelope implements Comparable<Envelope> {
-  @override
-  int get hashCode {
-    int result = 17;
-    result = (37 * result) + Coordinate.hashCodeS(_minX);
-    result = (37 * result) + Coordinate.hashCodeS(_maxX);
-    result = (37 * result) + Coordinate.hashCodeS(_minY);
-    result = (37 * result) + Coordinate.hashCodeS(_maxY);
-    return result;
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return equals(other);
-  }
-
   static bool intersects3(Coordinate p1, Coordinate p2, Coordinate q) {
     return ((q.x >= Math.min(p1.x, p2.x)) && (q.x <= Math.max(p1.x, p2.x))) &&
         ((q.y >= Math.min(p1.y, p2.y)) && (q.y <= Math.max(p1.y, p2.y)));
@@ -275,8 +260,7 @@ final class Envelope implements Comparable<Envelope> {
   bool containsPoint(double x, double y) => coversPoint(x, y);
 
   bool containsProperly(Envelope other) {
-    if (equals(other)) return false;
-
+    if (this == other) return false;
     return covers(other);
   }
 
@@ -320,17 +304,6 @@ final class Envelope implements Comparable<Envelope> {
     return MathUtil.hypot(dx, dy);
   }
 
-  bool equals(Object other) {
-    if (other is! Envelope) {
-      return false;
-    }
-    if (isNull) {
-      return other.isNull;
-    }
-    return (((_maxX == other.maxX) && (_maxY == other.maxY)) && (_minX == other.minX)) &&
-        (_minY == other.minY);
-  }
-
   @override
   int compareTo(Envelope env) {
     if (isNull) {
@@ -357,5 +330,27 @@ final class Envelope implements Comparable<Envelope> {
     if (_maxY > env._maxY) return 1;
 
     return 0;
+  }
+
+  @override
+  int get hashCode {
+    int result = 17;
+    result = (37 * result) + Coordinate.hashCodeS(_minX);
+    result = (37 * result) + Coordinate.hashCodeS(_maxX);
+    result = (37 * result) + Coordinate.hashCodeS(_minY);
+    result = (37 * result) + Coordinate.hashCodeS(_maxY);
+    return result;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! Envelope) {
+      return false;
+    }
+    if (isNull) {
+      return other.isNull;
+    }
+    return (((_maxX == other.maxX) && (_maxY == other.maxY)) && (_minX == other.minX)) &&
+        (_minY == other.minY);
   }
 }

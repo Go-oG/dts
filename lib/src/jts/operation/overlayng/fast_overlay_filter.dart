@@ -1,4 +1,4 @@
-import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geom.dart';
 import 'package:dts/src/jts/operation/overlay/overlay_op.dart';
 
 import 'overlay_util.dart';

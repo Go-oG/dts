@@ -1,4 +1,3 @@
-
 import 'package:dts/src/jts/geom/coordinate.dart';
 
 class TriEdge {
@@ -28,16 +27,10 @@ class TriEdge {
     return result;
   }
 
-  bool equals(Object arg) {
-    if (arg is! TriEdge) return false;
-
-    if (p0.equals(arg.p0) && p1.equals(arg.p1)) return true;
-
-    return false;
-  }
-
   @override
   bool operator ==(Object other) {
-    return equals(other);
+    if (other is! TriEdge) return false;
+    if (p0 == other.p0 && p1 == other.p1) return true;
+    return false;
   }
 }

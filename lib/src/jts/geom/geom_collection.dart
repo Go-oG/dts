@@ -7,24 +7,24 @@ import 'coordinate.dart';
 import 'coordinate_sequence.dart';
 import 'dimension.dart';
 import 'envelope.dart';
-import 'geometry.dart';
-import 'geometry_component_filter.dart';
-import 'geometry_factory.dart';
-import 'geometry_filter.dart';
+import 'geom.dart';
+import 'geom_component_filter.dart';
+import 'geom_factory.dart';
+import 'geom_filter.dart';
 import 'line_string.dart';
 import 'point.dart';
 import 'polygon.dart';
 import 'precision_model.dart';
 
-class GeometryCollection<T extends BaseGeometry> extends BaseGeometry<GeometryCollection<T>> {
+class GeomCollection<T extends BaseGeometry> extends BaseGeometry<GeomCollection<T>> {
   late Array<T> geometries;
 
   GeometryCollectionDimension? _geomCollDim;
 
-  GeometryCollection.of(Array<T>? geometries, PrecisionModel precisionModel, int srid)
-      : this(geometries, GeometryFactory.from(precisionModel, srid));
+  GeomCollection.of(Array<T>? geometries, PrecisionModel pm, int srid)
+      : this(geometries, GeomFactory(pm: pm, srid: srid));
 
-  GeometryCollection(Array<T>? geometries, GeometryFactory factory) : super(factory) {
+  GeomCollection(Array<T>? geometries, GeomFactory factory) : super(factory) {
     this.geometries = geometries ?? Array(0);
     if (Geometry.hasNullElements(this.geometries)) {
       throw IllegalArgumentException("geometries must not contain null elements");
@@ -106,8 +106,8 @@ class GeometryCollection<T extends BaseGeometry> extends BaseGeometry<GeometryCo
   }
 
   @override
-  GeometryType get geometryType {
-    return GeometryType.collection;
+  GeomType get geometryType {
+    return GeomType.collection;
   }
 
   @override
@@ -140,7 +140,7 @@ class GeometryCollection<T extends BaseGeometry> extends BaseGeometry<GeometryCo
     if (!isEquivalentClass(other)) {
       return false;
     }
-    GeometryCollection otherCollection = (other as GeometryCollection);
+    GeomCollection otherCollection = (other as GeomCollection);
     if (geometries.length != otherCollection.geometries.length) {
       return false;
     }
@@ -173,7 +173,7 @@ class GeometryCollection<T extends BaseGeometry> extends BaseGeometry<GeometryCo
   }
 
   @override
-  void apply3(GeometryFilter filter) {
+  void apply3(GeomFilter filter) {
     filter.filter(this);
     for (int i = 0; i < geometries.length; i++) {
       geometries[i].apply3(filter);
@@ -181,7 +181,7 @@ class GeometryCollection<T extends BaseGeometry> extends BaseGeometry<GeometryCo
   }
 
   @override
-  void apply4(GeometryComponentFilter filter) {
+  void apply4(GeomComponentFilter filter) {
     filter.filter(this);
     for (int i = 0; i < geometries.length; i++) {
       geometries[i].apply4(filter);
@@ -189,17 +189,17 @@ class GeometryCollection<T extends BaseGeometry> extends BaseGeometry<GeometryCo
   }
 
   @override
-  GeometryCollection<T> clone() {
+  GeomCollection<T> clone() {
     return copy();
   }
 
   @override
-  GeometryCollection<T> copyInternal() {
+  GeomCollection<T> copyInternal() {
     Array<T> geometries = Array(this.geometries.length);
     for (int i = 0; i < geometries.length; i++) {
       geometries[i] = this.geometries[i].copy() as T;
     }
-    return GeometryCollection(geometries, factory);
+    return GeomCollection(geometries, factory);
   }
 
   @override
@@ -224,13 +224,13 @@ class GeometryCollection<T extends BaseGeometry> extends BaseGeometry<GeometryCo
     Set<T> theseElements = SplayTreeSet();
     theseElements.addAll(geometries.asList());
     Set<T> otherElements = SplayTreeSet();
-    otherElements.addAll((o as GeometryCollection<T>).geometries.asList());
+    otherElements.addAll((o as GeomCollection<T>).geometries.asList());
     return compare(theseElements, otherElements);
   }
 
   @override
   int compareToSameClass2(Object o, CoordinateSequenceComparator comp) {
-    GeometryCollection gc = (o as GeometryCollection);
+    GeomCollection gc = (o as GeomCollection);
     int n1 = getNumGeometries();
     int n2 = gc.getNumGeometries();
     int i = 0;
@@ -250,12 +250,12 @@ class GeometryCollection<T extends BaseGeometry> extends BaseGeometry<GeometryCo
   }
 
   @override
-  GeometryCollection<T> reverseInternal() {
+  GeomCollection<T> reverseInternal() {
     Array<T> geometries = Array(this.geometries.length);
     for (int i = 0; i < geometries.length; i++) {
       geometries[i] = this.geometries[i].reverse() as T;
     }
-    return GeometryCollection(geometries, factory);
+    return GeomCollection(geometries, factory);
   }
 }
 
@@ -268,11 +268,11 @@ class GeometryCollectionDimension {
 
   bool _hasA = false;
 
-  GeometryCollectionDimension(GeometryCollection coll) {
+  GeometryCollectionDimension(GeomCollection coll) {
     init(coll);
   }
 
-  void init(GeometryCollection coll) {
+  void init(GeomCollection coll) {
     Iterator geomi = GeometryCollectionIterator(coll);
     while (geomi.moveNext()) {
       Geometry elem = (geomi.current as Geometry);
@@ -365,7 +365,7 @@ class GeometryCollectionIterator implements Iterator {
       throw "NoSuchElementException";
     }
     Geometry obj = _parent.getGeometryN(index++);
-    if (obj is GeometryCollection) {
+    if (obj is GeomCollection) {
       _subcollectionIterator = GeometryCollectionIterator(obj);
       return _subcollectionIterator!._next();
     }
@@ -373,7 +373,7 @@ class GeometryCollectionIterator implements Iterator {
   }
 
   static bool isAtomic(Geometry geom) {
-    return geom is! GeometryCollection;
+    return geom is! GeomCollection;
   }
 
   @override

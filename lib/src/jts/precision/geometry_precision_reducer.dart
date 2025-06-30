@@ -1,14 +1,14 @@
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/precision_model.dart';
-import 'package:dts/src/jts/geom/util/geometry_editor.dart';
+import 'package:dts/src/jts/geom/util/geom_editor.dart';
 
 import 'pointwise_precision_reducer_transformer.dart';
 import 'precision_reducer_transformer.dart';
 
 class GeometryPrecisionReducer {
-  static Geometry? reduce2(Geometry g, PrecisionModel precModel) {
-    final reducer = GeometryPrecisionReducer(precModel);
+  static Geometry? reduce2(Geometry g, PrecisionModel pm) {
+    final reducer = GeometryPrecisionReducer(pm);
     return reducer.reduce(g);
   }
 
@@ -18,8 +18,8 @@ class GeometryPrecisionReducer {
     return reducer.reduce(geom);
   }
 
-  static Geometry? reducePointwise(Geometry g, PrecisionModel precModel) {
-    final reducer = GeometryPrecisionReducer(precModel);
+  static Geometry? reducePointwise(Geometry g, PrecisionModel pm) {
+    final reducer = GeometryPrecisionReducer(pm);
     reducer.setPointwise(true);
     return reducer.reduce(g);
   }
@@ -64,18 +64,19 @@ class GeometryPrecisionReducer {
     return geomEditor.edit(geom, NoOpGeometryOperation());
   }
 
-  GeometryEditor createEditor(GeometryFactory geomFactory, PrecisionModel newPM) {
+  GeometryEditor createEditor(GeomFactory geomFactory, PrecisionModel newPM) {
     if (geomFactory.getPrecisionModel() == newPM) {
       return GeometryEditor.empty();
     }
 
-    GeometryFactory newFactory = createFactory(geomFactory, newPM);
+    GeomFactory newFactory = createFactory(geomFactory, newPM);
     GeometryEditor geomEdit = GeometryEditor(newFactory);
     return geomEdit;
   }
 
-  GeometryFactory createFactory(GeometryFactory inputFactory, PrecisionModel pm) {
-    GeometryFactory newFactory = GeometryFactory(pm, inputFactory.srid, inputFactory.csFactory);
+  GeomFactory createFactory(GeomFactory inputFactory, PrecisionModel pm) {
+    GeomFactory newFactory =
+        GeomFactory(pm: pm, srid: inputFactory.srid, csFactory: inputFactory.csFactory);
     return newFactory;
   }
 }

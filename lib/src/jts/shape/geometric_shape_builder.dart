@@ -1,14 +1,14 @@
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 
 abstract class GeometricShapeBuilder {
   Envelope? extent = Envelope.fromLRTB(0, 1, 0, 1);
   int numPts = 0;
 
-  GeometryFactory geomFactory;
+  GeomFactory geomFactory;
 
   GeometricShapeBuilder(this.geomFactory);
 

@@ -1,5 +1,5 @@
- import 'package:d_util/d_util.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:d_util/d_util.dart';
+import 'package:dts/src/jts/geom/geom.dart';
 
 import 'corner_area.dart';
 import 'coverage_edge.dart';
@@ -62,7 +62,8 @@ class CoverageSimplifier {
 
   Array<Geometry> simplify2(Array<double> tolerances) {
     if (tolerances.length != coverage.length) {
-      throw IllegalArgumentException("number of tolerances does not match number of coverage elements");
+      throw IllegalArgumentException(
+          "number of tolerances does not match number of coverage elements");
     }
 
     return _simplifyEdges(tolerances);
@@ -105,7 +106,8 @@ class CoverageSimplifier {
     return _simplify(covRings, covEdges, edges);
   }
 
-  Array<Geometry> _simplify(CoverageRingEdges covRings, List<CoverageEdge> covEdges, Array<TPVEdge> edges) {
+  Array<Geometry> _simplify(
+      CoverageRingEdges covRings, List<CoverageEdge> covEdges, Array<TPVEdge> edges) {
     CornerArea cornerArea = CornerArea(smoothWeight);
     TPVWSimplifier.simplify(edges, cornerArea, _removableSizeFactor);
     _setCoordinates(covEdges, edges);
@@ -113,7 +115,8 @@ class CoverageSimplifier {
     return result;
   }
 
-  Array<TPVEdge> _createEdgesS(List<CoverageEdge> covEdges, double toleranceInner, double toleranceOuter) {
+  Array<TPVEdge> _createEdgesS(
+      List<CoverageEdge> covEdges, double toleranceInner, double toleranceOuter) {
     Array<TPVEdge> edges = Array(covEdges.size);
     for (int i = 0; i < covEdges.size; i++) {
       CoverageEdge covEdge = covEdges.get(i);
@@ -127,7 +130,8 @@ class CoverageSimplifier {
     return TPVEdge(covEdge.getCoordinates(), tol, covEdge.isFreeRing(), covEdge.isRemovableRing());
   }
 
-  static double _computeToleranceS(CoverageEdge covEdge, double toleranceInner, double toleranceOuter) {
+  static double _computeToleranceS(
+      CoverageEdge covEdge, double toleranceInner, double toleranceOuter) {
     return covEdge.isInner() ? toleranceInner : toleranceOuter;
   }
 

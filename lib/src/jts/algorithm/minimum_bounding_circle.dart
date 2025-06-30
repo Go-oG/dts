@@ -1,7 +1,7 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geom.dart';
 import 'package:dts/src/jts/geom/point.dart';
 import 'package:dts/src/jts/geom/triangle.dart';
 import 'package:dts/src/jts/math/math.dart';
@@ -198,7 +198,8 @@ class MinimumBoundingCircle {
     return minAngPt;
   }
 
-  static Coordinate? _pointWithMinAngleWithSegment(Array<Coordinate> pts, Coordinate P, Coordinate Q) {
+  static Coordinate? _pointWithMinAngleWithSegment(
+      Array<Coordinate> pts, Coordinate P, Coordinate Q) {
     double minAng = double.maxFinite;
     Coordinate? minAngPt;
     for (int i = 0; i < pts.length; i++) {

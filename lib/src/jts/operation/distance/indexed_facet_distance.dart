@@ -1,6 +1,6 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geom.dart';
 import 'package:dts/src/jts/index/strtree/item_distance.dart';
 import 'package:dts/src/jts/index/strtree/strtree.dart';
 

@@ -1,7 +1,7 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/topology_exception.dart';
 import 'package:dts/src/jts/util/assert.dart';
 
@@ -64,7 +64,8 @@ class NgMaximalEdgeRing {
       }
 
       if (edge.getEdgeRingMax() == this) {
-        throw TopologyException("Ring edge visited twice at ${edge.getCoordinate()}", edge.getCoordinate());
+        throw TopologyException(
+            "Ring edge visited twice at ${edge.getCoordinate()}", edge.getCoordinate());
       }
 
       if (edge.nextResultMax() == null) {
@@ -75,7 +76,7 @@ class NgMaximalEdgeRing {
     } while (edge != startEdge);
   }
 
-  List<OverlayEdgeRing> buildMinimalRings(GeometryFactory geometryFactory) {
+  List<OverlayEdgeRing> buildMinimalRings(GeomFactory geometryFactory) {
     linkMinimalRings();
     List<OverlayEdgeRing> minEdgeRings = [];
     OverlayEdge? e = _startEdge;
@@ -114,7 +115,8 @@ class NgMaximalEdgeRing {
       currOut = currOut.oNextOE();
     } while (currOut != endOut);
     if (currMaxRingOut != null) {
-      throw TopologyException("Unmatched edge found during min-ring linking", nodeEdge.getCoordinate());
+      throw TopologyException(
+          "Unmatched edge found during min-ring linking", nodeEdge.getCoordinate());
     }
   }
 
@@ -131,7 +133,8 @@ class NgMaximalEdgeRing {
     return null;
   }
 
-  static OverlayEdge? linkMaxInEdge(OverlayEdge currOut, OverlayEdge currMaxRingOut, NgMaximalEdgeRing maxEdgeRing) {
+  static OverlayEdge? linkMaxInEdge(
+      OverlayEdge currOut, OverlayEdge currMaxRingOut, NgMaximalEdgeRing maxEdgeRing) {
     OverlayEdge currIn = currOut.symOE();
     if (currIn.getEdgeRingMax() != maxEdgeRing) {
       return currMaxRingOut;

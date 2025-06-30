@@ -3,8 +3,8 @@ import 'dart:core';
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/point_location.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 
@@ -27,7 +27,7 @@ class OuterShellsExtracter {
         outerShells.add(shell);
       }
     }
-    return GeometryFactory.toLinearRingArray(outerShells);
+    return GeomFactory.toLinearRingArray(outerShells);
   }
 
   bool _isOuter(LinearRing shell, List<LinearRing> outerShells) {

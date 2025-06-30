@@ -1,6 +1,6 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geom.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/util/linear_component_extracter.dart';
 import 'package:dts/src/jts/math/math.dart';
@@ -35,7 +35,8 @@ class OffsetPointGenerator {
     }
   }
 
-  void computeOffsetPoints(Coordinate p0, Coordinate p1, double offsetDistance, List<Coordinate> offsetPts) {
+  void computeOffsetPoints(
+      Coordinate p0, Coordinate p1, double offsetDistance, List<Coordinate> offsetPts) {
     double dx = p1.x - p0.x;
     double dy = p1.y - p0.y;
     double len = MathUtil.hypot(dx, dy);

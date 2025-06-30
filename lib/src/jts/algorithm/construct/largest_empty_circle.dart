@@ -2,8 +2,8 @@ import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/location.dart';
 import 'package:dts/src/jts/geom/point.dart';
@@ -31,7 +31,7 @@ class LargestEmptyCircle with InitMixin {
   }
 
   final Geometry _obstacles;
-  late final GeometryFactory _factory;
+  late final GeomFactory _factory;
   late final IndexedDistanceToPoint _obstacleDistance;
 
   Geometry? _boundary;

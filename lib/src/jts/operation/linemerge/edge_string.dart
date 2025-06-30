@@ -1,15 +1,15 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 
 import 'line_merge_directed_edge.dart';
 import 'line_merge_edge.dart';
 
 class EdgeString {
-  GeometryFactory factory;
+  GeomFactory factory;
 
   final List<LineMergeDirectedEdge> _directedEdges = [];
 

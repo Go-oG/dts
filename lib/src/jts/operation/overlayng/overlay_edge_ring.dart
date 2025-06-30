@@ -4,7 +4,7 @@ import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/location.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
@@ -27,7 +27,7 @@ class OverlayEdgeRing {
 
   final List<OverlayEdgeRing> _holes = [];
 
-  OverlayEdgeRing(this.startEdge, GeometryFactory geometryFactory) {
+  OverlayEdgeRing(this.startEdge, GeomFactory geometryFactory) {
     _ringPts = computeRingPts(startEdge);
     computeRing(_ringPts, geometryFactory);
   }
@@ -86,7 +86,7 @@ class OverlayEdgeRing {
     return pts.toCoordinateArray();
   }
 
-  void computeRing(Array<Coordinate> ringPts, GeometryFactory geometryFactory) {
+  void computeRing(Array<Coordinate> ringPts, GeomFactory geometryFactory) {
     if (ring != null) {
       return;
     }
@@ -145,7 +145,7 @@ class OverlayEdgeRing {
     return _ringPts[0];
   }
 
-  Polygon toPolygon(GeometryFactory factory) {
+  Polygon toPolygon(GeomFactory factory) {
     Array<LinearRing>? holeLR;
     holeLR = Array(_holes.length);
     for (int i = 0; i < _holes.length; i++) {

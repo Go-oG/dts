@@ -7,10 +7,10 @@ import 'coordinate.dart';
 import 'coordinate_sequence.dart';
 import 'dimension.dart';
 import 'envelope.dart';
-import 'geometry.dart';
-import 'geometry_component_filter.dart';
-import 'geometry_factory.dart';
-import 'geometry_filter.dart';
+import 'geom.dart';
+import 'geom_component_filter.dart';
+import 'geom_factory.dart';
+import 'geom_filter.dart';
 import 'lineal.dart';
 import 'precision_model.dart';
 
@@ -20,11 +20,11 @@ class LineString extends BaseGeometry<LineString> implements Lineal {
   late CoordinateSequence points;
 
   LineString(Array<Coordinate>? points, PrecisionModel precisionModel, int srid)
-      : super(GeometryFactory.from(precisionModel, srid)) {
+      : super(GeomFactory(pm: precisionModel, srid: srid)) {
     init(factory.csFactory.create(points));
   }
 
-  LineString.of(CoordinateSequence? points, GeometryFactory factory) : super(factory) {
+  LineString.of(CoordinateSequence? points, GeomFactory factory) : super(factory) {
     init(points);
   }
 
@@ -112,8 +112,8 @@ class LineString extends BaseGeometry<LineString> implements Lineal {
   }
 
   @override
-  GeometryType get geometryType {
-    return GeometryType.lineString;
+  GeomType get geometryType {
+    return GeomType.lineString;
   }
 
   @override
@@ -135,7 +135,7 @@ class LineString extends BaseGeometry<LineString> implements Lineal {
 
   bool isCoordinate(Coordinate pt) {
     for (int i = 0; i < points.size(); i++) {
-      if (points.getCoordinate(i).equals(pt)) {
+      if (points.getCoordinate(i) == pt) {
         return true;
       }
     }
@@ -186,12 +186,12 @@ class LineString extends BaseGeometry<LineString> implements Lineal {
   }
 
   @override
-  void apply3(GeometryFilter filter) {
+  void apply3(GeomFilter filter) {
     filter.filter(this);
   }
 
   @override
-  void apply4(GeometryComponentFilter filter) {
+  void apply4(GeomComponentFilter filter) {
     filter.filter(this);
   }
 
@@ -209,7 +209,7 @@ class LineString extends BaseGeometry<LineString> implements Lineal {
   void normalize() {
     for (int i = 0; i < (points.size() / 2); i++) {
       int j = (points.size() - 1) - i;
-      if (!points.getCoordinate(i).equals(points.getCoordinate(j))) {
+      if (points.getCoordinate(i) != points.getCoordinate(j)) {
         if (points.getCoordinate(i).compareTo(points.getCoordinate(j)) > 0) {
           CoordinateSequence copy = points.copy();
           CoordinateSequences.reverse(copy);

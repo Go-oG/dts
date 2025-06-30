@@ -1,5 +1,5 @@
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/precision_model.dart';
 import 'package:dts/src/jts/geom/util/linear_component_extracter.dart';
@@ -11,7 +11,7 @@ import 'package:dts/src/jts/noding/segment_string.dart';
 import 'snap_rounding_noder.dart';
 
 class GeometryNoder {
-  late GeometryFactory geomFact;
+  late GeomFactory geomFact;
 
   final PrecisionModel _pm;
 

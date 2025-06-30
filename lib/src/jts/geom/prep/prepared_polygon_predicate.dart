@@ -1,6 +1,6 @@
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geom.dart';
 import 'package:dts/src/jts/geom/location.dart';
 import 'package:dts/src/jts/geom/point.dart';
 import 'package:dts/src/jts/geom/polygonal.dart';
@@ -93,7 +93,8 @@ class PreparedPolygonContainsProperly extends PreparedPolygonPredicate {
     if (segsIntersect) return false;
 
     if (geom is Polygonal) {
-      bool isTargetGeomInTestArea = isAnyTargetComponentInAreaTest(geom, prepPoly.getRepresentativePoints());
+      bool isTargetGeomInTestArea =
+          isAnyTargetComponentInAreaTest(geom, prepPoly.getRepresentativePoints());
       if (isTargetGeomInTestArea) return false;
     }
     return true;
@@ -120,7 +121,8 @@ class PreparedPolygonIntersects extends PreparedPolygonPredicate {
       if (segsIntersect) return true;
     }
     if (geom.getDimension() == 2) {
-      bool isPrepGeomInArea = isAnyTargetComponentInAreaTest(geom, prepPoly.getRepresentativePoints());
+      bool isPrepGeomInArea =
+          isAnyTargetComponentInAreaTest(geom, prepPoly.getRepresentativePoints());
       if (isPrepGeomInArea) return true;
     }
     return false;

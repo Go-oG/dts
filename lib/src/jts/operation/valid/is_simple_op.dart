@@ -1,11 +1,11 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/boundary_node_rule.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_collection.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_collection.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/multi_line_string.dart';
 import 'package:dts/src/jts/geom/multi_point.dart';
@@ -82,7 +82,7 @@ class IsSimpleOp {
 
     if (geom is Polygonal) return isSimplePolygonal(geom);
 
-    if (geom is GeometryCollection) return isSimpleGeometryCollection(geom);
+    if (geom is GeomCollection) return isSimpleGeometryCollection(geom);
 
     return true;
   }
@@ -134,7 +134,8 @@ class IsSimpleOp {
     if (geom.isEmpty()) return true;
 
     List<SegmentString> segStrings = extractSegmentStrings(geom);
-    final segInt = _NonSimpleIntersectionFinder(_isClosedEndpointsInInterior, _isFindAllLocations, _nonSimplePts!);
+    final segInt = _NonSimpleIntersectionFinder(
+        _isClosedEndpointsInInterior, _isFindAllLocations, _nonSimplePts!);
     MCIndexNoder noder = MCIndexNoder();
     noder.setSegmentIntersector(segInt);
     noder.computeNodes(segStrings);
@@ -192,7 +193,8 @@ class _NonSimpleIntersectionFinder implements NSegmentIntersector {
 
   final List<Coordinate> _intersectionPts;
 
-  _NonSimpleIntersectionFinder(this.isClosedEndpointsInInterior, this._isFindAll, this._intersectionPts);
+  _NonSimpleIntersectionFinder(
+      this.isClosedEndpointsInInterior, this._isFindAll, this._intersectionPts);
 
   bool hasIntersection() {
     return _intersectionPts.size > 0;
@@ -240,7 +242,8 @@ class _NonSimpleIntersectionFinder implements NSegmentIntersector {
     return false;
   }
 
-  static bool isIntersectionEndpoint(SegmentString ss, int ssIndex, LineIntersector li, int liSegmentIndex) {
+  static bool isIntersectionEndpoint(
+      SegmentString ss, int ssIndex, LineIntersector li, int liSegmentIndex) {
     int vertexIndex = intersectionVertexIndex(li, liSegmentIndex);
     if (vertexIndex == 0) {
       return ssIndex == 0;

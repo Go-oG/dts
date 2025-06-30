@@ -2,8 +2,8 @@ import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/triangulate/quadedge/quad_edge_subdivision.dart';
 
 import 'delaunay_triangulation_builder.dart';
@@ -57,7 +57,7 @@ class VoronoiDiagramBuilder {
     return subdiv!;
   }
 
-  Geometry getDiagram(GeometryFactory geomFact) {
+  Geometry getDiagram(GeomFactory geomFact) {
     create();
     Geometry polys = subdiv!.getVoronoiDiagram(geomFact);
     return clipGeometryCollection(polys, _diagramEnv!);
@@ -79,6 +79,6 @@ class VoronoiDiagramBuilder {
         clipped.add(result);
       }
     }
-    return geom.factory.createGeometryCollection2(GeometryFactory.toGeometryArray(clipped)!);
+    return geom.factory.createGeomCollection(GeomFactory.toGeometryArray(clipped)!);
   }
 }

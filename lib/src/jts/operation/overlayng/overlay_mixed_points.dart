@@ -2,8 +2,8 @@ import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/location.dart';
 import 'package:dts/src/jts/geom/point.dart';
@@ -29,7 +29,7 @@ class OverlayMixedPoints {
 
   late final Geometry _geomNonPointInput;
 
-  late final GeometryFactory geometryFactory;
+  late final GeomFactory geometryFactory;
 
   late final bool _isPointRHS;
 
@@ -118,8 +118,8 @@ class OverlayMixedPoints {
     } else if (points.size == 1) {
       return points.get(0);
     }
-    Array<Point> pointsArray = GeometryFactory.toPointArray(points);
-    return geometryFactory.createMultiPoint2(pointsArray);
+    Array<Point> pointsArray = GeomFactory.toPointArray(points);
+    return geometryFactory.createMultiPoint(pointsArray);
   }
 
   List<Point> findPoints(bool isCovered, Array<Coordinate> coords) {

@@ -2,19 +2,19 @@ import 'package:dts/src/jts/operation/relate/relate_op.dart';
 import 'package:dts/src/jts/operation/relateng/relate_ng.dart';
 import 'package:dts/src/jts/operation/relateng/relate_predicate.dart';
 
-import 'geometry.dart';
+import 'geom.dart';
 import 'intersection_matrix.dart';
 
-enum GeometryRelateImpl { ng, old }
+enum GeomRelateImpl { ng, old }
 
-class GeometryRelate {
-  static GeometryRelateImpl _relateImpl = GeometryRelateImpl.ng;
+class GeomRelate {
+  static GeomRelateImpl _relateImpl = GeomRelateImpl.ng;
 
   static bool get _isRelateNG {
-    return _relateImpl == GeometryRelateImpl.ng;
+    return _relateImpl == GeomRelateImpl.ng;
   }
 
-  static void setRelateImpl(GeometryRelateImpl? relateImpl) {
+  static void setRelateImpl(GeomRelateImpl? relateImpl) {
     if (relateImpl == null) {
       return;
     }
@@ -98,7 +98,7 @@ class GeometryRelate {
     if (_isRelateNG) {
       return RelateNG.relate4(a, b, RelatePredicate.equalsTopo());
     }
-    if (!a.getEnvelopeInternal().equals(b.getEnvelopeInternal())) return false;
+    if (a.getEnvelopeInternal() != (b.getEnvelopeInternal())) return false;
 
     return RelateOp.relate(a, b).isEquals(a.getDimension(), b.getDimension());
   }

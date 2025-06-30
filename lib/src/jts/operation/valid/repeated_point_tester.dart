@@ -1,7 +1,7 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_collection.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_collection.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/multi_point.dart';
 import 'package:dts/src/jts/geom/point.dart';
@@ -27,7 +27,7 @@ class RepeatedPointTester {
       return hasRepeatedPoint(((g)).getCoordinates());
     else if (g is Polygon)
       return hasRepeatedPoint4(((g)));
-    else if (g is GeometryCollection)
+    else if (g is GeomCollection)
       return hasRepeatedPoint3(((g)));
     else
       throw "UnsupportedOperationException ${g.runtimeType}";
@@ -35,7 +35,7 @@ class RepeatedPointTester {
 
   bool hasRepeatedPoint(Array<Coordinate> coord) {
     for (int i = 1; i < coord.length; i++) {
-      if (coord[i - 1].equals(coord[i])) {
+      if (coord[i - 1] == coord[i]) {
         _repeatedCoord = coord[i];
         return true;
       }
@@ -56,7 +56,7 @@ class RepeatedPointTester {
     return false;
   }
 
-  bool hasRepeatedPoint3(GeometryCollection gc) {
+  bool hasRepeatedPoint3(GeomCollection gc) {
     for (int i = 0; i < gc.getNumGeometries(); i++) {
       Geometry g = gc.getGeometryN(i);
       if (hasRepeatedPoint2(g)) {

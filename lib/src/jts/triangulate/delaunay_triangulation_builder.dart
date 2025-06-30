@@ -3,8 +3,8 @@ import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/triangulate/quadedge/quad_edge_subdivision.dart';
 import 'package:dts/src/jts/triangulate/quadedge/vertex.dart';
 
@@ -23,7 +23,7 @@ class DelaunayTriangulationBuilder {
   static CoordinateList unique(Array<Coordinate> coords) {
     Array<Coordinate> coordsCopy = CoordinateArrays.copyDeep(coords);
     coordsCopy.sort();
-    CoordinateList coordList = CoordinateList.of2(coordsCopy, false);
+    CoordinateList coordList = CoordinateList(coordsCopy, false);
     return coordList;
   }
 
@@ -78,12 +78,12 @@ class DelaunayTriangulationBuilder {
     return subdiv!;
   }
 
-  Geometry getEdges(GeometryFactory geomFact) {
+  Geometry getEdges(GeomFactory geomFact) {
     create();
     return subdiv!.getEdges2(geomFact);
   }
 
-  Geometry getTriangles(GeometryFactory geomFact) {
+  Geometry getTriangles(GeomFactory geomFact) {
     create();
     return subdiv!.getTriangles2(geomFact);
   }

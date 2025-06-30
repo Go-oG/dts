@@ -1,7 +1,7 @@
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_collection.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_collection.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/location.dart';
@@ -73,7 +73,7 @@ class PointLocator {
         Polygon poly = geom.getGeometryN(i);
         _updateLocationInfo(_locateInPolygon(p, poly));
       }
-    } else if (geom is GeometryCollection) {
+    } else if (geom is GeomCollection) {
       Iterator geomi = GeometryCollectionIterator(geom);
       while (geomi.moveNext()) {
         Geometry g2 = geomi.current;
@@ -109,7 +109,7 @@ class PointLocator {
     }
 
     CoordinateSequence seq = l.getCoordinateSequence();
-    if (p.equals(seq.getCoordinate(0)) || p.equals(seq.getCoordinate(seq.size() - 1))) {
+    if (p == seq.getCoordinate(0) || p == seq.getCoordinate(seq.size() - 1)) {
       int boundaryCount = (l.isClosed()) ? 2 : 1;
       int loc = (_boundaryRule.isInBoundary(boundaryCount)) ? Location.boundary : Location.interior;
       return loc;

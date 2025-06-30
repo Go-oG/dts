@@ -1,7 +1,7 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/index/strtree/strtree.dart';
 
 import 'coverage_polygon_validator.dart';
@@ -66,7 +66,7 @@ class CoverageValidator {
     queryEnv.expandBy(_gapWidth);
     List<Geometry> nearGeomList = index.query(queryEnv);
     nearGeomList.remove(targetGeom);
-    Array<Geometry>? nearGeoms = GeometryFactory.toGeometryArray(nearGeomList);
+    Array<Geometry>? nearGeoms = GeomFactory.toGeometryArray(nearGeomList);
     Geometry result = CoveragePolygonValidator.validateS2(targetGeom, nearGeoms!, _gapWidth);
     return result.isEmpty() ? null : result;
   }

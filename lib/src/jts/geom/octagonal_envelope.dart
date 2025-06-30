@@ -5,9 +5,9 @@ import 'coordinate.dart';
 import 'coordinate_list.dart';
 import 'coordinate_sequence.dart';
 import 'envelope.dart';
-import 'geometry.dart';
-import 'geometry_component_filter.dart';
-import 'geometry_factory.dart';
+import 'geom.dart';
+import 'geom_component_filter.dart';
+import 'geom_factory.dart';
 import 'line_string.dart';
 import 'precision_model.dart';
 
@@ -274,7 +274,7 @@ class OctagonalEnvelope {
         (other._maxB <= _maxB);
   }
 
-  Geometry toGeometry(GeometryFactory geomFactory) {
+  Geometry toGeometry(GeomFactory geomFactory) {
     if (isNull()) {
       return geomFactory.createPoint();
     }
@@ -317,7 +317,7 @@ class OctagonalEnvelope {
   }
 }
 
-class BoundingOctagonComponentFilter implements GeometryComponentFilter {
+class BoundingOctagonComponentFilter implements GeomComponentFilter {
   OctagonalEnvelope oe;
 
   BoundingOctagonComponentFilter(this.oe);

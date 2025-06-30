@@ -1,6 +1,6 @@
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geom.dart';
 import 'package:dts/src/jts/operation/buffer/validate/point_pair_distance.dart';
 
 import 'distance_to_point_finder.dart';
@@ -13,28 +13,26 @@ class BufferCurveMaximumDistanceFinder {
   BufferCurveMaximumDistanceFinder(this.inputGeom);
 
   double findDistance(Geometry bufferCurve) {
-        computeMaxVertexDistance(bufferCurve);
-        computeMaxMidpointDistance(bufferCurve);
-        return _maxPtDist.getDistance();
-    }
+    computeMaxVertexDistance(bufferCurve);
+    computeMaxMidpointDistance(bufferCurve);
+    return _maxPtDist.getDistance();
+  }
 
-    OpPointPairDistance getDistancePoints() {
-        return _maxPtDist;
-    }
+  OpPointPairDistance getDistancePoints() {
+    return _maxPtDist;
+  }
 
-     void computeMaxVertexDistance(Geometry curve) {
+  void computeMaxVertexDistance(Geometry curve) {
     final distFilter = MaxPointDistanceFilter(inputGeom);
     curve.apply(distFilter);
     _maxPtDist.setMaximum(distFilter.getMaxPointDistance());
   }
 
-     void computeMaxMidpointDistance(Geometry curve) {
+  void computeMaxMidpointDistance(Geometry curve) {
     final distFilter = MaxMidpointDistanceFilter(inputGeom);
     curve.apply2(distFilter);
     _maxPtDist.setMaximum(distFilter.getMaxPointDistance());
-    }
-
-
+  }
 }
 
 class MaxMidpointDistanceFilter implements CoordinateSequenceFilter {

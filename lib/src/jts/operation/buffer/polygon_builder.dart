@@ -2,8 +2,8 @@ import 'package:dts/src/jts/algorithm/point_location.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/geomgraph/edge.dart';
@@ -16,7 +16,7 @@ import '../buffer/maximal_edge_ring.dart';
 import 'minimal_edge_ring.dart';
 
 class PolygonBuilder {
-  GeometryFactory geometryFactory;
+  GeomFactory geometryFactory;
 
   final List<EdgeRing> _shellList = [];
 
@@ -129,7 +129,7 @@ class PolygonBuilder {
     for (var tryShell in shellList) {
       LinearRing tryShellRing = tryShell.getLinearRing()!;
       Envelope tryShellEnv = tryShellRing.getEnvelopeInternal();
-      if (tryShellEnv.equals(testEnv)) {
+      if (tryShellEnv == testEnv) {
         continue;
       }
 

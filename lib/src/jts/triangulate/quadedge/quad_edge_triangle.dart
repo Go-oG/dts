@@ -1,8 +1,8 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/point_location.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
@@ -46,7 +46,7 @@ class QuadEdgeTriangle {
       v[2].getCoordinate(),
       v[0].getCoordinate()
     ].toArray();
-    GeometryFactory fact = GeometryFactory.empty();
+    GeomFactory fact = GeomFactory();
     LinearRing ring = fact.createLinearRings(ringPts);
     return fact.createPolygon(ring);
   }
@@ -58,7 +58,7 @@ class QuadEdgeTriangle {
       e[2].orig().getCoordinate(),
       e[0].orig().getCoordinate(),
     ].toArray();
-    GeometryFactory fact = GeometryFactory.empty();
+    GeomFactory fact = GeomFactory();
     LinearRing ring = fact.createLinearRings(ringPts);
     Polygon tri = fact.createPolygon(ring);
     return tri;
@@ -146,7 +146,7 @@ class QuadEdgeTriangle {
     return PointLocation.isInRing(pt, ring);
   }
 
-  Polygon getGeometry(GeometryFactory fact) {
+  Polygon getGeometry(GeomFactory fact) {
     LinearRing ring = fact.createLinearRings(getCoordinates());
     Polygon tri = fact.createPolygon(ring);
     return tri;

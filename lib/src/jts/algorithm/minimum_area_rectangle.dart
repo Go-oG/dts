@@ -1,7 +1,7 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
@@ -140,7 +140,7 @@ class MinimumAreaRectangle {
     return index;
   }
 
-  static LineString _computeMaximumLine(Array<Coordinate> pts, GeometryFactory factory) {
+  static LineString _computeMaximumLine(Array<Coordinate> pts, GeomFactory factory) {
     Coordinate? ptMinX;
     Coordinate? ptMaxX;
     Coordinate? ptMinY;

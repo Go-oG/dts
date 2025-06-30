@@ -1,5 +1,5 @@
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geom.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/lineal.dart';
 
@@ -33,7 +33,7 @@ class LinearIterator {
   LinearIterator.of(Geometry linear) : this(linear, 0, 0);
 
   LinearIterator.of2(Geometry linear, LinearLocation start)
-    : this(linear, start.getComponentIndex(), segmentEndVertexIndex(start));
+      : this(linear, start.getComponentIndex(), segmentEndVertexIndex(start));
 
   void loadCurrentLine() {
     if (_componentIndex >= _numLines) {
@@ -46,7 +46,8 @@ class LinearIterator {
   bool hasNext() {
     if (_componentIndex >= _numLines) return false;
 
-    if ((_componentIndex == (_numLines - 1)) && (_vertexIndex >= _currentLine!.getNumPoints())) return false;
+    if ((_componentIndex == (_numLines - 1)) && (_vertexIndex >= _currentLine!.getNumPoints()))
+      return false;
 
     return true;
   }
@@ -87,7 +88,8 @@ class LinearIterator {
   }
 
   Coordinate? getSegmentEnd() {
-    if (_vertexIndex < (getLine()!.getNumPoints() - 1)) return _currentLine!.getCoordinateN(_vertexIndex + 1);
+    if (_vertexIndex < (getLine()!.getNumPoints() - 1))
+      return _currentLine!.getCoordinateN(_vertexIndex + 1);
 
     return null;
   }

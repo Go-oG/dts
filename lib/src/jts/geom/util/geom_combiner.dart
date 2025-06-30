@@ -1,5 +1,5 @@
-import '../geometry.dart';
-import '../geometry_factory.dart';
+import '../geom.dart';
+import '../geom_factory.dart';
 
 class GeometryCombiner {
   static Geometry? combine2(List<Geometry> geoms) {
@@ -17,7 +17,7 @@ class GeometryCombiner {
     return combiner.combine();
   }
 
-  GeometryFactory? geomFactory;
+  GeomFactory? geomFactory;
 
   final bool _skipEmpty = false;
 
@@ -27,7 +27,7 @@ class GeometryCombiner {
     geomFactory = extractFactory(_inputGeoms);
   }
 
-  static GeometryFactory? extractFactory(List<Geometry> geoms) {
+  static GeomFactory? extractFactory(List<Geometry> geoms) {
     if (geoms.isEmpty) return null;
     return geoms.first.factory;
   }
@@ -39,7 +39,7 @@ class GeometryCombiner {
     }
     if (elems.isEmpty) {
       if (geomFactory != null) {
-        return geomFactory!.createGeometryCollection();
+        return geomFactory!.createGeomCollection();
       }
       return null;
     }

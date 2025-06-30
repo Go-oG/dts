@@ -1,7 +1,7 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_collection.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_collection.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
@@ -13,8 +13,8 @@ class DistanceToPointFinder {
       computeDistance3(geom, pt, ptDist);
     } else if (geom is Polygon) {
       computeDistance4(geom, pt, ptDist);
-    } else if (geom is GeometryCollection) {
-      GeometryCollection gc = geom;
+    } else if (geom is GeomCollection) {
+      GeomCollection gc = geom;
       for (int i = 0; i < gc.getNumGeometries(); i++) {
         Geometry g = gc.getGeometryN(i);
         computeDistance(g, pt, ptDist);

@@ -1,7 +1,6 @@
-import 'package:collection/collection.dart';
- import 'package:d_util/d_util.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:d_util/d_util.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 
 import '../../triangulate/tri/tri.dart';
 import 'hull_tri.dart';
@@ -29,7 +28,8 @@ class ConcaveHull {
     return concaveHullByLengthRatio2(geom, lengthRatio, false);
   }
 
-  static Geometry concaveHullByLengthRatio2(Geometry geom, double lengthRatio, bool isHolesAllowed) {
+  static Geometry concaveHullByLengthRatio2(
+      Geometry geom, double lengthRatio, bool isHolesAllowed) {
     ConcaveHull hull = ConcaveHull(geom);
     hull.setMaximumEdgeLengthRatio(lengthRatio);
     hull.setHolesAllowed(isHolesAllowed);
@@ -49,7 +49,7 @@ class ConcaveHull {
 
   final Geometry _inputGeometry;
 
-  late final GeometryFactory _geomFactory;
+  late final GeomFactory _geomFactory;
 
   double _maxEdgeLengthRatio = -1;
 
@@ -271,7 +271,7 @@ class ConcaveHull {
     return !tri.hasBoundaryTouch();
   }
 
-  Geometry _toGeometry(List<HullTri> triList, GeometryFactory geomFactory) {
+  Geometry _toGeometry(List<HullTri> triList, GeomFactory geomFactory) {
     if (!_isHolesAllowed) {
       return HullTriangulation.traceBoundaryPolygon(triList, geomFactory);
     }

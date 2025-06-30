@@ -3,18 +3,18 @@ import 'package:d_util/d_util.dart';
 import 'coordinate.dart';
 import 'coordinate_sequence.dart';
 import 'dimension.dart';
-import 'geometry.dart';
-import 'geometry_factory.dart';
+import 'geom.dart';
+import 'geom_factory.dart';
 import 'line_string.dart';
 import 'precision_model.dart';
 
 class LinearRing extends LineString {
-  static const int MINIMUM_VALID_SIZE = 3;
+  static const int kMinValidSize = 3;
 
   LinearRing(Array<Coordinate>? points, PrecisionModel precisionModel, int SRID)
-      : this.of(points, GeometryFactory.from(precisionModel, SRID));
+      : this.of(points, GeomFactory(pm: precisionModel, srid: SRID));
 
-  LinearRing.of(Array<Coordinate>? points, GeometryFactory factory)
+  LinearRing.of(Array<Coordinate>? points, GeomFactory factory)
       : this.of2(factory.csFactory.create(points), factory);
 
   LinearRing.of2(super.points, super.factory) : super.of() {
@@ -25,10 +25,9 @@ class LinearRing extends LineString {
     if ((!isEmpty()) && (!super.isClosed())) {
       throw IllegalArgumentException("Points of LinearRing do not form a closed linestring");
     }
-    if ((getCoordinateSequence().size() >= 1) &&
-        (getCoordinateSequence().size() < MINIMUM_VALID_SIZE)) {
+    if ((getCoordinateSequence().size() >= 1) && (getCoordinateSequence().size() < kMinValidSize)) {
       throw IllegalArgumentException(
-        "${("Invalid number of points in LinearRing (found ${getCoordinateSequence().size()} - must be 0 or >= $MINIMUM_VALID_SIZE")})",
+        "${("Invalid number of points in LinearRing (found ${getCoordinateSequence().size()} - must be 0 or >= $kMinValidSize")})",
       );
     }
   }
@@ -47,8 +46,8 @@ class LinearRing extends LineString {
   }
 
   @override
-  GeometryType get geometryType {
-    return GeometryType.linearRing;
+  GeomType get geometryType {
+    return GeomType.linearRing;
   }
 
   @override

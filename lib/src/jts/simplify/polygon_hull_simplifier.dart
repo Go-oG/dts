@@ -1,7 +1,7 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/area.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/multi_polygon.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
@@ -25,7 +25,7 @@ class PolygonHullSimplifier {
   }
 
   Geometry inputGeom;
-  late GeometryFactory geomFactory;
+  late GeomFactory geomFactory;
   final bool _isOuter;
 
   double _vertexNumFraction = -1;
@@ -83,7 +83,7 @@ class PolygonHullSimplifier {
       Polygon hull = polygonHull(poly, polyHulls[i], hullIndex);
       polys.add(hull);
     }
-    return geomFactory.createMultiPolygon(GeometryFactory.toPolygonArray(polys));
+    return geomFactory.createMultiPolygon(GeomFactory.toPolygonArray(polys));
   }
 
   Geometry computeMultiPolygonEach(MultiPolygon multiPoly) {
@@ -93,7 +93,7 @@ class PolygonHullSimplifier {
       Polygon hull = computePolygon(poly);
       polys.add(hull);
     }
-    return geomFactory.createMultiPolygon(GeometryFactory.toPolygonArray(polys));
+    return geomFactory.createMultiPolygon(GeomFactory.toPolygonArray(polys));
   }
 
   Polygon computePolygon(Polygon poly) {
@@ -132,7 +132,8 @@ class PolygonHullSimplifier {
     return area;
   }
 
-  RingHull createRingHull(LinearRing ring, bool isOuter, double areaTotal, RingHullIndex? hullIndex) {
+  RingHull createRingHull(
+      LinearRing ring, bool isOuter, double areaTotal, RingHullIndex? hullIndex) {
     RingHull ringHull = RingHull(ring, isOuter);
     if (_vertexNumFraction >= 0) {
       int targetVertexCount = Math.ceil(_vertexNumFraction * (ring.getNumPoints() - 1));
@@ -162,7 +163,7 @@ class PolygonHullSimplifier {
       LinearRing hull = ringHulls.get(ringIndex++).getHull(hullIndex);
       holeHulls.add(hull);
     }
-    Array<LinearRing> resultHoles = GeometryFactory.toLinearRingArray(holeHulls);
+    Array<LinearRing> resultHoles = GeomFactory.toLinearRingArray(holeHulls);
     return geomFactory.createPolygon(shellHull, resultHoles);
   }
 }

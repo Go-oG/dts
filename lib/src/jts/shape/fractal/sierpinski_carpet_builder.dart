@@ -1,7 +1,7 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
@@ -29,7 +29,7 @@ class SierpinskiCarpetBuilder extends GeometricShapeBuilder {
   Array<LinearRing> getHoles(int n, double originX, double originY, double width) {
     List<LinearRing> holeList = [];
     addHoles(n, originX, originY, width, holeList);
-    return GeometryFactory.toLinearRingArray(holeList);
+    return GeomFactory.toLinearRingArray(holeList);
   }
 
   void addHoles(int n, double originX, double originY, double width, List holeList) {

@@ -1,23 +1,23 @@
-import 'package:dts/src/jts/geom/geometry_collection.dart';
-import 'package:dts/src/jts/geom/util/geometry_collection_mapper.dart';
+import 'package:dts/src/jts/geom/geom_collection.dart';
+import 'package:dts/src/jts/geom/util/geom_collection_mapper.dart';
 import 'package:dts/src/jts/geom/util/geometry_mapper.dart';
 import 'package:dts/src/jts/operation/overlay/overlay_op.dart';
 import 'package:dts/src/jts/operation/overlay/snap/snap_if_needed_overlay_op.dart';
 import 'package:dts/src/jts/operation/overlayng/overlay_ngrobust.dart';
 import 'package:dts/src/jts/operation/union/unary_union_op.dart';
 
-import 'geometry.dart';
+import 'geom.dart';
 
-enum GeometryOverlayImpl { ng, old }
+enum GeomOverlayImpl { ng, old }
 
-class GeometryOverlay {
-  static GeometryOverlayImpl _overlayImpl = GeometryOverlayImpl.ng;
+class GeomOverlay {
+  static GeomOverlayImpl _overlayImpl = GeomOverlayImpl.ng;
 
   static bool get _isOverlayNG {
-    return _overlayImpl == GeometryOverlayImpl.ng;
+    return _overlayImpl == GeomOverlayImpl.ng;
   }
 
-  static void setOverlayImpl(GeometryOverlayImpl? overlayImpl) {
+  static void setOverlayImpl(GeomOverlayImpl? overlayImpl) {
     if (overlayImpl == null) return;
     _overlayImpl = overlayImpl;
   }
@@ -47,8 +47,8 @@ class GeometryOverlay {
 
     if (a.isGeometryCollection()) {
       final Geometry g2 = b;
-      return GeometryCollectionMapper.map2(
-        a as GeometryCollection,
+      return GeomCollectionMapper.map2(
+        a as GeomCollection,
         MapOpNormal((g) {
           return g.intersection(g2);
         }),
@@ -59,7 +59,8 @@ class GeometryOverlay {
 
   static Geometry? symDifference(Geometry a, Geometry b) {
     if (a.isEmpty() || b.isEmpty()) {
-      if (a.isEmpty() && b.isEmpty()) return OverlayOp.createEmptyResult(OverlayOpCode.symDifference, a, b, a.factory);
+      if (a.isEmpty() && b.isEmpty())
+        return OverlayOp.createEmptyResult(OverlayOpCode.symDifference, a, b, a.factory);
 
       if (a.isEmpty()) return b.copy();
 
@@ -72,7 +73,8 @@ class GeometryOverlay {
 
   static Geometry? union2(Geometry a, Geometry b) {
     if (a.isEmpty() || b.isEmpty()) {
-      if (a.isEmpty() && b.isEmpty()) return OverlayOp.createEmptyResult(OverlayOpCode.union, a, b, a.factory);
+      if (a.isEmpty() && b.isEmpty())
+        return OverlayOp.createEmptyResult(OverlayOpCode.union, a, b, a.factory);
 
       if (a.isEmpty()) return b.copy();
 

@@ -1,10 +1,10 @@
- import 'dart:collection';
+import 'dart:collection';
 
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_component_filter.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_component_filter.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/multi_line_string.dart';
 import 'package:dts/src/jts/planargraph/algorithm/connected_subgraph_finder.dart';
@@ -44,7 +44,7 @@ class LineSequencer {
       }
 
       if (lastNode != null) {
-        if (!startNode.equals(lastNode)) {
+        if (startNode != lastNode) {
           prevSubgraphNodes.addAll(currNodes);
           currNodes.clear();
         }
@@ -58,7 +58,7 @@ class LineSequencer {
 
   final graph = LineMergeGraph();
 
-  GeometryFactory? _factory = GeometryFactory.empty();
+  GeomFactory? _factory = GeomFactory();
 
   int _lineCount = 0;
 
@@ -76,7 +76,7 @@ class LineSequencer {
 
   void add(Geometry geometry) {
     geometry.apply4(
-      GeometryComponentFilter2((g) {
+      GeomComponentFilter2((g) {
         if (g is LineString) {
           addLine(g);
         }
@@ -266,7 +266,7 @@ class LineSequencer {
       }
     }
     if (lines.size == 0) {
-      return _factory!.createMultiLineString2(Array<LineString>(0));
+      return _factory!.createMultiLineString(Array<LineString>(0));
     }
 
     return _factory!.buildGeometry(lines);

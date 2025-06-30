@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/position.dart';
@@ -28,7 +28,7 @@ class RightmostEdgeFinder {
     }
 
     Assert.isTrue2(
-      (_minIndex != 0) || _minCoord!.equals(_minDe!.getCoordinate()),
+      (_minIndex != 0) || _minCoord! == (_minDe!.getCoordinate()),
       "inconsistency in rightmost processing",
     );
     if (_minIndex == 0) {
@@ -63,9 +63,11 @@ class RightmostEdgeFinder {
     Coordinate pNext = pts[_minIndex + 1];
     int orientation = Orientation.index(_minCoord!, pNext, pPrev);
     bool usePrev = false;
-    if (((pPrev.y < _minCoord!.y) && (pNext.y < _minCoord!.y)) && (orientation == Orientation.counterClockwise)) {
+    if (((pPrev.y < _minCoord!.y) && (pNext.y < _minCoord!.y)) &&
+        (orientation == Orientation.counterClockwise)) {
       usePrev = true;
-    } else if (((pPrev.y > _minCoord!.y) && (pNext.y > _minCoord!.y)) && (orientation == Orientation.clockwise)) {
+    } else if (((pPrev.y > _minCoord!.y) && (pNext.y > _minCoord!.y)) &&
+        (orientation == Orientation.clockwise)) {
       usePrev = true;
     }
     if (usePrev) {

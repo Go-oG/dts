@@ -1,6 +1,6 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geom.dart';
 import 'package:dts/src/jts/geom/location.dart';
 import 'package:dts/src/jts/operation/overlay/overlay_op.dart';
 import 'package:dts/src/jts/operation/overlay/snap/geometry_snapper.dart';
@@ -37,12 +37,11 @@ class OverlayResultValidator {
   OverlayResultValidator(Geometry a, Geometry b, Geometry result) {
     _boundaryDistanceTolerance = computeBoundaryDistanceTolerance(a, b);
     geom = [a, b, result].toArray();
-    _locFinder =
-        [
-          FuzzyPointLocator(geom[0], _boundaryDistanceTolerance),
-          FuzzyPointLocator(geom[1], _boundaryDistanceTolerance),
-          FuzzyPointLocator(geom[2], _boundaryDistanceTolerance),
-        ].toArray();
+    _locFinder = [
+      FuzzyPointLocator(geom[0], _boundaryDistanceTolerance),
+      FuzzyPointLocator(geom[1], _boundaryDistanceTolerance),
+      FuzzyPointLocator(geom[2], _boundaryDistanceTolerance),
+    ].toArray();
   }
 
   bool isValid(OverlayOpCode overlayOp) {

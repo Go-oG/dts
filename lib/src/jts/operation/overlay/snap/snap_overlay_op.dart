@@ -1,5 +1,5 @@
- import 'package:d_util/d_util.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:d_util/d_util.dart';
+import 'package:dts/src/jts/geom/geom.dart';
 import 'package:dts/src/jts/operation/overlay/overlay_op.dart';
 import 'package:dts/src/jts/precision/common_bits_remover.dart';
 

@@ -1,8 +1,8 @@
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_component_filter.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_component_filter.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/point.dart';
 import 'package:dts/src/jts/geom/precision_model.dart';
 
@@ -22,7 +22,7 @@ final class OverlayPoints {
 
   PrecisionModel? pm;
 
-  late GeometryFactory geometryFactory;
+  late GeomFactory geometryFactory;
 
   late List<Point> _resultList;
 
@@ -101,7 +101,7 @@ final class OverlayPoints {
   Map<Coordinate, Point> buildPointMap(Geometry geoms) {
     Map<Coordinate, Point> map = {};
     geoms.apply4(
-      GeometryComponentFilter2((geom) {
+      GeomComponentFilter2((geom) {
         if (geom is! Point) {
           return;
         }

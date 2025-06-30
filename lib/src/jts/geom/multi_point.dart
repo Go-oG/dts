@@ -3,15 +3,15 @@ import 'package:dts/src/jts/geom/point.dart';
 
 import 'coordinate.dart';
 import 'dimension.dart';
-import 'geometry.dart';
-import 'geometry_collection.dart';
-import 'geometry_factory.dart';
+import 'geom.dart';
+import 'geom_collection.dart';
+import 'geom_factory.dart';
 import 'precision_model.dart';
 import 'puntal.dart';
 
-class MultiPoint extends GeometryCollection<Point> implements Puntal {
-  MultiPoint.of(Array<Point>? points, PrecisionModel precisionModel, int SRID)
-      : this(points, GeometryFactory.from(precisionModel, SRID));
+class MultiPoint extends GeomCollection<Point> implements Puntal {
+  MultiPoint.of(Array<Point>? points, PrecisionModel pm, int SRID)
+      : this(points, GeomFactory(pm: pm, srid: SRID));
 
   MultiPoint(super.points, super.factory);
 
@@ -31,13 +31,13 @@ class MultiPoint extends GeometryCollection<Point> implements Puntal {
   }
 
   @override
-  GeometryType get geometryType {
-    return GeometryType.multiPoint;
+  GeomType get geometryType {
+    return GeomType.multiPoint;
   }
 
   @override
   Geometry getBoundary() {
-    return factory.createGeometryCollection();
+    return factory.createGeomCollection();
   }
 
   @override

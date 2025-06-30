@@ -1,11 +1,11 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geom.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/precision_model.dart';
-import 'package:dts/src/jts/geom/util/geometry_editor.dart';
+import 'package:dts/src/jts/geom/util/geom_editor.dart';
 
 class PrecisionReducerCoordinateOperation extends CoordinateOperation {
   PrecisionModel targetPM;
@@ -16,7 +16,7 @@ class PrecisionReducerCoordinateOperation extends CoordinateOperation {
 
   @override
   Array<Coordinate>? edit2(Array<Coordinate> coordinates, Geometry geom) {
-    if (coordinates.length == 0) {
+    if (coordinates.isEmpty) {
       return null;
     }
 
@@ -26,7 +26,7 @@ class PrecisionReducerCoordinateOperation extends CoordinateOperation {
       targetPM.makePrecise(coord);
       reducedCoords[i] = coord;
     }
-    CoordinateList noRepeatedCoordList = CoordinateList.of2(reducedCoords, false);
+    CoordinateList noRepeatedCoordList = CoordinateList(reducedCoords, false);
     Array<Coordinate> noRepeatedCoords = noRepeatedCoordList.toCoordinateArray();
     int minLength = 0;
     if (geom is LineString) minLength = 2;

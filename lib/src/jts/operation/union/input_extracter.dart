@@ -1,14 +1,14 @@
 import 'package:dts/src/jts/geom/dimension.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_collection.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
-import 'package:dts/src/jts/geom/geometry_filter.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_collection.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geom_filter.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/point.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/util/assert.dart';
 
-class InputExtracter implements GeometryFilter {
+class InputExtracter implements GeomFilter {
   static InputExtracter extract2(List<Geometry> geoms) {
     InputExtracter extracter = InputExtracter();
     extracter.add2(geoms);
@@ -21,7 +21,7 @@ class InputExtracter implements GeometryFilter {
     return extracter;
   }
 
-  GeometryFactory? geomFactory;
+  GeomFactory? geomFactory;
 
   final List<Polygon> _polygons = [];
 
@@ -39,7 +39,7 @@ class InputExtracter implements GeometryFilter {
     return dimension;
   }
 
-  GeometryFactory? getFactory() {
+  GeomFactory? getFactory() {
     return geomFactory;
   }
 
@@ -71,7 +71,7 @@ class InputExtracter implements GeometryFilter {
   @override
   void filter(Geometry geom) {
     recordDimension(geom.getDimension());
-    if (geom is GeometryCollection) {
+    if (geom is GeomCollection) {
       return;
     }
     if (geom.isEmpty()) return;

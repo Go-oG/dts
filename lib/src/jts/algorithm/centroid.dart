@@ -1,7 +1,7 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_collection.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_collection.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/point.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
@@ -39,7 +39,7 @@ class Centroid {
       _addLineSegments(geom.getCoordinates());
     } else if (geom is Polygon) {
       _add2(geom);
-    } else if (geom is GeometryCollection) {
+    } else if (geom is GeomCollection) {
       for (int i = 0; i < geom.getNumGeometries(); i++) {
         _add(geom.getGeometryN(i));
       }

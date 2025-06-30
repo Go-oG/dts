@@ -4,7 +4,7 @@ import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/location.dart';
@@ -40,7 +40,7 @@ class EdgeRingO {
     return edges;
   }
 
-  GeometryFactory factory;
+  GeomFactory factory;
 
   final List<PolygonizeDirectedEdge> _deList = [];
 

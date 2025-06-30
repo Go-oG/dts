@@ -1,8 +1,8 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 
 import '../geom/coordinate.dart';
-import '../geom/geometry.dart';
-import '../geom/geometry_factory.dart';
+import '../geom/geom.dart';
+import '../geom/geom_factory.dart';
 import '../geom/line_string.dart';
 import '../geom/util/linear_component_extracter.dart';
 import 'basic_segment_string.dart';
@@ -34,7 +34,7 @@ class SegmentStringUtil {
     return segStr;
   }
 
-  static Geometry toGeometry(List<SegmentString> segStrings, GeometryFactory geomFact) {
+  static Geometry toGeometry(List<SegmentString> segStrings, GeomFactory geomFact) {
     Array<LineString> lines = Array(segStrings.size);
     int index = 0;
     for (var ss in segStrings) {
@@ -45,7 +45,7 @@ class SegmentStringUtil {
       return lines[0];
     }
 
-    return geomFact.createMultiLineString2(lines);
+    return geomFact.createMultiLineString(lines);
   }
 
   static String toStringS(List<SegmentString> segStrings) {

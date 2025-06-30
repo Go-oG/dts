@@ -2,7 +2,7 @@ import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/distance/discrete_frechet_distance.dart';
 import 'package:dts/src/jts/algorithm/distance/discrete_hausdorff_distance.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geom.dart';
 
 abstract interface class SimilarityMeasure {
   double measure(Geometry g1, Geometry g2);

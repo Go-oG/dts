@@ -1,5 +1,5 @@
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_collection.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_collection.dart';
 
 abstract class ShortCircuitedGeometryVisitor {
   bool _isDone = false;
@@ -9,7 +9,7 @@ abstract class ShortCircuitedGeometryVisitor {
   void applyTo(Geometry geom) {
     for (int i = 0; (i < geom.getNumGeometries()) && (!_isDone); i++) {
       Geometry element = geom.getGeometryN(i);
-      if (element is! GeometryCollection) {
+      if (element is! GeomCollection) {
         visit(element);
         if (isDone()) {
           _isDone = true;

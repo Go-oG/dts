@@ -2,8 +2,8 @@ import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_collection.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_collection.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
@@ -35,8 +35,8 @@ final class InteriorPointArea {
 
     if (geom is Polygon) {
       _processPolygon(geom);
-    } else if (geom is GeometryCollection) {
-      GeometryCollection gc = geom;
+    } else if (geom is GeomCollection) {
+      GeomCollection gc = geom;
       for (int i = 0; i < gc.getNumGeometries(); i++) {
         _process(gc.getGeometryN(i));
       }

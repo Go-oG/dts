@@ -2,8 +2,8 @@ import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/angle.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
@@ -11,18 +11,14 @@ import 'package:dts/src/jts/geom/precision_model.dart';
 import 'package:dts/src/jts/geom/util/affine_transformation.dart';
 
 class GeometricShapeFactory {
-  late GeometryFactory geomFact;
-  late PrecisionModel precModel;
-
+  late final GeomFactory geomFact;
+  late final PrecisionModel precModel;
   Dimensions dim = Dimensions();
-
   int nPts = 100;
-
   double rotationAngle = 0.0;
 
-  GeometricShapeFactory.empty() : this(GeometryFactory.empty());
-
-  GeometricShapeFactory(this.geomFact) {
+  GeometricShapeFactory([GeomFactory? gf]) {
+    geomFact = gf ?? GeomFactory();
     precModel = geomFact.getPrecisionModel();
   }
 

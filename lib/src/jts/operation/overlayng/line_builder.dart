@@ -1,7 +1,7 @@
  import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/location.dart';
 
@@ -13,7 +13,7 @@ import 'overlay_label.dart';
 import 'overlay_ng.dart';
 
 class NgLineBuilder {
-  GeometryFactory geometryFactory;
+  GeomFactory geometryFactory;
   OverlayGraph graph;
 
   final OverlayOpCode _opCode;

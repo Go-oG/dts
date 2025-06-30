@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geomgraph/index/edge_set_intersector.dart';
 import 'package:dts/src/jts/geomgraph/index/segment_intersector.dart';
 import 'package:dts/src/jts/util/assert.dart';
@@ -10,8 +10,8 @@ import '../algorithm/orientation.dart';
 import '../algorithm/point_locator.dart';
 import '../geom/coordinate.dart';
 import '../geom/coordinate_arrays.dart';
-import '../geom/geometry.dart';
-import '../geom/geometry_collection.dart';
+import '../geom/geom.dart';
+import '../geom/geom_collection.dart';
 import '../geom/line_string.dart';
 import '../geom/linear_ring.dart';
 import '../geom/location.dart';
@@ -56,7 +56,8 @@ class GeometryGraph extends PGPlanarGraph {
     return SimpleMCSweepLineIntersector();
   }
 
-  GeometryGraph.of(int argIndex, Geometry parentGeom) : this(argIndex, parentGeom, BoundaryNodeRule.ogcSfsBR);
+  GeometryGraph.of(int argIndex, Geometry parentGeom)
+      : this(argIndex, parentGeom, BoundaryNodeRule.ogcSfsBR);
 
   GeometryGraph(this._argIndex, this._parentGeom, this._boundaryNodeRule) {
     if (_parentGeom != null) {
@@ -124,13 +125,13 @@ class GeometryGraph extends PGPlanarGraph {
       addCollection(g);
     else if (g is MultiPolygon)
       addCollection(g);
-    else if (g is GeometryCollection)
+    else if (g is GeomCollection)
       addCollection(g);
     else
       throw "UnsupportedOperationException";
   }
 
-  void addCollection(GeometryCollection gc) {
+  void addCollection(GeomCollection gc) {
     for (int i = 0; i < gc.getNumGeometries(); i++) {
       add2(gc.getGeometryN(i));
     }
@@ -201,14 +202,16 @@ class GeometryGraph extends PGPlanarGraph {
   SegmentIntersector computeSelfNodes(LineIntersector li, bool computeRingSelfNodes) {
     SegmentIntersector si = SegmentIntersector(li, true, false);
     EdgeSetIntersector esi = createEdgeSetIntersector();
-    bool isRings = ((_parentGeom is LinearRing) || (_parentGeom is Polygon)) || (_parentGeom is MultiPolygon);
+    bool isRings =
+        ((_parentGeom is LinearRing) || (_parentGeom is Polygon)) || (_parentGeom is MultiPolygon);
     bool computeAllSegments = computeRingSelfNodes || (!isRings);
     esi.computeIntersections(edges, si, computeAllSegments);
     addSelfIntersectionNodes(_argIndex);
     return si;
   }
 
-  SegmentIntersector computeEdgeIntersections(GeometryGraph g, LineIntersector li, bool includeProper) {
+  SegmentIntersector computeEdgeIntersections(
+      GeometryGraph g, LineIntersector li, bool includeProper) {
     SegmentIntersector si = SegmentIntersector(li, includeProper, true);
     si.setBoundaryNodes(getBoundaryNodes(), g.getBoundaryNodes());
     EdgeSetIntersector esi = createEdgeSetIntersector();

@@ -1,7 +1,7 @@
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geom.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/point.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
@@ -61,7 +61,7 @@ class RectangleContains {
   }
 
   bool isLineSegmentContainedInBoundary(Coordinate p0, Coordinate p1) {
-    if (p0.equals(p1)) return isPointContainedInBoundary(p0);
+    if (p0 == p1) return isPointContainedInBoundary(p0);
 
     if (p0.x == p1.x) {
       if ((p0.x == rectEnv.minX) || (p0.x == rectEnv.maxX)) return true;

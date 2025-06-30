@@ -1,5 +1,5 @@
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/precision_model.dart';
 import 'package:dts/src/jts/operation/union/unary_union_op.dart';
 import 'package:dts/src/jts/operation/union/union_strategy.dart';
@@ -21,7 +21,7 @@ class UnaryUnionNG {
     return op.union();
   }
 
-  static Geometry? union3(List<Geometry> geoms, GeometryFactory geomFact, PrecisionModel pm) {
+  static Geometry? union3(List<Geometry> geoms, GeomFactory geomFact, PrecisionModel pm) {
     UnaryUnionOp op = UnaryUnionOp(geoms, geomFact);
     op.setUnionFunction(createUnionStrategy(pm));
     return op.union();

@@ -1,6 +1,6 @@
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_component_filter.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_component_filter.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 
@@ -33,7 +33,7 @@ class Polygonizer {
 
   final bool _extractOnlyPolygonal;
 
-  GeometryFactory? _geomFactory;
+  GeomFactory? _geomFactory;
 
   Polygonizer([this._extractOnlyPolygonal = false]);
 
@@ -63,13 +63,13 @@ class Polygonizer {
   }
 
   Geometry getGeometry() {
-    _geomFactory ??= GeometryFactory.empty();
+    _geomFactory ??= GeomFactory();
 
     polygonize();
     if (_extractOnlyPolygonal) {
       return _geomFactory!.buildGeometry(polyList!);
     }
-    return _geomFactory!.createGeometryCollection2(GeometryFactory.toGeometryArray(polyList!)!);
+    return _geomFactory!.createGeomCollection(GeomFactory.toGeometryArray(polyList!)!);
   }
 
   List<LineString> getDangles() {
@@ -213,7 +213,7 @@ class Polygonizer {
   }
 }
 
-class LineStringAdder implements GeometryComponentFilter {
+class LineStringAdder implements GeomComponentFilter {
   Polygonizer p;
 
   LineStringAdder(this.p);

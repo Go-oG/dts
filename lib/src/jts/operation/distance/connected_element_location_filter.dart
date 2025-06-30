@@ -1,12 +1,12 @@
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_filter.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_filter.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/point.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 
 import 'geometry_location.dart';
 
-class ConnectedElementLocationFilter implements GeometryFilter {
+class ConnectedElementLocationFilter implements GeomFilter {
   static List<GeometryLocation> getLocations(Geometry geom) {
     List<GeometryLocation> locations = [];
     geom.apply3(ConnectedElementLocationFilter(locations));

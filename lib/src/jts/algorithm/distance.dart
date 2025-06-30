@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/math/math.dart';
@@ -7,11 +7,11 @@ final class Distance {
   Distance._();
 
   static double segmentToSegment(Coordinate A, Coordinate B, Coordinate C, Coordinate D) {
-    if (A.equals(B)) {
+    if (A == B) {
       return Distance.pointToSegment(A, C, D);
     }
 
-    if (C.equals(D)) {
+    if (C == D) {
       return Distance.pointToSegment(D, A, B);
     }
 

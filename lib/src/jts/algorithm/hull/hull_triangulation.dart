@@ -1,8 +1,8 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/geom/triangle.dart';
 import 'package:dts/src/jts/operation/overlayng/coverage_union.dart';
@@ -32,7 +32,7 @@ class HullTriangulation {
     return triList;
   }
 
-  static Geometry union<T extends Tri>(List<T> triList, GeometryFactory geomFactory) {
+  static Geometry union<T extends Tri>(List<T> triList, GeomFactory geomFactory) {
     List<Polygon> polys = [];
     for (Tri tri in triList) {
       Polygon poly = tri.toPolygon(geomFactory);
@@ -41,7 +41,7 @@ class HullTriangulation {
     return CoverageUnionNG.union(geomFactory.buildGeometry(polys));
   }
 
-  static Geometry traceBoundaryPolygon(List<HullTri> triList, GeometryFactory geomFactory) {
+  static Geometry traceBoundaryPolygon(List<HullTri> triList, GeomFactory geomFactory) {
     if (triList.size == 1) {
       Tri tri = triList.get(0);
       return tri.toPolygon(geomFactory);

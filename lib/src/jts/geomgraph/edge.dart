@@ -112,7 +112,7 @@ class Edge extends GraphComponent {
   }
 
   bool isClosed() {
-    return pts[0].equals(pts[pts.length - 1]);
+    return pts[0] == pts[pts.length - 1];
   }
 
   bool isCollapsed() {
@@ -120,7 +120,7 @@ class Edge extends GraphComponent {
 
     if (pts.length != 3) return false;
 
-    if (pts[0].equals(pts[2])) return true;
+    if (pts[0] == pts[2]) return true;
 
     return false;
   }
@@ -167,30 +167,6 @@ class Edge extends GraphComponent {
     updateIMS(label!, im);
   }
 
-  bool equals(Object e) {
-    if (e is! Edge) {
-      return false;
-    }
-
-    if (pts.length != e.pts.length) {
-      return false;
-    }
-
-    bool isEqualForward = true;
-    bool isEqualReverse = true;
-    int iRev = pts.length;
-    for (int i = 0; i < pts.length; i++) {
-      if (!pts[i].equals2D(e.pts[i])) {
-        isEqualForward = false;
-      }
-      if (!pts[i].equals2D(e.pts[--iRev])) {
-        isEqualReverse = false;
-      }
-      if ((!isEqualForward) && (!isEqualReverse)) return false;
-    }
-    return true;
-  }
-
   @override
   int get hashCode {
     final int prime = 31;
@@ -222,7 +198,27 @@ class Edge extends GraphComponent {
 
   @override
   bool operator ==(Object other) {
-    return equals(other);
+    if (other is! Edge) {
+      return false;
+    }
+
+    if (pts.length != other.pts.length) {
+      return false;
+    }
+
+    bool isEqualForward = true;
+    bool isEqualReverse = true;
+    int iRev = pts.length;
+    for (int i = 0; i < pts.length; i++) {
+      if (!pts[i].equals2D(other.pts[i])) {
+        isEqualForward = false;
+      }
+      if (!pts[i].equals2D(other.pts[--iRev])) {
+        isEqualReverse = false;
+      }
+      if ((!isEqualForward) && (!isEqualReverse)) return false;
+    }
+    return true;
   }
 }
 
@@ -1015,7 +1011,7 @@ class EdgeIntersectionList {
 
   bool isIntersection(Coordinate pt) {
     for (var ei in _nodeMap.values) {
-      if (ei.coord.equals(pt)) return true;
+      if (ei.coord == pt) return true;
     }
     return false;
   }

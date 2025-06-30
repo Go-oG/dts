@@ -1,4 +1,4 @@
-import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geom_factory.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/geom/topology_exception.dart';
 import 'package:dts/src/jts/util/assert.dart';
@@ -8,7 +8,7 @@ import 'overlay_edge.dart';
 import 'overlay_edge_ring.dart';
 
 class NgPolygonBuilder {
-  GeometryFactory geometryFactory;
+  GeomFactory geometryFactory;
 
   final List<OverlayEdgeRing> _shellList = [];
 
@@ -16,7 +16,8 @@ class NgPolygonBuilder {
 
   final bool _isEnforcePolygonal;
 
-  NgPolygonBuilder(List<OverlayEdge> resultAreaEdges, this.geometryFactory, [this._isEnforcePolygonal = true]) {
+  NgPolygonBuilder(List<OverlayEdge> resultAreaEdges, this.geometryFactory,
+      [this._isEnforcePolygonal = true]) {
     buildRings(resultAreaEdges);
   }
 

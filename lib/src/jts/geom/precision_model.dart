@@ -10,11 +10,8 @@ class PrecisionModel implements Comparable<PrecisionModel> {
   }
 
   static final Type FIXED = Type("FIXED");
-
   static final Type FLOATING = Type("FLOATING");
-
   static final Type FLOATING_SINGLE = Type("FLOATING SINGLE");
-
   static const double maximumPreciseValue = 9.007199254740992E15;
 
   late Type _modelType;
@@ -160,11 +157,11 @@ class PrecisionModel implements Comparable<PrecisionModel> {
     return description;
   }
 
-  bool equals(Object other) {
-    if (other is! PrecisionModel) {
-      return false;
-    }
-    return (_modelType == other._modelType) && (_scale == other._scale);
+  @override
+  int compareTo(PrecisionModel other) {
+    int sigDigits = getMaximumSignificantDigits();
+    int otherSigDigits = other.getMaximumSignificantDigits();
+    return sigDigits.compareTo(otherSigDigits);
   }
 
   @override
@@ -179,15 +176,11 @@ class PrecisionModel implements Comparable<PrecisionModel> {
   }
 
   @override
-  int compareTo(PrecisionModel other) {
-    int sigDigits = getMaximumSignificantDigits();
-    int otherSigDigits = other.getMaximumSignificantDigits();
-    return sigDigits.compareTo(otherSigDigits);
-  }
-
-  @override
   bool operator ==(Object other) {
-    return equals(other);
+    if (other is! PrecisionModel) {
+      return false;
+    }
+    return (_modelType == other._modelType) && (_scale == other._scale);
   }
 }
 

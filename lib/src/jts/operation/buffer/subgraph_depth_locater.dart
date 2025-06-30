@@ -9,10 +9,10 @@ import 'package:dts/src/jts/geomgraph/edge.dart';
 import 'buffer_subgraph.dart';
 
 class SubgraphDepthLocater {
-  final List<BufferSubgraph> _subgraphs;
+  final List<BufferSubgraph> _subGraphs;
   final LineSegment _seg = LineSegment.empty();
 
-  SubgraphDepthLocater(this._subgraphs);
+  SubgraphDepthLocater(this._subGraphs);
 
   int getDepth(Coordinate p) {
     List<DepthSegment> stabbedSegments = findStabbedSegments(p);
@@ -24,7 +24,7 @@ class SubgraphDepthLocater {
 
   List<DepthSegment> findStabbedSegments(Coordinate stabbingRayLeftPt) {
     List<DepthSegment> stabbedSegments = [];
-    for (var bsg in _subgraphs) {
+    for (var bsg in _subGraphs) {
       Envelope env = bsg.getEnvelope();
       if ((stabbingRayLeftPt.y < env.minY) || (stabbingRayLeftPt.y > env.maxY)) {
         continue;
@@ -62,7 +62,7 @@ class SubgraphDepthLocater {
       if (Orientation.index(_seg.p0, _seg.p1, stabbingRayLeftPt) == Orientation.right) continue;
 
       int depth = dirEdge.getDepth(Position.left);
-      if (!_seg.p0.equals(pts[i])) depth = dirEdge.getDepth(Position.right);
+      if (_seg.p0 != pts[i]) depth = dirEdge.getDepth(Position.right);
 
       final ds = DepthSegment(_seg, depth);
       stabbedSegments.add(ds);

@@ -2,16 +2,16 @@ import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/operation/boundary_op.dart';
 
 import 'dimension.dart';
-import 'geometry.dart';
-import 'geometry_collection.dart';
-import 'geometry_factory.dart';
+import 'geom.dart';
+import 'geom_collection.dart';
+import 'geom_factory.dart';
 import 'line_string.dart';
 import 'lineal.dart';
 import 'precision_model.dart';
 
-class MultiLineString extends GeometryCollection<LineString> implements Lineal {
+class MultiLineString extends GeomCollection<LineString> implements Lineal {
   MultiLineString.of(Array<LineString> lineStrings, PrecisionModel precisionModel, int srid)
-      : super(lineStrings, GeometryFactory.from(precisionModel, srid));
+      : super(lineStrings, GeomFactory(pm: precisionModel, srid: srid));
 
   MultiLineString(super.lineStrings, super.factory);
 
@@ -34,8 +34,8 @@ class MultiLineString extends GeometryCollection<LineString> implements Lineal {
   }
 
   @override
-  GeometryType get geometryType {
-    return GeometryType.multiLineString;
+  GeomType get geometryType {
+    return GeomType.multiLineString;
   }
 
   bool isClosed() {
