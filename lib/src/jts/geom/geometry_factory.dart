@@ -143,6 +143,10 @@ final class GeometryFactory {
     return MultiPolygon.of(polygons, this);
   }
 
+  MultiPolygon createMultiPolygon2(List<Polygon> polygons) {
+    return createMultiPolygon(Array.list(polygons));
+  }
+
   LinearRing createLinearRing() {
     return createLinearRing2(csFactory.create(Array<Coordinate>(0)));
   }
@@ -198,6 +202,20 @@ final class GeometryFactory {
 
   Polygon createPolygon3(Array<Coordinate> shell) {
     return createPolygon(createLinearRings(shell));
+  }
+
+  Polygon createPolygon4(List<Coordinate> vertexList, [bool close = true]) {
+    Array<Coordinate> array;
+    if (close) {
+      if (vertexList.first != vertexList.last) {
+        array = Array.list([...vertexList, vertexList.first]);
+      } else {
+        array = Array.list(vertexList);
+      }
+    } else {
+      array = Array.list(vertexList);
+    }
+    return createPolygon3(array);
   }
 
   Geometry buildGeometry(List<Geometry> geomList) {
