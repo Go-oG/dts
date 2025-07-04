@@ -1,8 +1,8 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/point.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
@@ -140,7 +140,7 @@ final class OverlayUtil {
     return false;
   }
 
-  static Geometry createEmptyResult(int dim, GeomFactory geomFact) {
+  static Geometry createEmptyResult(int dim, GeometryFactory geomFact) {
     Geometry? result;
     switch (dim) {
       case 0:
@@ -156,7 +156,7 @@ final class OverlayUtil {
         result = geomFact.createGeomCollection();
         break;
       default:
-        Assert.shouldNeverReachHere2("Unable to determine overlay result geometry dimension");
+        Assert.shouldNeverReachHere("Unable to determine overlay result geometry dimension");
     }
     return result!;
   }
@@ -184,7 +184,7 @@ final class OverlayUtil {
     List<Polygon>? resultPolyList,
     List<LineString>? resultLineList,
     List<Point>? resultPointList,
-    GeomFactory geometryFactory,
+    GeometryFactory geometryFactory,
   ) {
     List<Geometry> geomList = [];
     if (resultPolyList != null) {
@@ -202,7 +202,7 @@ final class OverlayUtil {
     return geometryFactory.buildGeometry(geomList);
   }
 
-  static Geometry toLines(OverlayGraph graph, bool isOutputEdges, GeomFactory geomFact) {
+  static Geometry toLines(OverlayGraph graph, bool isOutputEdges, GeometryFactory geomFact) {
     List<LineString> lines = [];
     for (OverlayEdge edge in graph.getEdges()) {
       bool includeEdge = isOutputEdges || edge.isInResultArea();

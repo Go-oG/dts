@@ -4,7 +4,7 @@ import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/point_locator.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/geom/dimension.dart';
-import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/intersection_matrix.dart';
 import 'package:dts/src/jts/geom/location.dart';
 import 'package:dts/src/jts/geomgraph/edge.dart';
@@ -189,7 +189,7 @@ class RelateComputer {
   void labelIsolatedNodes() {
     for (var n in _nodes.iterator()) {
       Label label = n.getLabel()!;
-      Assert.isTrue2(label.getGeometryCount() > 0, "node with empty label found");
+      Assert.isTrue(label.getGeometryCount() > 0, "node with empty label found");
       if (n.isIsolated()) {
         if (label.isNull(0)) {
           labelIsolatedNode(n, 0);

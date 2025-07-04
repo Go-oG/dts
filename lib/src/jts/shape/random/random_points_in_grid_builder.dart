@@ -1,7 +1,7 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/math/math.dart';
 import 'package:dts/src/jts/shape/geometric_shape_builder.dart';
 
@@ -10,7 +10,7 @@ class RandomPointsInGridBuilder extends GeometricShapeBuilder {
 
   double _gutterFraction = 0;
 
-  RandomPointsInGridBuilder.empty() : super(GeomFactory());
+  RandomPointsInGridBuilder.empty() : super(GeometryFactory());
 
   RandomPointsInGridBuilder(super.geomFact);
 

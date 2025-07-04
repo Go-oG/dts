@@ -1,4 +1,4 @@
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/geom/topology_exception.dart';
 import 'package:dts/src/jts/util/assert.dart';
@@ -8,7 +8,7 @@ import 'overlay_edge.dart';
 import 'overlay_edge_ring.dart';
 
 class NgPolygonBuilder {
-  GeomFactory geometryFactory;
+  GeometryFactory geometryFactory;
 
   final List<OverlayEdgeRing> _shellList = [];
 
@@ -90,7 +90,7 @@ class NgPolygonBuilder {
         shellCount++;
       }
     }
-    Assert.isTrue2(shellCount <= 1, "found two shells in EdgeRing list");
+    Assert.isTrue(shellCount <= 1, "found two shells in EdgeRing list");
     return shell;
   }
 

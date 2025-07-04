@@ -1,4 +1,4 @@
-import 'package:dts/src/jts/geom/geom_collection.dart';
+import 'package:dts/src/jts/geom/geometry_collection.dart';
 import 'package:dts/src/jts/geom/util/geom_collection_mapper.dart';
 import 'package:dts/src/jts/geom/util/geometry_mapper.dart';
 import 'package:dts/src/jts/operation/overlay/overlay_op.dart';
@@ -6,18 +6,18 @@ import 'package:dts/src/jts/operation/overlay/snap/snap_if_needed_overlay_op.dar
 import 'package:dts/src/jts/operation/overlayng/overlay_ngrobust.dart';
 import 'package:dts/src/jts/operation/union/unary_union_op.dart';
 
-import 'geom.dart';
+import 'geometry.dart';
 
-enum GeomOverlayImpl { ng, old }
+enum GeometryOverlayImpl { ng, old }
 
-class GeomOverlay {
-  static GeomOverlayImpl _overlayImpl = GeomOverlayImpl.ng;
+class GeometryOverlay {
+  static GeometryOverlayImpl _overlayImpl = GeometryOverlayImpl.ng;
 
   static bool get _isOverlayNG {
-    return _overlayImpl == GeomOverlayImpl.ng;
+    return _overlayImpl == GeometryOverlayImpl.ng;
   }
 
-  static void setOverlayImpl(GeomOverlayImpl? overlayImpl) {
+  static void setOverlayImpl(GeometryOverlayImpl? overlayImpl) {
     if (overlayImpl == null) return;
     _overlayImpl = overlayImpl;
   }
@@ -48,7 +48,7 @@ class GeomOverlay {
     if (a.isGeometryCollection()) {
       final Geometry g2 = b;
       return GeomCollectionMapper.map2(
-        a as GeomCollection,
+        a as GeometryCollection,
         MapOpNormal((g) {
           return g.intersection(g2);
         }),

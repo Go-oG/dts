@@ -3,8 +3,8 @@ import 'package:d_util/d_util.dart';
 import 'coordinate.dart';
 import 'coordinate_sequence.dart';
 import 'dimension.dart';
-import 'geom.dart';
-import 'geom_factory.dart';
+import 'geometry.dart';
+import 'geometry_factory.dart';
 import 'line_string.dart';
 import 'precision_model.dart';
 
@@ -12,9 +12,9 @@ class LinearRing extends LineString {
   static const int kMinValidSize = 3;
 
   LinearRing(Array<Coordinate>? points, PrecisionModel precisionModel, int SRID)
-      : this.of(points, GeomFactory(pm: precisionModel, srid: SRID));
+      : this.of(points, GeometryFactory(pm: precisionModel, srid: SRID));
 
-  LinearRing.of(Array<Coordinate>? points, GeomFactory factory)
+  LinearRing.of(Array<Coordinate>? points, GeometryFactory factory)
       : this.of2(factory.csFactory.create(points), factory);
 
   LinearRing.of2(super.points, super.factory) : super.of() {
@@ -46,8 +46,8 @@ class LinearRing extends LineString {
   }
 
   @override
-  GeomType get geometryType {
-    return GeomType.linearRing;
+  GeometryType get geometryType {
+    return GeometryType.linearRing;
   }
 
   @override

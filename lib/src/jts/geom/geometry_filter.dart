@@ -1,4 +1,4 @@
-import 'package:dts/src/jts/geom/geom_collection.dart';
+import 'package:dts/src/jts/geom/geometry_collection.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/multi_line_string.dart';
@@ -7,17 +7,17 @@ import 'package:dts/src/jts/geom/multi_polygon.dart';
 import 'package:dts/src/jts/geom/point.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 
-import 'geom.dart';
+import 'geometry.dart';
 
-abstract interface class GeomFilter {
+abstract interface class GeometryFilter {
   void filter(Geometry geom);
 }
 
-class PointExtracter implements GeomFilter {
+class PointExtracter implements GeometryFilter {
   static List<Point> getPoints2(Geometry geom, List<Point> list) {
     if (geom is Point) {
       list.add(geom);
-    } else if (geom is GeomCollection) {
+    } else if (geom is GeometryCollection) {
       geom.apply3(PointExtracter(list));
     }
     return list;
@@ -42,11 +42,11 @@ class PointExtracter implements GeomFilter {
   }
 }
 
-class LineStringExtracter implements GeomFilter {
+class LineStringExtracter implements GeometryFilter {
   static List<LineString> getLines2(Geometry geom, List<LineString> lines) {
     if (geom is LineString) {
       lines.add(geom);
-    } else if (geom is GeomCollection) {
+    } else if (geom is GeometryCollection) {
       geom.apply3(LineStringExtracter(lines));
     }
     return lines;
@@ -72,11 +72,11 @@ class LineStringExtracter implements GeomFilter {
   }
 }
 
-class PolygonExtracter implements GeomFilter {
+class PolygonExtracter implements GeometryFilter {
   static List<Polygon> getPolygons2(Geometry geom, List<Polygon> list) {
     if (geom is Polygon) {
       list.add(geom);
-    } else if (geom is GeomCollection) {
+    } else if (geom is GeometryCollection) {
       geom.apply3(PolygonExtracter(list));
     }
     return list;
@@ -98,31 +98,31 @@ class PolygonExtracter implements GeomFilter {
   }
 }
 
-class GeomExtracter implements GeomFilter {
+class GeomExtracter implements GeometryFilter {
   static List extract(Geometry geom, Type clz, List list) {
     return extract4(geom, toGeometryType(clz), list);
   }
 
-  static GeomType? toGeometryType(Type? clz) {
+  static GeometryType? toGeometryType(Type? clz) {
     if (clz == null) {
       return null;
     }
-    if (clz == (Point)) return GeomType.point;
-    if (clz == (LineString)) return GeomType.lineString;
-    if (clz == (LinearRing)) return GeomType.linearRing;
-    if (clz == (Polygon)) return GeomType.polygon;
-    if (clz == (MultiPoint)) return GeomType.multiPoint;
-    if (clz == (MultiLineString)) return GeomType.multiLineString;
-    if (clz == (MultiPolygon)) return GeomType.multiPolygon;
-    if (clz == (GeomCollection)) return GeomType.collection;
+    if (clz == (Point)) return GeometryType.point;
+    if (clz == (LineString)) return GeometryType.lineString;
+    if (clz == (LinearRing)) return GeometryType.linearRing;
+    if (clz == (Polygon)) return GeometryType.polygon;
+    if (clz == (MultiPoint)) return GeometryType.multiPoint;
+    if (clz == (MultiLineString)) return GeometryType.multiLineString;
+    if (clz == (MultiPolygon)) return GeometryType.multiPolygon;
+    if (clz == (GeometryCollection)) return GeometryType.collection;
 
     throw ("Unsupported class");
   }
 
-  static List extract4(Geometry geom, GeomType? geometryType, List list) {
+  static List extract4(Geometry geom, GeometryType? geometryType, List list) {
     if (geom.geometryType == geometryType) {
       list.add(geom);
-    } else if (geom is GeomCollection) {
+    } else if (geom is GeometryCollection) {
       geom.apply3(GeomExtracter.of(geometryType, list));
     }
     return list;
@@ -132,11 +132,11 @@ class GeomExtracter implements GeomFilter {
     return extract(geom, clz, []);
   }
 
-  static List extract3(Geometry geom, GeomType geometryType) {
+  static List extract3(Geometry geom, GeometryType geometryType) {
     return extract4(geom, geometryType, []);
   }
 
-  GeomType? _geometryType;
+  GeometryType? _geometryType;
 
   late List _comps;
 
@@ -147,10 +147,11 @@ class GeomExtracter implements GeomFilter {
 
   GeomExtracter.of(this._geometryType, this._comps);
 
-  static bool isOfType(Geometry geom, GeomType? geometryType) {
+  static bool isOfType(Geometry geom, GeometryType? geometryType) {
     if (geom.geometryType == geometryType) return true;
 
-    if ((geometryType == GeomType.lineString) && (geom.geometryType == GeomType.linearRing)) {
+    if ((geometryType == GeometryType.lineString) &&
+        (geom.geometryType == GeometryType.linearRing)) {
       return true;
     }
 

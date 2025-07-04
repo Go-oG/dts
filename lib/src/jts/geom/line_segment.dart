@@ -7,7 +7,7 @@ import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/math/math.dart';
 
 import 'coordinate.dart';
-import 'geom_factory.dart';
+import 'geometry_factory.dart';
 import 'line_string.dart';
 
 class LineSegment implements Comparable<LineSegment> {
@@ -303,7 +303,7 @@ class LineSegment implements Comparable<LineSegment> {
     return Intersection.intersection(p0, p1, line.p0, line.p1);
   }
 
-  LineString? toGeometry(GeomFactory geomFactory) {
+  LineString? toGeometry(GeometryFactory geomFactory) {
     return geomFactory.createLineString2([p0, p1].toArray());
   }
 

@@ -2,8 +2,8 @@ import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/geom/triangle.dart';
 import 'package:dts/src/jts/util/assert.dart';
@@ -11,7 +11,7 @@ import 'package:dts/src/jts/util/assert.dart';
 class Tri {
   static final String _kInvalidTriIndex = "Invalid Tri index";
 
-  static Geometry toGeometry(List<Tri> tris, GeomFactory geomFact) {
+  static Geometry toGeometry(List<Tri> tris, GeometryFactory geomFact) {
     Array<Geometry> geoms = Array(tris.size);
     int i = 0;
     for (Tri tri in tris) {
@@ -194,8 +194,8 @@ class Tri {
     int indexNeighbor = tri.getIndex2(this);
     Coordinate n0 = tri.getCoordinate(indexNeighbor);
     Coordinate n1 = tri.getCoordinate(next(indexNeighbor));
-    Assert.isTrue2(e0.equals2D(n1), "Edge coord not equal");
-    Assert.isTrue2(e1.equals2D(n0), "Edge coord not equal");
+    Assert.isTrue(e0.equals2D(n1), "Edge coord not equal");
+    Assert.isTrue(e1.equals2D(n0), "Edge coord not equal");
     RobustLineIntersector li = RobustLineIntersector();
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
@@ -347,15 +347,14 @@ class Tri {
     return Triangle.area2(p0, p1, p2);
   }
 
-  double getLength() {
-    return Triangle.length2(p0, p1, p2);
-  }
-
-  double getLength2(int edgeIndex) {
+  double getLength([int? edgeIndex]) {
+    if (edgeIndex == null) {
+      return Triangle.length2(p0, p1, p2);
+    }
     return getCoordinate(edgeIndex).distance(getCoordinate(next(edgeIndex)));
   }
 
-  Polygon toPolygon(GeomFactory geomFact) {
+  Polygon toPolygon(GeometryFactory geomFact) {
     return geomFact.createPolygon(
       geomFact.createLinearRings([p0.copy(), p1.copy(), p2.copy(), p0.copy()].toArray()),
       null,

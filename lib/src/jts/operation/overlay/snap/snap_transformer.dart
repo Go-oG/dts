@@ -1,7 +1,7 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
-import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/util/geometry_transformer.dart';
 
 import 'line_string_snapper.dart';

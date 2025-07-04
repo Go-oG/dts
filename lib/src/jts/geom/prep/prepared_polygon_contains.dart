@@ -1,4 +1,4 @@
-import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/geom/polygonal.dart';
 import 'package:dts/src/jts/noding/segment_intersection_detector.dart';

@@ -10,8 +10,8 @@ import '../algorithm/orientation.dart';
 import '../algorithm/point_locator.dart';
 import '../geom/coordinate.dart';
 import '../geom/coordinate_arrays.dart';
-import '../geom/geom.dart';
-import '../geom/geom_collection.dart';
+import '../geom/geometry.dart';
+import '../geom/geometry_collection.dart';
 import '../geom/line_string.dart';
 import '../geom/linear_ring.dart';
 import '../geom/location.dart';
@@ -100,9 +100,9 @@ class GeometryGraph extends PGPlanarGraph {
     return (_lineEdgeMap.get(line) as Edge?);
   }
 
-  void computeSplitEdges(List<Edge> edgelist) {
+  void computeSplitEdges(List<Edge> edgeList) {
     for (var e in edges) {
-      e.eiList.addSplitEdges(edgelist);
+      e.eiList.addSplitEdges(edgeList);
     }
   }
 
@@ -125,13 +125,13 @@ class GeometryGraph extends PGPlanarGraph {
       addCollection(g);
     else if (g is MultiPolygon)
       addCollection(g);
-    else if (g is GeomCollection)
+    else if (g is GeometryCollection)
       addCollection(g);
     else
       throw "UnsupportedOperationException";
   }
 
-  void addCollection(GeomCollection gc) {
+  void addCollection(GeometryCollection gc) {
     for (int i = 0; i < gc.getNumGeometries(); i++) {
       add2(gc.getGeometryN(i));
     }
@@ -183,7 +183,7 @@ class GeometryGraph extends PGPlanarGraph {
     Edge e = Edge(coord, Label.of2(_argIndex, Location.interior));
     _lineEdgeMap.put(line, e);
     insertEdge(e);
-    Assert.isTrue2(coord.length >= 2, "found LineString with single point");
+    Assert.isTrue(coord.length >= 2, "found LineString with single point");
     insertBoundaryPoint(_argIndex, coord[0]);
     insertBoundaryPoint(_argIndex, coord[coord.length - 1]);
   }
@@ -246,7 +246,6 @@ class GeometryGraph extends PGPlanarGraph {
   void addSelfIntersectionNodes(int argIndex) {
     for (var e in edges) {
       int eLoc = e.getLabel()!.getLocation(argIndex);
-      final it = e.eiList.iterator().iterator;
       for (var ei in e.eiList.iterator()) {
         addSelfIntersectionNode(argIndex, ei.coord, eLoc);
       }

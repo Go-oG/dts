@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/math/math.dart';
@@ -38,23 +39,26 @@ final class Envelope implements Comparable<Envelope> {
     setToNull();
   }
 
-  Envelope.from(Envelope env) {
-    initWithLRTB(env._minX, env._maxX, env._minY, env._maxY);
-  }
-
-  Envelope.fromLRTB(double l, double r, double t, double b) {
-    initWithLRTB(l, r, t, b);
-  }
-
-  Envelope.fromCoordinate(Coordinate p1, [Coordinate? p2]) {
+  Envelope.of(Coordinate p1, [Coordinate? p2]) {
     p2 ??= p1;
-    initWithLRTB(p1.x, p2.x, p1.y, p2.y);
+    initWithLTRB(p1.x, p1.y, p2.x, p2.y);
   }
 
-  void initWithLRTB(double l, double r, double t, double b) {
+  Envelope.from(Envelope env) {
+    initWithLTRB(env._minX, env._minY, env._maxX, env._maxY);
+  }
+
+  Envelope.fromLTRB(double l, double t, double r, double b) {
+    initWithLTRB(l, t, r, b);
+  }
+
+  Envelope.fromRect(Rect rect) : this.fromLTRB(rect.left, rect.top, rect.right, rect.bottom);
+
+  void initWithLTRB(double l, double t, double r, double b) {
     _minX = min(l, r);
-    _maxX = max(l, r);
     _minY = min(t, b);
+
+    _maxX = max(l, r);
     _maxY = max(t, b);
   }
 
@@ -186,7 +190,7 @@ final class Envelope implements Comparable<Envelope> {
     if (isNull) {
       return;
     }
-    initWithLRTB(minX + transX, maxX + transX, minY + transY, maxY + transY);
+    initWithLTRB(minX + transX, minY + transY, maxX + transX, maxY + transY);
   }
 
   Coordinate? centre() {
@@ -202,7 +206,7 @@ final class Envelope implements Comparable<Envelope> {
     double intMinY = Math.maxD(_minY, env._minY);
     double intMaxX = Math.minD(_maxX, env._maxX);
     double intMaxY = Math.minD(_maxY, env._maxY);
-    return Envelope.fromLRTB(intMinX, intMaxX, intMinY, intMaxY);
+    return Envelope.fromLTRB(intMinX, intMinY, intMaxX, intMaxY);
   }
 
   bool intersects(Envelope other) {

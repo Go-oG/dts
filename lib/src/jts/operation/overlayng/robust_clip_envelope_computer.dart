@@ -1,8 +1,8 @@
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_collection.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_collection.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 
@@ -31,10 +31,10 @@ class RobustClipEnvelopeComputer {
 
     if (g is Polygon) {
       addPolygon(g);
-    } else if (g is GeomCollection) addCollection(g);
+    } else if (g is GeometryCollection) addCollection(g);
   }
 
-  void addCollection(GeomCollection gc) {
+  void addCollection(GeometryCollection gc) {
     for (int i = 0; i < gc.getNumGeometries(); i++) {
       Geometry g = gc.getGeometryN(i);
       add(g);

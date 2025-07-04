@@ -3,8 +3,8 @@ import 'package:dts/src/jts/algorithm/distance.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
@@ -21,9 +21,9 @@ import 'offset_curve_section.dart';
 import 'segment_mcindex.dart';
 
 class OffsetCurve {
-  static const int _MATCH_DISTANCE_FACTOR = 10000;
+  static const int _kMatchDistanceFactor = 10000;
 
-  static const int _MIN_QUADRANT_SEGMENTS = 8;
+  static const int _kMinQuadrantSegments = 8;
 
   static Geometry? getCurve2(Geometry geom, double distance) {
     OffsetCurve oc = OffsetCurve(geom, distance);
@@ -59,16 +59,16 @@ class OffsetCurve {
 
   double _matchDistance = 0;
 
-  late GeomFactory geomFactory;
+  late GeometryFactory geomFactory;
 
   OffsetCurve(this.inputGeom, this.distance, [BufferParameters? bufParams]) {
-    _matchDistance = Math.abs(distance) / _MATCH_DISTANCE_FACTOR;
+    _matchDistance = Math.abs(distance) / _kMatchDistanceFactor;
     geomFactory = inputGeom.factory;
     _bufferParams = BufferParameters.empty();
     if (bufParams != null) {
       int quadSegs = bufParams.getQuadrantSegments();
-      if (quadSegs < _MIN_QUADRANT_SEGMENTS) {
-        quadSegs = _MIN_QUADRANT_SEGMENTS;
+      if (quadSegs < _kMinQuadrantSegments) {
+        quadSegs = _kMinQuadrantSegments;
       }
       _bufferParams!.setQuadrantSegments(quadSegs);
       _bufferParams!.setJoinStyle(bufParams.getJoinStyle());
@@ -233,7 +233,7 @@ class OffsetCurve {
     Array<Coordinate> bufferPts,
     Array<double> rawCurvePos,
   ) {
-    Envelope matchEnv = Envelope.fromCoordinate(raw0, raw1);
+    Envelope matchEnv = Envelope.of(raw0, raw1);
     matchEnv.expandBy(_matchDistance);
     MatchCurveSegmentAction matchAction = MatchCurveSegmentAction(
       raw0,
@@ -266,7 +266,7 @@ class OffsetCurve {
       sections.add(section);
       sectionStart = findSectionStart(rawCurveLoc, sectionEnd);
       if ((sectionCount++) > ringPts.length) {
-        Assert.shouldNeverReachHere2("Too many sections for ring - probable bug");
+        Assert.shouldNeverReachHere("Too many sections for ring - probable bug");
       }
     } while ((sectionStart != startIndex) && (sectionEnd != startIndex));
   }

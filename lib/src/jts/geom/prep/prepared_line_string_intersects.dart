@@ -1,6 +1,6 @@
 import '../../algorithm/point_locator.dart';
 import '../../noding/segment_string_util.dart';
-import '../geom.dart';
+import '../geometry.dart';
 import '../util/component_coordinate_extracter.dart';
 import 'prepared_geometry.dart';
 

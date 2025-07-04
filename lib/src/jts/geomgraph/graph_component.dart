@@ -45,7 +45,7 @@ abstract class GraphComponent {
   bool isIsolated();
 
   void updateIM(IntersectionMatrix im) {
-    Assert.isTrue2(label!.getGeometryCount() >= 2, "found partial label");
+    Assert.isTrue(label!.getGeometryCount() >= 2, "found partial label");
     computeIM(im);
   }
 }

@@ -163,8 +163,8 @@ class RobustLineIntersector extends LineIntersector {
   }
 
   bool _isInSegmentEnvelopes(Coordinate intPt) {
-    Envelope env0 = Envelope.fromCoordinate(inputLines[0][0], inputLines[0][1]);
-    Envelope env1 = Envelope.fromCoordinate(inputLines[1][0], inputLines[1][1]);
+    Envelope env0 = Envelope.of(inputLines[0][0], inputLines[0][1]);
+    Envelope env1 = Envelope.of(inputLines[1][0], inputLines[1][1]);
     return env0.containsCoordinate(intPt) && env1.containsCoordinate(intPt);
   }
 

@@ -15,7 +15,7 @@ abstract class AbstractSTRtree<T, B> {
   int _nodeCapacity = 10;
 
   AbstractSTRtree([int nodeCapacity = 10]) {
-    Assert.isTrue2(nodeCapacity > 1, "Node capacity must be greater than 1");
+    Assert.isTrue(nodeCapacity > 1, "Node capacity must be greater than 1");
     _nodeCapacity = nodeCapacity;
   }
 
@@ -134,7 +134,7 @@ abstract class AbstractSTRtree<T, B> {
   }
 
   void insert(B bounds, T item) {
-    Assert.isTrue2(
+    Assert.isTrue(
         !_built, "Cannot insert items into an STR packed R-tree after it has been built.");
     _itemBoundables!.add(ItemBoundable(bounds, item));
   }

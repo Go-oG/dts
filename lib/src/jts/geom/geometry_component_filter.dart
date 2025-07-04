@@ -1,10 +1,10 @@
-import 'geom.dart';
+import 'geometry.dart';
 
-abstract interface class GeomComponentFilter {
+abstract interface class GeometryComponentFilter {
   void filter(Geometry geom);
 }
 
-class GeomComponentFilter2 implements GeomComponentFilter {
+class GeomComponentFilter2 implements GeometryComponentFilter {
   final void Function(Geometry geom) apply;
 
   GeomComponentFilter2(this.apply);

@@ -1,12 +1,12 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/construct/maximum_inscribed_circle.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 
-import '../geom/geom_filter.dart';
+import '../geom/geometry_filter.dart';
 import 'coverage_union.dart';
 
 class CoverageGapFinder {

@@ -7,7 +7,7 @@ import '../../noding/segment_string_util.dart';
 import '../../operation/predicate/rectangle_contains.dart';
 import '../../operation/predicate/rectangle_intersects.dart';
 import '../coordinate.dart';
-import '../geom.dart';
+import '../geometry.dart';
 import '../lineal.dart';
 import '../puntal.dart';
 import '../util/component_coordinate_extracter.dart';

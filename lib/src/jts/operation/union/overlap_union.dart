@@ -1,8 +1,8 @@
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/geom/util/geom_combiner.dart';
 
@@ -15,7 +15,7 @@ class OverlapUnion {
     return union.union();
   }
 
-  late GeomFactory geomFactory;
+  late GeometryFactory geomFactory;
 
   Geometry g0;
 

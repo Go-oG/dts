@@ -3,8 +3,8 @@ import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/triangulate/quadedge/quad_edge_subdivision.dart';
 import 'package:dts/src/jts/triangulate/quadedge/vertex.dart';
 
@@ -78,12 +78,12 @@ class DelaunayTriangulationBuilder {
     return subdiv!;
   }
 
-  Geometry getEdges(GeomFactory geomFact) {
+  Geometry getEdges(GeometryFactory geomFact) {
     create();
     return subdiv!.getEdges2(geomFact);
   }
 
-  Geometry getTriangles(GeomFactory geomFact) {
+  Geometry getTriangles(GeometryFactory geomFact) {
     create();
     return subdiv!.getTriangles2(geomFact);
   }

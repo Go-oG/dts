@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/math/math.dart';
 import 'package:dts/src/jts/util/number_util.dart';
+import 'package:flutter/foundation.dart';
 
 final class Coordinates {
   Coordinates._();
@@ -74,9 +75,17 @@ class Coordinate implements Comparable<Coordinate> {
 
   double x;
   double y;
-  double z;
 
-  Coordinate([this.x = 0, this.y = 0, this.z = _nullOrdinate]);
+  @protected
+  late double mZ;
+
+  double get z => mZ;
+
+  set z(double v) => mZ = v;
+
+  Coordinate([this.x = 0, this.y = 0, double z = _nullOrdinate]) {
+    mZ = z;
+  }
 
   Coordinate.of2(Offset c) : this(c.dx, c.dy);
 
@@ -255,7 +264,9 @@ class CoordinateXY extends Coordinate {
   Coordinate create() => CoordinateXY();
 
   @override
-  set z(double v) => z = _nullOrdinate;
+  set z(double v) {
+    throw UnsupportedError("not allow set z");
+  }
 
   @override
   double get z => _nullOrdinate;

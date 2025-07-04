@@ -2,8 +2,8 @@ import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/angle.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
@@ -11,14 +11,14 @@ import 'package:dts/src/jts/geom/precision_model.dart';
 import 'package:dts/src/jts/geom/util/affine_transformation.dart';
 
 class GeometricShapeFactory {
-  late final GeomFactory geomFact;
+  late final GeometryFactory geomFact;
   late final PrecisionModel precModel;
   Dimensions dim = Dimensions();
   int nPts = 100;
   double rotationAngle = 0.0;
 
-  GeometricShapeFactory([GeomFactory? gf]) {
-    geomFact = gf ?? GeomFactory();
+  GeometricShapeFactory([GeometryFactory? gf]) {
+    geomFact = gf ?? GeometryFactory();
     precModel = geomFact.getPrecisionModel();
   }
 
@@ -284,17 +284,20 @@ class Dimensions {
   }
 
   Envelope getEnvelope() {
+    final base = this.base;
+
     if (base != null) {
-      return Envelope.fromLRTB(base!.x, base!.x + width, base!.y, base!.y + height);
+      return Envelope.fromLTRB(base.x, base.y, base.x + width, base.y + height);
     }
+    final centre = this.centre;
     if (centre != null) {
-      return Envelope.fromLRTB(
-        centre!.x - (width / 2),
-        centre!.x + (width / 2),
-        centre!.y - (height / 2),
-        centre!.y + (height / 2),
+      return Envelope.fromLTRB(
+        centre.x - width / 2,
+        centre.y - height / 2,
+        centre.x + width / 2,
+        centre.y + height / 2,
       );
     }
-    return Envelope.fromLRTB(0, width, 0, height);
+    return Envelope.fromLTRB(0, 0, width, height);
   }
 }

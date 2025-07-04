@@ -1,6 +1,6 @@
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_component_filter.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_component_filter.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/planargraph/graph_component.dart';
 import 'package:dts/src/jts/planargraph/node.dart';
@@ -15,7 +15,7 @@ class LineMerger {
 
   List<LineString>? _mergedLineStrings;
 
-  GeomFactory? factory;
+  GeometryFactory? factory;
 
   void add(Geometry geometry) {
     geometry.apply4(

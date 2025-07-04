@@ -1,7 +1,7 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/area.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/multi_polygon.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
@@ -25,7 +25,7 @@ class PolygonHullSimplifier {
   }
 
   Geometry inputGeom;
-  late GeomFactory geomFactory;
+  late GeometryFactory geomFactory;
   final bool _isOuter;
 
   double _vertexNumFraction = -1;
@@ -83,7 +83,7 @@ class PolygonHullSimplifier {
       Polygon hull = polygonHull(poly, polyHulls[i], hullIndex);
       polys.add(hull);
     }
-    return geomFactory.createMultiPolygon(GeomFactory.toPolygonArray(polys));
+    return geomFactory.createMultiPolygon(GeometryFactory.toPolygonArray(polys));
   }
 
   Geometry computeMultiPolygonEach(MultiPolygon multiPoly) {
@@ -93,7 +93,7 @@ class PolygonHullSimplifier {
       Polygon hull = computePolygon(poly);
       polys.add(hull);
     }
-    return geomFactory.createMultiPolygon(GeomFactory.toPolygonArray(polys));
+    return geomFactory.createMultiPolygon(GeometryFactory.toPolygonArray(polys));
   }
 
   Polygon computePolygon(Polygon poly) {
@@ -163,7 +163,7 @@ class PolygonHullSimplifier {
       LinearRing hull = ringHulls.get(ringIndex++).getHull(hullIndex);
       holeHulls.add(hull);
     }
-    Array<LinearRing> resultHoles = GeomFactory.toLinearRingArray(holeHulls);
+    Array<LinearRing> resultHoles = GeometryFactory.toLinearRingArray(holeHulls);
     return geomFactory.createPolygon(shellHull, resultHoles);
   }
 }

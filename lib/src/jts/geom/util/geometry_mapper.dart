@@ -1,7 +1,7 @@
 import 'package:d_util/d_util.dart';
 
-import '../geom.dart';
-import '../geom_collection.dart';
+import '../geometry.dart';
+import '../geometry_collection.dart';
 
 class GeometryMapper {
   static Geometry map(Geometry geom, MapOp op) {
@@ -42,7 +42,7 @@ class GeometryMapper {
   static void flatMap2(Geometry geom, MapOp op, List<Geometry> mapped) {
     for (int i = 0; i < geom.getNumGeometries(); i++) {
       Geometry g = geom.getGeometryN(i);
-      if (g is GeomCollection) {
+      if (g is GeometryCollection) {
         flatMap2(g, op, mapped);
       } else {
         final res = op.map(g);
@@ -58,7 +58,7 @@ class GeometryMapper {
       return;
     }
 
-    if (geom is GeomCollection) {
+    if (geom is GeometryCollection) {
       for (int i = 0; i < geom.getNumGeometries(); i++) {
         addFlat(geom.getGeometryN(i), geomList);
       }

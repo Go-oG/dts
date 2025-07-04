@@ -1,7 +1,7 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/precision_model.dart';
 import 'package:dts/src/jts/noding/snap/snapping_noder.dart';
 import 'package:dts/src/jts/operation/union/unary_union_op.dart';
@@ -27,7 +27,7 @@ class OverlayNGRobust {
     return op.union();
   }
 
-  static Geometry? union3(List<Geometry> geoms, GeomFactory geomFact) {
+  static Geometry? union3(List<Geometry> geoms, GeometryFactory geomFact) {
     UnaryUnionOp op = UnaryUnionOp(geoms, geomFact);
     op.setUnionFunction(_overlayUnion);
     return op.union();

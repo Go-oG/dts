@@ -1,5 +1,5 @@
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/precision_model.dart';
 import 'package:dts/src/jts/geom/util/geom_editor.dart';
 
@@ -64,19 +64,19 @@ class GeometryPrecisionReducer {
     return geomEditor.edit(geom, NoOpGeometryOperation());
   }
 
-  GeometryEditor createEditor(GeomFactory geomFactory, PrecisionModel newPM) {
+  GeometryEditor createEditor(GeometryFactory geomFactory, PrecisionModel newPM) {
     if (geomFactory.getPrecisionModel() == newPM) {
       return GeometryEditor.empty();
     }
 
-    GeomFactory newFactory = createFactory(geomFactory, newPM);
+    GeometryFactory newFactory = createFactory(geomFactory, newPM);
     GeometryEditor geomEdit = GeometryEditor(newFactory);
     return geomEdit;
   }
 
-  GeomFactory createFactory(GeomFactory inputFactory, PrecisionModel pm) {
-    GeomFactory newFactory =
-        GeomFactory(pm: pm, srid: inputFactory.srid, csFactory: inputFactory.csFactory);
+  GeometryFactory createFactory(GeometryFactory inputFactory, PrecisionModel pm) {
+    GeometryFactory newFactory =
+        GeometryFactory(pm: pm, srid: inputFactory.srid, csFactory: inputFactory.csFactory);
     return newFactory;
   }
 }

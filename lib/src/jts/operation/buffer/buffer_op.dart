@@ -1,7 +1,7 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/geom/precision_model.dart';
 import 'package:dts/src/jts/math/math.dart';
@@ -94,7 +94,7 @@ class BufferOp {
       return polys.get(0);
     }
 
-    return poly0.factory.createMultiPolygon(GeomFactory.toPolygonArray(polys));
+    return poly0.factory.createMultiPolygon(GeometryFactory.toPolygonArray(polys));
   }
 
   static void extractPolygons(Geometry poly0, List<Polygon> polys) {

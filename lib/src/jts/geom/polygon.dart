@@ -5,10 +5,10 @@ import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'coordinate.dart';
 import 'coordinate_sequence.dart';
 import 'envelope.dart';
-import 'geom.dart';
-import 'geom_component_filter.dart';
-import 'geom_factory.dart';
-import 'geom_filter.dart';
+import 'geometry.dart';
+import 'geometry_component_filter.dart';
+import 'geometry_factory.dart';
+import 'geometry_filter.dart';
 import 'linear_ring.dart';
 import 'polygonal.dart';
 import 'precision_model.dart';
@@ -21,9 +21,9 @@ class Polygon extends BaseGeometry<Polygon> implements Polygonal {
       : this.of2(shell, Array<LinearRing>(0), precisionModel, srid);
 
   Polygon.of2(LinearRing? shell, Array<LinearRing>? holes, PrecisionModel pm, int srid)
-      : this(shell, holes, GeomFactory(pm: pm, srid: srid));
+      : this(shell, holes, GeometryFactory(pm: pm, srid: srid));
 
-  Polygon(LinearRing? shell, Array<LinearRing>? holes, GeomFactory factory) : super(factory) {
+  Polygon(LinearRing? shell, Array<LinearRing>? holes, GeometryFactory factory) : super(factory) {
     this.shell = shell ?? factory.createLinearRing();
     this.holes = holes ?? Array(0);
 
@@ -129,8 +129,8 @@ class Polygon extends BaseGeometry<Polygon> implements Polygonal {
   }
 
   @override
-  GeomType get geometryType {
-    return GeomType.polygon;
+  GeometryType get geometryType {
+    return GeometryType.polygon;
   }
 
   @override
@@ -216,12 +216,12 @@ class Polygon extends BaseGeometry<Polygon> implements Polygonal {
   }
 
   @override
-  void apply3(GeomFilter filter) {
+  void apply3(GeometryFilter filter) {
     filter.filter(this);
   }
 
   @override
-  void apply4(GeomComponentFilter filter) {
+  void apply4(GeometryComponentFilter filter) {
     filter.filter(this);
     shell.apply4(filter);
     for (int i = 0; i < holes.length; i++) {

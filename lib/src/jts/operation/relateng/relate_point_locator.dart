@@ -3,8 +3,8 @@ import 'package:dts/src/jts/algorithm/boundary_node_rule.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/algorithm/point_location.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_collection.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_collection.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/location.dart';
 import 'package:dts/src/jts/geom/point.dart';
@@ -67,7 +67,7 @@ class RelatePointLocator {
       addLine(geom);
     } else if ((geom is Polygon) || (geom is MultiPolygon)) {
       addPolygonal(geom);
-    } else if (geom is GeomCollection) {
+    } else if (geom is GeometryCollection) {
       for (int i = 0; i < geom.getNumGeometries(); i++) {
         Geometry g = geom.getGeometryN(i);
         extractElements(g);

@@ -1,5 +1,5 @@
 import 'package:dts/src/jts/algorithm/point_locator.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geomgraph/edge.dart';
 import 'package:dts/src/jts/geomgraph/label.dart';
@@ -10,7 +10,7 @@ import 'overlay_op.dart';
 class LineBuilder {
   final OverlayOp _op;
 
-  GeomFactory geometryFactory;
+  GeometryFactory geometryFactory;
 
   final PointLocator _ptLocator;
 

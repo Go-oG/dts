@@ -1,7 +1,7 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/triangle.dart';
 import 'package:dts/src/jts/simplify/linked_line.dart';
@@ -60,7 +60,7 @@ class Corner implements Comparable<Corner> {
     Coordinate pp = _edge.getCoordinate(_prev);
     Coordinate p = _edge.getCoordinate(_index);
     Coordinate pn = _edge.getCoordinate(_next);
-    Envelope env = Envelope.fromCoordinate(pp, pn);
+    Envelope env = Envelope.of(pp, pn);
     env.expandToIncludeCoordinate(p);
     return env;
   }
@@ -110,7 +110,7 @@ class Corner implements Comparable<Corner> {
     Coordinate pp = _edge.getCoordinate(_prev);
     Coordinate p = _edge.getCoordinate(_index);
     Coordinate pn = _edge.getCoordinate(_next);
-    return GeomFactory()
+    return GeometryFactory()
         .createLineString2([_safeCoord(pp), _safeCoord(p), _safeCoord(pn)].toArray());
   }
 

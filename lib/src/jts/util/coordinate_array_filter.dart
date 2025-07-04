@@ -10,9 +10,7 @@ class CoordinateArrayFilter implements CoordinateFilter {
     pts = Array(size);
   }
 
-  Array<Coordinate> getCoordinates() {
-    return pts;
-  }
+  Array<Coordinate> getCoordinates() => pts;
 
   @override
   void filter(Coordinate coord) {

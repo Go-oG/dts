@@ -1,5 +1,5 @@
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/util/assert.dart';
 
@@ -37,7 +37,7 @@ class LocationIndexOfPoint {
     }
 
     LinearLocation closestAfter = indexOfFromStart(inputPt, minIndex);
-    Assert.isTrue2(closestAfter.compareTo(minIndex) >= 0,
+    Assert.isTrue(closestAfter.compareTo(minIndex) >= 0,
         "computed location is before specified minimum location");
     return closestAfter;
   }

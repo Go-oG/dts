@@ -1,4 +1,4 @@
-import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/noding/boundary_chain_noder.dart';
 import 'package:dts/src/jts/noding/noder.dart';
 import 'package:dts/src/jts/noding/segment_extracting_noder.dart';

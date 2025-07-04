@@ -1,5 +1,5 @@
 import 'package:d_util/d_util.dart';
-import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
 
 import 'corner_area.dart';
 import 'coverage_edge.dart';

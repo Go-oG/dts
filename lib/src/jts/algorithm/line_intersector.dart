@@ -38,7 +38,7 @@ abstract class LineIntersector {
         dist = Math.maxD(pdx, pdy);
       }
     }
-    Assert.isTrue2(!((dist == 0.0) && p != p0), "Bad distance calculation");
+    Assert.isTrue(!((dist == 0.0) && p != p0), "Bad distance calculation");
     return dist;
   }
 
@@ -46,7 +46,7 @@ abstract class LineIntersector {
     double dx = p.x - p1.x;
     double dy = p.y - p1.y;
     double dist = MathUtil.hypot(dx, dy);
-    Assert.isTrue2(!(dist == 0.0 && p != p1), "Invalid distance calculation");
+    Assert.isTrue(!(dist == 0.0 && p != p1), "Invalid distance calculation");
     return dist;
   }
 

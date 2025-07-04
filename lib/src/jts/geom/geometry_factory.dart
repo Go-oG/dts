@@ -8,8 +8,8 @@ import '../util/assert.dart';
 import 'coordinate.dart';
 import 'coordinate_sequence.dart';
 import 'envelope.dart';
-import 'geom.dart';
-import 'geom_collection.dart';
+import 'geometry.dart';
+import 'geometry_collection.dart';
 import 'line_string.dart';
 import 'linear_ring.dart';
 import 'multi_line_string.dart';
@@ -20,12 +20,12 @@ import 'polygon.dart';
 import 'precision_model.dart';
 import 'util/geom_editor.dart';
 
-final class GeomFactory {
+final class GeometryFactory {
   late final int srid;
   late final PrecisionModel pm;
   late CoordinateSequenceFactory csFactory;
 
-  GeomFactory({PrecisionModel? pm, this.srid = 0, CoordinateSequenceFactory? csFactory}) {
+  GeometryFactory({PrecisionModel? pm, this.srid = 0, CoordinateSequenceFactory? csFactory}) {
     this.pm = pm ?? PrecisionModel();
     this.csFactory = csFactory ?? getDefaultCoordinateSequenceFactory();
   }
@@ -125,8 +125,8 @@ final class GeomFactory {
     return MultiLineString(lineStrings, this);
   }
 
-  GeomCollection createGeomCollection([Array<Geometry>? geometries]) {
-    return GeomCollection(geometries?.asArray(), this);
+  GeometryCollection createGeomCollection([Array<Geometry>? geometries]) {
+    return GeometryCollection(geometries?.asArray(), this);
   }
 
   MultiPolygon createMultiPolygon([Array<Polygon>? polygons]) {
@@ -232,7 +232,7 @@ final class GeomFactory {
       if (partClass != geomClass) {
         isHeterogeneous = true;
       }
-      if (geom is GeomCollection) {
+      if (geom is GeometryCollection) {
         hasGeometryCollection = true;
       }
     }
@@ -254,7 +254,7 @@ final class GeomFactory {
       } else if (geom0 is Point) {
         return createMultiPoint(toPointArray(geomList.cast()));
       }
-      Assert.shouldNeverReachHere2("Unhandled class: ${geom0.runtimeType}");
+      Assert.shouldNeverReachHere("Unhandled class: ${geom0.runtimeType}");
     }
     return geom0;
   }

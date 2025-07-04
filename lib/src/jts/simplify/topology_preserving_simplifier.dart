@@ -1,6 +1,6 @@
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_component_filter.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_component_filter.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/util/geometry_transformer.dart';
@@ -60,7 +60,7 @@ class LineStringTransformer extends GeometryTransformer {
   }
 }
 
-class LineStringMapBuilderFilter implements GeomComponentFilter {
+class LineStringMapBuilderFilter implements GeometryComponentFilter {
   TopologyPreservingSimplifier tps;
 
   LineStringMapBuilderFilter(this.tps);

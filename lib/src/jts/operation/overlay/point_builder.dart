@@ -1,6 +1,6 @@
 import 'package:dts/src/jts/algorithm/point_locator.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/point.dart';
 import 'package:dts/src/jts/geomgraph/label.dart';
 import 'package:dts/src/jts/geomgraph/node.dart';
@@ -10,7 +10,7 @@ import 'overlay_op.dart';
 class PointBuilder {
   OverlayOp op;
 
-  GeomFactory geometryFactory;
+  GeometryFactory geometryFactory;
 
   List<Point> resultPointList = [];
 

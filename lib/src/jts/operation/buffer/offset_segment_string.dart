@@ -1,6 +1,6 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/precision_model.dart';
 
@@ -73,7 +73,7 @@ class OffsetSegmentString {
 
   @override
   String toString() {
-    GeomFactory fact = GeomFactory();
+    GeometryFactory fact = GeometryFactory();
     LineString line = fact.createLineString2(getCoordinates());
     return line.toString();
   }

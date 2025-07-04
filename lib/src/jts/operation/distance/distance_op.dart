@@ -3,8 +3,8 @@ import 'package:dts/src/jts/algorithm/distance.dart';
 import 'package:dts/src/jts/algorithm/point_locator.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_filter.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_filter.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/location.dart';
@@ -276,13 +276,13 @@ class DistanceOp {
     Array<Coordinate> coord0 = line0.getCoordinates();
     Array<Coordinate> coord1 = line1.getCoordinates();
     for (int i = 0; i < (coord0.length - 1); i++) {
-      Envelope segEnv0 = Envelope.fromCoordinate(coord0[i], coord0[i + 1]);
+      Envelope segEnv0 = Envelope.of(coord0[i], coord0[i + 1]);
       if (segEnv0.distance(line1.getEnvelopeInternal()) > minDistance) {
         continue;
       }
 
       for (int j = 0; j < (coord1.length - 1); j++) {
-        Envelope segEnv1 = Envelope.fromCoordinate(coord1[j], coord1[j + 1]);
+        Envelope segEnv1 = Envelope.of(coord1[j], coord1[j + 1]);
         if (segEnv0.distance(segEnv1) > minDistance) {
           continue;
         }

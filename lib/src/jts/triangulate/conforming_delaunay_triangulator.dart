@@ -2,8 +2,8 @@ import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/convex_hull.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/index/kd_tree.dart';
 import 'package:dts/src/jts/triangulate/quadedge/last_found_quad_edge_locator.dart';
 import 'package:dts/src/jts/triangulate/quadedge/quad_edge_subdivision.dart';
@@ -109,7 +109,7 @@ class ConformingDelaunayTriangulator {
   }
 
   void computeConvexHull() {
-    GeomFactory fact = GeomFactory();
+    GeometryFactory fact = GeometryFactory();
     Array<Coordinate> coords = getPointArray();
     ConvexHull hull = ConvexHull(coords, fact);
     _convexHull = hull.getConvexHull();
@@ -250,7 +250,7 @@ class ConformingDelaunayTriangulator {
     Coordinate q = seg.getEnd();
     Coordinate midPt = Coordinate((p.x + q.x) / 2.0, (p.y + q.y) / 2.0);
     double segRadius = p.distance(midPt);
-    Envelope env = Envelope.fromCoordinate(midPt);
+    Envelope env = Envelope.of(midPt);
     env.expandBy(segRadius);
     List result = _kdt.query2(env);
 

@@ -1,14 +1,14 @@
 import 'package:dts/src/jts/geom/dimension.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_collection.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
-import 'package:dts/src/jts/geom/geom_filter.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_collection.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geometry_filter.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/point.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/util/assert.dart';
 
-class InputExtracter implements GeomFilter {
+class InputExtracter implements GeometryFilter {
   static InputExtracter extract2(List<Geometry> geoms) {
     InputExtracter extracter = InputExtracter();
     extracter.add2(geoms);
@@ -21,7 +21,7 @@ class InputExtracter implements GeomFilter {
     return extracter;
   }
 
-  GeomFactory? geomFactory;
+  GeometryFactory? geomFactory;
 
   final List<Polygon> _polygons = [];
 
@@ -39,7 +39,7 @@ class InputExtracter implements GeomFilter {
     return dimension;
   }
 
-  GeomFactory? getFactory() {
+  GeometryFactory? getFactory() {
     return geomFactory;
   }
 
@@ -52,7 +52,7 @@ class InputExtracter implements GeomFilter {
       case 2:
         return _polygons;
     }
-    Assert.shouldNeverReachHere2("Invalid dimension: $dim");
+    Assert.shouldNeverReachHere("Invalid dimension: $dim");
     return null;
   }
 
@@ -71,7 +71,7 @@ class InputExtracter implements GeomFilter {
   @override
   void filter(Geometry geom) {
     recordDimension(geom.getDimension());
-    if (geom is GeomCollection) {
+    if (geom is GeometryCollection) {
       return;
     }
     if (geom.isEmpty()) return;
@@ -86,7 +86,7 @@ class InputExtracter implements GeomFilter {
       points.add(geom);
       return;
     }
-    Assert.shouldNeverReachHere2("Unhandled geometry type: ${geom.geometryType}");
+    Assert.shouldNeverReachHere("Unhandled geometry type: ${geom.geometryType}");
   }
 
   void recordDimension(int dim) {

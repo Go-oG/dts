@@ -2,8 +2,8 @@ import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/util/assert.dart';
 
@@ -13,7 +13,7 @@ import 'point_location.dart';
 final class ConvexHull {
   static const int _tuningReduceSize = 50;
 
-  final GeomFactory geomFactory;
+  final GeometryFactory geomFactory;
 
   final Array<Coordinate> _inputPts;
 

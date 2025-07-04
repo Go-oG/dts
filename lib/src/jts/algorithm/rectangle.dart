@@ -1,6 +1,6 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
@@ -12,7 +12,7 @@ class Rectangle {
     Coordinate oppositePt,
     Coordinate leftSidePt,
     Coordinate rightSidePt,
-    GeomFactory factory,
+    GeometryFactory factory,
   ) {
     double dx = baseLeftPt.x - baseRightPt.x;
     double dy = baseLeftPt.y - baseRightPt.y;

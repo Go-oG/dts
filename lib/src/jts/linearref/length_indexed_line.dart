@@ -1,7 +1,7 @@
 import 'package:d_util/d_util.dart';
 
 import '../geom/coordinate.dart';
-import '../geom/geom.dart';
+import '../geom/geometry.dart';
 import 'extract_line_by_location.dart';
 import 'length_index_of_point.dart';
 import 'length_location_map.dart';

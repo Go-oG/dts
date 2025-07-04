@@ -1,6 +1,6 @@
 import 'package:d_util/d_util.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 
 import '../../triangulate/tri/tri.dart';
 import 'hull_tri.dart';
@@ -49,7 +49,7 @@ class ConcaveHull {
 
   final Geometry _inputGeometry;
 
-  late final GeomFactory _geomFactory;
+  late final GeometryFactory _geomFactory;
 
   double _maxEdgeLengthRatio = -1;
 
@@ -271,7 +271,7 @@ class ConcaveHull {
     return !tri.hasBoundaryTouch();
   }
 
-  Geometry _toGeometry(List<HullTri> triList, GeomFactory geomFactory) {
+  Geometry _toGeometry(List<HullTri> triList, GeometryFactory geomFactory) {
     if (!_isHolesAllowed) {
       return HullTriangulation.traceBoundaryPolygon(triList, geomFactory);
     }

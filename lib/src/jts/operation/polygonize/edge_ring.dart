@@ -4,7 +4,7 @@ import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/location.dart';
@@ -34,13 +34,13 @@ class EdgeRingO {
     do {
       edges.add(de!);
       de = de.next;
-      Assert.isTrue2(de != null, "found null DE in ring");
-      Assert.isTrue2((de == startDE) || (!de!.isInRing()), "found DE already in ring");
+      Assert.isTrue(de != null, "found null DE in ring");
+      Assert.isTrue(de == startDE || !de!.isInRing(), "found DE already in ring");
     } while (de != startDE);
     return edges;
   }
 
-  GeomFactory factory;
+  GeometryFactory factory;
 
   final List<PolygonizeDirectedEdge> _deList = [];
 
@@ -72,8 +72,8 @@ class EdgeRingO {
       add(de!);
       de.setRing(this);
       de = de.next;
-      Assert.isTrue2(de != null, "found null DE in ring");
-      Assert.isTrue2((de == startDE) || (!de!.isInRing()), "found DE already in ring");
+      Assert.isTrue(de != null, "found null DE in ring");
+      Assert.isTrue((de == startDE) || (!de!.isInRing()), "found DE already in ring");
     } while (de != startDE);
   }
 

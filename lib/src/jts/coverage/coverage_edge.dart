@@ -1,7 +1,7 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 
@@ -150,7 +150,7 @@ class CoverageEdge {
     return _pts[0];
   }
 
-  LineString toLineString(GeomFactory geomFactory) {
+  LineString toLineString(GeometryFactory geomFactory) {
     return geomFactory.createLineString2(getCoordinates());
   }
 

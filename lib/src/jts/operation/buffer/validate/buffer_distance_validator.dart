@@ -1,14 +1,14 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/distance/discrete_hausdorff_distance.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_filter.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_filter.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/geom/util/linear_component_extracter.dart';
 import 'package:dts/src/jts/operation/distance/distance_op.dart';
 
-import '../../../geom/geom_collection.dart';
+import '../../../geom/geometry_collection.dart';
 import '../../../geom/multi_polygon.dart';
 
 class BufferDistanceValidator {
@@ -76,7 +76,7 @@ class BufferDistanceValidator {
   }
 
   void checkNegativeValid() {
-    if (!((input is Polygon) || (input is MultiPolygon)) || (input is GeomCollection)) {
+    if (!((input is Polygon) || (input is MultiPolygon)) || (input is GeometryCollection)) {
       return;
     }
     Geometry inputCurve = getPolygonLines(input);

@@ -2,9 +2,9 @@ import 'dart:collection';
 
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_component_filter.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_component_filter.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/multi_line_string.dart';
 import 'package:dts/src/jts/planargraph/algorithm/connected_subgraph_finder.dart';
@@ -58,7 +58,7 @@ class LineSequencer {
 
   final graph = LineMergeGraph();
 
-  GeomFactory? _factory = GeomFactory();
+  GeometryFactory? _factory = GeometryFactory();
 
   int _lineCount = 0;
 
@@ -113,8 +113,8 @@ class LineSequencer {
     _sequencedGeometry = buildSequencedGeometry(sequences);
     _isSequenceable = true;
     int finalLineCount = _sequencedGeometry!.getNumGeometries();
-    Assert.isTrue2(_lineCount == finalLineCount, "Lines were missing from result");
-    Assert.isTrue2(
+    Assert.isTrue(_lineCount == finalLineCount, "Lines were missing from result");
+    Assert.isTrue(
       (_sequencedGeometry is LineString) || (_sequencedGeometry is MultiLineString),
       "Result is not lineal",
     );
@@ -194,7 +194,7 @@ class LineSequencer {
       de = unvisitedOutDE.getSym()!;
     }
     if (expectedClosed) {
-      Assert.isTrue2(fromNode == endNode, "path not contiguous");
+      Assert.isTrue(fromNode == endNode, "path not contiguous");
     }
   }
 

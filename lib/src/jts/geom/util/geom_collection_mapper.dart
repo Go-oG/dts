@@ -1,11 +1,11 @@
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_collection.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_collection.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 
 import 'geometry_mapper.dart';
 
 class GeomCollectionMapper {
-  static GeomCollection map2(GeomCollection gc, MapOp op) {
+  static GeometryCollection map2(GeometryCollection gc, MapOp op) {
     GeomCollectionMapper mapper = GeomCollectionMapper(op);
     return mapper.map(gc);
   }
@@ -14,7 +14,7 @@ class GeomCollectionMapper {
 
   GeomCollectionMapper(this._mapOp);
 
-  GeomCollection map(GeomCollection gc) {
+  GeometryCollection map(GeometryCollection gc) {
     List<Geometry> mapped = [];
     for (int i = 0; i < gc.getNumGeometries(); i++) {
       Geometry? g = _mapOp.map(gc.getGeometryN(i));
@@ -22,6 +22,6 @@ class GeomCollectionMapper {
         mapped.add(g);
       }
     }
-    return gc.factory.createGeomCollection(GeomFactory.toGeometryArray(mapped)!);
+    return gc.factory.createGeomCollection(GeometryFactory.toGeometryArray(mapped)!);
   }
 }

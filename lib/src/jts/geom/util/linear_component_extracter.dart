@@ -1,9 +1,9 @@
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_component_filter.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_component_filter.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 
-class LinearComponentExtracter implements GeomComponentFilter {
+class LinearComponentExtracter implements GeometryComponentFilter {
   static List<LineString> getLines2(List<Geometry> geoms, List<LineString> lines) {
     for (var g in geoms) {
       getLines5(g, lines);

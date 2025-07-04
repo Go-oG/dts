@@ -1,9 +1,9 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_collection.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_collection.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/multi_line_string.dart';
@@ -14,7 +14,7 @@ import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/util/assert.dart';
 
 class GeometryEditor {
-  GeomFactory? _factory;
+  GeometryFactory? _factory;
 
   bool _isUserDataCopied = false;
 
@@ -41,7 +41,7 @@ class GeometryEditor {
   Geometry? editInternal(Geometry geometry, GeometryEditorOperation operation) {
     _factory ??= geometry.factory;
 
-    if (geometry is GeomCollection) {
+    if (geometry is GeometryCollection) {
       return editGeometryCollection(geometry, operation);
     }
     if (geometry is Polygon) {
@@ -53,7 +53,7 @@ class GeometryEditor {
     if (geometry is LineString) {
       return operation.edit(geometry, _factory!);
     }
-    Assert.shouldNeverReachHere2("Unsupported Geometry class: ${geometry.runtimeType}");
+    Assert.shouldNeverReachHere("Unsupported Geometry class: ${geometry.runtimeType}");
     return null;
   }
 
@@ -79,9 +79,10 @@ class GeometryEditor {
     return _factory!.createPolygon(shell, holes.toArray());
   }
 
-  GeomCollection editGeometryCollection(
-      GeomCollection collection, GeometryEditorOperation operation) {
-    GeomCollection collectionForType = (operation.edit(collection, _factory!) as GeomCollection);
+  GeometryCollection editGeometryCollection(
+      GeometryCollection collection, GeometryEditorOperation operation) {
+    GeometryCollection collectionForType =
+        (operation.edit(collection, _factory!) as GeometryCollection);
     List<Geometry> geometries = [];
     for (int i = 0; i < collectionForType.getNumGeometries(); i++) {
       Geometry? geometry = edit(collectionForType.getGeometryN(i), operation);
@@ -104,12 +105,12 @@ class GeometryEditor {
 }
 
 abstract interface class GeometryEditorOperation {
-  Geometry edit(Geometry geometry, GeomFactory factory);
+  Geometry edit(Geometry geometry, GeometryFactory factory);
 }
 
 abstract class CoordinateSequenceOperation implements GeometryEditorOperation {
   @override
-  Geometry edit(Geometry geometry, GeomFactory factory) {
+  Geometry edit(Geometry geometry, GeometryFactory factory) {
     if (geometry is LinearRing) {
       return factory.createLinearRing2(edit2(geometry.getCoordinateSequence(), geometry));
     }
@@ -127,14 +128,14 @@ abstract class CoordinateSequenceOperation implements GeometryEditorOperation {
 
 class NoOpGeometryOperation implements GeometryEditorOperation {
   @override
-  Geometry edit(Geometry geometry, GeomFactory factory) {
+  Geometry edit(Geometry geometry, GeometryFactory factory) {
     return geometry;
   }
 }
 
 abstract class CoordinateOperation implements GeometryEditorOperation {
   @override
-  Geometry edit(Geometry geometry, GeomFactory factory) {
+  Geometry edit(Geometry geometry, GeometryFactory factory) {
     if (geometry is LinearRing) {
       return factory.createLinearRings(edit2(geometry.getCoordinates(), geometry));
     }

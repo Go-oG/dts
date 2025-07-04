@@ -26,7 +26,7 @@ class MonotoneChain<T> {
     if (_env == null) {
       Coordinate p0 = pts[_start];
       Coordinate p1 = pts[_end];
-      _env = Envelope.fromCoordinate(p0, p1);
+      _env = Envelope.of(p0, p1);
       if (expansionDistance > 0.0) {
         _env!.expandBy(expansionDistance);
       }

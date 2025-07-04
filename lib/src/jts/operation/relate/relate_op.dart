@@ -1,5 +1,5 @@
 import 'package:dts/src/jts/algorithm/boundary_node_rule.dart';
-import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/intersection_matrix.dart';
 import 'package:dts/src/jts/operation/geometry_graph_operation.dart';
 

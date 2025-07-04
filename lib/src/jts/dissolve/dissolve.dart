@@ -3,11 +3,11 @@ import 'package:dts/src/jts/edgegraph/edge_graph.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 
-import '../geom/geom_component_filter.dart';
+import '../geom/geometry_component_filter.dart';
 
 class DissolveEdgeGraph extends EdgeGraph {
   @override
@@ -33,7 +33,7 @@ class LineDissolver {
 
   Geometry? _result;
 
-  late GeomFactory factory;
+  late GeometryFactory factory;
 
   late final DissolveEdgeGraph _graph;
 

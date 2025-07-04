@@ -2,7 +2,7 @@ import 'package:dts/src/jts/algorithm/boundary_node_rule.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/dimension.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/intersection_matrix.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
@@ -11,7 +11,7 @@ import 'package:dts/src/jts/geom/point.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/noding/mcindex_segment_set_mutual_intersector.dart';
 
-import '../../geom/geom_collection.dart';
+import '../../geom/geometry_collection.dart';
 import 'dimension_location.dart';
 import 'edge_segment_intersector.dart';
 import 'edge_set_intersector.dart';

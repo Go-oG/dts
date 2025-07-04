@@ -1,5 +1,5 @@
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/util/assert.dart';
 
@@ -31,7 +31,7 @@ class LengthIndexOfPoint {
     if (endIndex < minIndex) return endIndex;
 
     double closestAfter = indexOfFromStart(inputPt, minIndex);
-    Assert.isTrue2(closestAfter >= minIndex, "computed index is before specified minimum index");
+    Assert.isTrue(closestAfter >= minIndex, "computed index is before specified minimum index");
     return closestAfter;
   }
 

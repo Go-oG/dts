@@ -33,7 +33,7 @@ class MCIndexPointSnapper {
 
   Envelope getSafeEnvelope(HotPixel hp) {
     double safeTolerance = _SAFE_ENV_EXPANSION_FACTOR / hp.getScaleFactor();
-    Envelope safeEnv = Envelope.fromCoordinate(hp.getCoordinate());
+    Envelope safeEnv = Envelope.of(hp.getCoordinate());
     safeEnv.expandBy(safeTolerance);
     return safeEnv;
   }

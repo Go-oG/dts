@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:dts/src/jts/algorithm/point_locator.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/location.dart';
 import 'package:dts/src/jts/geom/point.dart';
@@ -68,7 +68,7 @@ class OverlayOp extends GeometryGraphOperation {
   final ptLocator = PointLocator.empty();
 
   late PGPlanarGraph graph;
-  late GeomFactory geomFact;
+  late GeometryFactory geomFact;
 
   Geometry? _resultGeom;
 
@@ -163,10 +163,10 @@ class OverlayOp extends GeometryGraphOperation {
             if (depth.getDelta(i) == 0) {
               lbl.toLine(i);
             } else {
-              Assert.isTrue2(
+              Assert.isTrue(
                   !depth.isNull3(i, Position.left), "depth of LEFT side has not been initialized");
               lbl.setLocation2(i, Position.left, depth.getLocation(i, Position.left));
-              Assert.isTrue2(!depth.isNull3(i, Position.right),
+              Assert.isTrue(!depth.isNull3(i, Position.right),
                   "depth of RIGHT side has not been initialized");
               lbl.setLocation2(i, Position.right, depth.getLocation(i, Position.right));
             }
@@ -297,7 +297,7 @@ class OverlayOp extends GeometryGraphOperation {
   }
 
   static Geometry createEmptyResult(
-      OverlayOpCode overlayOpCode, Geometry a, Geometry b, GeomFactory geomFact) {
+      OverlayOpCode overlayOpCode, Geometry a, Geometry b, GeometryFactory geomFact) {
     int resultDim = resultDimension(overlayOpCode, a, b);
     return geomFact.createEmpty(resultDim);
   }

@@ -1,7 +1,7 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/topology_exception.dart';
 import 'package:dts/src/jts/util/assert.dart';
 
@@ -9,15 +9,15 @@ import 'overlay_edge.dart';
 import 'overlay_edge_ring.dart';
 
 class NgMaximalEdgeRing {
-  static const int _STATE_FIND_INCOMING = 1;
+  static const int _kStateFindIncoming = 1;
 
-  static const int _STATE_LINK_OUTGOING = 2;
+  static const int _kStateLinkOutgoing = 2;
 
   static void linkResultAreaMaxRingAtNode(OverlayEdge nodeEdge) {
-    Assert.isTrue2(nodeEdge.isInResultArea(), "Attempt to link non-result edge");
+    Assert.isTrue(nodeEdge.isInResultArea(), "Attempt to link non-result edge");
     OverlayEdge? endOut = nodeEdge.oNextOE();
     OverlayEdge? currOut = endOut;
-    int state = _STATE_FIND_INCOMING;
+    int state = _kStateFindIncoming;
     OverlayEdge? currResultIn;
     do {
       if ((currResultIn != null) && currResultIn.isResultMaxLinked()) {
@@ -25,27 +25,27 @@ class NgMaximalEdgeRing {
       }
 
       switch (state) {
-        case _STATE_FIND_INCOMING:
+        case _kStateFindIncoming:
           OverlayEdge currIn = currOut!.symOE();
           if (!currIn.isInResultArea()) {
             break;
           }
 
           currResultIn = currIn;
-          state = _STATE_LINK_OUTGOING;
+          state = _kStateLinkOutgoing;
           break;
-        case _STATE_LINK_OUTGOING:
+        case _kStateLinkOutgoing:
           if (!currOut!.isInResultArea()) {
             break;
           }
 
           currResultIn!.setNextResultMax(currOut);
-          state = _STATE_FIND_INCOMING;
+          state = _kStateFindIncoming;
           break;
       }
       currOut = currOut!.oNextOE();
     } while (currOut != endOut);
-    if (state == _STATE_LINK_OUTGOING) {
+    if (state == _kStateLinkOutgoing) {
       throw TopologyException("no outgoing edge found", nodeEdge.getCoordinate());
     }
   }
@@ -76,7 +76,7 @@ class NgMaximalEdgeRing {
     } while (edge != startEdge);
   }
 
-  List<OverlayEdgeRing> buildMinimalRings(GeomFactory geometryFactory) {
+  List<OverlayEdgeRing> buildMinimalRings(GeometryFactory geometryFactory) {
     linkMinimalRings();
     List<OverlayEdgeRing> minEdgeRings = [];
     OverlayEdge? e = _startEdge;

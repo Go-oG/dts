@@ -1,7 +1,7 @@
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_collection.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_collection.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/location.dart';
@@ -73,7 +73,7 @@ class PointLocator {
         Polygon poly = geom.getGeometryN(i);
         _updateLocationInfo(_locateInPolygon(p, poly));
       }
-    } else if (geom is GeomCollection) {
+    } else if (geom is GeometryCollection) {
       Iterator geomi = GeometryCollectionIterator(geom);
       while (geomi.moveNext()) {
         Geometry g2 = geomi.current;

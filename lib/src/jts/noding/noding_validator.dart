@@ -2,7 +2,7 @@ import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/noding/segment_string.dart';
 
 class NodingValidator {
@@ -10,7 +10,7 @@ class NodingValidator {
 
   List<SegmentString> segStrings;
 
-  static final GeomFactory _fact = GeomFactory();
+  static final GeometryFactory _fact = GeometryFactory();
 
   NodingValidator(this.segStrings);
 

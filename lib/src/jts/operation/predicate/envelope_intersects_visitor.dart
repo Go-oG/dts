@@ -1,5 +1,5 @@
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/util/short_circuited_geometry_visitor.dart';
 
 class EnvelopeIntersectsVisitor extends ShortCircuitedGeometryVisitor {

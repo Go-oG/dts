@@ -5,9 +5,9 @@ import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/dimension.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_collection.dart';
-import 'package:dts/src/jts/geom/geom_filter.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_collection.dart';
+import 'package:dts/src/jts/geom/geometry_filter.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/multi_line_string.dart';
@@ -304,7 +304,7 @@ class RelateGeometry {
     }
     for (int i = 0; i < geom.getNumGeometries(); i++) {
       Geometry g = geom.getGeometryN(i);
-      if (g is GeomCollection) {
+      if (g is GeometryCollection) {
         extractSegmentStrings2(isA, env, g, segStrings);
       } else {
         extractSegmentStringsFromAtomic(isA, g, parentPolygonal, env, segStrings);

@@ -1,6 +1,6 @@
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
-import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/operation/buffer/validate/point_pair_distance.dart';
 
 import 'distance_to_point_finder.dart';

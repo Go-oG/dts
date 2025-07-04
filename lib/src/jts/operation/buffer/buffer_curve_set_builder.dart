@@ -4,8 +4,8 @@ import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_collection.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_collection.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
@@ -85,13 +85,13 @@ class BufferCurveSetBuilder {
       addCollection(g);
     else if (g is MultiPolygon)
       addCollection(g);
-    else if (g is GeomCollection)
+    else if (g is GeometryCollection)
       addCollection(g);
     else
       throw "UnsupportedOperationException ${g.runtimeType}";
   }
 
-  void addCollection(GeomCollection gc) {
+  void addCollection(GeometryCollection gc) {
     for (int i = 0; i < gc.getNumGeometries(); i++) {
       Geometry g = gc.getGeometryN(i);
       add(g);

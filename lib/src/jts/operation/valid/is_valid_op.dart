@@ -1,7 +1,7 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_collection.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_collection.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/multi_point.dart';
@@ -80,7 +80,7 @@ final class IsValidOp {
 
     if (g is MultiPolygon) return isValid8(g);
 
-    if (g is GeomCollection) return isValid4(g);
+    if (g is GeometryCollection) return isValid4(g);
 
     throw "UnsupportedOperationException${g.runtimeType}";
   }
@@ -184,7 +184,7 @@ final class IsValidOp {
     return true;
   }
 
-  bool isValid4(GeomCollection gc) {
+  bool isValid4(GeometryCollection gc) {
     for (int i = 0; i < gc.getNumGeometries(); i++) {
       if (!isValidGeometry(gc.getGeometryN(i))) return false;
     }

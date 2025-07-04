@@ -14,15 +14,15 @@ import 'package:dts/src/jts/operation/valid/is_valid_op.dart';
 import 'coordinate.dart';
 import 'coordinate_sequence.dart';
 import 'envelope.dart';
-import 'geom_component_filter.dart';
-import 'geom_factory.dart';
-import 'geom_filter.dart';
-import 'geom_overlay.dart';
-import 'geom_relate.dart';
+import 'geometry_component_filter.dart';
+import 'geometry_factory.dart';
+import 'geometry_filter.dart';
+import 'geometry_overlay.dart';
+import 'geometry_relate.dart';
 import 'intersection_matrix.dart';
 import 'precision_model.dart';
 
-enum GeomType {
+enum GeometryType {
   point("Point", 0),
   multiPoint("MultiPoint", 1),
   lineString("LineString", 2),
@@ -35,7 +35,7 @@ enum GeomType {
   final String key;
   final int code;
 
-  const GeomType(this.key, this.code);
+  const GeometryType(this.key, this.code);
 }
 
 abstract class Geometry implements Comparable<Geometry> {
@@ -43,7 +43,8 @@ abstract class Geometry implements Comparable<Geometry> {
     geom.geometryChangedAction();
   });
 
-  late final GeomFactory factory;
+  final GeometryFactory factory;
+
   int srid = 0;
 
   Envelope? envelope;
@@ -223,7 +224,7 @@ abstract class Geometry implements Comparable<Geometry> {
     return GeomRelate.relate(this, g);
   }
 
-  GeomType get geometryType;
+  GeometryType get geometryType;
 
   bool equals2(Geometry? g) {
     if (g == null) {
@@ -276,23 +277,23 @@ abstract class Geometry implements Comparable<Geometry> {
   Geometry reverseInternal();
 
   Geometry? intersection(Geometry other) {
-    return GeomOverlay.intersection(this, other);
+    return GeometryOverlay.intersection(this, other);
   }
 
   Geometry? union2(Geometry other) {
-    return GeomOverlay.union2(this, other);
+    return GeometryOverlay.union2(this, other);
   }
 
   Geometry? difference(Geometry other) {
-    return GeomOverlay.difference(this, other);
+    return GeometryOverlay.difference(this, other);
   }
 
   Geometry? symDifference(Geometry other) {
-    return GeomOverlay.symDifference(this, other);
+    return GeometryOverlay.symDifference(this, other);
   }
 
   Geometry? union() {
-    return GeomOverlay.union(this);
+    return GeometryOverlay.union(this);
   }
 
   bool equalsExact(Geometry other) {
@@ -311,9 +312,9 @@ abstract class Geometry implements Comparable<Geometry> {
 
   void apply2(CoordinateSequenceFilter filter);
 
-  void apply3(GeomFilter filter);
+  void apply3(GeometryFilter filter);
 
-  void apply4(GeomComponentFilter filter);
+  void apply4(GeometryComponentFilter filter);
 
   Geometry clone() {
     return copy();
@@ -381,7 +382,7 @@ abstract class Geometry implements Comparable<Geometry> {
   }
 
   bool isGeometryCollection() {
-    return geometryType == GeomType.collection;
+    return geometryType == GeometryType.collection;
   }
 
   Envelope computeEnvelopeInternal();

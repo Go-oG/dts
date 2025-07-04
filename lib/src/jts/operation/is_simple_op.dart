@@ -4,8 +4,8 @@ import 'package:dts/src/jts/algorithm/boundary_node_rule.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_collection.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_collection.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/multi_line_string.dart';
@@ -49,7 +49,7 @@ class IsSimpleOpO {
       return isSimplePolygonal(geom);
     }
 
-    if (geom is GeomCollection) return isSimpleGeometryCollection(geom);
+    if (geom is GeometryCollection) return isSimpleGeometryCollection(geom);
 
     return true;
   }

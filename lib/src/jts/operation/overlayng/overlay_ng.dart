@@ -1,6 +1,6 @@
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/location.dart';
 import 'package:dts/src/jts/geom/point.dart';
@@ -98,7 +98,7 @@ class OverlayNG {
 
   late InputGeometry _inputGeom;
 
-  late GeomFactory geomFact;
+  late GeometryFactory geomFact;
 
   PrecisionModel? pm;
 

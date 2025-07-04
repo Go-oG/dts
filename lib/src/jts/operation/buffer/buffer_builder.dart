@@ -2,8 +2,8 @@ import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/location.dart';
 import 'package:dts/src/jts/geom/position.dart';
@@ -43,7 +43,7 @@ class BufferBuilder {
 
   Noder? _workingNoder;
 
-  late GeomFactory geomFact;
+  late GeometryFactory geomFact;
 
   late PGPlanarGraph _graph;
 
@@ -170,7 +170,7 @@ class BufferBuilder {
   }
 
   static Geometry convertSegStrings(Iterator<SegmentString> it) {
-    GeomFactory fact = GeomFactory();
+    GeometryFactory fact = GeometryFactory();
     List<LineString> lines = [];
     while (it.moveNext()) {
       SegmentString ss = it.current;

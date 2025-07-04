@@ -1,6 +1,6 @@
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
-import 'package:dts/src/jts/geom/geom_filter.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geometry_filter.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/geom/polygonal.dart';
 import 'package:dts/src/jts/index/strtree/strtree.dart';
@@ -41,7 +41,7 @@ class CascadedPolygonUnion {
 
   late List<Geometry> _inputPolys;
 
-  GeomFactory? geomFactory;
+  GeometryFactory? geomFactory;
 
   late UnionStrategy _unionFun;
 
@@ -138,6 +138,6 @@ class CascadedPolygonUnion {
     List<Polygon> polygons = PolygonExtracter.getPolygons(g);
     if (polygons.length == 1) return polygons.first;
 
-    return g.factory.createMultiPolygon(GeomFactory.toPolygonArray(polygons));
+    return g.factory.createMultiPolygon(GeometryFactory.toPolygonArray(polygons));
   }
 }

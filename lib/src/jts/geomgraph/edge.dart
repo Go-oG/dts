@@ -297,7 +297,7 @@ class EdgeEnd implements Comparable<EdgeEnd> {
     _dx = p1.x - p0.x;
     _dy = p1.y - p0.y;
     _quadrant = Quadrant.quadrant(_dx, _dy);
-    Assert.isTrue2(!((_dx == 0) && (_dy == 0)), "EdgeEnd with identical endpoints found");
+    Assert.isTrue(!((_dx == 0) && (_dy == 0)), "EdgeEnd with identical endpoints found");
   }
 
   Edge getEdge() {
@@ -628,12 +628,12 @@ abstract class EdgeEndStar {
     int lastEdgeIndex = edges.length - 1;
     Label startLabel = edges.get(lastEdgeIndex).getLabel()!;
     int startLoc = startLabel.getLocation2(geomIndex, Position.left);
-    Assert.isTrue2(startLoc != Location.none, "Found unlabelled area edge");
+    Assert.isTrue(startLoc != Location.none, "Found unlabelled area edge");
     int currLoc = startLoc;
 
     for (var e in edgeList!) {
       Label label = e.getLabel()!;
-      Assert.isTrue2(label.isArea2(geomIndex), "Found non-area edge");
+      Assert.isTrue(label.isArea2(geomIndex), "Found non-area edge");
       int leftLoc = label.getLocation2(geomIndex, Position.left);
       int rightLoc = label.getLocation2(geomIndex, Position.right);
       if (leftLoc == rightLoc) {
@@ -669,15 +669,16 @@ abstract class EdgeEndStar {
         int leftLoc = label.getLocation2(geomIndex, Position.left);
         int rightLoc = label.getLocation2(geomIndex, Position.right);
         if (rightLoc != Location.none) {
-          if (rightLoc != currLoc)
+          if (rightLoc != currLoc) {
             throw TopologyException("side location conflict ${e.getCoordinate()}");
+          }
 
           if (leftLoc == Location.none) {
-            Assert.shouldNeverReachHere2("found single null side (at ${e.getCoordinate()})");
+            Assert.shouldNeverReachHere("found single null side (at ${e.getCoordinate()})");
           }
           currLoc = leftLoc;
         } else {
-          Assert.isTrue2(label.getLocation2(geomIndex, Position.left) == Location.none,
+          Assert.isTrue(label.getLocation2(geomIndex, Position.left) == Location.none,
               "found single null side");
           label.setLocation2(geomIndex, Position.right, currLoc);
           label.setLocation2(geomIndex, Position.left, currLoc);
@@ -756,8 +757,7 @@ class DirectedEdgeStar extends EdgeEndStar {
         return deLast;
       }
     }
-
-    Assert.shouldNeverReachHere2("found two horizontal edges incident on node");
+    Assert.shouldNeverReachHere("found two horizontal edges incident on node");
     return null;
   }
 
@@ -805,15 +805,15 @@ class DirectedEdgeStar extends EdgeEndStar {
     return _resultAreaEdgeList!;
   }
 
-  static const int _SCANNING_FOR_INCOMING = 1;
+  static const int _kScanningForIncoming = 1;
 
-  static const int _LINKING_TO_OUTGOING = 2;
+  static const int _kLinkingToOutgoing = 2;
 
   void linkResultDirectedEdges() {
     getResultAreaEdges();
     DirectedEdge? firstOut;
     DirectedEdge? incoming;
-    int state = _SCANNING_FOR_INCOMING;
+    int state = _kScanningForIncoming;
     for (int i = 0; i < _resultAreaEdgeList!.length; i++) {
       DirectedEdge nextOut = _resultAreaEdgeList![i];
       DirectedEdge nextIn = nextOut.getSym();
@@ -822,23 +822,23 @@ class DirectedEdgeStar extends EdgeEndStar {
       if ((firstOut == null) && nextOut.isInResult()) firstOut = nextOut;
 
       switch (state) {
-        case _SCANNING_FOR_INCOMING:
+        case _kScanningForIncoming:
           if (!nextIn.isInResult()) continue;
 
           incoming = nextIn;
-          state = _LINKING_TO_OUTGOING;
+          state = _kLinkingToOutgoing;
           break;
-        case _LINKING_TO_OUTGOING:
+        case _kLinkingToOutgoing:
           if (!nextOut.isInResult()) continue;
 
           incoming!.setNext(nextOut);
-          state = _SCANNING_FOR_INCOMING;
+          state = _kScanningForIncoming;
           break;
       }
     }
-    if (state == _LINKING_TO_OUTGOING) {
+    if (state == _kLinkingToOutgoing) {
       if (firstOut == null) throw TopologyException("no outgoing dirEdge found", getCoordinate());
-      Assert.isTrue2(firstOut.isInResult(), "unable to link last incoming dirEdge");
+      Assert.isTrue(firstOut.isInResult(), "unable to link last incoming dirEdge");
       incoming!.setNext(firstOut);
     }
   }
@@ -846,30 +846,30 @@ class DirectedEdgeStar extends EdgeEndStar {
   void linkMinimalDirectedEdges(EdgeRing er) {
     DirectedEdge? firstOut;
     DirectedEdge? incoming;
-    int state = _SCANNING_FOR_INCOMING;
+    int state = _kScanningForIncoming;
     for (int i = _resultAreaEdgeList!.length - 1; i >= 0; i--) {
       DirectedEdge nextOut = (_resultAreaEdgeList![i]);
       DirectedEdge nextIn = nextOut.getSym();
       if ((firstOut == null) && (nextOut.getEdgeRing() == er)) firstOut = nextOut;
 
       switch (state) {
-        case _SCANNING_FOR_INCOMING:
+        case _kScanningForIncoming:
           if (nextIn.getEdgeRing() != er) continue;
 
           incoming = nextIn;
-          state = _LINKING_TO_OUTGOING;
+          state = _kLinkingToOutgoing;
           break;
-        case _LINKING_TO_OUTGOING:
+        case _kLinkingToOutgoing:
           if (nextOut.getEdgeRing() != er) continue;
 
           incoming!.setNextMin(nextOut);
-          state = _SCANNING_FOR_INCOMING;
+          state = _kScanningForIncoming;
           break;
       }
     }
-    if (state == _LINKING_TO_OUTGOING) {
-      Assert.isTrue2(firstOut != null, "found null for first outgoing dirEdge");
-      Assert.isTrue2(firstOut!.getEdgeRing() == er, "unable to link last incoming dirEdge");
+    if (state == _kLinkingToOutgoing) {
+      Assert.isTrue(firstOut != null, "found null for first outgoing dirEdge");
+      Assert.isTrue(firstOut!.getEdgeRing() == er, "unable to link last incoming dirEdge");
       incoming!.setNextMin(firstOut);
     }
   }

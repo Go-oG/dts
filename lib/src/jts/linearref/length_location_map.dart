@@ -1,5 +1,5 @@
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
 
 import 'linear_iterator.dart';
 import 'linear_location.dart';

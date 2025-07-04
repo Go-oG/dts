@@ -2,8 +2,8 @@ import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/point_location.dart';
 import 'package:dts/src/jts/algorithm/ray_crossing_counter.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_collection.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_collection.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
@@ -39,7 +39,7 @@ class SimplePointInAreaLocator implements PointOnGeometryLocator {
     if (geom is Polygon) {
       return locatePointInPolygon(p, geom);
     }
-    if (geom is GeomCollection) {
+    if (geom is GeometryCollection) {
       Iterator geomi = GeometryCollectionIterator(geom);
       while (geomi.moveNext()) {
         Geometry g2 = geomi.current as Geometry;

@@ -1,9 +1,9 @@
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_filter.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_filter.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 
-class PolygonalLineworkExtracter implements GeomFilter {
+class PolygonalLineworkExtracter implements GeometryFilter {
   final List<LinearRing> _linework = [];
 
   @override

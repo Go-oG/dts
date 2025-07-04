@@ -1,7 +1,7 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
-import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/point.dart';
 import 'package:dts/src/jts/geom/triangle.dart';
 import 'package:dts/src/jts/math/math.dart';
@@ -160,7 +160,7 @@ class MinimumBoundingCircle {
         return;
       }
     }
-    Assert.shouldNeverReachHere2("Logic failure in Minimum Bounding Circle algorithm!");
+    Assert.shouldNeverReachHere("Logic failure in Minimum Bounding Circle algorithm!");
   }
 
   static Coordinate _lowestPoint(Array<Coordinate> pts) {

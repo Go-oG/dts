@@ -3,8 +3,8 @@ import 'dart:collection';
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/util/linear_component_extracter.dart';
 import 'package:dts/src/jts/triangulate/quadedge/quad_edge_subdivision.dart';
@@ -96,12 +96,12 @@ class ConformingDelaunayTriangulationBuilder {
     return _subdiv!;
   }
 
-  Geometry getEdges(GeomFactory geomFact) {
+  Geometry getEdges(GeometryFactory geomFact) {
     create();
     return _subdiv!.getEdges2(geomFact);
   }
 
-  Geometry getTriangles(GeomFactory geomFact) {
+  Geometry getTriangles(GeometryFactory geomFact) {
     create();
     return _subdiv!.getTriangles2(geomFact);
   }

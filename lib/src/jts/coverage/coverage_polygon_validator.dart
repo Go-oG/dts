@@ -1,14 +1,14 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/noding/mcindex_segment_set_mutual_intersector.dart';
 
-import '../geom/geom_filter.dart';
+import '../geom/geometry_filter.dart';
 import 'coverage_polygon.dart';
 import 'coverage_ring.dart';
 import 'invalid_segment_detector.dart';
@@ -26,7 +26,7 @@ class CoveragePolygonValidator {
   }
 
   late Geometry _targetGeom;
-  late GeomFactory geomFactory;
+  late GeometryFactory geomFactory;
   late Array<Geometry> _adjGeoms;
 
   double _gapWidth = 0.0;
@@ -178,7 +178,7 @@ class CoveragePolygonValidator {
     } else if (lines.size == 1) {
       return lines.get(0);
     }
-    return geomFactory.createMultiLineString(GeomFactory.toLineStringArray(lines));
+    return geomFactory.createMultiLineString(GeometryFactory.toLineStringArray(lines));
   }
 }
 

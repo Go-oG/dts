@@ -3,7 +3,7 @@ import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/algorithm/point_location.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/location.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
@@ -34,7 +34,7 @@ abstract class EdgeRing {
 
   final List<EdgeRing> _holes = [];
 
-  GeomFactory geometryFactory;
+  GeometryFactory geometryFactory;
 
   EdgeRing(DirectedEdge start, this.geometryFactory) {
     computePoints(start);
@@ -80,7 +80,7 @@ abstract class EdgeRing {
     _holes.add(ring);
   }
 
-  Polygon toPolygon(GeomFactory geometryFactory) {
+  Polygon toPolygon(GeometryFactory geometryFactory) {
     Array<LinearRing> holeLR = Array(_holes.length);
     int i = 0;
     for (var e in _holes) {

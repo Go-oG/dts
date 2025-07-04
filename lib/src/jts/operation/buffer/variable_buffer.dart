@@ -3,9 +3,9 @@ import 'package:dts/src/jts/algorithm/angle.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_collection.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_collection.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
@@ -109,7 +109,7 @@ class VariableBuffer {
 
   final Array<double> _distance;
 
-  late GeomFactory geomFactory;
+  late GeometryFactory geomFactory;
 
   final int _quadrantSegs = BufferParameters.kDefaultQuadrantSegments;
 
@@ -131,8 +131,8 @@ class VariableBuffer {
         if (poly != null) parts.add(poly);
       }
     }
-    GeomCollection partsGeom =
-        geomFactory.createGeomCollection(GeomFactory.toGeometryArray(parts)!);
+    GeometryCollection partsGeom =
+        geomFactory.createGeomCollection(GeometryFactory.toGeometryArray(parts)!);
     Geometry buffer = partsGeom.union()!;
     if (buffer.isEmpty()) {
       return geomFactory.createPolygon();

@@ -11,10 +11,11 @@ class EdgeMerger {
       EdgeKey edgeKey = EdgeKey.create(edge);
       OEdge? baseEdge = edgeMap[edgeKey];
       if (baseEdge == null) {
-        edgeMap[edgeKey]=edge;
+        edgeMap[edgeKey] = edge;
         mergedEdges.add(edge);
       } else {
-        Assert.isTrue2(baseEdge.size() == edge.size(), "Merge of edges of different sizes - probable noding error.");
+        Assert.isTrue(baseEdge.size() == edge.size(),
+            "Merge of edges of different sizes - probable noding error.");
         baseEdge.merge(edge);
       }
     }

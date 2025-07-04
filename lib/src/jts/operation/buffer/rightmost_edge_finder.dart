@@ -27,7 +27,7 @@ class RightmostEdgeFinder {
       checkForRightmostCoordinate(de);
     }
 
-    Assert.isTrue2(
+    Assert.isTrue(
       (_minIndex != 0) || _minCoord! == (_minDe!.getCoordinate()),
       "inconsistency in rightmost processing",
     );
@@ -55,8 +55,8 @@ class RightmostEdgeFinder {
 
   void findRightmostEdgeAtVertex() {
     Array<Coordinate> pts = _minDe!.getEdge().getCoordinates();
-    Assert.isTrue2(
-      (_minIndex > 0) && (_minIndex < pts.length),
+    Assert.isTrue(
+      _minIndex > 0 && _minIndex < pts.length,
       "rightmost point expected to be interior vertex of edge",
     );
     Coordinate pPrev = pts[_minIndex - 1];

@@ -1,8 +1,8 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/precision_model.dart';
@@ -33,7 +33,7 @@ class SimpleGeometryPrecisionReducer {
   Geometry? reduce(Geometry geom) {
     GeometryEditor geomEdit;
     if (changePrecisionModel) {
-      GeomFactory newFactory = GeomFactory(pm: _newPrecisionModel, srid: geom.factory.srid);
+      GeometryFactory newFactory = GeometryFactory(pm: _newPrecisionModel, srid: geom.factory.srid);
       geomEdit = GeometryEditor(newFactory);
     } else {
       geomEdit = GeometryEditor.empty();

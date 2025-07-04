@@ -1,5 +1,5 @@
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/puntal.dart';
 
 import 'cascaded_polygon_union.dart';
@@ -13,7 +13,7 @@ class UnaryUnionOp {
     return op.union();
   }
 
-  static Geometry? union3(List<Geometry> geoms, GeomFactory geomFact) {
+  static Geometry? union3(List<Geometry> geoms, GeometryFactory geomFact) {
     UnaryUnionOp op = UnaryUnionOp(geoms, geomFact);
     return op.union();
   }
@@ -23,7 +23,7 @@ class UnaryUnionOp {
     return op.union();
   }
 
-  GeomFactory? _geomFact;
+  GeometryFactory? _geomFact;
 
   late InputExtracter _extracter;
 

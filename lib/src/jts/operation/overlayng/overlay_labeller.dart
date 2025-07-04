@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/location.dart';
 import 'package:dts/src/jts/geom/position.dart';
 import 'package:dts/src/jts/geom/topology_exception.dart';
@@ -62,7 +62,7 @@ class OverlayLabeller {
         }
         int locLeft = e.getLocation(geomIndex, Position.left);
         if (locLeft == Location.none) {
-          Assert.shouldNeverReachHere2("found single null side at  e");
+          Assert.shouldNeverReachHere("found single null side at  e");
         }
         currLoc = locLeft;
       }

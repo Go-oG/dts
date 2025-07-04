@@ -3,7 +3,7 @@ import 'package:d_util/d_util.dart';
 import '../../math/math.dart';
 import '../coordinate.dart';
 import '../coordinate_sequence.dart';
-import '../geom.dart';
+import '../geometry.dart';
 
 class AffineTransformation implements CoordinateSequenceFilter {
   static AffineTransformation reflectionInstance(double x0, double y0, double x1, double y1) {

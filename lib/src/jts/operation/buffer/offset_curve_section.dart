@@ -1,12 +1,12 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 
 class OffsetCurveSection implements Comparable<OffsetCurveSection> {
-  static Geometry toGeometry(List<OffsetCurveSection> sections, GeomFactory geomFactory) {
+  static Geometry toGeometry(List<OffsetCurveSection> sections, GeometryFactory geomFactory) {
     if (sections.isEmpty) return geomFactory.createLineString();
 
     if (sections.length == 1)
@@ -20,7 +20,7 @@ class OffsetCurveSection implements Comparable<OffsetCurveSection> {
     return geomFactory.createMultiLineString(lines);
   }
 
-  static Geometry toLine(List<OffsetCurveSection> sections, GeomFactory geomFactory) {
+  static Geometry toLine(List<OffsetCurveSection> sections, GeometryFactory geomFactory) {
     if (sections.size == 0) return geomFactory.createLineString();
 
     if (sections.size == 1) return geomFactory.createLineString2(sections.get(0).getCoordinates());

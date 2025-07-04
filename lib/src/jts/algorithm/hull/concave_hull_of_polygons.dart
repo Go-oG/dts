@@ -3,9 +3,9 @@ import 'dart:collection';
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_collection.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_collection.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/multi_polygon.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
@@ -61,7 +61,7 @@ class ConcaveHullOfPolygons {
   static const int _notFound = -1;
 
   late final Geometry _inputPolygons;
-  late final GeomFactory geomFactory;
+  late final GeometryFactory geomFactory;
   double _maxEdgeLength = 0.0;
 
   double _maxEdgeLengthRatio = _notSpecified.toDouble();
@@ -166,7 +166,7 @@ class ConcaveHullOfPolygons {
           continue;
         }
 
-        double len = tri.getLength2(i);
+        double len = tri.getLength(i);
         if (len > maxEdgeLen) {
           maxEdgeLen = len;
         }
@@ -184,7 +184,7 @@ class ConcaveHullOfPolygons {
   }
 
   static Polygon _createFrame(
-      Envelope polygonsEnv, Array<LinearRing>? polygonRings, GeomFactory geomFactory) {
+      Envelope polygonsEnv, Array<LinearRing>? polygonRings, GeometryFactory geomFactory) {
     double diam = polygonsEnv.diameter;
     Envelope envFrame = polygonsEnv.copy();
     envFrame.expandBy(_frameExpandFactor * diam);
@@ -267,7 +267,7 @@ class ConcaveHullOfPolygons {
     }
 
     for (int i = 0; i < 3; i++) {
-      if (tri.hasAdjacent2(i) && (tri.getLength2(i) > _maxEdgeLength)) {
+      if (tri.hasAdjacent2(i) && (tri.getLength(i) > _maxEdgeLength)) {
         return true;
       }
     }
@@ -290,7 +290,7 @@ class ConcaveHullOfPolygons {
 
     if (_borderEdgeMap.containsKey(tri)) {
       int borderEdgeIndex = _borderEdgeMap.get(tri)!;
-      double edgeLen = tri.getLength2(borderEdgeIndex);
+      double edgeLen = tri.getLength(borderEdgeIndex);
       if (edgeLen > _maxEdgeLength) {
         return true;
       }
@@ -349,7 +349,7 @@ class ConcaveHullOfPolygons {
   }
 
   static Envelope _envelope(Tri tri) {
-    Envelope env = Envelope.fromCoordinate(tri.getCoordinate(0), tri.getCoordinate(1));
+    Envelope env = Envelope.of(tri.getCoordinate(0), tri.getCoordinate(1));
     env.expandToIncludeCoordinate(tri.getCoordinate(2));
     return env;
   }
@@ -368,7 +368,7 @@ class ConcaveHullOfPolygons {
       return _inputPolygons.copy();
     }
     Array<Geometry> geoms = [fillGeometry, _inputPolygons].toArray();
-    GeomCollection geomColl = geomFactory.createGeomCollection(geoms);
+    GeometryCollection geomColl = geomFactory.createGeomCollection(geoms);
     Geometry hull = CoverageUnionNG.union(geomColl);
     return hull;
   }

@@ -5,8 +5,8 @@ import 'package:dts/src/jts/algorithm/boundary_node_rule.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/dimension.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/multi_line_string.dart';
 import 'package:dts/src/jts/geom/multi_point.dart';
@@ -37,7 +37,7 @@ class BoundaryOp {
   }
 
   final Geometry geom;
-  late final GeomFactory geomFact;
+  late final GeometryFactory geomFact;
   late BoundaryNodeRule _bnRule;
   late Map<Coordinate, Counter> _endpointMap;
 

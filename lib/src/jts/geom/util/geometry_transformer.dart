@@ -2,9 +2,9 @@ import 'package:d_util/d_util.dart';
 
 import '../coordinate.dart';
 import '../coordinate_sequence.dart';
-import '../geom.dart';
-import '../geom_collection.dart';
-import '../geom_factory.dart';
+import '../geometry.dart';
+import '../geometry_collection.dart';
+import '../geometry_factory.dart';
 import '../line_string.dart';
 import '../linear_ring.dart';
 import '../multi_line_string.dart';
@@ -16,7 +16,7 @@ import '../polygon.dart';
 class GeometryTransformer {
   late Geometry inputGeom;
 
-  late GeomFactory factory;
+  late GeometryFactory factory;
 
   final bool _pruneEmptyGeometry = true;
   final bool _preserveGeometryCollectionType = true;
@@ -45,7 +45,7 @@ class GeometryTransformer {
 
     if (inputGeom is MultiPolygon) return transformMultiPolygon(inputGeom, null);
 
-    if (inputGeom is GeomCollection) return transformGeometryCollection(inputGeom, null);
+    if (inputGeom is GeometryCollection) return transformGeometryCollection(inputGeom, null);
 
     throw IllegalArgumentException("Unknown Geometry subtype: ${inputGeom.runtimeType}");
   }
@@ -162,7 +162,7 @@ class GeometryTransformer {
     return factory.buildGeometry(transGeomList);
   }
 
-  Geometry? transformGeometryCollection(GeomCollection geom, Geometry? parent) {
+  Geometry? transformGeometryCollection(GeometryCollection geom, Geometry? parent) {
     List<Geometry> transGeomList = [];
     for (int i = 0; i < geom.getNumGeometries(); i++) {
       Geometry? transformGeom = transform(geom.getGeometryN(i));
@@ -176,7 +176,7 @@ class GeometryTransformer {
       transGeomList.add(transformGeom);
     }
     if (_preserveGeometryCollectionType) {
-      return factory.createGeomCollection(GeomFactory.toGeometryArray(transGeomList)!);
+      return factory.createGeomCollection(GeometryFactory.toGeometryArray(transGeomList)!);
     }
     return factory.buildGeometry(transGeomList);
   }

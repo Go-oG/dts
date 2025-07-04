@@ -4,7 +4,7 @@ import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/geom/triangle.dart';
 import 'package:dts/src/jts/index/rtree/vertex_sequence_packed_rtree.dart';
@@ -144,7 +144,7 @@ class PolygonEarClipper {
   }
 
   static Envelope envelope(Array<Coordinate> corner) {
-    Envelope cornerEnv = Envelope.fromCoordinate(corner[0], corner[1]);
+    Envelope cornerEnv = Envelope.of(corner[0], corner[1]);
     cornerEnv.expandToIncludeCoordinate(corner[2]);
     return cornerEnv;
   }
@@ -206,7 +206,7 @@ class PolygonEarClipper {
   }
 
   Polygon toGeometry() {
-    GeomFactory fact = GeomFactory();
+    GeometryFactory fact = GeometryFactory();
     CoordinateList coordList = CoordinateList();
     int index = _vertexFirst;
     for (int i = 0; i < _vertexSize; i++) {

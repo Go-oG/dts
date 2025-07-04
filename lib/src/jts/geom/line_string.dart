@@ -7,10 +7,10 @@ import 'coordinate.dart';
 import 'coordinate_sequence.dart';
 import 'dimension.dart';
 import 'envelope.dart';
-import 'geom.dart';
-import 'geom_component_filter.dart';
-import 'geom_factory.dart';
-import 'geom_filter.dart';
+import 'geometry.dart';
+import 'geometry_component_filter.dart';
+import 'geometry_factory.dart';
+import 'geometry_filter.dart';
 import 'lineal.dart';
 import 'precision_model.dart';
 
@@ -20,11 +20,11 @@ class LineString extends BaseGeometry<LineString> implements Lineal {
   late CoordinateSequence points;
 
   LineString(Array<Coordinate>? points, PrecisionModel precisionModel, int srid)
-      : super(GeomFactory(pm: precisionModel, srid: srid)) {
+      : super(GeometryFactory(pm: precisionModel, srid: srid)) {
     init(factory.csFactory.create(points));
   }
 
-  LineString.of(CoordinateSequence? points, GeomFactory factory) : super(factory) {
+  LineString.of(CoordinateSequence? points, GeometryFactory factory) : super(factory) {
     init(points);
   }
 
@@ -112,8 +112,8 @@ class LineString extends BaseGeometry<LineString> implements Lineal {
   }
 
   @override
-  GeomType get geometryType {
-    return GeomType.lineString;
+  GeometryType get geometryType {
+    return GeometryType.lineString;
   }
 
   @override
@@ -186,12 +186,12 @@ class LineString extends BaseGeometry<LineString> implements Lineal {
   }
 
   @override
-  void apply3(GeomFilter filter) {
+  void apply3(GeometryFilter filter) {
     filter.filter(this);
   }
 
   @override
-  void apply4(GeomComponentFilter filter) {
+  void apply4(GeometryComponentFilter filter) {
     filter.filter(this);
   }
 

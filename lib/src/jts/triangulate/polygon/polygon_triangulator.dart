@@ -1,6 +1,6 @@
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
-import 'package:dts/src/jts/geom/geom_filter.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
+import 'package:dts/src/jts/geom/geometry_filter.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/triangulate/tri/tri.dart';
 
@@ -13,7 +13,7 @@ class PolygonTriangulator {
     return triangulator.getResult();
   }
 
-  late final GeomFactory geomFact;
+  late final GeometryFactory geomFact;
 
   final Geometry inputGeom;
 

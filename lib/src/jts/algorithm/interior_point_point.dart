@@ -1,6 +1,6 @@
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_collection.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_collection.dart';
 
 import '../geom/point.dart';
 
@@ -28,8 +28,8 @@ final class InteriorPointPoint {
 
     if (geom is Point) {
       _add2(geom.getCoordinate()!);
-    } else if (geom is GeomCollection) {
-      GeomCollection gc = (geom);
+    } else if (geom is GeometryCollection) {
+      GeometryCollection gc = (geom);
       for (int i = 0; i < gc.getNumGeometries(); i++) {
         _add(gc.getGeometryN(i));
       }

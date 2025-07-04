@@ -5,7 +5,7 @@ import 'package:d_util/d_util.dart';
 import '../../util/geometric_shape_factory.dart';
 import '../coordinate.dart';
 import '../envelope.dart';
-import '../geom.dart';
+import '../geometry.dart';
 import '../linear_ring.dart';
 
 class SineStarFactory extends GeometricShapeFactory {

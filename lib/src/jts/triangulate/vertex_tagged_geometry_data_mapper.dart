@@ -1,8 +1,8 @@
 import 'dart:collection';
 
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geom.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
 
 class VertexTaggedGeometryDataMapper {
   final Map<Coordinate, Object?> _coordDataMap = SplayTreeMap();

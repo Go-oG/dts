@@ -4,8 +4,8 @@ import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
-import 'package:dts/src/jts/geom/geom.dart';
-import 'package:dts/src/jts/geom/geom_factory.dart';
+import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/location.dart';
 import 'package:dts/src/jts/geom/polygonal.dart';
 import 'package:dts/src/jts/shape/geometric_shape_builder.dart';
@@ -15,7 +15,7 @@ class RandomPointsBuilder extends GeometricShapeBuilder {
 
   PointOnGeometryLocator? _extentLocator;
 
-  RandomPointsBuilder.empty() : super(GeomFactory());
+  RandomPointsBuilder.empty() : super(GeometryFactory());
 
   RandomPointsBuilder(super.geomFact);
 

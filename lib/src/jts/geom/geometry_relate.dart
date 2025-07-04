@@ -2,19 +2,19 @@ import 'package:dts/src/jts/operation/relate/relate_op.dart';
 import 'package:dts/src/jts/operation/relateng/relate_ng.dart';
 import 'package:dts/src/jts/operation/relateng/relate_predicate.dart';
 
-import 'geom.dart';
+import 'geometry.dart';
 import 'intersection_matrix.dart';
 
-enum GeomRelateImpl { ng, old }
+enum GeometryRelateImpl { ng, old }
 
 class GeomRelate {
-  static GeomRelateImpl _relateImpl = GeomRelateImpl.ng;
+  static GeometryRelateImpl _relateImpl = GeometryRelateImpl.ng;
 
   static bool get _isRelateNG {
-    return _relateImpl == GeomRelateImpl.ng;
+    return _relateImpl == GeometryRelateImpl.ng;
   }
 
-  static void setRelateImpl(GeomRelateImpl? relateImpl) {
+  static void setRelateImpl(GeometryRelateImpl? relateImpl) {
     if (relateImpl == null) {
       return;
     }
