@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -10,7 +10,7 @@ class NodingValidator {
 
   List<SegmentString> segStrings;
 
-  static final GeometryFactory _fact = GeometryFactory.empty();
+  static final GeometryFactory _fact = GeometryFactory();
 
   NodingValidator(this.segStrings);
 
@@ -34,7 +34,7 @@ class NodingValidator {
   }
 
   void checkCollapse(Coordinate p0, Coordinate p1, Coordinate p2) {
-    if (p0.equals(p2)) {
+    if (p0 == p2) {
       throw "found non-noded collapse at ${_fact.createLineString2([p0, p1, p2].toArray())}";
     }
   }
@@ -57,7 +57,8 @@ class NodingValidator {
     }
   }
 
-  void checkInteriorIntersections2(SegmentString e0, int segIndex0, SegmentString e1, int segIndex1) {
+  void checkInteriorIntersections2(
+      SegmentString e0, int segIndex0, SegmentString e1, int segIndex1) {
     if ((e0 == e1) && (segIndex0 == segIndex1)) return;
 
     Coordinate p00 = e0.getCoordinate(segIndex0);
@@ -66,7 +67,8 @@ class NodingValidator {
     Coordinate p11 = e1.getCoordinate(segIndex1 + 1);
     li.computeIntersection2(p00, p01, p10, p11);
     if (li.hasIntersection()) {
-      if ((li.isProper || hasInteriorIntersection(li, p00, p01)) || hasInteriorIntersection(li, p10, p11)) {
+      if ((li.isProper || hasInteriorIntersection(li, p00, p01)) ||
+          hasInteriorIntersection(li, p10, p11)) {
         throw "found non-noded intersection at $p00-$p01 and $p10-$p11";
       }
     }
@@ -75,7 +77,7 @@ class NodingValidator {
   bool hasInteriorIntersection(LineIntersector li, Coordinate p0, Coordinate p1) {
     for (int i = 0; i < li.getIntersectionNum(); i++) {
       Coordinate intPt = li.getIntersection(i);
-      if (!(intPt.equals(p0) || intPt.equals(p1))) return true;
+      if (!(intPt == p0 || intPt == p1)) return true;
     }
     return false;
   }
@@ -92,7 +94,7 @@ class NodingValidator {
     for (var ss in segStrings) {
       Array<Coordinate> pts = ss.getCoordinates();
       for (int j = 1; j < (pts.length - 1); j++) {
-        if (pts[j].equals(testPt)) {
+        if (pts[j] == testPt) {
           throw "found endpt/interior pt intersection at index $j :pt $testPt";
         }
       }

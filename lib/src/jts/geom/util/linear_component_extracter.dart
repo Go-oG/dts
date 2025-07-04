@@ -11,7 +11,8 @@ class LinearComponentExtracter implements GeometryComponentFilter {
     return lines;
   }
 
-  static List<LineString> getLines3(List<Geometry> geoms, List<LineString> lines, bool forceToLineString) {
+  static List<LineString> getLines3(
+      List<Geometry> geoms, List<LineString> lines, bool forceToLineString) {
     for (var g in geoms) {
       getLines6(g, lines, forceToLineString);
     }

@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_collection.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
@@ -10,7 +10,7 @@ class CoverageUnion {
       return null;
     }
     GeometryFactory geomFact = coverage[0].factory;
-    GeometryCollection geoms = geomFact.createGeometryCollection2(coverage);
+    GeometryCollection geoms = geomFact.createGeomCollection(coverage);
     return cu.CoverageUnionNG.union(geoms);
   }
 }

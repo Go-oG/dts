@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/point_locator.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
@@ -37,7 +37,7 @@ class FuzzyPointLocator {
     g.apply3(extracter);
     final linework = extracter.getLinework();
     Array<LineString> lines = GeometryFactory.toLineStringArray(linework);
-    return g.factory.createMultiLineString2(lines);
+    return g.factory.createMultiLineString(lines);
   }
 
   bool isWithinToleranceOfBoundary(Coordinate pt) {

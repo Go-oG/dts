@@ -9,7 +9,7 @@ import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/location.dart';
 import 'package:dts/src/jts/geom/point.dart';
 import 'package:dts/src/jts/geom/puntal.dart';
-import 'package:dts/src/jts/geom/util/geometry_combiner.dart';
+import 'package:dts/src/jts/geom/util/geom_combiner.dart';
 
 class PointGeometryUnion {
   static Geometry? union2(Puntal pointGeom, Geometry otherGeom) {
@@ -45,7 +45,7 @@ class PointGeometryUnion {
     if (coords.length == 1) {
       ptComp = geomFact.createPoint2(coords[0]);
     } else {
-      ptComp = geomFact.createMultiPoint5(coords);
+      ptComp = geomFact.createMultiPoint4(coords);
     }
     return GeometryCombiner.combine3(ptComp, _otherGeom);
   }

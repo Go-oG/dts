@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -160,7 +160,7 @@ class MinimumBoundingCircle {
         return;
       }
     }
-    Assert.shouldNeverReachHere2("Logic failure in Minimum Bounding Circle algorithm!");
+    Assert.shouldNeverReachHere("Logic failure in Minimum Bounding Circle algorithm!");
   }
 
   static Coordinate _lowestPoint(Array<Coordinate> pts) {
@@ -198,7 +198,8 @@ class MinimumBoundingCircle {
     return minAngPt;
   }
 
-  static Coordinate? _pointWithMinAngleWithSegment(Array<Coordinate> pts, Coordinate P, Coordinate Q) {
+  static Coordinate? _pointWithMinAngleWithSegment(
+      Array<Coordinate> pts, Coordinate P, Coordinate Q) {
     double minAng = double.maxFinite;
     Coordinate? minAngPt;
     for (int i = 0; i < pts.length; i++) {

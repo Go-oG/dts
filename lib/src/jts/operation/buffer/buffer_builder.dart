@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -80,9 +80,9 @@ class BufferBuilder {
     computeNodedEdges(bufferSegStrList, precisionModel, isNodingValidated);
     _graph = PGPlanarGraph(BufferNodeFactory());
     _graph.addEdges(_edgeList.getEdges());
-    List<BufferSubgraph> subgraphList = createSubgraphs(_graph);
+    List<BufferSubgraph> subgraphList = createSubGraphs(_graph);
     final polyBuilder = PolygonBuilder(geomFact);
-    buildSubgraphs(subgraphList, polyBuilder);
+    buildSubGraphs(subgraphList, polyBuilder);
     List<Geometry> resultPolyList = polyBuilder.getPolygons();
     if (resultPolyList.isEmpty) {
       return createEmptyResultGeometry();
@@ -103,7 +103,8 @@ class BufferBuilder {
     return noder;
   }
 
-  void computeNodedEdges(List<SegmentString> bufferSegStrList, PrecisionModel precisionModel, bool isNodingValidated) {
+  void computeNodedEdges(
+      List<SegmentString> bufferSegStrList, PrecisionModel precisionModel, bool isNodingValidated) {
     Noder noder = getNoder(precisionModel);
     noder.computeNodes(bufferSegStrList);
     final nodedSegStrings = noder.getNodedSubstrings()!;
@@ -142,7 +143,7 @@ class BufferBuilder {
     }
   }
 
-  List<BufferSubgraph> createSubgraphs(PGPlanarGraph graph) {
+  List<BufferSubgraph> createSubGraphs(PGPlanarGraph graph) {
     List<BufferSubgraph> subgraphList = [];
     for (var node in graph.getNodes()) {
       if (!node.isVisited) {
@@ -155,7 +156,7 @@ class BufferBuilder {
     return subgraphList.reversed.toList();
   }
 
-  void buildSubgraphs(List<BufferSubgraph> subgraphList, PolygonBuilder polyBuilder) {
+  void buildSubGraphs(List<BufferSubgraph> subgraphList, PolygonBuilder polyBuilder) {
     List<BufferSubgraph> processedGraphs = [];
     for (var subgraph in subgraphList) {
       Coordinate p = subgraph.getRightmostCoordinate()!;
@@ -169,7 +170,7 @@ class BufferBuilder {
   }
 
   static Geometry convertSegStrings(Iterator<SegmentString> it) {
-    GeometryFactory fact = GeometryFactory.empty();
+    GeometryFactory fact = GeometryFactory();
     List<LineString> lines = [];
     while (it.moveNext()) {
       SegmentString ss = it.current;

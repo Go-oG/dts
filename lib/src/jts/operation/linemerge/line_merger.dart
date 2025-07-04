@@ -19,7 +19,7 @@ class LineMerger {
 
   void add(Geometry geometry) {
     geometry.apply4(
-      GeometryComponentFilter2((com) {
+      GeomComponentFilter2((com) {
         if (com is LineString) {
           add3(com);
         }

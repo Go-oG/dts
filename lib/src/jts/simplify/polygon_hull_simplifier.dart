@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/area.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
@@ -132,7 +132,8 @@ class PolygonHullSimplifier {
     return area;
   }
 
-  RingHull createRingHull(LinearRing ring, bool isOuter, double areaTotal, RingHullIndex? hullIndex) {
+  RingHull createRingHull(
+      LinearRing ring, bool isOuter, double areaTotal, RingHullIndex? hullIndex) {
     RingHull ringHull = RingHull(ring, isOuter);
     if (_vertexNumFraction >= 0) {
       int targetVertexCount = Math.ceil(_vertexNumFraction * (ring.getNumPoints() - 1));

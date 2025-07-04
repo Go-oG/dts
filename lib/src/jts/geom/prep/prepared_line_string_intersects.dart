@@ -31,7 +31,7 @@ class PreparedLineStringIntersects {
     PointLocator locator = PointLocator.empty();
     final coords = ComponentCoordinateExtracter.getCoordinates(testGeom);
     for (var p in coords) {
-      if (locator.intersects(p, prepLine.getGeometry())) return true;
+      if (locator.intersects(p, prepLine.getGeom())) return true;
     }
     return false;
   }

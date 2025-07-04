@@ -60,7 +60,7 @@ class Corner implements Comparable<Corner> {
     Coordinate pp = _edge.getCoordinate(_prev);
     Coordinate p = _edge.getCoordinate(_index);
     Coordinate pn = _edge.getCoordinate(_next);
-    Envelope env = Envelope.fromCoordinate(pp, pn);
+    Envelope env = Envelope.of(pp, pn);
     env.expandToIncludeCoordinate(p);
     return env;
   }
@@ -110,7 +110,7 @@ class Corner implements Comparable<Corner> {
     Coordinate pp = _edge.getCoordinate(_prev);
     Coordinate p = _edge.getCoordinate(_index);
     Coordinate pn = _edge.getCoordinate(_next);
-    return GeometryFactory.empty()
+    return GeometryFactory()
         .createLineString2([_safeCoord(pp), _safeCoord(p), _safeCoord(pn)].toArray());
   }
 

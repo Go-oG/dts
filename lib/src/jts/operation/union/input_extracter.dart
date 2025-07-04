@@ -52,7 +52,7 @@ class InputExtracter implements GeometryFilter {
       case 2:
         return _polygons;
     }
-    Assert.shouldNeverReachHere2("Invalid dimension: $dim");
+    Assert.shouldNeverReachHere("Invalid dimension: $dim");
     return null;
   }
 
@@ -86,7 +86,7 @@ class InputExtracter implements GeometryFilter {
       points.add(geom);
       return;
     }
-    Assert.shouldNeverReachHere2("Unhandled geometry type: ${geom.geometryType}");
+    Assert.shouldNeverReachHere("Unhandled geometry type: ${geom.geometryType}");
   }
 
   void recordDimension(int dim) {

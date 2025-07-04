@@ -189,7 +189,7 @@ class RelateComputer {
   void labelIsolatedNodes() {
     for (var n in _nodes.iterator()) {
       Label label = n.getLabel()!;
-      Assert.isTrue2(label.getGeometryCount() > 0, "node with empty label found");
+      Assert.isTrue(label.getGeometryCount() > 0, "node with empty label found");
       if (n.isIsolated()) {
         if (label.isNull(0)) {
           labelIsolatedNode(n, 0);

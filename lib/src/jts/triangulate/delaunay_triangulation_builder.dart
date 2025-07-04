@@ -23,7 +23,7 @@ class DelaunayTriangulationBuilder {
   static CoordinateList unique(Array<Coordinate> coords) {
     Array<Coordinate> coordsCopy = CoordinateArrays.copyDeep(coords);
     coordsCopy.sort();
-    CoordinateList coordList = CoordinateList.of2(coordsCopy, false);
+    CoordinateList coordList = CoordinateList(coordsCopy, false);
     return coordList;
   }
 

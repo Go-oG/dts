@@ -71,7 +71,7 @@ class BoundaryOp {
     if (bdyPts.length == 1) {
       return geomFact.createPoint2(bdyPts[0]);
     }
-    return geomFact.createMultiPoint5(bdyPts);
+    return geomFact.createMultiPoint4(bdyPts);
   }
 
   Array<Coordinate> computeBoundaryCoordinates(MultiLineString mLine) {
@@ -116,6 +116,6 @@ class BoundaryOp {
         return geomFact.createMultiPoint();
       }
     }
-    return geomFact.createMultiPoint2([line.getStartPoint()!, line.getEndPoint()!].toArray());
+    return geomFact.createMultiPoint([line.getStartPoint()!, line.getEndPoint()!].toArray());
   }
 }

@@ -13,9 +13,9 @@ class TopologyPreservingSimplifier {
     final tss = TopologyPreservingSimplifier(geom);
     tss.setDistanceTolerance(distanceTolerance);
     return tss.getResultGeometry();
-    }
+  }
 
-     Geometry inputGeom;
+  Geometry inputGeom;
 
   final _lineSimplifier = TaggedLinesSimplifier();
 

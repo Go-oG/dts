@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -29,8 +29,7 @@ class ExtractLineByLocation {
 
   Geometry? reverse(Geometry linear) {
     if (linear is Lineal) return linear.reverse();
-
-    Assert.shouldNeverReachHere2("non-linear geometry encountered");
+    Assert.shouldNeverReachHere("non-linear geometry encountered");
     return null;
   }
 

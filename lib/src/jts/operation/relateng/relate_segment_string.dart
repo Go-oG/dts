@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/dimension.dart';
@@ -9,7 +9,8 @@ import 'node_section.dart';
 import 'relate_geometry.dart';
 
 class RelateSegmentString extends BasicSegmentString {
-  static RelateSegmentString createLine(Array<Coordinate> pts, bool isA, int elementId, RelateGeometry parent) {
+  static RelateSegmentString createLine(
+      Array<Coordinate> pts, bool isA, int elementId, RelateGeometry parent) {
     return createSegmentString(pts, isA, Dimension.L, elementId, -1, null, parent);
   }
 
@@ -72,10 +73,12 @@ class RelateSegmentString extends BasicSegmentString {
   }
 
   NodeSection createNodeSection(int segIndex, Coordinate intPt) {
-    bool isNodeAtVertex = intPt.equals2D(getCoordinate(segIndex)) || intPt.equals2D(getCoordinate(segIndex + 1));
+    bool isNodeAtVertex =
+        intPt.equals2D(getCoordinate(segIndex)) || intPt.equals2D(getCoordinate(segIndex + 1));
     Coordinate prev = prevVertex(segIndex, intPt)!;
     Coordinate next = nextVertex(segIndex, intPt)!;
-    return NodeSection(isA, _dimension, id, ringId, _parentPolygonal, isNodeAtVertex, prev, intPt, next);
+    return NodeSection(
+        isA, _dimension, id, ringId, _parentPolygonal, isNodeAtVertex, prev, intPt, next);
   }
 
   Coordinate? prevVertex(int segIndex, Coordinate pt) {

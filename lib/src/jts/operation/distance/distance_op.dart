@@ -276,13 +276,13 @@ class DistanceOp {
     Array<Coordinate> coord0 = line0.getCoordinates();
     Array<Coordinate> coord1 = line1.getCoordinates();
     for (int i = 0; i < (coord0.length - 1); i++) {
-      Envelope segEnv0 = Envelope.fromCoordinate(coord0[i], coord0[i + 1]);
+      Envelope segEnv0 = Envelope.of(coord0[i], coord0[i + 1]);
       if (segEnv0.distance(line1.getEnvelopeInternal()) > minDistance) {
         continue;
       }
 
       for (int j = 0; j < (coord1.length - 1); j++) {
-        Envelope segEnv1 = Envelope.fromCoordinate(coord1[j], coord1[j + 1]);
+        Envelope segEnv1 = Envelope.of(coord1[j], coord1[j + 1]);
         if (segEnv0.distance(segEnv1) > minDistance) {
           continue;
         }

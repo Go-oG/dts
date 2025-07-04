@@ -168,14 +168,14 @@ class BufferCurveSetBuilder {
 
   void addPolygonRingSide(
       Array<Coordinate> coord, double offsetDistance, int side, int cwLeftLoc, int cwRightLoc) {
-    if ((offsetDistance == 0.0) && (coord.length < LinearRing.MINIMUM_VALID_SIZE)) {
+    if ((offsetDistance == 0.0) && (coord.length < LinearRing.kMinValidSize)) {
       return;
     }
 
     int leftLoc = cwLeftLoc;
     int rightLoc = cwRightLoc;
     bool isCCW = isRingCCW(coord);
-    if ((coord.length >= LinearRing.MINIMUM_VALID_SIZE) && isCCW) {
+    if ((coord.length >= LinearRing.kMinValidSize) && isCCW) {
       leftLoc = cwRightLoc;
       rightLoc = cwLeftLoc;
       side = Position.opposite(side);

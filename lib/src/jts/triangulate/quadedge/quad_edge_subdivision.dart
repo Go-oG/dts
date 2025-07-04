@@ -55,8 +55,7 @@ class QuadEdgeSubdivision {
     _frameVertex[0] = Vertex((env.maxX + env.minX) / 2.0, env.maxY + frameSize);
     _frameVertex[1] = Vertex(env.minX - frameSize, env.minY - frameSize);
     _frameVertex[2] = Vertex(env.maxX + frameSize, env.minY - frameSize);
-    _frameEnv =
-        Envelope.fromCoordinate(_frameVertex[0].getCoordinate(), _frameVertex[1].getCoordinate());
+    _frameEnv = Envelope.of(_frameVertex[0].getCoordinate(), _frameVertex[1].getCoordinate());
     _frameEnv.expandToIncludeCoordinate(_frameVertex[2].getCoordinate());
   }
 
@@ -369,7 +368,7 @@ class QuadEdgeSubdivision {
       edges[i++] = geomFact
           .createLineString2([qe.orig().getCoordinate(), qe.dest().getCoordinate()].toArray());
     }
-    return geomFact.createMultiLineString2(edges);
+    return geomFact.createMultiLineString(edges);
   }
 
   Geometry getTriangles2(GeometryFactory geomFact) {
@@ -380,7 +379,7 @@ class QuadEdgeSubdivision {
       Array<Coordinate> triPt = it.current;
       tris[i++] = geomFact.createPolygon(geomFact.createLinearRings(triPt));
     }
-    return geomFact.createGeometryCollection2(tris);
+    return geomFact.createGeomCollection(tris);
   }
 
   Geometry getTriangles(bool includeFrame, GeometryFactory geomFact) {
@@ -391,12 +390,12 @@ class QuadEdgeSubdivision {
       Array<Coordinate> triPt = it.current;
       tris[i++] = geomFact.createPolygon(geomFact.createLinearRings(triPt));
     }
-    return geomFact.createGeometryCollection2(tris);
+    return geomFact.createGeomCollection(tris);
   }
 
   Geometry getVoronoiDiagram(GeometryFactory geomFact) {
     final vorCells = getVoronoiCellPolygons(geomFact);
-    return geomFact.createGeometryCollection2(GeometryFactory.toGeometryArray(vorCells)!);
+    return geomFact.createGeomCollection(GeometryFactory.toGeometryArray(vorCells)!);
   }
 
   List<Polygon> getVoronoiCellPolygons(GeometryFactory geomFact) {

@@ -21,8 +21,8 @@ class GeometryCollection<T extends BaseGeometry> extends BaseGeometry<GeometryCo
 
   GeometryCollectionDimension? _geomCollDim;
 
-  GeometryCollection.of(Array<T>? geometries, PrecisionModel precisionModel, int srid)
-      : this(geometries, GeometryFactory.from(precisionModel, srid));
+  GeometryCollection.of(Array<T>? geometries, PrecisionModel pm, int srid)
+      : this(geometries, GeometryFactory(pm: pm, srid: srid));
 
   GeometryCollection(Array<T>? geometries, GeometryFactory factory) : super(factory) {
     this.geometries = geometries ?? Array(0);

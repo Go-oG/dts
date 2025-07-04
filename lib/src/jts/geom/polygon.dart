@@ -17,11 +17,11 @@ class Polygon extends BaseGeometry<Polygon> implements Polygonal {
   late LinearRing shell;
   late Array<LinearRing> holes;
 
-  Polygon.of(LinearRing? shell, PrecisionModel precisionModel, int SRID)
-      : this.of2(shell, Array<LinearRing>(0), precisionModel, SRID);
+  Polygon.of(LinearRing? shell, PrecisionModel precisionModel, int srid)
+      : this.of2(shell, Array<LinearRing>(0), precisionModel, srid);
 
-  Polygon.of2(LinearRing? shell, Array<LinearRing>? holes, PrecisionModel precisionModel, int SRID)
-      : this(shell, holes, GeometryFactory.from(precisionModel, SRID));
+  Polygon.of2(LinearRing? shell, Array<LinearRing>? holes, PrecisionModel pm, int srid)
+      : this(shell, holes, GeometryFactory(pm: pm, srid: srid));
 
   Polygon(LinearRing? shell, Array<LinearRing>? holes, GeometryFactory factory) : super(factory) {
     this.shell = shell ?? factory.createLinearRing();
@@ -165,7 +165,7 @@ class Polygon extends BaseGeometry<Polygon> implements Polygonal {
     }
     if (rings.length <= 1) return factory.createLinearRing2(rings[0].getCoordinateSequence());
 
-    return factory.createMultiLineString2(rings);
+    return factory.createMultiLineString(rings);
   }
 
   @override

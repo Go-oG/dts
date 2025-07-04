@@ -39,7 +39,7 @@ class GeometryCombiner {
     }
     if (elems.isEmpty) {
       if (geomFactory != null) {
-        return geomFactory!.createGeometryCollection();
+        return geomFactory!.createGeomCollection();
       }
       return null;
     }

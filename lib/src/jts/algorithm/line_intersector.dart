@@ -1,25 +1,25 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/precision_model.dart';
 import 'package:dts/src/jts/math/math.dart';
 import 'package:dts/src/jts/util/assert.dart';
 
 abstract class LineIntersector {
-  static const int dontIntersect = 0;
-  static const int doIntersect = 1;
-  static const int collinear = 2;
+  static const int kDontIntersect = 0;
+  static const int kDoIntersect = 1;
+  static const int kCollinear = 2;
 
-  static const int noIntersection = 0;
-  static const int pointIntersection = 1;
-  static const int collinearIntersection = 2;
+  static const int kNoIntersection = 0;
+  static const int kPointIntersection = 1;
+  static const int kCollinearIntersection = 2;
 
   static double computeEdgeDistance(Coordinate p, Coordinate p0, Coordinate p1) {
     double dx = Math.abs(p1.x - p0.x);
     double dy = Math.abs(p1.y - p0.y);
     double dist = -1.0;
-    if (p.equals(p0)) {
+    if (p == (p0)) {
       dist = 0.0;
-    } else if (p.equals(p1)) {
+    } else if (p == (p1)) {
       if (dx > dy) {
         dist = dx;
       } else {
@@ -34,11 +34,11 @@ abstract class LineIntersector {
         dist = pdy;
       }
 
-      if ((dist == 0.0) && (!p.equals(p0))) {
+      if ((dist == 0.0) && p != p0) {
         dist = Math.maxD(pdx, pdy);
       }
     }
-    Assert.isTrue2(!((dist == 0.0) && (!p.equals(p0))), "Bad distance calculation");
+    Assert.isTrue(!((dist == 0.0) && p != p0), "Bad distance calculation");
     return dist;
   }
 
@@ -46,7 +46,7 @@ abstract class LineIntersector {
     double dx = p.x - p1.x;
     double dy = p.y - p1.y;
     double dist = MathUtil.hypot(dx, dy);
-    Assert.isTrue2(!((dist == 0.0) && (!p.equals(p1))), "Invalid distance calculation");
+    Assert.isTrue(!(dist == 0.0 && p != p1), "Invalid distance calculation");
     return dist;
   }
 
@@ -89,7 +89,7 @@ abstract class LineIntersector {
   void computeIntersection(Coordinate p, Coordinate p1, Coordinate p2);
 
   bool isCollinear() {
-    return result == collinearIntersection;
+    return result == kCollinearIntersection;
   }
 
   void computeIntersection2(Coordinate p1, Coordinate p2, Coordinate p3, Coordinate p4) {
@@ -107,7 +107,7 @@ abstract class LineIntersector {
   }
 
   bool hasIntersection() {
-    return result != noIntersection;
+    return result != kNoIntersection;
   }
 
   int getIntersectionNum() {
@@ -149,7 +149,8 @@ abstract class LineIntersector {
 
   bool isInteriorIntersection2(int inputLineIndex) {
     for (int i = 0; i < result; i++) {
-      if (!(intPt[i].equals2D(inputLines[inputLineIndex][0]) || intPt[i].equals2D(inputLines[inputLineIndex][1]))) {
+      if (!(intPt[i].equals2D(inputLines[inputLineIndex][0]) ||
+          intPt[i].equals2D(inputLines[inputLineIndex][1]))) {
         return true;
       }
     }
@@ -183,7 +184,8 @@ abstract class LineIntersector {
   }
 
   double getEdgeDistance(int segmentIndex, int intIndex) {
-    double dist = computeEdgeDistance(intPt[intIndex], inputLines[segmentIndex][0], inputLines[segmentIndex][1]);
+    double dist = computeEdgeDistance(
+        intPt[intIndex], inputLines[segmentIndex][0], inputLines[segmentIndex][1]);
     return dist;
   }
 }

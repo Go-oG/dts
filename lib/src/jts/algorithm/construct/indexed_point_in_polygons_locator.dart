@@ -28,7 +28,7 @@ class IndexedPointInPolygonsLocator with InitMixin implements PointOnGeometryLoc
   @override
   int locate(Coordinate p) {
     _init();
-    List<IndexedPointInAreaLocator> results = _index.query(Envelope.fromCoordinate(p));
+    List<IndexedPointInAreaLocator> results = _index.query(Envelope.of(p));
     for (var ptLocater in results) {
       int loc = ptLocater.locate(p);
       if (loc != Location.exterior) {

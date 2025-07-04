@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_collection.dart';
@@ -35,7 +35,7 @@ class RepeatedPointTester {
 
   bool hasRepeatedPoint(Array<Coordinate> coord) {
     for (int i = 1; i < coord.length; i++) {
-      if (coord[i - 1].equals(coord[i])) {
+      if (coord[i - 1] == coord[i]) {
         _repeatedCoord = coord[i];
         return true;
       }

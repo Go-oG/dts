@@ -15,12 +15,12 @@ import 'prepared_line_string_intersects.dart';
 import 'prepared_polygon_contains.dart';
 import 'prepared_polygon_predicate.dart';
 
-class PreparedGeometryFactory {
-  static PreparedGeometry prepare(Geometry geom) {
-    return PreparedGeometryFactory().create(geom);
+class PreparedGeomFactory {
+  static PreparedGeom prepare(Geometry geom) {
+    return PreparedGeomFactory().create(geom);
   }
 
-  PreparedGeometry create(Geometry geom) {
+  PreparedGeom create(Geometry geom) {
     if (geom is Polygon) {
       return PreparedPolygon(geom);
     }
@@ -30,12 +30,12 @@ class PreparedGeometryFactory {
     if (geom is Puntal) {
       return PreparedPoint(geom as Puntal);
     }
-    return BasicPreparedGeometry(geom);
+    return BasicPreparedGeom(geom);
   }
 }
 
-abstract interface class PreparedGeometry {
-  Geometry getGeometry();
+abstract interface class PreparedGeom {
+  Geometry getGeom();
 
   bool contains(Geometry geom);
 
@@ -58,16 +58,16 @@ abstract interface class PreparedGeometry {
   bool within(Geometry geom);
 }
 
-class BasicPreparedGeometry<T extends Geometry> implements PreparedGeometry {
+class BasicPreparedGeom<T extends Geometry> implements PreparedGeom {
   late final T _baseGeom;
   late final List<Coordinate> _representativePts;
 
-  BasicPreparedGeometry(this._baseGeom) {
+  BasicPreparedGeom(this._baseGeom) {
     _representativePts = ComponentCoordinateExtracter.getCoordinates(_baseGeom);
   }
 
   @override
-  T getGeometry() => _baseGeom;
+  T getGeom() => _baseGeom;
 
   List<Coordinate> getRepresentativePoints() {
     return _representativePts;
@@ -151,7 +151,7 @@ class BasicPreparedGeometry<T extends Geometry> implements PreparedGeometry {
   }
 }
 
-class PreparedPoint extends BasicPreparedGeometry {
+class PreparedPoint extends BasicPreparedGeom {
   PreparedPoint(Puntal point) : super(point as Geometry);
 
   @override
@@ -162,14 +162,14 @@ class PreparedPoint extends BasicPreparedGeometry {
   }
 }
 
-class PreparedLineString extends BasicPreparedGeometry {
+class PreparedLineString extends BasicPreparedGeom {
   FastSegmentSetIntersectionFinder? _segIntFinder;
 
   PreparedLineString(super._baseGeom);
 
   FastSegmentSetIntersectionFinder getIntersectionFinder() {
     _segIntFinder ??=
-        FastSegmentSetIntersectionFinder(SegmentStringUtil.extractSegmentStrings(getGeometry()));
+        FastSegmentSetIntersectionFinder(SegmentStringUtil.extractSegmentStrings(getGeom()));
     return _segIntFinder!;
   }
 
@@ -180,23 +180,23 @@ class PreparedLineString extends BasicPreparedGeometry {
   }
 }
 
-class PreparedPolygon extends BasicPreparedGeometry<Polygon> {
+class PreparedPolygon extends BasicPreparedGeom<Polygon> {
   late final bool _isRectangle;
   FastSegmentSetIntersectionFinder? segIntFinder;
   PointOnGeometryLocator? _pia;
 
   PreparedPolygon(super.baseGeom) {
-    _isRectangle = (getGeometry()).isRectangle();
+    _isRectangle = (getGeom()).isRectangle();
   }
 
   FastSegmentSetIntersectionFinder getIntersectionFinder() {
     segIntFinder ??=
-        FastSegmentSetIntersectionFinder(SegmentStringUtil.extractSegmentStrings(getGeometry()));
+        FastSegmentSetIntersectionFinder(SegmentStringUtil.extractSegmentStrings(getGeom()));
     return segIntFinder!;
   }
 
   PointOnGeometryLocator getPointLocator() {
-    _pia ??= IndexedPointInAreaLocator(getGeometry());
+    _pia ??= IndexedPointInAreaLocator(getGeom());
     return _pia!;
   }
 
@@ -205,7 +205,7 @@ class PreparedPolygon extends BasicPreparedGeometry<Polygon> {
     if (!envelopesIntersect(g)) return false;
 
     if (_isRectangle) {
-      return RectangleIntersects.intersects2(getGeometry(), g);
+      return RectangleIntersects.intersects2(getGeom(), g);
     }
     return PreparedPolygonIntersects.intersectsS(this, g);
   }
@@ -215,7 +215,7 @@ class PreparedPolygon extends BasicPreparedGeometry<Polygon> {
     if (!envelopeCovers(g)) return false;
 
     if (_isRectangle) {
-      return RectangleContains.containsS(getGeometry(), g);
+      return RectangleContains.containsS(getGeom(), g);
     }
     return PreparedPolygonContains.containsS(this, g);
   }

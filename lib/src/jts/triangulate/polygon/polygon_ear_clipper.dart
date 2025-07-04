@@ -11,7 +11,7 @@ import 'package:dts/src/jts/index/rtree/vertex_sequence_packed_rtree.dart';
 import 'package:dts/src/jts/triangulate/tri/tri.dart';
 
 class PolygonEarClipper {
-  static const int _NO_VERTEX_INDEX = -1;
+  static const int _kNoVertexIndex = -1;
 
   static List<Tri> triangulate(Array<Coordinate> polyShell) {
     PolygonEarClipper clipper = PolygonEarClipper(polyShell);
@@ -85,7 +85,7 @@ class PolygonEarClipper {
 
   bool isValidEar(int cornerIndex, Array<Coordinate> corner) {
     int intApexIndex = findIntersectingVertex(cornerIndex, corner);
-    if (intApexIndex == _NO_VERTEX_INDEX) return true;
+    if (intApexIndex == _kNoVertexIndex) return true;
 
     if (_vertex[intApexIndex].equals2D(corner[1])) {
       return isValidEarScan(cornerIndex, corner);
@@ -96,7 +96,7 @@ class PolygonEarClipper {
   int findIntersectingVertex(int cornerIndex, Array<Coordinate> corner) {
     Envelope cornerEnv = envelope(corner);
     Array<int> result = _vertexCoordIndex.query(cornerEnv);
-    int dupApexIndex = _NO_VERTEX_INDEX;
+    int dupApexIndex = _kNoVertexIndex;
     for (int i = 0; i < result.length; i++) {
       int vertIndex = result[i];
       if (((vertIndex == cornerIndex) || (vertIndex == (_vertex.length - 1))) ||
@@ -109,10 +109,10 @@ class PolygonEarClipper {
         continue;
       } else if (Triangle.intersects(corner[0], corner[1], corner[2], v)) return vertIndex;
     }
-    if (dupApexIndex != _NO_VERTEX_INDEX) {
+    if (dupApexIndex != _kNoVertexIndex) {
       return dupApexIndex;
     }
-    return _NO_VERTEX_INDEX;
+    return _kNoVertexIndex;
   }
 
   bool isValidEarScan(int cornerIndex, Array<Coordinate> corner) {
@@ -144,7 +144,7 @@ class PolygonEarClipper {
   }
 
   static Envelope envelope(Array<Coordinate> corner) {
-    Envelope cornerEnv = Envelope.fromCoordinate(corner[0], corner[1]);
+    Envelope cornerEnv = Envelope.of(corner[0], corner[1]);
     cornerEnv.expandToIncludeCoordinate(corner[2]);
     return cornerEnv;
   }
@@ -156,14 +156,14 @@ class PolygonEarClipper {
     }
     _vertexNext[_cornerIndex[0]] = _vertexNext[cornerApexIndex];
     _vertexCoordIndex.remove(cornerApexIndex);
-    _vertexNext[cornerApexIndex] = _NO_VERTEX_INDEX;
+    _vertexNext[cornerApexIndex] = _kNoVertexIndex;
     _vertexSize--;
     _cornerIndex[1] = nextIndex(_cornerIndex[0]);
     _cornerIndex[2] = nextIndex(_cornerIndex[1]);
   }
 
   bool isRemoved(int vertexIndex) {
-    return _NO_VERTEX_INDEX == _vertexNext[vertexIndex];
+    return _kNoVertexIndex == _vertexNext[vertexIndex];
   }
 
   void initCornerIndex() {
@@ -206,7 +206,7 @@ class PolygonEarClipper {
   }
 
   Polygon toGeometry() {
-    GeometryFactory fact = GeometryFactory.empty();
+    GeometryFactory fact = GeometryFactory();
     CoordinateList coordList = CoordinateList();
     int index = _vertexFirst;
     for (int i = 0; i < _vertexSize; i++) {

@@ -53,7 +53,7 @@ class GeometryEditor {
     if (geometry is LineString) {
       return operation.edit(geometry, _factory!);
     }
-    Assert.shouldNeverReachHere2("Unsupported Geometry class: ${geometry.runtimeType}");
+    Assert.shouldNeverReachHere("Unsupported Geometry class: ${geometry.runtimeType}");
     return null;
   }
 
@@ -92,15 +92,15 @@ class GeometryEditor {
       geometries.add(geometry);
     }
     if (collectionForType.runtimeType == MultiPoint) {
-      return _factory!.createMultiPoint2(geometries.cast<Point>().toArray());
+      return _factory!.createMultiPoint(geometries.cast<Point>().toArray());
     }
     if (collectionForType.runtimeType == MultiLineString) {
-      return _factory!.createMultiLineString2(geometries.cast<LineString>().toArray());
+      return _factory!.createMultiLineString(geometries.cast<LineString>().toArray());
     }
     if (collectionForType.runtimeType == MultiPolygon) {
       return _factory!.createMultiPolygon(geometries.cast<Polygon>().toArray());
     }
-    return _factory!.createGeometryCollection2(geometries.cast<Geometry>().toArray());
+    return _factory!.createGeomCollection(geometries.cast<Geometry>().toArray());
   }
 }
 

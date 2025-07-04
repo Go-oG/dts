@@ -17,7 +17,7 @@ class Tri {
     for (Tri tri in tris) {
       geoms[i++] = tri.toPolygon(geomFact);
     }
-    return geomFact.createGeometryCollection2(geoms);
+    return geomFact.createGeomCollection(geoms);
   }
 
   static double area<T extends Tri>(List<T> triList) {
@@ -194,8 +194,8 @@ class Tri {
     int indexNeighbor = tri.getIndex2(this);
     Coordinate n0 = tri.getCoordinate(indexNeighbor);
     Coordinate n1 = tri.getCoordinate(next(indexNeighbor));
-    Assert.isTrue2(e0.equals2D(n1), "Edge coord not equal");
-    Assert.isTrue2(e1.equals2D(n0), "Edge coord not equal");
+    Assert.isTrue(e0.equals2D(n1), "Edge coord not equal");
+    Assert.isTrue(e1.equals2D(n0), "Edge coord not equal");
     RobustLineIntersector li = RobustLineIntersector();
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
@@ -347,11 +347,10 @@ class Tri {
     return Triangle.area2(p0, p1, p2);
   }
 
-  double getLength() {
-    return Triangle.length2(p0, p1, p2);
-  }
-
-  double getLength2(int edgeIndex) {
+  double getLength([int? edgeIndex]) {
+    if (edgeIndex == null) {
+      return Triangle.length2(p0, p1, p2);
+    }
     return getCoordinate(edgeIndex).distance(getCoordinate(next(edgeIndex)));
   }
 

@@ -101,7 +101,7 @@ final class OverlayPoints {
   Map<Coordinate, Point> buildPointMap(Geometry geoms) {
     Map<Coordinate, Point> map = {};
     geoms.apply4(
-      GeometryComponentFilter2((geom) {
+      GeomComponentFilter2((geom) {
         if (geom is! Point) {
           return;
         }

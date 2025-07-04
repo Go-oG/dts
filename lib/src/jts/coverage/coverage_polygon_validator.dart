@@ -178,7 +178,7 @@ class CoveragePolygonValidator {
     } else if (lines.size == 1) {
       return lines.get(0);
     }
-    return geomFactory.createMultiLineString2(GeometryFactory.toLineStringArray(lines));
+    return geomFactory.createMultiLineString(GeometryFactory.toLineStringArray(lines));
   }
 }
 

@@ -1,5 +1,4 @@
-import 'package:collection/collection.dart';
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
 
@@ -29,7 +28,8 @@ class ConcaveHull {
     return concaveHullByLengthRatio2(geom, lengthRatio, false);
   }
 
-  static Geometry concaveHullByLengthRatio2(Geometry geom, double lengthRatio, bool isHolesAllowed) {
+  static Geometry concaveHullByLengthRatio2(
+      Geometry geom, double lengthRatio, bool isHolesAllowed) {
     ConcaveHull hull = ConcaveHull(geom);
     hull.setMaximumEdgeLengthRatio(lengthRatio);
     hull.setHolesAllowed(isHolesAllowed);

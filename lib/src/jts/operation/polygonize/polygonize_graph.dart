@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
@@ -113,8 +113,8 @@ class PolygonizeGraph extends PlanarGraph {
         intNodes.add(node);
       }
       de = de.next;
-      Assert.isTrue2(de != null, "found null DE in ring");
-      Assert.isTrue2((de == startDE) || (!de!.isInRing()), "found DE already in ring");
+      Assert.isTrue(de != null, "found null DE in ring");
+      Assert.isTrue(de == startDE || !de!.isInRing(), "found DE already in ring");
     } while (de != startDE);
     return intNodes;
   }

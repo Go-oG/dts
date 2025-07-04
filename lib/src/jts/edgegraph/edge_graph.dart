@@ -86,7 +86,7 @@ class EdgeGraphBuilder {
 
   void add(Geometry geometry) {
     geometry.apply4(
-      GeometryComponentFilter2((c) {
+      GeomComponentFilter2((c) {
         if (c is LineString) {
           _add(c);
         }
@@ -191,7 +191,7 @@ class HalfEdge {
   }
 
   bool equals(Coordinate p0, Coordinate p1) {
-    return _orig.equals2D(p0) && _sym._orig.equals(p1);
+    return _orig.equals2D(p0) && _sym._orig == p1;
   }
 
   void insert(HalfEdge eAdd) {

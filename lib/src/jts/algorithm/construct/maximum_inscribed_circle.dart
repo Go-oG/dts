@@ -173,7 +173,7 @@ class _Cell implements Comparable<_Cell> {
   }
 
   Envelope getEnvelope() {
-    return Envelope.fromLRTB(x - hSide, x + hSide, y - hSide, y + hSide);
+    return Envelope.fromLTRB(x - hSide, y - hSide, x + hSide, y + hSide);
   }
 
   @override

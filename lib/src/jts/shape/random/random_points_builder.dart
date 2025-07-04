@@ -15,7 +15,7 @@ class RandomPointsBuilder extends GeometricShapeBuilder {
 
   PointOnGeometryLocator? _extentLocator;
 
-  RandomPointsBuilder.empty() : super(GeometryFactory.empty());
+  RandomPointsBuilder.empty() : super(GeometryFactory());
 
   RandomPointsBuilder(super.geomFact);
 
@@ -39,7 +39,7 @@ class RandomPointsBuilder extends GeometricShapeBuilder {
       }
       pts[i++] = p;
     }
-    return geomFactory.createMultiPoint5(pts);
+    return geomFactory.createMultiPoint4(pts);
   }
 
   bool isInExtent(Coordinate p) {

@@ -168,7 +168,7 @@ class CoordinateArrays {
 
   static bool hasRepeatedPoints(Array<Coordinate> coord) {
     for (int i = 1; i < coord.length; i++) {
-      if (coord[i - 1].equals(coord[i])) {
+      if (coord[i - 1] == coord[i]) {
         return true;
       }
     }
@@ -181,7 +181,7 @@ class CoordinateArrays {
 
   static Array<Coordinate> removeRepeatedPoints(Array<Coordinate> coord) {
     if (!hasRepeatedPoints(coord)) return coord;
-    CoordinateList coordList = CoordinateList.of2(coord, false);
+    CoordinateList coordList = CoordinateList(coord, false);
     return coordList.toCoordinateArray();
   }
 
@@ -189,7 +189,7 @@ class CoordinateArrays {
     for (int i = 1; i < coord.length; i++) {
       if (!coord[i].isValid()) return true;
 
-      if (coord[i - 1].equals(coord[i])) {
+      if (coord[i - 1] == coord[i]) {
         return true;
       }
     }
@@ -249,7 +249,7 @@ class CoordinateArrays {
     if (coord1.length != coord2.length) return false;
 
     for (int i = 0; i < coord1.length; i++) {
-      if (!coord1[i].equals(coord2[i])) return false;
+      if (coord1[i] != coord2[i]) return false;
     }
     return true;
   }
@@ -312,7 +312,7 @@ class CoordinateArrays {
 
   static int indexOf(Coordinate coordinate, Array<Coordinate> coordinates) {
     for (int i = 0; i < coordinates.length; i++) {
-      if (coordinate.equals(coordinates[i])) {
+      if (coordinate == coordinates[i]) {
         return i;
       }
     }

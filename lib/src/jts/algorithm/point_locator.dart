@@ -109,7 +109,7 @@ class PointLocator {
     }
 
     CoordinateSequence seq = l.getCoordinateSequence();
-    if (p.equals(seq.getCoordinate(0)) || p.equals(seq.getCoordinate(seq.size() - 1))) {
+    if (p == seq.getCoordinate(0) || p == seq.getCoordinate(seq.size() - 1)) {
       int boundaryCount = (l.isClosed()) ? 2 : 1;
       int loc = (_boundaryRule.isInBoundary(boundaryCount)) ? Location.boundary : Location.interior;
       return loc;

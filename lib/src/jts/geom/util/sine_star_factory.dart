@@ -25,7 +25,7 @@ class SineStarFactory extends GeometricShapeFactory {
 
   double armLengthRatio = 0.5;
 
-  SineStarFactory() : super.empty();
+  SineStarFactory() : super();
 
   SineStarFactory.of(super.geomFact);
 

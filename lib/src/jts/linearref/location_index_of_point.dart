@@ -12,7 +12,8 @@ class LocationIndexOfPoint {
     return locater.indexOf(inputPt);
   }
 
-  static LinearLocation indexOfAfter2(Geometry linearGeom, Coordinate inputPt, LinearLocation minIndex) {
+  static LinearLocation indexOfAfter2(
+      Geometry linearGeom, Coordinate inputPt, LinearLocation minIndex) {
     LocationIndexOfPoint locater = LocationIndexOfPoint(linearGeom);
     return locater.indexOfAfter(inputPt, minIndex);
   }
@@ -36,7 +37,8 @@ class LocationIndexOfPoint {
     }
 
     LinearLocation closestAfter = indexOfFromStart(inputPt, minIndex);
-    Assert.isTrue2(closestAfter.compareTo(minIndex) >= 0, "computed location is before specified minimum location");
+    Assert.isTrue(closestAfter.compareTo(minIndex) >= 0,
+        "computed location is before specified minimum location");
     return closestAfter;
   }
 
@@ -56,7 +58,9 @@ class LocationIndexOfPoint {
         int candidateSegmentIndex = it.getVertexIndex();
         if (segDistance < minDistance) {
           if ((minIndex == null) ||
-              (minIndex.compareLocationValues(candidateComponentIndex, candidateSegmentIndex, segFrac) < 0)) {
+              (minIndex.compareLocationValues(
+                      candidateComponentIndex, candidateSegmentIndex, segFrac) <
+                  0)) {
             minComponentIndex = candidateComponentIndex;
             minSegmentIndex = candidateSegmentIndex;
             minFrac = segFrac;

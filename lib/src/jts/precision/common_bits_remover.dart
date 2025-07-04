@@ -11,17 +11,17 @@ class CommonBitsRemover {
 
   void add(Geometry geom) {
     geom.apply(_ccFilter);
-        _commonCoord = _ccFilter.getCommonCoordinate();
-    }
+    _commonCoord = _ccFilter.getCommonCoordinate();
+  }
 
-    Coordinate getCommonCoordinate() {
-        return _commonCoord;
-    }
+  Coordinate getCommonCoordinate() {
+    return _commonCoord;
+  }
 
-    Geometry removeCommonBits(Geometry geom) {
-        if ((_commonCoord.x == 0.0) && (_commonCoord.y == 0.0)) {
-          return geom;
-        }
+  Geometry removeCommonBits(Geometry geom) {
+    if ((_commonCoord.x == 0.0) && (_commonCoord.y == 0.0)) {
+      return geom;
+    }
 
     Coordinate invCoord = Coordinate.of(_commonCoord);
     invCoord.x = -invCoord.x;
@@ -29,15 +29,14 @@ class CommonBitsRemover {
     final trans = Translater(invCoord);
     geom.apply2(trans);
     geom.geometryChanged();
-        return geom;
-    }
+    return geom;
+  }
 
-    void addCommonBits(Geometry geom) {
-        Translater trans = Translater(_commonCoord);
-        geom.apply2(trans);
-        geom.geometryChanged();
-    }
-
+  void addCommonBits(Geometry geom) {
+    Translater trans = Translater(_commonCoord);
+    geom.apply2(trans);
+    geom.geometryChanged();
+  }
 }
 
 class Translater implements CoordinateSequenceFilter {

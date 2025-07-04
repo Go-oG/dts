@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
@@ -26,7 +26,8 @@ class NgLineBuilder {
 
   final List<LineString> _lines = [];
 
-  NgLineBuilder(InputGeometry inputGeom, this.graph, this._hasResultArea, this._opCode, this.geometryFactory) {
+  NgLineBuilder(InputGeometry inputGeom, this.graph, this._hasResultArea, this._opCode,
+      this.geometryFactory) {
     _inputAreaIndex = inputGeom.getAreaIndex();
   }
 

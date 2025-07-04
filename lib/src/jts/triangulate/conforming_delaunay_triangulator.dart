@@ -109,7 +109,7 @@ class ConformingDelaunayTriangulator {
   }
 
   void computeConvexHull() {
-    GeometryFactory fact = GeometryFactory.empty();
+    GeometryFactory fact = GeometryFactory();
     Array<Coordinate> coords = getPointArray();
     ConvexHull hull = ConvexHull(coords, fact);
     _convexHull = hull.getConvexHull();
@@ -250,7 +250,7 @@ class ConformingDelaunayTriangulator {
     Coordinate q = seg.getEnd();
     Coordinate midPt = Coordinate((p.x + q.x) / 2.0, (p.y + q.y) / 2.0);
     double segRadius = p.distance(midPt);
-    Envelope env = Envelope.fromCoordinate(midPt);
+    Envelope env = Envelope.of(midPt);
     env.expandBy(segRadius);
     List result = _kdt.query2(env);
 

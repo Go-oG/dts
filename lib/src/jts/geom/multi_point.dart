@@ -10,8 +10,8 @@ import 'precision_model.dart';
 import 'puntal.dart';
 
 class MultiPoint extends GeometryCollection<Point> implements Puntal {
-  MultiPoint.of(Array<Point>? points, PrecisionModel precisionModel, int SRID)
-      : this(points, GeometryFactory.from(precisionModel, SRID));
+  MultiPoint.of(Array<Point>? points, PrecisionModel pm, int SRID)
+      : this(points, GeometryFactory(pm: pm, srid: SRID));
 
   MultiPoint(super.points, super.factory);
 
@@ -37,7 +37,7 @@ class MultiPoint extends GeometryCollection<Point> implements Puntal {
 
   @override
   Geometry getBoundary() {
-    return factory.createGeometryCollection();
+    return factory.createGeomCollection();
   }
 
   @override

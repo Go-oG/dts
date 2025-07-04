@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
@@ -15,8 +15,8 @@ class OffsetSegmentString {
     this.precisionModel = precisionModel;
   }
 
-  void setMinimumVertexDistance(double minimimVertexDistance) {
-    _minimimVertexDistance = minimimVertexDistance;
+  void setMinimumVertexDistance(double minVertexDistance) {
+    _minimimVertexDistance = minVertexDistance;
   }
 
   void addPt(Coordinate pt) {
@@ -58,7 +58,7 @@ class OffsetSegmentString {
 
     Coordinate startPt = Coordinate.of(_ptList.first);
     Coordinate lastPt = _ptList.last;
-    if (startPt.equals(lastPt)) {
+    if (startPt == lastPt) {
       return;
     }
 
@@ -73,7 +73,7 @@ class OffsetSegmentString {
 
   @override
   String toString() {
-    GeometryFactory fact = GeometryFactory.empty();
+    GeometryFactory fact = GeometryFactory();
     LineString line = fact.createLineString2(getCoordinates());
     return line.toString();
   }

@@ -110,7 +110,7 @@ class PGPlanarGraph {
   Edge? findEdge(Coordinate p0, Coordinate p1) {
     for (var e in edges) {
       final eCoord = e.getCoordinates();
-      if (p0.equals(eCoord[0]) && p1.equals(eCoord[1])) return e;
+      if (p0 == eCoord[0] && p1 == eCoord[1]) return e;
     }
     return null;
   }
@@ -119,13 +119,14 @@ class PGPlanarGraph {
     for (var e in edges) {
       final eCoord = e.getCoordinates();
       if (matchInSameDirection(p0, p1, eCoord[0], eCoord[1])) return e;
-      if (matchInSameDirection(p0, p1, eCoord[eCoord.length - 1], eCoord[eCoord.length - 2])) return e;
+      if (matchInSameDirection(p0, p1, eCoord[eCoord.length - 1], eCoord[eCoord.length - 2]))
+        return e;
     }
     return null;
   }
 
   bool matchInSameDirection(Coordinate p0, Coordinate p1, Coordinate ep0, Coordinate ep1) {
-    if (!p0.equals(ep0)) return false;
+    if (p0 != ep0) return false;
 
     if ((Orientation.index(p0, p1, ep1) == Orientation.collinear) &&
         (Quadrant.quadrant2(p0, p1) == Quadrant.quadrant2(ep0, ep1))) {

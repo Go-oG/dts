@@ -79,6 +79,6 @@ class VoronoiDiagramBuilder {
         clipped.add(result);
       }
     }
-    return geom.factory.createGeometryCollection2(GeometryFactory.toGeometryArray(clipped)!);
+    return geom.factory.createGeomCollection(GeometryFactory.toGeometryArray(clipped)!);
   }
 }

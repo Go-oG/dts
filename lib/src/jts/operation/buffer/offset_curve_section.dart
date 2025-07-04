@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -9,14 +9,15 @@ class OffsetCurveSection implements Comparable<OffsetCurveSection> {
   static Geometry toGeometry(List<OffsetCurveSection> sections, GeometryFactory geomFactory) {
     if (sections.isEmpty) return geomFactory.createLineString();
 
-    if (sections.length == 1) return geomFactory.createLineString2(sections.get(0).getCoordinates());
+    if (sections.length == 1)
+      return geomFactory.createLineString2(sections.get(0).getCoordinates());
     sections.sort();
 
     Array<LineString> lines = Array(sections.length);
     for (int i = 0; i < sections.size; i++) {
       lines[i] = geomFactory.createLineString2(sections.get(i).getCoordinates());
     }
-    return geomFactory.createMultiLineString2(lines);
+    return geomFactory.createMultiLineString(lines);
   }
 
   static Geometry toLine(List<OffsetCurveSection> sections, GeometryFactory geomFactory) {
@@ -47,7 +48,8 @@ class OffsetCurveSection implements Comparable<OffsetCurveSection> {
     return geomFactory.createLineString2(pts.toCoordinateArray());
   }
 
-  static OffsetCurveSection create(Array<Coordinate> srcPts, int start, int end, double loc, double locLast) {
+  static OffsetCurveSection create(
+      Array<Coordinate> srcPts, int start, int end, double loc, double locLast) {
     int len = (end - start) + 1;
     if (end <= start) {
       len = (srcPts.length - start) + end;

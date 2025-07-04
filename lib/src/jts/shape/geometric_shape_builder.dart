@@ -5,7 +5,7 @@ import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 
 abstract class GeometricShapeBuilder {
-  Envelope? extent = Envelope.fromLRTB(0, 1, 0, 1);
+  Envelope? extent = Envelope.fromLTRB(0, 0, 1, 1);
   int numPts = 0;
 
   GeometryFactory geomFactory;
@@ -39,8 +39,8 @@ abstract class GeometricShapeBuilder {
   Envelope getSquareExtent() {
     double radius = getRadius();
     Coordinate centre = getCentre()!;
-    return Envelope.fromLRTB(
-        centre.x - radius, centre.x + radius, centre.y - radius, centre.y + radius);
+    return Envelope.fromLTRB(
+        centre.x - radius, centre.y - radius, centre.x + radius, centre.y + radius);
   }
 
   void setNumPoints(int numPts) {

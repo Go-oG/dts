@@ -117,7 +117,7 @@ class OffsetSegmentGenerator {
     computeOffsetSegment(_seg0, _side, distance, _offset0);
     _seg1.setCoordinates2(_s1, _s2);
     computeOffsetSegment(_seg1, _side, distance, _offset1);
-    if (_s1.equals(_s2)) {
+    if (_s1 == _s2) {
       return;
     }
 

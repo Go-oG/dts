@@ -173,7 +173,7 @@ class RingHull {
   }
 
   Polygon toGeometry() {
-    GeometryFactory fact = GeometryFactory.empty();
+    GeometryFactory fact = GeometryFactory();
     Array<Coordinate> coords = _vertexRing.getCoordinates();
     return fact.createPolygon(fact.createLinearRings(coords));
   }
@@ -211,7 +211,7 @@ class RingHullCorner implements Comparable<RingHullCorner> {
     Coordinate pp = ring.getCoordinate(prev);
     Coordinate p = ring.getCoordinate(index);
     Coordinate pn = ring.getCoordinate(next);
-    Envelope env = Envelope.fromCoordinate(pp, pn);
+    Envelope env = Envelope.of(pp, pn);
     env.expandToIncludeCoordinate(p);
     return env;
   }
@@ -231,7 +231,7 @@ class RingHullCorner implements Comparable<RingHullCorner> {
     Coordinate pp = ring.getCoordinate(prev);
     Coordinate p = ring.getCoordinate(index);
     Coordinate pn = ring.getCoordinate(next);
-    return GeometryFactory.empty()
+    return GeometryFactory()
         .createLineString2([safeCoord(pp), safeCoord(p), safeCoord(pn)].toArray());
   }
 

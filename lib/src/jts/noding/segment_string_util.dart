@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 
 import '../geom/coordinate.dart';
 import '../geom/geometry.dart';
@@ -45,7 +45,7 @@ class SegmentStringUtil {
       return lines[0];
     }
 
-    return geomFact.createMultiLineString2(lines);
+    return geomFact.createMultiLineString(lines);
   }
 
   static String toStringS(List<SegmentString> segStrings) {

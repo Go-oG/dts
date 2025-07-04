@@ -129,11 +129,11 @@ final class CGAlgorithms {
   }
 
   static double distanceLineLine(Coordinate A, Coordinate B, Coordinate C, Coordinate D) {
-    if (A.equals(B)) {
+    if (A == B) {
       return distancePointLine2(A, C, D);
     }
 
-    if (C.equals(D)) {
+    if (C == D) {
       return distancePointLine2(D, A, B);
     }
 

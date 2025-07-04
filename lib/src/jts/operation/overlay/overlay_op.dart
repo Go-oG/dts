@@ -163,9 +163,11 @@ class OverlayOp extends GeometryGraphOperation {
             if (depth.getDelta(i) == 0) {
               lbl.toLine(i);
             } else {
-              Assert.isTrue2(!depth.isNull3(i, Position.left), "depth of LEFT side has not been initialized");
+              Assert.isTrue(
+                  !depth.isNull3(i, Position.left), "depth of LEFT side has not been initialized");
               lbl.setLocation2(i, Position.left, depth.getLocation(i, Position.left));
-              Assert.isTrue2(!depth.isNull3(i, Position.right), "depth of RIGHT side has not been initialized");
+              Assert.isTrue(!depth.isNull3(i, Position.right),
+                  "depth of RIGHT side has not been initialized");
               lbl.setLocation2(i, Position.right, depth.getLocation(i, Position.right));
             }
           }
@@ -238,7 +240,8 @@ class OverlayOp extends GeometryGraphOperation {
       DirectedEdge de = it as DirectedEdge;
       Label label = de.getLabel()!;
       if ((label.isArea() && (!de.isInteriorAreaEdge())) &&
-          isResultOfOp2(label.getLocation2(0, Position.right), label.getLocation2(1, Position.right), opCode)) {
+          isResultOfOp2(label.getLocation2(0, Position.right),
+              label.getLocation2(1, Position.right), opCode)) {
         de.setInResult(true);
       }
     }
@@ -293,7 +296,8 @@ class OverlayOp extends GeometryGraphOperation {
     return geomFact.buildGeometry(geomList);
   }
 
-  static Geometry createEmptyResult(OverlayOpCode overlayOpCode, Geometry a, Geometry b, GeometryFactory geomFact) {
+  static Geometry createEmptyResult(
+      OverlayOpCode overlayOpCode, Geometry a, Geometry b, GeometryFactory geomFact) {
     int resultDim = resultDimension(overlayOpCode, a, b);
     return geomFact.createEmpty(resultDim);
   }

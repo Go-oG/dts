@@ -61,7 +61,7 @@ class HotPixelIndex {
   }
 
   void query(Coordinate p0, Coordinate p1, KdNodeVisitor visitor) {
-    Envelope queryEnv = Envelope.fromCoordinate(p0, p1);
+    Envelope queryEnv = Envelope.of(p0, p1);
     queryEnv.expandBy(1.0 / scaleFactor);
     _index.query3(queryEnv, visitor);
   }

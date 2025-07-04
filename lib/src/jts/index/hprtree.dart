@@ -277,10 +277,10 @@ class HPRtree<T> implements SpatialIndex<T> {
     Array<Envelope> bounds = Array(numNodes);
     for (int i = numNodes - 1; i >= 0; i--) {
       int boundIndex = 4 * i;
-      bounds[i] = Envelope.fromLRTB(
+      bounds[i] = Envelope.fromLTRB(
         nodeBounds[boundIndex],
-        nodeBounds[boundIndex + 2],
         nodeBounds[boundIndex + 1],
+        nodeBounds[boundIndex + 2],
         nodeBounds[boundIndex + 3],
       );
     }

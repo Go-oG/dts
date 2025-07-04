@@ -86,7 +86,7 @@ class PolygonBuilder {
         shellCount++;
       }
     }
-    Assert.isTrue2(shellCount <= 1, "found two shells in MinimalEdgeRing list");
+    Assert.isTrue(shellCount <= 1, "found two shells in MinimalEdgeRing list");
     return shell;
   }
 
@@ -129,7 +129,7 @@ class PolygonBuilder {
     for (var tryShell in shellList) {
       LinearRing tryShellRing = tryShell.getLinearRing()!;
       Envelope tryShellEnv = tryShellRing.getEnvelopeInternal();
-      if (tryShellEnv.equals(testEnv)) {
+      if (tryShellEnv == testEnv) {
         continue;
       }
 

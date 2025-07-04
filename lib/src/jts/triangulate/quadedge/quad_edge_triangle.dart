@@ -46,7 +46,7 @@ class QuadEdgeTriangle {
       v[2].getCoordinate(),
       v[0].getCoordinate()
     ].toArray();
-    GeometryFactory fact = GeometryFactory.empty();
+    GeometryFactory fact = GeometryFactory();
     LinearRing ring = fact.createLinearRings(ringPts);
     return fact.createPolygon(ring);
   }
@@ -58,7 +58,7 @@ class QuadEdgeTriangle {
       e[2].orig().getCoordinate(),
       e[0].orig().getCoordinate(),
     ].toArray();
-    GeometryFactory fact = GeometryFactory.empty();
+    GeometryFactory fact = GeometryFactory();
     LinearRing ring = fact.createLinearRings(ringPts);
     Polygon tri = fact.createPolygon(ring);
     return tri;

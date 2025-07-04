@@ -63,13 +63,13 @@ class Polygonizer {
   }
 
   Geometry getGeometry() {
-    _geomFactory ??= GeometryFactory.empty();
+    _geomFactory ??= GeometryFactory();
 
     polygonize();
     if (_extractOnlyPolygonal) {
       return _geomFactory!.buildGeometry(polyList!);
     }
-    return _geomFactory!.createGeometryCollection2(GeometryFactory.toGeometryArray(polyList!)!);
+    return _geomFactory!.createGeomCollection(GeometryFactory.toGeometryArray(polyList!)!);
   }
 
   List<LineString> getDangles() {

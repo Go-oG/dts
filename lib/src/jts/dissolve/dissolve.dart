@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/edgegraph/edge_graph.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
@@ -45,7 +45,7 @@ class LineDissolver {
 
   void add(Geometry geometry) {
     geometry.apply4(
-      GeometryComponentFilter2((e) {
+      GeomComponentFilter2((e) {
         if (e is LineString) {
           _add(e);
         }
@@ -63,7 +63,8 @@ class LineDissolver {
     CoordinateSequence seq = lineString.getCoordinateSequence();
     bool doneStart = false;
     for (int i = 1; i < seq.size(); i++) {
-      DissolveHalfEdge? e = ((_graph.addEdge(seq.getCoordinate(i - 1), seq.getCoordinate(i))) as DissolveHalfEdge?);
+      DissolveHalfEdge? e =
+          ((_graph.addEdge(seq.getCoordinate(i - 1), seq.getCoordinate(i))) as DissolveHalfEdge?);
       if (e == null) {
         continue;
       }

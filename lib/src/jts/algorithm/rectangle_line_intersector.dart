@@ -21,7 +21,7 @@ class RectangleLineIntersector {
   }
 
   bool intersects(Coordinate p0, Coordinate p1) {
-    Envelope segEnv = Envelope.fromCoordinate(p0, p1);
+    Envelope segEnv = Envelope.of(p0, p1);
     if (!_rectEnv.intersects(segEnv)) {
       return false;
     }

@@ -85,7 +85,7 @@ class UnaryUnionOp {
       union = PointGeometryUnion.union2(unionPoints as Puntal, unionLA);
     }
     if (union == null) {
-      return _geomFact!.createGeometryCollection();
+      return _geomFact!.createGeomCollection();
     }
 
     return union;

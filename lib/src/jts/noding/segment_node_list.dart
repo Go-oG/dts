@@ -1,6 +1,6 @@
 import 'dart:collection';
 
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 
 import '../geom/coordinate.dart';
@@ -28,7 +28,7 @@ class SegmentNodeList {
     final eiNew = SegmentNode(_edge, intPt, segmentIndex, _edge.getSegmentOctant(segmentIndex));
     final ei = nodeMap.get(eiNew);
     if (ei != null) {
-      Assert.isTrue2(ei.coord.equals2D(intPt), "Found equal nodes with different coordinates");
+      Assert.isTrue(ei.coord.equals2D(intPt), "Found equal nodes with different coordinates");
       return ei;
     }
     nodeMap[eiNew] = eiNew;

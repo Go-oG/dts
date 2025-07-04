@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/distance.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
@@ -15,7 +15,8 @@ class LineStringSnapper {
 
   bool _isClosed = false;
 
-  LineStringSnapper.of(LineString srcLine, double snapTolerance) : this(srcLine.getCoordinates(), snapTolerance);
+  LineStringSnapper.of(LineString srcLine, double snapTolerance)
+      : this(srcLine.getCoordinates(), snapTolerance);
 
   LineStringSnapper(this._srcPts, this._snapTolerance) {
     _isClosed = isClosed(_srcPts);
@@ -33,7 +34,7 @@ class LineStringSnapper {
   }
 
   Array<Coordinate> snapTo(Array<Coordinate> snapPts) {
-    CoordinateList coordList = CoordinateList.of(_srcPts);
+    CoordinateList coordList = CoordinateList(_srcPts);
     snapVertices(coordList, snapPts);
     snapSegments(coordList, snapPts);
     Array<Coordinate> newPts = coordList.toCoordinateArray();

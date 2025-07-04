@@ -83,7 +83,7 @@ class OPolygonBuilder {
         shellCount++;
       }
     }
-    Assert.isTrue2(shellCount <= 1, "found two shells in MinimalEdgeRing list");
+    Assert.isTrue(shellCount <= 1, "found two shells in MinimalEdgeRing list");
     return shell;
   }
 
@@ -127,7 +127,7 @@ class OPolygonBuilder {
     for (var tryShell in shellList) {
       LinearRing tryShellRing = tryShell.getLinearRing()!;
       Envelope tryShellEnv = tryShellRing.getEnvelopeInternal();
-      if (tryShellEnv.equals(testEnv)) continue;
+      if (tryShellEnv == testEnv) continue;
 
       if (!tryShellEnv.contains(testEnv)) continue;
 

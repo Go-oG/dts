@@ -137,13 +137,6 @@ class Vector3D {
     return Coordinate(v.x / len, v.y / len, v.z / len);
   }
 
-  bool equals(Object o) {
-    if (o is! Vector3D) {
-      return false;
-    }
-    return ((x == o.x) && (y == o.y)) && (_z == o._z);
-  }
-
   @override
   int get hashCode {
     int result = 17;
@@ -155,7 +148,10 @@ class Vector3D {
 
   @override
   bool operator ==(Object other) {
-    return equals(other);
+    if (other is! Vector3D) {
+      return false;
+    }
+    return ((x == other.x) && (y == other.y)) && (_z == other._z);
   }
 }
 
@@ -326,13 +322,6 @@ class Vector2D {
     return Vector2D.of(this);
   }
 
-  bool equals(Object o) {
-    if (o is! Vector2D) {
-      return false;
-    }
-    return (x == o.x) && (y == o.y);
-  }
-
   @override
   int get hashCode {
     int result = 17;
@@ -343,28 +332,25 @@ class Vector2D {
 
   @override
   bool operator ==(Object other) {
-    return equals(other);
+    if (other is! Vector2D) {
+      return false;
+    }
+    return (x == other.x) && (y == other.y);
   }
 }
 
 final class DD implements Comparable<DD> {
-  static final DD PI = DD(3.141592653589793, 1.2246467991473532E-16);
-
-  static final DD TWO_PI = DD(6.283185307179586, 2.4492935982947064E-16);
-
-  static final DD PI_2 = DD(1.5707963267948966, 6.123233995736766E-17);
-
-  static final DD E = DD(2.718281828459045, 1.4456468917292502E-16);
-
-  static final DD NaN = DD(double.nan, double.nan);
-
-  static const double EPS = 1.23259516440783E-32;
+  static final DD kPi = DD(3.141592653589793, 1.2246467991473532E-16);
+  static final DD kTwoPi = DD(6.283185307179586, 2.4492935982947064E-16);
+  static final DD kPi2 = DD(1.5707963267948966, 6.123233995736766E-17);
+  static final DD kE = DD(2.718281828459045, 1.4456468917292502E-16);
+  static final DD kNaN = DD(double.nan, double.nan);
+  static const double kEPS = 1.23259516440783E-32;
+  static const double _kSplit = 1.34217729E8;
 
   static DD createNaN() {
     return DD(double.nan, double.nan);
   }
-
-  static const double _SPLIT = 1.34217729E8;
 
   double _hi = 0.0;
 
@@ -523,9 +509,9 @@ final class DD implements Comparable<DD> {
     double ty;
     double C;
     double c;
-    C = _SPLIT * _hi;
+    C = _kSplit * _hi;
     hx = C - _hi;
-    c = _SPLIT * yhi;
+    c = _kSplit * yhi;
     hx = C - hx;
     tx = _hi - hx;
     hy = c - yhi;
@@ -551,9 +537,9 @@ final class DD implements Comparable<DD> {
     double U;
     double u;
     C = _hi / y._hi;
-    c = _SPLIT * C;
+    c = _kSplit * C;
     hc = c - C;
-    u = _SPLIT * y._hi;
+    u = _kSplit * y._hi;
     hc = c - hc;
     tc = C - hc;
     hy = u - y._hi;
@@ -592,9 +578,9 @@ final class DD implements Comparable<DD> {
     double U;
     double u;
     C = _hi / yhi;
-    c = _SPLIT * C;
+    c = _kSplit * C;
     hc = c - C;
-    u = _SPLIT * yhi;
+    u = _kSplit * yhi;
     hc = c - hc;
     tc = C - hc;
     hy = u - yhi;
@@ -619,9 +605,9 @@ final class DD implements Comparable<DD> {
     double U;
     double u;
     C = 1.0 / _hi;
-    c = _SPLIT * C;
+    c = _kSplit * C;
     hc = c - C;
-    u = _SPLIT * _hi;
+    u = _kSplit * _hi;
     hc = c - hc;
     tc = C - hc;
     hy = u - _hi;
@@ -636,7 +622,7 @@ final class DD implements Comparable<DD> {
   }
 
   DD floor() {
-    if (isNaN()) return NaN;
+    if (isNaN()) return kNaN;
 
     double fhi = Math.floor(_hi).toDouble();
     double flo = 0.0;
@@ -647,7 +633,7 @@ final class DD implements Comparable<DD> {
   }
 
   DD ceil() {
-    if (isNaN()) return NaN;
+    if (isNaN()) return kNaN;
 
     double fhi = _hi.ceilToDouble();
     double flo = 0.0;
@@ -677,7 +663,7 @@ final class DD implements Comparable<DD> {
   }
 
   DD trunc() {
-    if (isNaN()) return NaN;
+    if (isNaN()) return kNaN;
 
     if (isPositive()) {
       return floor();
@@ -687,7 +673,7 @@ final class DD implements Comparable<DD> {
   }
 
   DD abs() {
-    if (isNaN()) return NaN;
+    if (isNaN()) return kNaN;
 
     if (isNegative()) return negate();
 
@@ -710,7 +696,7 @@ final class DD implements Comparable<DD> {
     if (isZero()) return DD.valueOf(0.0);
 
     if (isNegative()) {
-      return NaN;
+      return kNaN;
     }
     double x = 1.0 / Math.sqrt(_hi);
     double ax = _hi * x;

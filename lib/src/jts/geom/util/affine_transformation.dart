@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 
 import '../../math/math.dart';
 import '../coordinate.dart';
@@ -32,7 +32,8 @@ class AffineTransformation implements CoordinateSequenceFilter {
     return rotationInstance4(Math.sin(theta), Math.cos(theta), x, y);
   }
 
-  static AffineTransformation rotationInstance4(double sinTheta, double cosTheta, double x, double y) {
+  static AffineTransformation rotationInstance4(
+      double sinTheta, double cosTheta, double x, double y) {
     AffineTransformation trans = AffineTransformation();
     trans.setToRotation4(sinTheta, cosTheta, x, y);
     return trans;
@@ -118,7 +119,8 @@ class AffineTransformation implements CoordinateSequenceFilter {
     return this;
   }
 
-  AffineTransformation setTransformation2(double m00, double m01, double m02, double m10, double m11, double m12) {
+  AffineTransformation setTransformation2(
+      double m00, double m01, double m02, double m10, double m11, double m12) {
     _m00 = m00;
     _m01 = m01;
     _m02 = m02;
@@ -394,21 +396,8 @@ class AffineTransformation implements CoordinateSequenceFilter {
   }
 
   bool isIdentity() {
-    return (((((_m00 == 1) && (_m01 == 0)) && (_m02 == 0)) && (_m10 == 0)) && (_m11 == 1)) && (_m12 == 0);
-  }
-
-  bool equals(Object? obj) {
-    if (obj == null) {
-      return false;
-    }
-
-    if (obj is! AffineTransformation) {
-      return false;
-    }
-
-    return (((((_m00 == obj._m00) && (_m01 == obj._m01)) && (_m02 == obj._m02)) && (_m10 == obj._m10)) &&
-            (_m11 == obj._m11)) &&
-        (_m12 == obj._m12);
+    return (((((_m00 == 1) && (_m01 == 0)) && (_m02 == 0)) && (_m10 == 0)) && (_m11 == 1)) &&
+        (_m12 == 0);
   }
 
   @override
@@ -437,6 +426,15 @@ class AffineTransformation implements CoordinateSequenceFilter {
 
   @override
   bool operator ==(Object other) {
-    return equals(other);
+    if (other is! AffineTransformation) {
+      return false;
+    }
+
+    return _m00 == other._m00 &&
+        _m01 == other._m01 &&
+        _m02 == other._m02 &&
+        _m10 == other._m10 &&
+        _m11 == other._m11 &&
+        _m12 == other._m12;
   }
 }

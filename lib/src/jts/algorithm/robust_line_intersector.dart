@@ -14,32 +14,32 @@ class RobustLineIntersector extends LineIntersector {
     if (Envelope.intersects3(p1, p2, p)) {
       if ((Orientation.index(p1, p2, p) == 0) && (Orientation.index(p2, p1, p) == 0)) {
         isProper = true;
-        if (p.equals(p1) || p.equals(p2)) {
+        if (p == p1 || p == p2) {
           isProper = false;
         }
-        result = LineIntersector.pointIntersection;
+        result = LineIntersector.kPointIntersection;
         return;
       }
     }
-    result = LineIntersector.noIntersection;
+    result = LineIntersector.kNoIntersection;
   }
 
   @override
   int computeIntersect(Coordinate p1, Coordinate p2, Coordinate q1, Coordinate q2) {
     isProper = false;
     if (!Envelope.intersects4(p1, p2, q1, q2)) {
-      return LineIntersector.noIntersection;
+      return LineIntersector.kNoIntersection;
     }
 
     int Pq1 = Orientation.index(p1, p2, q1);
     int Pq2 = Orientation.index(p1, p2, q2);
     if (((Pq1 > 0) && (Pq2 > 0)) || ((Pq1 < 0) && (Pq2 < 0))) {
-      return LineIntersector.noIntersection;
+      return LineIntersector.kNoIntersection;
     }
     int Qp1 = Orientation.index(q1, q2, p1);
     int Qp2 = Orientation.index(q1, q2, p2);
     if (((Qp1 > 0) && (Qp2 > 0)) || ((Qp1 < 0) && (Qp2 < 0))) {
-      return LineIntersector.noIntersection;
+      return LineIntersector.kNoIntersection;
     }
     bool collinear = (((Pq1 == 0) && (Pq2 == 0)) && (Qp1 == 0)) && (Qp2 == 0);
     if (collinear) {
@@ -80,7 +80,7 @@ class RobustLineIntersector extends LineIntersector {
       z = _zInterpolate2(p, p1, p2, q1, q2);
     }
     intPt[0] = _copyWithZ(p!, z);
-    return LineIntersector.pointIntersection;
+    return LineIntersector.kPointIntersection;
   }
 
   int _computeCollinearIntersection(Coordinate p1, Coordinate p2, Coordinate q1, Coordinate q2) {
@@ -91,42 +91,42 @@ class RobustLineIntersector extends LineIntersector {
     if (q1inP && q2inP) {
       intPt[0] = _copyWithZInterpolate(q1, p1, p2);
       intPt[1] = _copyWithZInterpolate(q2, p1, p2);
-      return LineIntersector.collinearIntersection;
+      return LineIntersector.kCollinearIntersection;
     }
     if (p1inQ && p2inQ) {
       intPt[0] = _copyWithZInterpolate(p1, q1, q2);
       intPt[1] = _copyWithZInterpolate(p2, q1, q2);
-      return LineIntersector.collinearIntersection;
+      return LineIntersector.kCollinearIntersection;
     }
     if (q1inP && p1inQ) {
       intPt[0] = _copyWithZInterpolate(q1, p1, p2);
       intPt[1] = _copyWithZInterpolate(p1, q1, q2);
-      return (q1.equals(p1) && (!q2inP)) && (!p2inQ)
-          ? LineIntersector.pointIntersection
-          : LineIntersector.collinearIntersection;
+      return (q1 == p1 && !q2inP) && (!p2inQ)
+          ? LineIntersector.kPointIntersection
+          : LineIntersector.kCollinearIntersection;
     }
     if (q1inP && p2inQ) {
       intPt[0] = _copyWithZInterpolate(q1, p1, p2);
       intPt[1] = _copyWithZInterpolate(p2, q1, q2);
-      return (q1.equals(p2) && (!q2inP)) && (!p1inQ)
-          ? LineIntersector.pointIntersection
-          : LineIntersector.collinearIntersection;
+      return (q1 == p2 && !q2inP) && (!p1inQ)
+          ? LineIntersector.kPointIntersection
+          : LineIntersector.kCollinearIntersection;
     }
     if (q2inP && p1inQ) {
       intPt[0] = _copyWithZInterpolate(q2, p1, p2);
       intPt[1] = _copyWithZInterpolate(p1, q1, q2);
-      return (q2.equals(p1) && (!q1inP)) && (!p2inQ)
-          ? LineIntersector.pointIntersection
-          : LineIntersector.collinearIntersection;
+      return (q2 == p1 && (!q1inP)) && (!p2inQ)
+          ? LineIntersector.kPointIntersection
+          : LineIntersector.kCollinearIntersection;
     }
     if (q2inP && p2inQ) {
       intPt[0] = _copyWithZInterpolate(q2, p1, p2);
       intPt[1] = _copyWithZInterpolate(p2, q1, q2);
-      return (q2.equals(p2) && (!q1inP)) && (!p1inQ)
-          ? LineIntersector.pointIntersection
-          : LineIntersector.collinearIntersection;
+      return (q2 == p2 && (!q1inP)) && (!p1inQ)
+          ? LineIntersector.kPointIntersection
+          : LineIntersector.kCollinearIntersection;
     }
-    return LineIntersector.noIntersection;
+    return LineIntersector.kNoIntersection;
   }
 
   static Coordinate _copyWithZInterpolate(Coordinate p, Coordinate p1, Coordinate p2) {
@@ -163,8 +163,8 @@ class RobustLineIntersector extends LineIntersector {
   }
 
   bool _isInSegmentEnvelopes(Coordinate intPt) {
-    Envelope env0 = Envelope.fromCoordinate(inputLines[0][0], inputLines[0][1]);
-    Envelope env1 = Envelope.fromCoordinate(inputLines[1][0], inputLines[1][1]);
+    Envelope env0 = Envelope.of(inputLines[0][0], inputLines[0][1]);
+    Envelope env1 = Envelope.of(inputLines[1][0], inputLines[1][1]);
     return env0.containsCoordinate(intPt) && env1.containsCoordinate(intPt);
   }
 

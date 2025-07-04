@@ -7,7 +7,7 @@ import 'intersection_matrix.dart';
 
 enum GeometryRelateImpl { ng, old }
 
-class GeometryRelate {
+class GeomRelate {
   static GeometryRelateImpl _relateImpl = GeometryRelateImpl.ng;
 
   static bool get _isRelateNG {
@@ -98,7 +98,7 @@ class GeometryRelate {
     if (_isRelateNG) {
       return RelateNG.relate4(a, b, RelatePredicate.equalsTopo());
     }
-    if (!a.getEnvelopeInternal().equals(b.getEnvelopeInternal())) return false;
+    if (a.getEnvelopeInternal() != (b.getEnvelopeInternal())) return false;
 
     return RelateOp.relate(a, b).isEquals(a.getDimension(), b.getDimension());
   }

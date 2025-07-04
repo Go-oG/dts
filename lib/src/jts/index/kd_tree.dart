@@ -207,7 +207,7 @@ class BestMatchVisitor implements KdNodeVisitor {
   BestMatchVisitor(this.p, this.tolerance);
 
   Envelope queryEnvelope() {
-    Envelope queryEnv = Envelope.fromCoordinate(p);
+    Envelope queryEnv = Envelope.of(p);
     queryEnv.expandBy(tolerance);
     return queryEnv;
   }

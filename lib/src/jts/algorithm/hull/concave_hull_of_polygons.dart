@@ -166,7 +166,7 @@ class ConcaveHullOfPolygons {
           continue;
         }
 
-        double len = tri.getLength2(i);
+        double len = tri.getLength(i);
         if (len > maxEdgeLen) {
           maxEdgeLen = len;
         }
@@ -267,7 +267,7 @@ class ConcaveHullOfPolygons {
     }
 
     for (int i = 0; i < 3; i++) {
-      if (tri.hasAdjacent2(i) && (tri.getLength2(i) > _maxEdgeLength)) {
+      if (tri.hasAdjacent2(i) && (tri.getLength(i) > _maxEdgeLength)) {
         return true;
       }
     }
@@ -290,7 +290,7 @@ class ConcaveHullOfPolygons {
 
     if (_borderEdgeMap.containsKey(tri)) {
       int borderEdgeIndex = _borderEdgeMap.get(tri)!;
-      double edgeLen = tri.getLength2(borderEdgeIndex);
+      double edgeLen = tri.getLength(borderEdgeIndex);
       if (edgeLen > _maxEdgeLength) {
         return true;
       }
@@ -349,7 +349,7 @@ class ConcaveHullOfPolygons {
   }
 
   static Envelope _envelope(Tri tri) {
-    Envelope env = Envelope.fromCoordinate(tri.getCoordinate(0), tri.getCoordinate(1));
+    Envelope env = Envelope.of(tri.getCoordinate(0), tri.getCoordinate(1));
     env.expandToIncludeCoordinate(tri.getCoordinate(2));
     return env;
   }
@@ -368,7 +368,7 @@ class ConcaveHullOfPolygons {
       return _inputPolygons.copy();
     }
     Array<Geometry> geoms = [fillGeometry, _inputPolygons].toArray();
-    GeometryCollection geomColl = geomFactory.createGeometryCollection2(geoms);
+    GeometryCollection geomColl = geomFactory.createGeomCollection(geoms);
     Geometry hull = CoverageUnionNG.union(geomColl);
     return hull;
   }

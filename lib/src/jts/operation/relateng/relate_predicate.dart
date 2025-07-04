@@ -327,7 +327,7 @@ class _EqualsTopo extends IMPredicate {
   @override
   void init2(Envelope envA, Envelope envB) {
     setValueIf(true, envA.isNull && envB.isNull);
-    require(envA.equals(envB));
+    require(envA == envB);
   }
 
   @override

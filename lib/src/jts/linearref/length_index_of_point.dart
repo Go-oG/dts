@@ -31,7 +31,7 @@ class LengthIndexOfPoint {
     if (endIndex < minIndex) return endIndex;
 
     double closestAfter = indexOfFromStart(inputPt, minIndex);
-    Assert.isTrue2(closestAfter >= minIndex, "computed index is before specified minimum index");
+    Assert.isTrue(closestAfter >= minIndex, "computed index is before specified minimum index");
     return closestAfter;
   }
 

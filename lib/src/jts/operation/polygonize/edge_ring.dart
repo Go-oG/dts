@@ -34,8 +34,8 @@ class EdgeRingO {
     do {
       edges.add(de!);
       de = de.next;
-      Assert.isTrue2(de != null, "found null DE in ring");
-      Assert.isTrue2((de == startDE) || (!de!.isInRing()), "found DE already in ring");
+      Assert.isTrue(de != null, "found null DE in ring");
+      Assert.isTrue(de == startDE || !de!.isInRing(), "found DE already in ring");
     } while (de != startDE);
     return edges;
   }
@@ -72,8 +72,8 @@ class EdgeRingO {
       add(de!);
       de.setRing(this);
       de = de.next;
-      Assert.isTrue2(de != null, "found null DE in ring");
-      Assert.isTrue2((de == startDE) || (!de!.isInRing()), "found DE already in ring");
+      Assert.isTrue(de != null, "found null DE in ring");
+      Assert.isTrue((de == startDE) || (!de!.isInRing()), "found DE already in ring");
     } while (de != startDE);
   }
 

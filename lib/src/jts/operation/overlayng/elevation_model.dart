@@ -160,14 +160,14 @@ class ElevationCell {
 
 class _CoordinateSequenceFilter implements CoordinateSequenceFilter {
   final ElevationModel parent;
-  bool _hasZ = true;
+  bool hasZ = true;
 
   _CoordinateSequenceFilter(this.parent);
 
   @override
   void filter(CoordinateSequence seq, int i) {
     if (!seq.hasZ()) {
-      _hasZ = false;
+      hasZ = false;
       return;
     }
     double z = seq.getOrdinate(i, Coordinate.kZ);
@@ -176,7 +176,7 @@ class _CoordinateSequenceFilter implements CoordinateSequenceFilter {
 
   @override
   bool isDone() {
-    return !_hasZ;
+    return !hasZ;
   }
 
   @override

@@ -20,7 +20,7 @@ class LineString extends BaseGeometry<LineString> implements Lineal {
   late CoordinateSequence points;
 
   LineString(Array<Coordinate>? points, PrecisionModel precisionModel, int srid)
-      : super(GeometryFactory.from(precisionModel, srid)) {
+      : super(GeometryFactory(pm: precisionModel, srid: srid)) {
     init(factory.csFactory.create(points));
   }
 
@@ -135,7 +135,7 @@ class LineString extends BaseGeometry<LineString> implements Lineal {
 
   bool isCoordinate(Coordinate pt) {
     for (int i = 0; i < points.size(); i++) {
-      if (points.getCoordinate(i).equals(pt)) {
+      if (points.getCoordinate(i) == pt) {
         return true;
       }
     }
@@ -209,7 +209,7 @@ class LineString extends BaseGeometry<LineString> implements Lineal {
   void normalize() {
     for (int i = 0; i < (points.size() / 2); i++) {
       int j = (points.size() - 1) - i;
-      if (!points.getCoordinate(i).equals(points.getCoordinate(j))) {
+      if (points.getCoordinate(i) != points.getCoordinate(j)) {
         if (points.getCoordinate(i).compareTo(points.getCoordinate(j)) > 0) {
           CoordinateSequence copy = points.copy();
           CoordinateSequences.reverse(copy);

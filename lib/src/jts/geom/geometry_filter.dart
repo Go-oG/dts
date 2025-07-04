@@ -98,7 +98,7 @@ class PolygonExtracter implements GeometryFilter {
   }
 }
 
-class GeometryExtracter implements GeometryFilter {
+class GeomExtracter implements GeometryFilter {
   static List extract(Geometry geom, Type clz, List list) {
     return extract4(geom, toGeometryType(clz), list);
   }
@@ -123,7 +123,7 @@ class GeometryExtracter implements GeometryFilter {
     if (geom.geometryType == geometryType) {
       list.add(geom);
     } else if (geom is GeometryCollection) {
-      geom.apply3(GeometryExtracter.of(geometryType, list));
+      geom.apply3(GeomExtracter.of(geometryType, list));
     }
     return list;
   }
@@ -140,17 +140,18 @@ class GeometryExtracter implements GeometryFilter {
 
   late List _comps;
 
-  GeometryExtracter(Type clz, List comps) {
+  GeomExtracter(Type clz, List comps) {
     _geometryType = toGeometryType(clz);
     _comps = comps;
   }
 
-  GeometryExtracter.of(this._geometryType, this._comps);
+  GeomExtracter.of(this._geometryType, this._comps);
 
   static bool isOfType(Geometry geom, GeometryType? geometryType) {
     if (geom.geometryType == geometryType) return true;
 
-    if ((geometryType == GeometryType.lineString) && (geom.geometryType == GeometryType.linearRing)) {
+    if ((geometryType == GeometryType.lineString) &&
+        (geom.geometryType == GeometryType.linearRing)) {
       return true;
     }
 

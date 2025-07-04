@@ -132,7 +132,7 @@ class VariableBuffer {
       }
     }
     GeometryCollection partsGeom =
-        geomFactory.createGeometryCollection2(GeometryFactory.toGeometryArray(parts)!);
+        geomFactory.createGeomCollection(GeometryFactory.toGeometryArray(parts)!);
     Geometry buffer = partsGeom.union()!;
     if (buffer.isEmpty()) {
       return geomFactory.createPolygon();

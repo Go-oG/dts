@@ -15,16 +15,16 @@ import 'puntal.dart';
 class Point extends BaseGeometry<Point> implements Puntal {
   late CoordinateSequence _coordinates;
 
-  Point(Coordinate? coordinate, PrecisionModel precisionModel, int srid)
-      : super(GeometryFactory.from(precisionModel, srid)) {
-    init(factory.csFactory.create(coordinate != null ? Array.of(coordinate) : Array(0)));
+  Point(Coordinate? coordinate, PrecisionModel pm, int srid)
+      : super(GeometryFactory(pm: pm, srid: srid)) {
+    _init(factory.csFactory.create(coordinate != null ? Array.of(coordinate) : Array(0)));
   }
 
   Point.of(CoordinateSequence? coordinates, GeometryFactory factory) : super(factory) {
-    init(coordinates);
+    _init(coordinates);
   }
 
-  void init(CoordinateSequence? coordinates) {
+  void _init(CoordinateSequence? coordinates) {
     coordinates ??= factory.csFactory.create(Array(0));
     Assert.isTrue(coordinates.size() <= 1);
     _coordinates = coordinates;
@@ -80,13 +80,11 @@ class Point extends BaseGeometry<Point> implements Puntal {
   }
 
   @override
-  GeometryType get geometryType {
-    return GeometryType.point;
-  }
+  GeometryType get geometryType => GeometryType.point;
 
   @override
   Geometry getBoundary() {
-    return factory.createGeometryCollection();
+    return factory.createGeomCollection();
   }
 
   @override

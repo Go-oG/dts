@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 
 import '../algorithm/line_intersector.dart';
 import '../geom/coordinate.dart';
@@ -15,7 +15,8 @@ class NodedSegmentString extends NodableSegmentString {
     return resultEdgelist;
   }
 
-  static void getNodedSubstrings2(List<NodedSegmentString> segStrings, List<SegmentString> resultEdgelist) {
+  static void getNodedSubstrings2(
+      List<NodedSegmentString> segStrings, List<SegmentString> resultEdgelist) {
     for (var segString in segStrings) {
       segString.getNodeList().addSplitEdges(resultEdgelist);
     }
@@ -66,7 +67,7 @@ class NodedSegmentString extends NodableSegmentString {
 
   @override
   bool isClosed() {
-    return pts[0].equals(pts[pts.length - 1]);
+    return pts[0] == pts[pts.length - 1];
   }
 
   bool hasNodes() {

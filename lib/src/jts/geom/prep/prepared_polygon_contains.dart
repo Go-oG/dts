@@ -24,7 +24,8 @@ abstract class AbstractPreparedPolygonContains extends PreparedPolygonPredicate 
     bool isAllInTargetArea = isAllTestComponentsInTarget(geom);
     if (!isAllInTargetArea) return false;
 
-    bool properIntersectionImpliesNotContained = isProperIntersectionImpliesNotContainedSituation(geom);
+    bool properIntersectionImpliesNotContained =
+        isProperIntersectionImpliesNotContainedSituation(geom);
     findAndClassifyIntersections(geom);
     if (properIntersectionImpliesNotContained && _hasProperIntersection) return false;
 
@@ -34,7 +35,8 @@ abstract class AbstractPreparedPolygonContains extends PreparedPolygonPredicate 
       return fullTopologicalPredicate(geom);
     }
     if (geom is Polygonal) {
-      bool isTargetInTestArea = isAnyTargetComponentInAreaTest(geom, prepPoly.getRepresentativePoints());
+      bool isTargetInTestArea =
+          isAnyTargetComponentInAreaTest(geom, prepPoly.getRepresentativePoints());
       if (isTargetInTestArea) return false;
     }
     return true;
@@ -54,7 +56,7 @@ abstract class AbstractPreparedPolygonContains extends PreparedPolygonPredicate 
   bool isProperIntersectionImpliesNotContainedSituation(Geometry testGeom) {
     if (testGeom is Polygonal) return true;
 
-    if (isSingleShell(prepPoly.getGeometry())) return true;
+    if (isSingleShell(prepPoly.getGeom())) return true;
 
     return false;
   }
@@ -96,7 +98,7 @@ class PreparedPolygonContains extends AbstractPreparedPolygonContains {
 
   @override
   bool fullTopologicalPredicate(Geometry geom) {
-    bool isContained = prepPoly.getGeometry().contains(geom);
+    bool isContained = prepPoly.getGeom().contains(geom);
     return isContained;
   }
 }
@@ -117,7 +119,7 @@ class PreparedPolygonCovers extends AbstractPreparedPolygonContains {
 
   @override
   bool fullTopologicalPredicate(Geometry geom) {
-    bool result = prepPoly.getGeometry().covers(geom);
+    bool result = prepPoly.getGeom().covers(geom);
     return result;
   }
 }

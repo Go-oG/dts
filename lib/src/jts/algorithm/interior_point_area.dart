@@ -120,7 +120,7 @@ class _InteriorPointPolygon {
       return;
     }
 
-    Assert.isTrue2(0 == (crossings.length % 2),
+    Assert.isTrue(0 == (crossings.length % 2),
         "Interior Point robustness failure: odd number of scanline crossings");
 
     crossings.sort(Double.compare);

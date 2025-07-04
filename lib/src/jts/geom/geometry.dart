@@ -39,11 +39,12 @@ enum GeometryType {
 }
 
 abstract class Geometry implements Comparable<Geometry> {
-  static final _geometryChangedFilter = GeometryComponentFilter2((geom) {
+  static final _geometryChangedFilter = GeomComponentFilter2((geom) {
     geom.geometryChangedAction();
   });
 
-  late final GeometryFactory factory;
+  final GeometryFactory factory;
+
   int srid = 0;
 
   Envelope? envelope;
@@ -171,7 +172,7 @@ abstract class Geometry implements Comparable<Geometry> {
   }
 
   bool touches(Geometry g) {
-    return GeometryRelate.touches(this, g);
+    return GeomRelate.touches(this, g);
   }
 
   bool intersects(Geometry g) {
@@ -183,7 +184,7 @@ abstract class Geometry implements Comparable<Geometry> {
     if (g.isRectangle()) {
       return RectangleIntersects.intersects2(g as Polygon, this);
     }
-    return GeometryRelate.intersects(this, g);
+    return GeomRelate.intersects(this, g);
   }
 
   bool crosses(Geometry g) {
@@ -193,34 +194,34 @@ abstract class Geometry implements Comparable<Geometry> {
   }
 
   bool within(Geometry g) {
-    return GeometryRelate.within(this, g);
+    return GeomRelate.within(this, g);
   }
 
   bool contains(Geometry g) {
     if (isRectangle()) {
       return RectangleContains.containsS(this as Polygon, g);
     }
-    return GeometryRelate.contains(this, g);
+    return GeomRelate.contains(this, g);
   }
 
   bool overlaps(Geometry g) {
-    return GeometryRelate.overlaps(this, g);
+    return GeomRelate.overlaps(this, g);
   }
 
   bool covers(Geometry g) {
-    return GeometryRelate.covers(this, g);
+    return GeomRelate.covers(this, g);
   }
 
   bool coveredBy(Geometry g) {
-    return GeometryRelate.coveredBy(this, g);
+    return GeomRelate.coveredBy(this, g);
   }
 
   bool relate2(Geometry g, String intersectionPattern) {
-    return GeometryRelate.relate2(this, g, intersectionPattern);
+    return GeomRelate.relate2(this, g, intersectionPattern);
   }
 
   IntersectionMatrix relate(Geometry g) {
-    return GeometryRelate.relate(this, g);
+    return GeomRelate.relate(this, g);
   }
 
   GeometryType get geometryType;
@@ -234,12 +235,7 @@ abstract class Geometry implements Comparable<Geometry> {
   }
 
   bool equalsTopo(Geometry g) {
-    return GeometryRelate.equalsTopo(this, g);
-  }
-
-  bool equals(Object o) {
-    if (o is! Geometry) return false;
-    return equalsExact(o);
+    return GeomRelate.equalsTopo(this, g);
   }
 
   @override
@@ -249,7 +245,8 @@ abstract class Geometry implements Comparable<Geometry> {
 
   @override
   bool operator ==(Object other) {
-    return equals(other);
+    if (other is! Geometry) return false;
+    return equalsExact(other);
   }
 
   Geometry buffer(double distance) {
@@ -417,7 +414,7 @@ abstract class Geometry implements Comparable<Geometry> {
 
   bool equal(Coordinate a, Coordinate b, double tolerance) {
     if (tolerance == 0) {
-      return a.equals(b);
+      return a == b;
     }
     return a.distance(b) <= tolerance;
   }

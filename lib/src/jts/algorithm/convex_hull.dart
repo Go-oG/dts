@@ -47,7 +47,7 @@ final class ConvexHull {
     if (uniquePts == null) {
       return null;
     } else if (uniquePts.isEmpty) {
-      return geomFactory.createGeometryCollection();
+      return geomFactory.createGeomCollection();
     } else if (uniquePts.length == 1) {
       return geomFactory.createPoint2(uniquePts[0]);
     } else {
@@ -231,7 +231,7 @@ final class ConvexHull {
     for (int i = 0; i <= (original.length - 2); i++) {
       Coordinate currentCoordinate = original[i];
       Coordinate nextCoordinate = original[i + 1];
-      if (currentCoordinate.equals(nextCoordinate)) {
+      if (currentCoordinate == nextCoordinate) {
         continue;
       }
       if ((previousDistinctCoordinate != null) &&

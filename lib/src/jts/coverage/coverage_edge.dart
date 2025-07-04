@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
@@ -65,7 +65,8 @@ class CoverageEdge {
     return LineSegment(key0, key1);
   }
 
-  static Coordinate _findDistinctPoint(Array<Coordinate> pts, int index, bool isForward, Coordinate pt) {
+  static Coordinate _findDistinctPoint(
+      Array<Coordinate> pts, int index, bool isForward, Coordinate pt) {
     int inc = (isForward) ? 1 : -1;
     int i = index;
     do {

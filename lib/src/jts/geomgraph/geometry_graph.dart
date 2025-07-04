@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geomgraph/index/edge_set_intersector.dart';
 import 'package:dts/src/jts/geomgraph/index/segment_intersector.dart';
 import 'package:dts/src/jts/util/assert.dart';
@@ -56,7 +56,8 @@ class GeometryGraph extends PGPlanarGraph {
     return SimpleMCSweepLineIntersector();
   }
 
-  GeometryGraph.of(int argIndex, Geometry parentGeom) : this(argIndex, parentGeom, BoundaryNodeRule.ogcSfsBR);
+  GeometryGraph.of(int argIndex, Geometry parentGeom)
+      : this(argIndex, parentGeom, BoundaryNodeRule.ogcSfsBR);
 
   GeometryGraph(this._argIndex, this._parentGeom, this._boundaryNodeRule) {
     if (_parentGeom != null) {
@@ -99,9 +100,9 @@ class GeometryGraph extends PGPlanarGraph {
     return (_lineEdgeMap.get(line) as Edge?);
   }
 
-  void computeSplitEdges(List<Edge> edgelist) {
+  void computeSplitEdges(List<Edge> edgeList) {
     for (var e in edges) {
-      e.eiList.addSplitEdges(edgelist);
+      e.eiList.addSplitEdges(edgeList);
     }
   }
 
@@ -182,7 +183,7 @@ class GeometryGraph extends PGPlanarGraph {
     Edge e = Edge(coord, Label.of2(_argIndex, Location.interior));
     _lineEdgeMap.put(line, e);
     insertEdge(e);
-    Assert.isTrue2(coord.length >= 2, "found LineString with single point");
+    Assert.isTrue(coord.length >= 2, "found LineString with single point");
     insertBoundaryPoint(_argIndex, coord[0]);
     insertBoundaryPoint(_argIndex, coord[coord.length - 1]);
   }
@@ -201,14 +202,16 @@ class GeometryGraph extends PGPlanarGraph {
   SegmentIntersector computeSelfNodes(LineIntersector li, bool computeRingSelfNodes) {
     SegmentIntersector si = SegmentIntersector(li, true, false);
     EdgeSetIntersector esi = createEdgeSetIntersector();
-    bool isRings = ((_parentGeom is LinearRing) || (_parentGeom is Polygon)) || (_parentGeom is MultiPolygon);
+    bool isRings =
+        ((_parentGeom is LinearRing) || (_parentGeom is Polygon)) || (_parentGeom is MultiPolygon);
     bool computeAllSegments = computeRingSelfNodes || (!isRings);
     esi.computeIntersections(edges, si, computeAllSegments);
     addSelfIntersectionNodes(_argIndex);
     return si;
   }
 
-  SegmentIntersector computeEdgeIntersections(GeometryGraph g, LineIntersector li, bool includeProper) {
+  SegmentIntersector computeEdgeIntersections(
+      GeometryGraph g, LineIntersector li, bool includeProper) {
     SegmentIntersector si = SegmentIntersector(li, includeProper, true);
     si.setBoundaryNodes(getBoundaryNodes(), g.getBoundaryNodes());
     EdgeSetIntersector esi = createEdgeSetIntersector();
@@ -243,7 +246,6 @@ class GeometryGraph extends PGPlanarGraph {
   void addSelfIntersectionNodes(int argIndex) {
     for (var e in edges) {
       int eLoc = e.getLabel()!.getLocation(argIndex);
-      final it = e.eiList.iterator().iterator;
       for (var ei in e.eiList.iterator()) {
         addSelfIntersectionNode(argIndex, ei.coord, eLoc);
       }

@@ -16,7 +16,8 @@ class NgPolygonBuilder {
 
   final bool _isEnforcePolygonal;
 
-  NgPolygonBuilder(List<OverlayEdge> resultAreaEdges, this.geometryFactory, [this._isEnforcePolygonal = true]) {
+  NgPolygonBuilder(List<OverlayEdge> resultAreaEdges, this.geometryFactory,
+      [this._isEnforcePolygonal = true]) {
     buildRings(resultAreaEdges);
   }
 
@@ -89,7 +90,7 @@ class NgPolygonBuilder {
         shellCount++;
       }
     }
-    Assert.isTrue2(shellCount <= 1, "found two shells in EdgeRing list");
+    Assert.isTrue(shellCount <= 1, "found two shells in EdgeRing list");
     return shell;
   }
 

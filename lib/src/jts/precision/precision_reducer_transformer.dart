@@ -37,7 +37,7 @@ class PrecisionReducerTransformer extends GeometryTransformer {
     }
 
     if (parent is LinearRing) {
-      minSize = LinearRing.MINIMUM_VALID_SIZE;
+      minSize = LinearRing.kMinValidSize;
     }
 
     if (coordsReduce.length < minSize) {

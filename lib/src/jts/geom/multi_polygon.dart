@@ -10,8 +10,8 @@ import 'polygonal.dart';
 import 'precision_model.dart';
 
 class MultiPolygon extends GeometryCollection<Polygon> implements Polygonal {
-  MultiPolygon(Array<Polygon>? polygons, PrecisionModel precisionModel, int SRID)
-      : this.of(polygons, GeometryFactory.from(precisionModel, SRID));
+  MultiPolygon(Array<Polygon>? polygons, PrecisionModel pm, int srid)
+      : this.of(polygons, GeometryFactory(pm: pm, srid: srid));
 
   MultiPolygon.of(super.polygons, super.factory);
 
@@ -48,7 +48,7 @@ class MultiPolygon extends GeometryCollection<Polygon> implements Polygonal {
         allRings.add(rings.getGeometryN(j) as LineString);
       }
     }
-    return factory.createMultiLineString2(allRings.toArray());
+    return factory.createMultiLineString(allRings.toArray());
   }
 
   @override

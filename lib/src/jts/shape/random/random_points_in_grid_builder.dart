@@ -10,7 +10,7 @@ class RandomPointsInGridBuilder extends GeometricShapeBuilder {
 
   double _gutterFraction = 0;
 
-  RandomPointsInGridBuilder.empty() : super(GeometryFactory.empty());
+  RandomPointsInGridBuilder.empty() : super(GeometryFactory());
 
   RandomPointsInGridBuilder(super.geomFact);
 
@@ -46,7 +46,7 @@ class RandomPointsInGridBuilder extends GeometricShapeBuilder {
         pts[index++] = randomPointInCell(orgX, orgY, cellDX, cellDY);
       }
     }
-    return geomFactory.createMultiPoint5(pts);
+    return geomFactory.createMultiPoint4(pts);
   }
 
   Coordinate randomPointInCell(double orgX, double orgY, double xLen, double yLen) {

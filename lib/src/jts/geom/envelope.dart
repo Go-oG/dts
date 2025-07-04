@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/math/math.dart';
@@ -6,21 +7,6 @@ import 'package:dts/src/jts/math/math.dart';
 import 'coordinate.dart';
 
 final class Envelope implements Comparable<Envelope> {
-  @override
-  int get hashCode {
-    int result = 17;
-    result = (37 * result) + Coordinate.hashCodeS(_minX);
-    result = (37 * result) + Coordinate.hashCodeS(_maxX);
-    result = (37 * result) + Coordinate.hashCodeS(_minY);
-    result = (37 * result) + Coordinate.hashCodeS(_maxY);
-    return result;
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return equals(other);
-  }
-
   static bool intersects3(Coordinate p1, Coordinate p2, Coordinate q) {
     return ((q.x >= Math.min(p1.x, p2.x)) && (q.x <= Math.max(p1.x, p2.x))) &&
         ((q.y >= Math.min(p1.y, p2.y)) && (q.y <= Math.max(p1.y, p2.y)));
@@ -53,23 +39,26 @@ final class Envelope implements Comparable<Envelope> {
     setToNull();
   }
 
-  Envelope.from(Envelope env) {
-    initWithLRTB(env._minX, env._maxX, env._minY, env._maxY);
-  }
-
-  Envelope.fromLRTB(double l, double r, double t, double b) {
-    initWithLRTB(l, r, t, b);
-  }
-
-  Envelope.fromCoordinate(Coordinate p1, [Coordinate? p2]) {
+  Envelope.of(Coordinate p1, [Coordinate? p2]) {
     p2 ??= p1;
-    initWithLRTB(p1.x, p2.x, p1.y, p2.y);
+    initWithLTRB(p1.x, p1.y, p2.x, p2.y);
   }
 
-  void initWithLRTB(double l, double r, double t, double b) {
+  Envelope.from(Envelope env) {
+    initWithLTRB(env._minX, env._minY, env._maxX, env._maxY);
+  }
+
+  Envelope.fromLTRB(double l, double t, double r, double b) {
+    initWithLTRB(l, t, r, b);
+  }
+
+  Envelope.fromRect(Rect rect) : this.fromLTRB(rect.left, rect.top, rect.right, rect.bottom);
+
+  void initWithLTRB(double l, double t, double r, double b) {
     _minX = min(l, r);
-    _maxX = max(l, r);
     _minY = min(t, b);
+
+    _maxX = max(l, r);
     _maxY = max(t, b);
   }
 
@@ -201,7 +190,7 @@ final class Envelope implements Comparable<Envelope> {
     if (isNull) {
       return;
     }
-    initWithLRTB(minX + transX, maxX + transX, minY + transY, maxY + transY);
+    initWithLTRB(minX + transX, minY + transY, maxX + transX, maxY + transY);
   }
 
   Coordinate? centre() {
@@ -217,7 +206,7 @@ final class Envelope implements Comparable<Envelope> {
     double intMinY = Math.maxD(_minY, env._minY);
     double intMaxX = Math.minD(_maxX, env._maxX);
     double intMaxY = Math.minD(_maxY, env._maxY);
-    return Envelope.fromLRTB(intMinX, intMaxX, intMinY, intMaxY);
+    return Envelope.fromLTRB(intMinX, intMinY, intMaxX, intMaxY);
   }
 
   bool intersects(Envelope other) {
@@ -275,8 +264,7 @@ final class Envelope implements Comparable<Envelope> {
   bool containsPoint(double x, double y) => coversPoint(x, y);
 
   bool containsProperly(Envelope other) {
-    if (equals(other)) return false;
-
+    if (this == other) return false;
     return covers(other);
   }
 
@@ -320,17 +308,6 @@ final class Envelope implements Comparable<Envelope> {
     return MathUtil.hypot(dx, dy);
   }
 
-  bool equals(Object other) {
-    if (other is! Envelope) {
-      return false;
-    }
-    if (isNull) {
-      return other.isNull;
-    }
-    return (((_maxX == other.maxX) && (_maxY == other.maxY)) && (_minX == other.minX)) &&
-        (_minY == other.minY);
-  }
-
   @override
   int compareTo(Envelope env) {
     if (isNull) {
@@ -357,5 +334,27 @@ final class Envelope implements Comparable<Envelope> {
     if (_maxY > env._maxY) return 1;
 
     return 0;
+  }
+
+  @override
+  int get hashCode {
+    int result = 17;
+    result = (37 * result) + Coordinate.hashCodeS(_minX);
+    result = (37 * result) + Coordinate.hashCodeS(_maxX);
+    result = (37 * result) + Coordinate.hashCodeS(_minY);
+    result = (37 * result) + Coordinate.hashCodeS(_maxY);
+    return result;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! Envelope) {
+      return false;
+    }
+    if (isNull) {
+      return other.isNull;
+    }
+    return (((_maxX == other.maxX) && (_maxY == other.maxY)) && (_minX == other.minX)) &&
+        (_minY == other.minY);
   }
 }

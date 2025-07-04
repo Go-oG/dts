@@ -106,7 +106,7 @@ class GeometryFixer {
     }
     if ((!_isKeepMulti) && (pts.size == 1)) return pts.get(0);
 
-    return factory.createMultiPoint2(GeometryFactory.toPointArray(pts));
+    return factory.createMultiPoint(GeometryFactory.toPointArray(pts));
   }
 
   Geometry fixLinearRing(LinearRing geom) {
@@ -187,9 +187,9 @@ class GeometryFixer {
       if ((!_isKeepMulti) || (fixed.get(0) is! LineString)) return fixed.get(0);
     }
     if (isMixed) {
-      return factory.createGeometryCollection2(GeometryFactory.toGeometryArray(fixed)!);
+      return factory.createGeomCollection(GeometryFactory.toGeometryArray(fixed)!);
     }
-    return factory.createMultiLineString2(GeometryFactory.toLineStringArray(fixed.cast()));
+    return factory.createMultiLineString(GeometryFactory.toLineStringArray(fixed.cast()));
   }
 
   Geometry fixPolygon(Polygon geom) {
@@ -238,7 +238,7 @@ class GeometryFixer {
 
   void classifyHoles(
       Geometry shell, List<Geometry> holesFixed, List<Geometry> holes, List<Geometry> shells) {
-    PreparedGeometry shellPrep = PreparedGeometryFactory.prepare(shell);
+    PreparedGeom shellPrep = PreparedGeomFactory.prepare(shell);
     for (Geometry hole in holesFixed) {
       if (shellPrep.intersects(hole)) {
         holes.add(hole);
@@ -298,7 +298,7 @@ class GeometryFixer {
     for (int i = 0; i < geom.getNumGeometries(); i++) {
       geomRep[i] = fix3(geom.getGeometryN(i), _isKeepCollapsed, _isKeepMulti);
     }
-    return factory.createGeometryCollection2(geomRep);
+    return factory.createGeomCollection(geomRep);
   }
 
   static Geometry fix3(Geometry geom, bool isKeepCollapsed, bool isKeepMulti) {

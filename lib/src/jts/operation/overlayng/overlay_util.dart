@@ -153,10 +153,10 @@ final class OverlayUtil {
         result = geomFact.createPolygon();
         break;
       case -1:
-        result = geomFact.createGeometryCollection();
+        result = geomFact.createGeomCollection();
         break;
       default:
-        Assert.shouldNeverReachHere2("Unable to determine overlay result geometry dimension");
+        Assert.shouldNeverReachHere("Unable to determine overlay result geometry dimension");
     }
     return result!;
   }

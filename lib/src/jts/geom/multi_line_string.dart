@@ -11,7 +11,7 @@ import 'precision_model.dart';
 
 class MultiLineString extends GeometryCollection<LineString> implements Lineal {
   MultiLineString.of(Array<LineString> lineStrings, PrecisionModel precisionModel, int srid)
-      : super(lineStrings, GeometryFactory.from(precisionModel, srid));
+      : super(lineStrings, GeometryFactory(pm: precisionModel, srid: srid));
 
   MultiLineString(super.lineStrings, super.factory);
 

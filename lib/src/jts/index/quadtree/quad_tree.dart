@@ -27,7 +27,7 @@ class Quadtree<T> implements SpatialIndex<T> {
       miny = miny - (minExtent / 2.0);
       maxy = maxy + (minExtent / 2.0);
     }
-    return Envelope.fromLRTB(minx, maxx, miny, maxy);
+    return Envelope.fromLTRB(minx, miny, maxx, maxy);
   }
 
   Root<T>? _root;
@@ -416,7 +416,7 @@ class QuadNode<T> extends NodeBase<T> {
         maxy = env.maxY;
         break;
     }
-    Envelope sqEnv = Envelope.fromLRTB(minx, maxx, miny, maxy);
+    Envelope sqEnv = Envelope.fromLTRB(minx, miny, maxx, maxy);
     return QuadNode(sqEnv, level - 1);
   }
 
@@ -472,6 +472,6 @@ class _Key {
     double quadSize = DoubleBits.powerOf2(level);
     _pt.x = Math.floor(itemEnv.minX / quadSize) * quadSize;
     _pt.y = Math.floor(itemEnv.minY / quadSize) * quadSize;
-    env.initWithLRTB(_pt.x, _pt.x + quadSize, _pt.y, _pt.y + quadSize);
+    env.initWithLTRB(_pt.x, _pt.y, _pt.x + quadSize, _pt.y + quadSize);
   }
 }

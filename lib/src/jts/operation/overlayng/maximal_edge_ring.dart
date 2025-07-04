@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
@@ -9,15 +9,15 @@ import 'overlay_edge.dart';
 import 'overlay_edge_ring.dart';
 
 class NgMaximalEdgeRing {
-  static const int _STATE_FIND_INCOMING = 1;
+  static const int _kStateFindIncoming = 1;
 
-  static const int _STATE_LINK_OUTGOING = 2;
+  static const int _kStateLinkOutgoing = 2;
 
   static void linkResultAreaMaxRingAtNode(OverlayEdge nodeEdge) {
-    Assert.isTrue2(nodeEdge.isInResultArea(), "Attempt to link non-result edge");
+    Assert.isTrue(nodeEdge.isInResultArea(), "Attempt to link non-result edge");
     OverlayEdge? endOut = nodeEdge.oNextOE();
     OverlayEdge? currOut = endOut;
-    int state = _STATE_FIND_INCOMING;
+    int state = _kStateFindIncoming;
     OverlayEdge? currResultIn;
     do {
       if ((currResultIn != null) && currResultIn.isResultMaxLinked()) {
@@ -25,27 +25,27 @@ class NgMaximalEdgeRing {
       }
 
       switch (state) {
-        case _STATE_FIND_INCOMING:
+        case _kStateFindIncoming:
           OverlayEdge currIn = currOut!.symOE();
           if (!currIn.isInResultArea()) {
             break;
           }
 
           currResultIn = currIn;
-          state = _STATE_LINK_OUTGOING;
+          state = _kStateLinkOutgoing;
           break;
-        case _STATE_LINK_OUTGOING:
+        case _kStateLinkOutgoing:
           if (!currOut!.isInResultArea()) {
             break;
           }
 
           currResultIn!.setNextResultMax(currOut);
-          state = _STATE_FIND_INCOMING;
+          state = _kStateFindIncoming;
           break;
       }
       currOut = currOut!.oNextOE();
     } while (currOut != endOut);
-    if (state == _STATE_LINK_OUTGOING) {
+    if (state == _kStateLinkOutgoing) {
       throw TopologyException("no outgoing edge found", nodeEdge.getCoordinate());
     }
   }
@@ -64,7 +64,8 @@ class NgMaximalEdgeRing {
       }
 
       if (edge.getEdgeRingMax() == this) {
-        throw TopologyException("Ring edge visited twice at ${edge.getCoordinate()}", edge.getCoordinate());
+        throw TopologyException(
+            "Ring edge visited twice at ${edge.getCoordinate()}", edge.getCoordinate());
       }
 
       if (edge.nextResultMax() == null) {
@@ -114,7 +115,8 @@ class NgMaximalEdgeRing {
       currOut = currOut.oNextOE();
     } while (currOut != endOut);
     if (currMaxRingOut != null) {
-      throw TopologyException("Unmatched edge found during min-ring linking", nodeEdge.getCoordinate());
+      throw TopologyException(
+          "Unmatched edge found during min-ring linking", nodeEdge.getCoordinate());
     }
   }
 
@@ -131,7 +133,8 @@ class NgMaximalEdgeRing {
     return null;
   }
 
-  static OverlayEdge? linkMaxInEdge(OverlayEdge currOut, OverlayEdge currMaxRingOut, NgMaximalEdgeRing maxEdgeRing) {
+  static OverlayEdge? linkMaxInEdge(
+      OverlayEdge currOut, OverlayEdge currMaxRingOut, NgMaximalEdgeRing maxEdgeRing) {
     OverlayEdge currIn = currOut.symOE();
     if (currIn.getEdgeRingMax() != maxEdgeRing) {
       return currMaxRingOut;

@@ -119,7 +119,7 @@ class OverlayMixedPoints {
       return points.get(0);
     }
     Array<Point> pointsArray = GeometryFactory.toPointArray(points);
-    return geometryFactory.createMultiPoint2(pointsArray);
+    return geometryFactory.createMultiPoint(pointsArray);
   }
 
   List<Point> findPoints(bool isCovered, Array<Coordinate> coords) {

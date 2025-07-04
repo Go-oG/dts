@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/math/math.dart';
 import 'package:dts/src/jts/util/number_util.dart';
+import 'package:flutter/foundation.dart';
 
 final class Coordinates {
   Coordinates._();
@@ -72,9 +75,19 @@ class Coordinate implements Comparable<Coordinate> {
 
   double x;
   double y;
-  double z;
 
-  Coordinate([this.x = 0, this.y = 0, this.z = _nullOrdinate]);
+  @protected
+  late double mZ;
+
+  double get z => mZ;
+
+  set z(double v) => mZ = v;
+
+  Coordinate([this.x = 0, this.y = 0, double z = _nullOrdinate]) {
+    mZ = z;
+  }
+
+  Coordinate.of2(Offset c) : this(c.dx, c.dy);
 
   Coordinate.of(Coordinate c) : this(c.x, c.y, c.z);
 
@@ -161,13 +174,6 @@ class Coordinate implements Comparable<Coordinate> {
     return NumberUtil.equalsWithTolerance(z, c.z, tolerance);
   }
 
-  bool equals(Object other) {
-    if (other is! Coordinate) {
-      return false;
-    }
-    return equals2D(other);
-  }
-
   @override
   int compareTo(Coordinate other) {
     if (x < other.x) {
@@ -229,7 +235,10 @@ class Coordinate implements Comparable<Coordinate> {
 
   @override
   bool operator ==(Object other) {
-    return equals(other);
+    if (other is! Coordinate) {
+      return false;
+    }
+    return equals2D(other);
   }
 
   static int hashCodeS(double x) {
@@ -248,17 +257,16 @@ class CoordinateXY extends Coordinate {
 
   CoordinateXY.of(Coordinate coord) : super(coord.x, coord.y);
 
-  CoordinateXY.of2(CoordinateXY coord) : super(coord.x, coord.y);
-
   @override
-  CoordinateXY copy() => CoordinateXY.of2(this);
+  CoordinateXY copy() => CoordinateXY.of(this);
 
   @override
   Coordinate create() => CoordinateXY();
 
   @override
-  set z(double v) =>
-      throw IllegalArgumentException("CoordinateXY dimension 2 does not support z-ordinate");
+  set z(double v) {
+    throw UnsupportedError("not allow set z");
+  }
 
   @override
   double get z => _nullOrdinate;

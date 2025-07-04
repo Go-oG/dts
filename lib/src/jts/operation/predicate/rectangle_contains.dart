@@ -61,7 +61,7 @@ class RectangleContains {
   }
 
   bool isLineSegmentContainedInBoundary(Coordinate p0, Coordinate p1) {
-    if (p0.equals(p1)) return isPointContainedInBoundary(p0);
+    if (p0 == p1) return isPointContainedInBoundary(p0);
 
     if (p0.x == p1.x) {
       if ((p0.x == rectEnv.minX) || (p0.x == rectEnv.maxX)) return true;
