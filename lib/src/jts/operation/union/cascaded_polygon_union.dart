@@ -12,9 +12,7 @@ import 'union_strategy.dart';
 
 class _UnionStrategy implements UnionStrategy {
   @override
-  bool isdoubleingPrecision() {
-    return true;
-  }
+  bool isDoublePrecision()=>true;
 
   @override
   Geometry? union(Geometry g0, Geometry g1) {

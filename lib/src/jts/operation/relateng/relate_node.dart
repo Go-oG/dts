@@ -9,19 +9,15 @@ import 'relate_edge.dart';
 import 'relate_geometry.dart';
 
 class RelateNGNode {
-  Coordinate nodePt;
+  final Coordinate nodePt;
 
   final List<RelateEdge> _edges = [];
 
   RelateNGNode(this.nodePt);
 
-  Coordinate getCoordinate() {
-    return nodePt;
-  }
+  Coordinate getCoordinate()=>nodePt;
 
-  List<RelateEdge> getEdges() {
-    return _edges;
-  }
+  List<RelateEdge> getEdges()=>_edges;
 
   void addEdges2(List<NodeSection> nss) {
     for (NodeSection ns in nss) {
@@ -74,11 +70,11 @@ class RelateNGNode {
     }
   }
 
-  RelateEdge? addLineEdge(bool isA, Coordinate dirPt) {
+  RelateEdge? addLineEdge(bool isA, Coordinate? dirPt) {
     return addEdge(isA, dirPt, Dimension.L, false);
   }
 
-  RelateEdge? addAreaEdge(bool isA, Coordinate dirPt, bool isForward) {
+  RelateEdge? addAreaEdge(bool isA, Coordinate? dirPt, bool isForward) {
     return addEdge(isA, dirPt, Dimension.A, isForward);
   }
 

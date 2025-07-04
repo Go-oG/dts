@@ -10,7 +10,7 @@ import 'cascaded_polygon_union.dart';
 import 'union_strategy.dart';
 
 class OverlapUnion {
-  static Geometry? union2(Geometry g0, Geometry g1, UnionStrategy unionFun) {
+  static Geometry? unionS(Geometry g0, Geometry g1, UnionStrategy unionFun) {
     OverlapUnion union = OverlapUnion(g0, g1, unionFun);
     return union.union();
   }
@@ -151,8 +151,7 @@ class _CoordinateSequenceFilter implements CoordinateSequenceFilter {
 
     Coordinate p0 = seq.getCoordinate(i - 1);
     Coordinate p1 = seq.getCoordinate(i);
-    bool isBorder =
-        OverlapUnion.intersects(env, p0, p1) && (!OverlapUnion.containsProperly2(env, p0, p1));
+    bool isBorder = OverlapUnion.intersects(env, p0, p1) && (!OverlapUnion.containsProperly2(env, p0, p1));
     if (isBorder) {
       LineSegment seg = LineSegment(p0, p1);
       segs.add(seg);

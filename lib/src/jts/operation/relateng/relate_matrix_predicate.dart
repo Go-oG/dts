@@ -3,29 +3,27 @@ import 'package:dts/src/jts/geom/intersection_matrix.dart';
 import 'impredicate.dart';
 
 class RelateMatrixPredicate extends IMPredicate {
-
-
-    @override
+  @override
   String name() {
-        return "relateMatrix";
-    }
+    return "relateMatrix";
+  }
 
-    @override
-    bool requireInteraction() {
-        return false;
-    }
+  @override
+  bool requireInteraction() {
+    return false;
+  }
 
-    @override
-    bool isDetermined() {
-        return false;
-    }
+  @override
+  bool isDetermined() {
+    return false;
+  }
 
-    @override
-    bool valueIM() {
-        return false;
-    }
+  @override
+  bool valueIM() {
+    return false;
+  }
 
-    IntersectionMatrix getIM() {
-        return intMatrix;
-    }
+  IntersectionMatrix getIM() {
+    return intMatrix;
+  }
 }

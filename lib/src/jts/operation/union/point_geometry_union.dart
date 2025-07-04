@@ -12,7 +12,7 @@ import 'package:dts/src/jts/geom/puntal.dart';
 import 'package:dts/src/jts/geom/util/geom_combiner.dart';
 
 class PointGeometryUnion {
-  static Geometry? union2(Puntal pointGeom, Geometry otherGeom) {
+  static Geometry? unionS(Puntal pointGeom, Geometry otherGeom) {
     PointGeometryUnion unioner = PointGeometryUnion(pointGeom, otherGeom);
     return unioner.union();
   }

@@ -40,14 +40,12 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope> implements SpatialIndex<T>
   });
 
   @override
-  List<AbstractNode<Envelope>> createParentBoundables(
-      List<Boundable<Envelope>> childBoundables, int newLevel) {
+  List<AbstractNode<Envelope>> createParentBoundables(List<Boundable<Envelope>> childBoundables, int newLevel) {
     Assert.isTrue(childBoundables.isNotEmpty);
     int minLeafCount = Math.ceil(childBoundables.size / getNodeCapacity());
     List<Boundable<Envelope>> sortedChildBoundables = List.from(childBoundables);
     sortedChildBoundables.sort(_xComparator.compare);
-    Array<List<Boundable<Envelope>>> vv =
-        verticalSlices(sortedChildBoundables, Math.ceil(Math.sqrt(minLeafCount)));
+    Array<List<Boundable<Envelope>>> vv = verticalSlices(sortedChildBoundables, Math.ceil(Math.sqrt(minLeafCount)));
     return createParentBoundablesFromVerticalSlices(vv, newLevel);
   }
 
@@ -71,8 +69,7 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope> implements SpatialIndex<T>
     return super.createParentBoundables(childBoundables, newLevel);
   }
 
-  Array<List<Boundable<Envelope>>> verticalSlices(
-      List<Boundable<Envelope>> childBoundables, int sliceCount) {
+  Array<List<Boundable<Envelope>>> verticalSlices(List<Boundable<Envelope>> childBoundables, int sliceCount) {
     int sliceCapacity = Math.ceil(childBoundables.size / sliceCount);
     Array<List<Boundable<Envelope>>> slices = Array(sliceCount);
     final i = childBoundables.iterator;
@@ -87,9 +84,11 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope> implements SpatialIndex<T>
     return slices;
   }
 
-  STRtree([super.nodeCapacity = 10, STRtreeNode? super.root]) : super.of();
+  STRtree([super.nodeCapacity = 10]);
 
-  STRtree.of(super.nodeCapacity, List<Boundable<Envelope>> super.itemBoundables) : super.of2();
+  STRtree.of([super.nodeCapacity = 10, STRtreeNode? super.root]) : super.of();
+
+  STRtree.of2(super.nodeCapacity, List<Boundable<Envelope>> super.itemBoundables) : super.of2();
 
   @override
   AbstractNode<Envelope> createNode(int level) {

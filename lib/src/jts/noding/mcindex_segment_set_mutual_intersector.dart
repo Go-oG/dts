@@ -9,22 +9,14 @@ import 'segment_string.dart';
 
 class MCIndexSegmentSetMutualIntersector implements SegmentSetMutualIntersector {
   final STRtree _index = STRtree();
+  final Envelope? _envelope;
 
   double _overlapTolerance = 0.0;
 
-  Envelope? _envelope;
-
-  MCIndexSegmentSetMutualIntersector(List<SegmentString> baseSegStrings) {
+  MCIndexSegmentSetMutualIntersector(List<SegmentString> baseSegStrings,
+      [this._envelope, double overlapTolerance = 0]) {
     initBaseSegments(baseSegStrings);
-  }
-
-  MCIndexSegmentSetMutualIntersector.of(List<SegmentString> baseSegStrings, this._envelope) {
-    initBaseSegments(baseSegStrings);
-  }
-
-  MCIndexSegmentSetMutualIntersector.of2(
-      List<SegmentString> baseSegStrings, this._overlapTolerance) {
-    initBaseSegments(baseSegStrings);
+    _overlapTolerance = overlapTolerance;
   }
 
   SpatialIndex getIndex() {

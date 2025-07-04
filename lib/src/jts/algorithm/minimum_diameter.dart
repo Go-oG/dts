@@ -75,7 +75,7 @@ class MinimumDiameter {
       _convexHullPts = convexGeom.getCoordinates();
     }
 
-    if (_convexHullPts!.length == 0) {
+    if (_convexHullPts!.isEmpty) {
       _minWidth = 0.0;
       _minWidthPt = null;
       _minBaseSeg = null;

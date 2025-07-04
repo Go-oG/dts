@@ -43,7 +43,7 @@ class _UnionStrategy implements UnionStrategy {
   }
 
   @override
-  bool isdoubleingPrecision() {
+  bool isDoublePrecision() {
     return OverlayUtil.isdoubleing(pm);
   }
 }

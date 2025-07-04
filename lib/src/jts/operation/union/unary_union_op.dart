@@ -8,20 +8,12 @@ import 'point_geometry_union.dart';
 import 'union_strategy.dart';
 
 class UnaryUnionOp {
-  static Geometry? union2(List<Geometry> geoms) {
-    UnaryUnionOp op = UnaryUnionOp(geoms);
-    return op.union();
-  }
-
-  static Geometry? union3(List<Geometry> geoms, GeometryFactory geomFact) {
+  static Geometry? unionS(List<Geometry> geoms, [GeometryFactory? geomFact]) {
     UnaryUnionOp op = UnaryUnionOp(geoms, geomFact);
     return op.union();
   }
 
-  static Geometry? union4(Geometry geom) {
-    UnaryUnionOp op = UnaryUnionOp.of(geom);
-    return op.union();
-  }
+  static Geometry? unionS2(Geometry geom) => UnaryUnionOp.of(geom).union();
 
   GeometryFactory? _geomFact;
 
@@ -82,7 +74,7 @@ class UnaryUnionOp {
     } else if (unionLA == null) {
       union = unionPoints;
     } else {
-      union = PointGeometryUnion.union2(unionPoints as Puntal, unionLA);
+      union = PointGeometryUnion.unionS(unionPoints as Puntal, unionLA);
     }
     if (union == null) {
       return _geomFact!.createGeomCollection();

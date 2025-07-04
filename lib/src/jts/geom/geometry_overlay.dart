@@ -89,7 +89,7 @@ class GeometryOverlay {
     if (_isOverlayNG) {
       return OverlayNGRobust.union(a);
     } else {
-      return UnaryUnionOp.union4(a);
+      return UnaryUnionOp.unionS2(a);
     }
   }
 }

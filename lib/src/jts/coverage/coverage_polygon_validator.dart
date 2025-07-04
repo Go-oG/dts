@@ -62,8 +62,7 @@ class CoveragePolygonValidator {
     return covPolys;
   }
 
-  void _checkTargetRings(
-      List<CoverageRing> targetRings, List<CoverageRing> adjRings, Envelope targetEnv) {
+  void _checkTargetRings(List<CoverageRing> targetRings, List<CoverageRing> adjRings, Envelope targetEnv) {
     _markMatchedSegments(targetRings, adjRings, targetEnv);
     if (CoverageRing.isKnownS(targetRings)) {
       return;
@@ -85,8 +84,7 @@ class CoveragePolygonValidator {
     return geomFactory.createLineString();
   }
 
-  void _markMatchedSegments(
-      List<CoverageRing> targetRings, List<CoverageRing> adjRngs, Envelope targetEnv) {
+  void _markMatchedSegments(List<CoverageRing> targetRings, List<CoverageRing> adjRngs, Envelope targetEnv) {
     Map<_CoverageRingSegment, _CoverageRingSegment> segmentMap = {};
     _markMatchedSegments2(targetRings, targetEnv, segmentMap);
     _markMatchedSegments2(adjRngs, targetEnv, segmentMap);
@@ -116,19 +114,15 @@ class CoveragePolygonValidator {
   }
 
   void _markInvalidInteractingSegments(
-    List<CoverageRing> targetRings,
-    List<CoverageRing> adjRings,
-    double distanceTolerance,
-  ) {
+      List<CoverageRing> targetRings, List<CoverageRing> adjRings, double distanceTolerance) {
     InvalidSegmentDetector detector = InvalidSegmentDetector(distanceTolerance);
-    final segSetMutInt = MCIndexSegmentSetMutualIntersector.of2(targetRings, distanceTolerance);
+    final segSetMutInt = MCIndexSegmentSetMutualIntersector(targetRings, null, distanceTolerance);
     segSetMutInt.process(adjRings, detector);
   }
 
   static const _RING_SECTION_STRIDE = 1000;
 
-  void _markInvalidInteriorSegments(
-      List<CoverageRing> targetRings, List<CoveragePolygon> adjCovPolygons) {
+  void _markInvalidInteriorSegments(List<CoverageRing> targetRings, List<CoveragePolygon> adjCovPolygons) {
     for (CoverageRing ring in targetRings) {
       int stride = _RING_SECTION_STRIDE;
       for (int i = 0; i < (ring.size() - 1); i += stride) {
@@ -142,8 +136,7 @@ class CoveragePolygonValidator {
     }
   }
 
-  void _markInvalidInteriorSection(
-      CoverageRing ring, int iStart, int iEnd, List<CoveragePolygon> adjPolygons) {
+  void _markInvalidInteriorSection(CoverageRing ring, int iStart, int iEnd, List<CoveragePolygon> adjPolygons) {
     Envelope sectionEnv = ring.getEnvelope(iStart, iEnd);
     for (CoveragePolygon adjPoly in adjPolygons) {
       if (adjPoly.intersectsEnv(sectionEnv)) {

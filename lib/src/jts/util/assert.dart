@@ -3,12 +3,7 @@ class Assert {
     if (assertion) {
       return;
     }
-
-    if (message == null) {
-      throw AssertionFailedException();
-    } else {
-      throw AssertionFailedException(message);
-    }
+    throw AssertionFailedException(message ?? "");
   }
 
   static void equals(Object expectedValue, Object actualValue, [String? message]) {
@@ -26,5 +21,6 @@ class Assert {
 
 class AssertionFailedException {
   final String message;
+
   AssertionFailedException([this.message = ""]);
 }

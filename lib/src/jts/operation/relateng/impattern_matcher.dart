@@ -7,7 +7,7 @@ import 'impredicate.dart';
 
 class IMPatternMatcher extends IMPredicate {
   final String _imPattern;
-  late IntersectionMatrix _patternMatrix;
+  late final IntersectionMatrix _patternMatrix;
 
   IMPatternMatcher(this._imPattern) {
     _patternMatrix = IntersectionMatrix.of(_imPattern);

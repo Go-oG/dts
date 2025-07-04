@@ -26,7 +26,7 @@ abstract class AbstractSTRtree<T, B> {
   }
 
   AbstractSTRtree.of2(int nodeCapacity, List<Boundable<B>>? itemBoundables) {
-    this._nodeCapacity = nodeCapacity;
+    _nodeCapacity = nodeCapacity;
     _itemBoundables = itemBoundables;
   }
 
@@ -134,8 +134,7 @@ abstract class AbstractSTRtree<T, B> {
   }
 
   void insert(B bounds, T item) {
-    Assert.isTrue(
-        !_built, "Cannot insert items into an STR packed R-tree after it has been built.");
+    Assert.isTrue(!_built, "Cannot insert items into an STR packed R-tree after it has been built.");
     _itemBoundables!.add(ItemBoundable(bounds, item));
   }
 
@@ -300,9 +299,7 @@ abstract class AbstractSTRtree<T, B> {
 
   CComparator<Boundable<B>> getComparator();
 
-  List<Boundable<B>> getItemBoundables() {
-    return _itemBoundables ?? [];
-  }
+  List<Boundable<B>> getItemBoundables() => _itemBoundables ?? [];
 }
 
 abstract interface class IntersectsOp<B> {

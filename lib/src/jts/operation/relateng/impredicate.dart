@@ -19,7 +19,7 @@ abstract class IMPredicate extends BasicPredicate {
 
   int dimB = 0;
 
-  late IntersectionMatrix intMatrix;
+  late final IntersectionMatrix intMatrix;
 
   IMPredicate() {
     intMatrix = IntersectionMatrix();
@@ -50,11 +50,9 @@ abstract class IMPredicate extends BasicPredicate {
 
   bool intersectsExteriorOf(bool isA) {
     if (isA) {
-      return isIntersects(Location.exterior, Location.interior) ||
-          isIntersects(Location.exterior, Location.boundary);
+      return isIntersects(Location.exterior, Location.interior) || isIntersects(Location.exterior, Location.boundary);
     } else {
-      return isIntersects(Location.interior, Location.exterior) ||
-          isIntersects(Location.boundary, Location.exterior);
+      return isIntersects(Location.interior, Location.exterior) || isIntersects(Location.boundary, Location.exterior);
     }
   }
 

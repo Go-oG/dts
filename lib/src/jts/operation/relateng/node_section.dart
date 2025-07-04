@@ -21,9 +21,9 @@ class NodeSection implements Comparable<NodeSection> {
 
   final Coordinate _nodePt;
 
-  final Coordinate _v0;
+  final Coordinate? _v0;
 
-  final Coordinate _v1;
+  final Coordinate? _v1;
 
   final Geometry? _poly;
 
@@ -39,7 +39,7 @@ class NodeSection implements Comparable<NodeSection> {
     this._v1,
   );
 
-  Coordinate getVertex(int i) {
+  Coordinate? getVertex(int i) {
     return i == 0 ? _v0 : _v1;
   }
 
@@ -141,6 +141,6 @@ class NodeSection implements Comparable<NodeSection> {
 class NodeSectionEdgeAngleComparator implements CComparator<NodeSection> {
   @override
   int compare(NodeSection ns1, NodeSection ns2) {
-    return PolygonNodeTopology.compareAngle(ns1._nodePt, ns1.getVertex(0), ns2.getVertex(0));
+    return PolygonNodeTopology.compareAngle(ns1._nodePt, ns1.getVertex(0)!, ns2.getVertex(0)!);
   }
 }

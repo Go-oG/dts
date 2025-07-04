@@ -2,7 +2,7 @@ import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/index/item_visitor.dart';
 
 class SortedPackedIntervalRTree<T> {
-  final List<IntervalRTreeLeafNode<T>> _leaves = [];
+  final List<IntervalRTreeNode<T>> _leaves = [];
 
   IntervalRTreeNode<T>? _root;
 

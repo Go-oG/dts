@@ -3,7 +3,7 @@ import 'package:dts/src/jts/noding/segment_intersector.dart';
 import 'package:dts/src/jts/noding/segment_string.dart';
 
 class EdgeSegmentOverlapAction extends MonotoneChainOverlapAction {
-  NSegmentIntersector si;
+  final NSegmentIntersector si;
 
   EdgeSegmentOverlapAction(this.si);
 

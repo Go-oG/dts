@@ -28,7 +28,7 @@ class RelatePointLocator {
 
   List<Geometry>? _polygons;
 
-  Array<PointOnGeometryLocator?>? _polyLocator;
+  Array<PointOnGeometryLocator>? _polyLocator;
 
   LinearBoundary? _lineBoundary;
 
@@ -101,9 +101,7 @@ class RelatePointLocator {
         return DimensionLocation.locationArea(locPoly);
       }
     }
-    return _lineBoundary!.isBoundary(p)
-        ? DimensionLocation.LINE_BOUNDARY
-        : DimensionLocation.LINE_INTERIOR;
+    return _lineBoundary!.isBoundary(p) ? DimensionLocation.LINE_BOUNDARY : DimensionLocation.LINE_INTERIOR;
   }
 
   int locateNode(Coordinate p, Geometry? parentPolygonal) {
@@ -219,11 +217,10 @@ class RelatePointLocator {
   }
 
   PointOnGeometryLocator getLocator(int index) {
-    PointOnGeometryLocator? locator = _polyLocator![index];
+    PointOnGeometryLocator? locator = _polyLocator?.get(index);
     if (locator == null) {
       Geometry polygonal = _polygons!.get(index);
-      locator =
-          (isPrepared) ? IndexedPointInAreaLocator(polygonal) : SimplePointInAreaLocator(polygonal);
+      locator = isPrepared ? IndexedPointInAreaLocator(polygonal) : SimplePointInAreaLocator(polygonal);
       _polyLocator![index] = locator;
     }
     return locator;

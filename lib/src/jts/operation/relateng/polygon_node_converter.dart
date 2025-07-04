@@ -22,21 +22,20 @@ class PolygonNodeConverter {
     return convertedSections;
   }
 
-  static int convertShellAndHoles(
-      List<NodeSection> sections, int shellIndex, List<NodeSection> convertedSections) {
+  static int convertShellAndHoles(List<NodeSection> sections, int shellIndex, List<NodeSection> convertedSections) {
     NodeSection shellSection = sections.get(shellIndex);
-    Coordinate inVertex = shellSection.getVertex(0);
+    Coordinate? inVertex = shellSection.getVertex(0);
     int i = next(sections, shellIndex);
     NodeSection? holeSection;
     while (!sections.get(i).isShell()) {
       holeSection = sections.get(i);
-      Coordinate outVertex = holeSection.getVertex(1);
+      final outVertex = holeSection.getVertex(1);
       NodeSection ns = createSection(shellSection, inVertex, outVertex);
       convertedSections.add(ns);
       inVertex = holeSection.getVertex(0);
       i = next(sections, i);
     }
-    Coordinate outVertex = shellSection.getVertex(1);
+    final outVertex = shellSection.getVertex(1);
     NodeSection ns = createSection(shellSection, inVertex, outVertex);
     convertedSections.add(ns);
     return i;
@@ -47,17 +46,16 @@ class PolygonNodeConverter {
     NodeSection copySection = sections.get(0);
     for (int i = 0; i < sections.size; i++) {
       int inext = next(sections, i);
-      Coordinate inVertex = sections.get(i).getVertex(0);
-      Coordinate outVertex = sections.get(inext).getVertex(1);
+      Coordinate? inVertex = sections.get(i).getVertex(0);
+      Coordinate? outVertex = sections.get(inext).getVertex(1);
       NodeSection ns = createSection(copySection, inVertex, outVertex);
       convertedSections.add(ns);
     }
     return convertedSections;
   }
 
-  static NodeSection createSection(NodeSection ns, Coordinate v0, Coordinate v1) {
-    return NodeSection(ns.isA(), Dimension.A, ns.id, 0, ns.getPolygonal(), ns.isNodeAtVertex(), v0,
-        ns.nodePt(), v1);
+  static NodeSection createSection(NodeSection ns, Coordinate? v0, Coordinate? v1) {
+    return NodeSection(ns.isA(), Dimension.A, ns.id, 0, ns.getPolygonal(), ns.isNodeAtVertex(), v0, ns.nodePt(), v1);
   }
 
   static List<NodeSection> extractUnique(List<NodeSection> sections) {

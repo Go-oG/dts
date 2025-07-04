@@ -19,29 +19,19 @@ class _PredicateTracer implements TopologyPredicate {
   _PredicateTracer(this._pred);
 
   @override
-  String name() {
-    return _pred.name();
-  }
+  String name() => _pred.name();
 
   @override
-  bool requireSelfNoding() {
-    return _pred.requireSelfNoding();
-  }
+  bool requireSelfNoding() => _pred.requireSelfNoding();
 
   @override
-  bool requireInteraction() {
-    return _pred.requireInteraction();
-  }
+  bool requireInteraction() => _pred.requireInteraction();
 
   @override
-  bool requireCovers(bool isSourceA) {
-    return _pred.requireCovers(isSourceA);
-  }
+  bool requireCovers(bool isSourceA) => _pred.requireCovers(isSourceA);
 
   @override
-  bool requireExteriorCheck(bool isSourceA) {
-    return _pred.requireExteriorCheck(isSourceA);
-  }
+  bool requireExteriorCheck(bool isSourceA) => _pred.requireExteriorCheck(isSourceA);
 
   @override
   void init(int dimA, int dimB) {
@@ -57,8 +47,7 @@ class _PredicateTracer implements TopologyPredicate {
 
   @override
   void updateDimension(int locA, int locB, int dimension) {
-    String desc =
-        ("A:${Location.toLocationSymbol(locA)}/B:${Location.toLocationSymbol(locB)} -> $dimension");
+    String desc = ("A:${Location.toLocationSymbol(locA)}/B:${Location.toLocationSymbol(locB)} -> $dimension");
     String ind = "";
     bool isChanged = isDimChanged(locA, locB, dimension);
     if (isChanged) {

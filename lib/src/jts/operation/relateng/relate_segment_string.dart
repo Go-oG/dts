@@ -9,8 +9,7 @@ import 'node_section.dart';
 import 'relate_geometry.dart';
 
 class RelateSegmentString extends BasicSegmentString {
-  static RelateSegmentString createLine(
-      Array<Coordinate> pts, bool isA, int elementId, RelateGeometry parent) {
+  static RelateSegmentString createLine(Array<Coordinate> pts, bool isA, int elementId, RelateGeometry parent) {
     return createSegmentString(pts, isA, Dimension.L, elementId, -1, null, parent);
   }
 
@@ -20,8 +19,7 @@ class RelateSegmentString extends BasicSegmentString {
     int elementId,
     int ringId,
     Geometry poly,
-    RelateGeometry parent,
-  ) {
+    RelateGeometry parent) {
     return createSegmentString(pts, isA, Dimension.A, elementId, ringId, poly, parent);
   }
 
@@ -64,21 +62,15 @@ class RelateSegmentString extends BasicSegmentString {
     this._inputGeom,
   ) : super(pts, null);
 
-  RelateGeometry getGeometry() {
-    return _inputGeom;
-  }
+  RelateGeometry getGeometry()=>_inputGeom;
 
-  Geometry? getPolygonal() {
-    return _parentPolygonal;
-  }
+  Geometry? getPolygonal()=>_parentPolygonal;
 
   NodeSection createNodeSection(int segIndex, Coordinate intPt) {
-    bool isNodeAtVertex =
-        intPt.equals2D(getCoordinate(segIndex)) || intPt.equals2D(getCoordinate(segIndex + 1));
-    Coordinate prev = prevVertex(segIndex, intPt)!;
-    Coordinate next = nextVertex(segIndex, intPt)!;
-    return NodeSection(
-        isA, _dimension, id, ringId, _parentPolygonal, isNodeAtVertex, prev, intPt, next);
+    bool isNodeAtVertex = intPt.equals2D(getCoordinate(segIndex)) || intPt.equals2D(getCoordinate(segIndex + 1));
+    Coordinate? prev = prevVertex(segIndex, intPt);
+    Coordinate? next = nextVertex(segIndex, intPt);
+    return NodeSection(isA, _dimension, id, ringId, _parentPolygonal, isNodeAtVertex, prev, intPt, next);
   }
 
   Coordinate? prevVertex(int segIndex, Coordinate pt) {

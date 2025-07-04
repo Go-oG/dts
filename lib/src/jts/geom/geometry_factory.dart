@@ -218,7 +218,6 @@ final class GeometryFactory {
 
   Polygon createPolygon5(List<Offset> vertexList, [bool close = true]) {
     var list = vertexList.map((e) => Coordinate.of2(e)).toList();
-
     return createPolygon4(list, close);
   }
 

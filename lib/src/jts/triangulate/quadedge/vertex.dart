@@ -31,25 +31,19 @@ class Vertex {
     p = Coordinate(x, y, z);
   }
 
-  Vertex.of(Coordinate p) {
-    p = Coordinate.of(p);
+  Vertex.of(Coordinate coord) {
+    p = Coordinate.of(coord);
   }
 
-  double getX() {
-    return p.x;
-  }
+  double getX()=> p.x;
 
-  double getY() {
-    return p.y;
-  }
+  double getY()=> p.y;
 
   double getZ() => p.z;
 
   void setZ(double z) => p.z = z;
 
-  Coordinate getCoordinate() {
-    return p;
-  }
+  Coordinate getCoordinate() =>p;
 
   bool equals(Vertex x) {
     if ((p.x == x.getX()) && (p.y == x.getY())) {

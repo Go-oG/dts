@@ -1,3 +1,4 @@
+export 'package:d_util/d_util.dart';
 export '/src/jts/algorithm/angle.dart';
 export '/src/jts/algorithm/area.dart';
 export '/src/jts/algorithm/boundary_node_rule.dart';
