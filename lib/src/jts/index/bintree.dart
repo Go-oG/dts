@@ -1,8 +1,8 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/index/quadtree/double_bits.dart';
 import 'package:dts/src/jts/util/assert.dart';
 
-import 'Interval_size.dart';
+import 'interval_size.dart';
 
 class BinTree<T> {
   static BinInterval ensureExtent(BinInterval itemInterval, double minExtent) {

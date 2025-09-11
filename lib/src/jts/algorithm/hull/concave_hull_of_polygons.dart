@@ -1,6 +1,5 @@
 import 'dart:collection';
 
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -29,12 +28,13 @@ class ConcaveHullOfPolygons {
     return hull.getHull();
   }
 
-  static Geometry concaveHullByLengthRatio(Geometry polygons, double lengthRatio) {
+  static Geometry concaveHullByLengthRatio(
+      Geometry polygons, double lengthRatio) {
     return concaveHullByLengthRatio2(polygons, lengthRatio, false, false);
   }
 
-  static Geometry concaveHullByLengthRatio2(
-      Geometry polygons, double lengthRatio, bool isTight, bool isHolesAllowed) {
+  static Geometry concaveHullByLengthRatio2(Geometry polygons,
+      double lengthRatio, bool isTight, bool isHolesAllowed) {
     ConcaveHullOfPolygons hull = ConcaveHullOfPolygons(polygons);
     hull.setMaximumEdgeLengthRatio(lengthRatio);
     hull.setHolesAllowed(isHolesAllowed);
@@ -48,7 +48,8 @@ class ConcaveHullOfPolygons {
     return hull.getFill();
   }
 
-  static Geometry concaveFillByLengthRatio(Geometry polygons, double lengthRatio) {
+  static Geometry concaveFillByLengthRatio(
+      Geometry polygons, double lengthRatio) {
     ConcaveHullOfPolygons hull = ConcaveHullOfPolygons(polygons);
     hull.setMaximumEdgeLengthRatio(lengthRatio);
     return hull.getFill();
@@ -70,7 +71,7 @@ class ConcaveHullOfPolygons {
 
   bool _isTight = false;
 
-  Array<LinearRing>? _polygonRings;
+  List<LinearRing>? _polygonRings;
 
   late Set<Tri> _hullTris;
 
@@ -80,7 +81,7 @@ class ConcaveHullOfPolygons {
 
   ConcaveHullOfPolygons(Geometry polygons) {
     if (!((polygons is Polygon) || (polygons is MultiPolygon))) {
-      throw IllegalArgumentException("Input must be polygonal");
+      throw ArgumentError("Input must be polygonal");
     }
     _inputPolygons = polygons;
     geomFactory = _inputPolygons.factory;
@@ -88,7 +89,7 @@ class ConcaveHullOfPolygons {
 
   void setMaximumEdgeLength(double edgeLength) {
     if (edgeLength < 0) {
-      throw IllegalArgumentException("Edge length must be non-negative");
+      throw ArgumentError("Edge length must be non-negative");
     }
 
     _maxEdgeLength = edgeLength;
@@ -96,8 +97,8 @@ class ConcaveHullOfPolygons {
   }
 
   void setMaximumEdgeLengthRatio(double edgeLengthRatio) {
-    if ((edgeLengthRatio < 0) || (edgeLengthRatio > 1)) {
-      throw IllegalArgumentException("Edge length ratio must be in range [0,1]");
+    if (edgeLengthRatio < 0 || edgeLengthRatio > 1) {
+      throw ArgumentError("Edge length ratio must be in range [0,1]");
     }
 
     _maxEdgeLengthRatio = edgeLengthRatio;
@@ -134,12 +135,15 @@ class ConcaveHullOfPolygons {
 
   void _buildHullTris() {
     _polygonRings = OuterShellsExtracter.extractShells(_inputPolygons);
-    Polygon frame = _createFrame(_inputPolygons.getEnvelopeInternal(), _polygonRings, geomFactory);
-    ConstrainedDelaunayTriangulator cdt = ConstrainedDelaunayTriangulator(frame);
+    Polygon frame = _createFrame(
+        _inputPolygons.getEnvelopeInternal(), _polygonRings, geomFactory);
+    ConstrainedDelaunayTriangulator cdt =
+        ConstrainedDelaunayTriangulator(frame);
     List<Tri> tris = cdt.getTriangles();
-    Array<Coordinate> framePts = frame.getExteriorRing().getCoordinates();
+    final framePts = frame.getExteriorRing().getCoordinates();
     if (_maxEdgeLengthRatio >= 0) {
-      _maxEdgeLength = _computeTargetEdgeLength(tris, framePts, _maxEdgeLengthRatio);
+      _maxEdgeLength =
+          _computeTargetEdgeLength(tris, framePts, _maxEdgeLengthRatio);
     }
     _hullTris = _removeFrameCornerTris(tris, framePts);
     _removeBorderTris();
@@ -148,8 +152,8 @@ class ConcaveHullOfPolygons {
     }
   }
 
-  static double _computeTargetEdgeLength(
-      List<Tri> triList, Array<Coordinate> frameCorners, double edgeLengthRatio) {
+  static double _computeTargetEdgeLength(List<Tri> triList,
+      List<Coordinate> frameCorners, double edgeLengthRatio) {
     if (edgeLengthRatio == 0) {
       return 0;
     }
@@ -183,8 +187,8 @@ class ConcaveHullOfPolygons {
     return (edgeLengthRatio * (maxEdgeLen - minEdgeLen)) + minEdgeLen;
   }
 
-  static Polygon _createFrame(
-      Envelope polygonsEnv, Array<LinearRing>? polygonRings, GeometryFactory geomFactory) {
+  static Polygon _createFrame(Envelope polygonsEnv,
+      List<LinearRing>? polygonRings, GeometryFactory geomFactory) {
     double diam = polygonsEnv.diameter;
     Envelope envFrame = polygonsEnv.copy();
     envFrame.expandBy(_frameExpandFactor * diam);
@@ -193,13 +197,14 @@ class ConcaveHullOfPolygons {
     return geomFactory.createPolygon(shell, polygonRings);
   }
 
-  static bool _isFrameTri(Tri tri, Array<Coordinate> frameCorners) {
+  static bool _isFrameTri(Tri tri, List<Coordinate> frameCorners) {
     int index = _vertexIndex(tri, frameCorners);
     bool isFrameTri = index >= 0;
     return isFrameTri;
   }
 
-  Set<Tri> _removeFrameCornerTris(List<Tri> tris, Array<Coordinate> frameCorners) {
+  Set<Tri> _removeFrameCornerTris(
+      List<Tri> tris, List<Coordinate> frameCorners) {
     Set<Tri> hullTris = HashSet<Tri>();
     _borderTriQue = Queue();
     for (Tri tri in tris) {
@@ -208,7 +213,8 @@ class ConcaveHullOfPolygons {
       if (isFrameTri) {
         int oppIndex = Tri.oppEdge(index);
         Tri? oppTri = tri.getAdjacent(oppIndex);
-        bool isBorderTri = (oppTri != null) && (!_isFrameTri(oppTri, frameCorners));
+        bool isBorderTri =
+            (oppTri != null) && (!_isFrameTri(oppTri, frameCorners));
         if (isBorderTri) {
           _addBorderTri(tri, oppIndex);
         }
@@ -220,7 +226,7 @@ class ConcaveHullOfPolygons {
     return hullTris;
   }
 
-  static int _vertexIndex(Tri tri, Array<Coordinate> pts) {
+  static int _vertexIndex(Tri tri, List<Coordinate> pts) {
     for (Coordinate p in pts) {
       int index = tri.getIndex(p);
       if (index >= 0) {
@@ -289,7 +295,7 @@ class ConcaveHullOfPolygons {
     }
 
     if (_borderEdgeMap.containsKey(tri)) {
-      int borderEdgeIndex = _borderEdgeMap.get(tri)!;
+      int borderEdgeIndex = _borderEdgeMap[tri]!;
       double edgeLen = tri.getLength(borderEdgeIndex);
       if (edgeLen > _maxEdgeLength) {
         return true;
@@ -320,7 +326,7 @@ class ConcaveHullOfPolygons {
     Tri adj = tri.getAdjacent(index)!;
     _borderTriQue.add(adj);
     int borderEdgeIndex = adj.getIndex2(tri);
-    _borderEdgeMap.put(adj, borderEdgeIndex);
+    _borderEdgeMap[adj] = borderEdgeIndex;
   }
 
   void _removeBorderTri(Tri tri) {
@@ -355,7 +361,7 @@ class ConcaveHullOfPolygons {
   }
 
   Geometry _createHullGeometry(Set<Tri> hullTris, bool isIncludeInput) {
-    if ((!isIncludeInput) && hullTris.isEmpty) {
+    if (!isIncludeInput && hullTris.isEmpty) {
       return _createEmptyHull();
     }
 
@@ -367,9 +373,8 @@ class ConcaveHullOfPolygons {
     if (fillGeometry.isEmpty()) {
       return _inputPolygons.copy();
     }
-    Array<Geometry> geoms = [fillGeometry, _inputPolygons].toArray();
+    List<Geometry> geoms = [fillGeometry, _inputPolygons];
     GeometryCollection geomColl = geomFactory.createGeomCollection(geoms);
-    Geometry hull = CoverageUnionNG.union(geomColl);
-    return hull;
+    return CoverageUnionNG.union(geomColl);
   }
 }

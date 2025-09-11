@@ -1,7 +1,6 @@
-import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart' show Math;
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/geom/precision_model.dart';
 import 'package:dts/src/jts/math/math.dart';
@@ -23,7 +22,8 @@ class BufferOp {
 
   static final int _kMaxPrecisionDigits = 12;
 
-  static double precisionScaleFactor(Geometry g, double distance, int maxPrecisionDigits) {
+  static double precisionScaleFactor(
+      Geometry g, double distance, int maxPrecisionDigits) {
     Envelope env = g.getEnvelopeInternal();
     double envMax = MathUtil.max2(
       Math.abs(env.maxX),
@@ -33,7 +33,8 @@ class BufferOp {
     );
     double expandByDistance = (distance > 0.0) ? distance : 0.0;
     double bufEnvMax = envMax + (2 * expandByDistance);
-    int bufEnvPrecisionDigits = ((Math.log(bufEnvMax) / Math.log(10)) + 1.0).toInt();
+    int bufEnvPrecisionDigits =
+        ((Math.log(bufEnvMax) / Math.log(10)) + 1.0).toInt();
     int minUnitLog10 = maxPrecisionDigits - bufEnvPrecisionDigits;
     double scaleFactor = Math.pow(10.0, minUnitLog10);
     return scaleFactor;
@@ -45,7 +46,8 @@ class BufferOp {
     return geomBuf;
   }
 
-  static Geometry bufferOp3(Geometry g, double distance, BufferParameters? params) {
+  static Geometry bufferOp3(
+      Geometry g, double distance, BufferParameters? params) {
     BufferOp bufOp = BufferOp(g, params);
     Geometry geomBuf = bufOp.getResultGeometry(distance);
     return geomBuf;
@@ -58,7 +60,8 @@ class BufferOp {
     return geomBuf;
   }
 
-  static Geometry bufferOp4(Geometry g, double distance, int quadrantSegments, int endCapStyle) {
+  static Geometry bufferOp4(
+      Geometry g, double distance, int quadrantSegments, int endCapStyle) {
     BufferOp bufOp = BufferOp(g);
     bufOp.setQuadrantSegments(quadrantSegments);
     bufOp.setEndCapStyle(endCapStyle);
@@ -90,11 +93,10 @@ class BufferOp {
     List<Polygon> polys = [];
     extractPolygons(poly0, polys);
     extractPolygons(poly1, polys);
-    if (polys.size == 1) {
-      return polys.get(0);
+    if (polys.length == 1) {
+      return polys.first;
     }
-
-    return poly0.factory.createMultiPolygon(GeometryFactory.toPolygonArray(polys));
+    return poly0.factory.createMultiPolygon(polys);
   }
 
   static void extractPolygons(Geometry poly0, List<Polygon> polys) {
@@ -142,7 +144,7 @@ class BufferOp {
     }
 
     PrecisionModel argPM = _argGeom.factory.getPrecisionModel();
-    if (argPM.getType() == PrecisionModel.FIXED) {
+    if (argPM.getType().isFixed) {
       bufferFixedPrecision(argPM);
     } else {
       bufferReducedPrecision();
@@ -164,7 +166,8 @@ class BufferOp {
   }
 
   void bufferReducedPrecision2(int precisionDigits) {
-    double sizeBasedScaleFactor = precisionScaleFactor(_argGeom, distance, precisionDigits);
+    double sizeBasedScaleFactor =
+        precisionScaleFactor(_argGeom, distance, precisionDigits);
     PrecisionModel fixedPM = PrecisionModel.fixed(sizeBasedScaleFactor);
     bufferFixedPrecision(fixedPM);
   }

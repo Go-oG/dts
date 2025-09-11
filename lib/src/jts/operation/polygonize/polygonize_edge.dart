@@ -4,5 +4,5 @@ import 'package:dts/src/jts/planargraph/edge.dart';
 class PolygonizeEdge extends PGEdge {
   LineString line;
   PolygonizeEdge(this.line);
-  LineString getLine()=>line;
+  LineString getLine() => line;
 }

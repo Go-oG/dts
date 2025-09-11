@@ -13,7 +13,8 @@ class ElevationModel {
     if (geom2 != null) {
       extent.expandToInclude(geom2.getEnvelopeInternal());
     }
-    ElevationModel model = ElevationModel(extent, _kDefaultCellNum, _kDefaultCellNum);
+    ElevationModel model =
+        ElevationModel(extent, _kDefaultCellNum, _kDefaultCellNum);
     model.add(geom1);
 
     if (geom2 != null) {
@@ -171,7 +172,8 @@ class _CoordinateSequenceFilter implements CoordinateSequenceFilter {
       return;
     }
     double z = seq.getOrdinate(i, Coordinate.kZ);
-    parent.add2(seq.getOrdinate(i, Coordinate.kX), seq.getOrdinate(i, Coordinate.kY), z);
+    parent.add2(seq.getOrdinate(i, Coordinate.kX),
+        seq.getOrdinate(i, Coordinate.kY), z);
   }
 
   @override
@@ -197,7 +199,8 @@ class _CoordinateSequenceFilter2 implements CoordinateSequenceFilter {
       return;
     }
     if (Double.isNaN(seq.getZ(i))) {
-      double z = parent.getZ(seq.getOrdinate(i, Coordinate.kX), seq.getOrdinate(i, Coordinate.kY));
+      double z = parent.getZ(
+          seq.getOrdinate(i, Coordinate.kX), seq.getOrdinate(i, Coordinate.kY));
       seq.setOrdinate(i, Coordinate.kZ, z);
     }
   }

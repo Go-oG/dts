@@ -1,9 +1,12 @@
+import 'dart:math' as m;
+
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/distance/point_pair_distance.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
+import 'package:dts/src/jts/util/collection_util.dart';
 
-class DiscreteFrechetDistance with InitMixin {
+class DiscreteFrechetDistance {
   static double distance(Geometry g0, Geometry g1) {
     return DiscreteFrechetDistance(g0, g1)._distance();
   }
@@ -17,18 +20,21 @@ class DiscreteFrechetDistance with InitMixin {
   DiscreteFrechetDistance(this._g0, this._g1);
 
   double _distance() {
-    Array<Coordinate> coords0 = _g0.getCoordinates();
-    Array<Coordinate> coords1 = _g1.getCoordinates();
-    MatrixStorage distances = _createMatrixStorage(coords0.length, coords1.length);
-    Array<int> diagonal = bresenhamDiagonal(coords0.length, coords1.length);
-    Map<double, Array<int>> distanceToPair = {};
-    _computeCoordinateDistances(coords0, coords1, diagonal, distances, distanceToPair);
-    _ptDist = _computeFrechet(coords0, coords1, diagonal, distances, distanceToPair);
+    final coords0 = _g0.getCoordinates();
+    final coords1 = _g1.getCoordinates();
+    MatrixStorage distances =
+        _createMatrixStorage(coords0.length, coords1.length);
+    List<int> diagonal = bresenhamDiagonal(coords0.length, coords1.length);
+    Map<double, List<int>> distanceToPair = {};
+    _computeCoordinateDistances(
+        coords0, coords1, diagonal, distances, distanceToPair);
+    _ptDist =
+        _computeFrechet(coords0, coords1, diagonal, distances, distanceToPair);
     return _ptDist.getDistance();
   }
 
   static MatrixStorage _createMatrixStorage(int rows, int cols) {
-    int max = Math.max(rows, cols).toInt();
+    int max = m.max(rows, cols);
     if (max < 1024) {
       return RectMatrix(rows, cols, double.infinity);
     }
@@ -36,19 +42,21 @@ class DiscreteFrechetDistance with InitMixin {
     return CsrMatrix.of(rows, cols, double.infinity);
   }
 
-  Array<Coordinate> getCoordinates() {
-    if (getAndMarkInit()) {
+  bool _init = false;
+  List<Coordinate> getCoordinates() {
+    if (_init == false) {
+      _init = true;
       _distance();
     }
     return _ptDist.getCoordinates();
   }
 
   static PointPairDistance _computeFrechet(
-    Array<Coordinate> coords0,
-    Array<Coordinate> coords1,
-    Array<int> diagonal,
+    List<Coordinate> coords0,
+    List<Coordinate> coords1,
+    List<int> diagonal,
     MatrixStorage distances,
-    Map<double, Array<int>> distanceToPair,
+    Map<double, List<int>> distanceToPair,
   ) {
     for (int d = 0; d < diagonal.length; d += 2) {
       int i0 = diagonal[d];
@@ -76,7 +84,7 @@ class DiscreteFrechetDistance with InitMixin {
     }
     PointPairDistance result = PointPairDistance();
     double distance = distances.get(coords0.length - 1, coords1.length - 1);
-    Array<int>? index = distanceToPair.get(distance);
+    List<int>? index = distanceToPair[distance];
     if (index == null) {
       throw ("Pair of points not recorded for computed distance");
     }
@@ -89,7 +97,7 @@ class DiscreteFrechetDistance with InitMixin {
       double d0 = matrix.get(i - 1, j - 1);
       double d1 = matrix.get(i - 1, j);
       double d2 = matrix.get(i, j - 1);
-      return Math.minD(Math.minD(d0, d1), d2);
+      return m.min(m.min(d0, d1), d2);
     }
     if ((i == 0) && (j == 0)) {
       return matrix.get(0, 0);
@@ -103,11 +111,11 @@ class DiscreteFrechetDistance with InitMixin {
   }
 
   void _computeCoordinateDistances(
-    Array<Coordinate> coords0,
-    Array<Coordinate> coords1,
-    Array<int> diagonal,
+    List<Coordinate> coords0,
+    List<Coordinate> coords1,
+    List<int> diagonal,
     MatrixStorage distances,
-    Map<double, Array<int>> distanceToPair,
+    Map<double, List<int>> distanceToPair,
   ) {
     int numDiag = diagonal.length;
     double maxDistOnDiag = 0.0;
@@ -124,7 +132,7 @@ class DiscreteFrechetDistance with InitMixin {
       }
 
       distances.set(i0, j0, diagDist);
-      distanceToPair.putIfAbsent(diagDist, () => [i0, j0].toArray());
+      distanceToPair.putIfAbsent(diagDist, () => [i0, j0]);
     }
     for (int k = 0; k < (numDiag - 2); k += 2) {
       int i0 = diagonal[k];
@@ -137,7 +145,7 @@ class DiscreteFrechetDistance with InitMixin {
           double dist = coords0[i].distance(coord1);
           if ((dist < maxDistOnDiag) || (i < imin)) {
             distances.set(i, j0, dist);
-            distanceToPair.putIfAbsent(dist, () => [i, j0].toArray());
+            distanceToPair.putIfAbsent(dist, () => [i, j0]);
           } else {
             break;
           }
@@ -152,7 +160,7 @@ class DiscreteFrechetDistance with InitMixin {
           double dist = coord0.distance(coords1[j]);
           if ((dist < maxDistOnDiag) || (j < jmin)) {
             distances.set(i0, j, dist);
-            distanceToPair.putIfAbsent(dist, () => [i0, j].toArray());
+            distanceToPair.putIfAbsent(dist, () => [i0, j]);
           } else {
             break;
           }
@@ -164,9 +172,9 @@ class DiscreteFrechetDistance with InitMixin {
     }
   }
 
-  static Array<int> bresenhamDiagonal(int numCols, int numRows) {
-    int dim = Math.max(numCols, numRows).toInt();
-    Array<int> diagXY = Array<int>(2 * dim);
+  static List<int> bresenhamDiagonal(int numCols, int numRows) {
+    int dim = m.max(numCols, numRows).toInt();
+    List<int> diagXY = List.filled(2 * dim, 0);
     int dx = numCols - 1;
     int dy = numRows - 1;
     int err;
@@ -217,10 +225,10 @@ abstract class MatrixStorage {
 }
 
 final class RectMatrix extends MatrixStorage {
-  late final Array<double> matrix;
+  late final List<double> matrix;
 
   RectMatrix(super.numRows, super.numCols, super.defaultValue) {
-    matrix = Array<double>(numRows * numCols);
+    matrix = List.filled(numRows * numCols, 0);
     for (var i = 0; i < matrix.length; i++) {
       matrix[i] = defaultValue;
     }
@@ -238,27 +246,30 @@ final class RectMatrix extends MatrixStorage {
 
   @override
   bool isValueSet(int i, int j) {
-    return Double.doubleToLongBits(get(i, j)) != Double.doubleToLongBits(defaultValue);
+    return Double.doubleToLongBits(get(i, j)) !=
+        Double.doubleToLongBits(defaultValue);
   }
 }
 
 final class CsrMatrix extends MatrixStorage {
-  late Array<double> v;
-  late final Array<int> ri;
-  late Array<int> ci;
+  late List<double> v;
+  late final List<int> ri;
+  late List<int> ci;
 
   static CsrMatrix of(int numRows, int numCols, double defaultValue) {
-    return CsrMatrix(numRows, numCols, defaultValue, expectedValuesHeuristic(numRows, numCols));
+    return CsrMatrix(numRows, numCols, defaultValue,
+        expectedValuesHeuristic(numRows, numCols));
   }
 
-  CsrMatrix(super.numRows, super.numCols, super.defaultValue, int expectedValues) {
-    v = Array<double>(expectedValues);
-    ci = Array<int>(expectedValues);
-    ri = Array<int>(numRows + 1);
+  CsrMatrix(
+      super.numRows, super.numCols, super.defaultValue, int expectedValues) {
+    v = List.filled(expectedValues, 0);
+    ci = List.filled(expectedValues, 0);
+    ri = List.filled(numRows + 1, 0);
   }
 
   static int expectedValuesHeuristic(int numRows, int numCols) {
-    int max = Math.max(numRows, numCols).toInt();
+    int max = m.max(numRows, numCols).toInt();
     return (max * max) ~/ 10;
   }
 
@@ -268,7 +279,7 @@ final class CsrMatrix extends MatrixStorage {
     if (cHigh <= cLow) {
       return ~cLow;
     }
-    return Array.binarySearch(ci, cLow, cHigh, j);
+    return CollectionUtil.binarySearch(ci, cLow, cHigh, j);
   }
 
   @override
@@ -310,9 +321,10 @@ final class CsrMatrix extends MatrixStorage {
       return;
     }
 
-    int increment = Math.max(numRows, numCols).toInt();
-    v = Array.copyOf(v, v.length + increment);
-    ci = Array.copyOf(ci, v.length + increment);
+    int increment = m.max(numRows, numCols);
+
+    v = CollectionUtil.copyOf(v, v.length + increment, 0);
+    ci = CollectionUtil.copyOf(ci, v.length + increment, 0);
   }
 }
 
@@ -330,7 +342,7 @@ final class HashMapMatrix extends MatrixStorage {
   @override
   void set(int i, int j, double value) {
     int key = (i << 32) | j;
-    matrix.put(key, value);
+    matrix[key] = value;
   }
 
   @override

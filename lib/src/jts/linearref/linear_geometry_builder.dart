@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -28,20 +27,13 @@ class LinearGeometryBuilder {
     _fixInvalidLines = fixInvalidLines;
   }
 
-  void add(Coordinate pt) {
-    add2(pt, true);
-  }
-
-  void add2(Coordinate pt, bool allowRepeatedPoints) {
+  void add(Coordinate pt, [bool allowRepeatedPoints = true]) {
     _coordList ??= CoordinateList();
-
     _coordList!.add3(pt, allowRepeatedPoints);
     _lastPt = pt;
   }
 
-  Coordinate? getLastCoordinate() {
-    return _lastPt;
-  }
+  Coordinate? getLastCoordinate() => _lastPt;
 
   void endLine() {
     if (_coordList == null) {
@@ -51,8 +43,8 @@ class LinearGeometryBuilder {
       _coordList = null;
       return;
     }
-    Array<Coordinate> rawPts = _coordList!.toCoordinateArray();
-    Array<Coordinate> pts = rawPts;
+    List<Coordinate> rawPts = _coordList!.toCoordinateList();
+    List<Coordinate> pts = rawPts;
     if (_fixInvalidLines) {
       pts = validCoordinateSequence(rawPts);
     }
@@ -71,11 +63,11 @@ class LinearGeometryBuilder {
     }
   }
 
-  Array<Coordinate> validCoordinateSequence(Array<Coordinate> pts) {
+  List<Coordinate> validCoordinateSequence(List<Coordinate> pts) {
     if (pts.length >= 2) {
       return pts;
     }
-    return [pts[0], pts[0]].toArray();
+    return [pts[0], pts[0]];
   }
 
   Geometry getGeometry() {

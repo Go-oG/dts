@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/util/assert.dart';
 
 import 'coordinate.dart';
@@ -15,9 +14,8 @@ import 'puntal.dart';
 class Point extends BaseGeometry<Point> implements Puntal {
   late CoordinateSequence _coordinates;
 
-  Point(Coordinate? coordinate, PrecisionModel pm, int srid)
-      : super(GeometryFactory(pm: pm, srid: srid)) {
-    _init(factory.csFactory.create(coordinate != null ? Array.of(coordinate) : Array(0)));
+  Point(Coordinate? coordinate, PrecisionModel pm, int srid) : super(GeometryFactory(pm: pm, srid: srid)) {
+    _init(factory.csFactory.create(coordinate != null ? [coordinate] : []));
   }
 
   Point.of(CoordinateSequence? coordinates, GeometryFactory factory) : super(factory) {
@@ -25,14 +23,14 @@ class Point extends BaseGeometry<Point> implements Puntal {
   }
 
   void _init(CoordinateSequence? coordinates) {
-    coordinates ??= factory.csFactory.create(Array(0));
+    coordinates ??= factory.csFactory.create([]);
     Assert.isTrue(coordinates.size() <= 1);
     _coordinates = coordinates;
   }
 
   @override
-  Array<Coordinate> getCoordinates() {
-    return isEmpty() ? Array(0) : Array.of(getCoordinate()!);
+  List<Coordinate> getCoordinates() {
+    return isEmpty() ? [] : [getCoordinate()!];
   }
 
   @override
@@ -57,7 +55,7 @@ class Point extends BaseGeometry<Point> implements Puntal {
 
   @override
   int getBoundaryDimension() {
-    return Dimension.False;
+    return Dimension.kFalse;
   }
 
   double getX() {

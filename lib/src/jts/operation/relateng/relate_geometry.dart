@@ -22,8 +22,8 @@ import 'relate_point_locator.dart';
 import 'relate_segment_string.dart';
 
 class RelateGeometry {
-  static const bool GEOM_A = true;
-  static const bool GEOM_B = false;
+  static const bool kGeomA = true;
+  static const bool kGeomB = false;
 
   static String name(bool isA) {
     return isA ? "A" : "B";
@@ -35,7 +35,7 @@ class RelateGeometry {
 
   late Envelope _geomEnv;
 
-  int _geomDim = Dimension.False;
+  int _geomDim = Dimension.kFalse;
 
   Set<Coordinate>? _uniquePoints;
 
@@ -180,7 +180,7 @@ class RelateGeometry {
 
   int getDimensionReal() {
     if (_isGeomEmpty) {
-      return Dimension.False;
+      return Dimension.kFalse;
     }
 
     if ((getDimension() == 1) && _isLineZeroLen) {
@@ -209,7 +209,7 @@ class RelateGeometry {
 
   bool isNodeInArea(Coordinate nodePt, Geometry? parentPolygonal) {
     int loc = getLocator().locateNodeWithDim(nodePt, parentPolygonal);
-    return loc == DimensionLocation.AREA_INTERIOR;
+    return loc == DimensionLocation.kAreaInterior;
   }
 
   int locateLineEndWithDim(Coordinate p) {
@@ -230,8 +230,7 @@ class RelateGeometry {
   }
 
   bool isSelfNodingRequired() {
-    if ((((geom is Point) || (geom is MultiPoint)) || (geom is Polygon)) ||
-        (geom is MultiPolygon)) {
+    if ((((geom is Point) || (geom is MultiPoint)) || (geom is Polygon)) || (geom is MultiPolygon)) {
       return false;
     }
 
@@ -296,8 +295,7 @@ class RelateGeometry {
     return segStrings;
   }
 
-  void extractSegmentStrings2(
-      bool isA, Envelope? env, Geometry geom, List<RelateSegmentString> segStrings) {
+  void extractSegmentStrings2(bool isA, Envelope? env, Geometry geom, List<RelateSegmentString> segStrings) {
     MultiPolygon? parentPolygonal;
     if (geom is MultiPolygon) {
       parentPolygonal = geom;
@@ -329,16 +327,14 @@ class RelateGeometry {
     }
     _elementId++;
     if (geom is LineString) {
-      RelateSegmentString ss =
-          RelateSegmentString.createLine(geom.getCoordinates(), isA, _elementId, this);
+      RelateSegmentString ss = RelateSegmentString.createLine(geom.getCoordinates(), isA, _elementId, this);
       segStrings.add(ss);
     } else if (geom is Polygon) {
       Polygon poly = geom;
       Geometry parentPoly = (parentPolygonal != null) ? parentPolygonal : poly;
       extractRingToSegmentString(isA, poly.getExteriorRing(), 0, env, parentPoly, segStrings);
       for (int i = 0; i < poly.getNumInteriorRing(); i++) {
-        extractRingToSegmentString(
-            isA, poly.getInteriorRingN(i), i + 1, env, parentPoly, segStrings);
+        extractRingToSegmentString(isA, poly.getInteriorRingN(i), i + 1, env, parentPoly, segStrings);
       }
     }
   }
@@ -360,13 +356,12 @@ class RelateGeometry {
     }
 
     bool requireCW = ringId == 0;
-    Array<Coordinate> pts = orient(ring.getCoordinates(), requireCW);
-    RelateSegmentString ss =
-        RelateSegmentString.createRing(pts, isA, _elementId, ringId, parentPoly, this);
+    final pts = orient(ring.getCoordinates(), requireCW);
+    final ss = RelateSegmentString.createRing(pts, isA, _elementId, ringId, parentPoly, this);
     segStrings.add(ss);
   }
 
-  static Array<Coordinate> orient(Array<Coordinate> pts, bool orientCW) {
+  static List<Coordinate> orient(List<Coordinate> pts, bool orientCW) {
     bool isFlipped = orientCW == Orientation.isCCW(pts);
     if (isFlipped) {
       pts = pts.copy();

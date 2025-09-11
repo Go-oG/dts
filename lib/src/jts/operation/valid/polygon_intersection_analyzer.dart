@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/polygon_node_topology.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
@@ -75,16 +75,18 @@ class PolygonIntersectionAnalyzer implements NSegmentIntersector {
     }
     bool isSameSegString = ss0 == ss1;
     if (li.isProper || (li.getIntersectionNum() >= 2)) {
-      return TopologyValidationError.SELF_INTERSECTION;
+      return TopologyValidationError.kSelfIntersection;
     }
     Coordinate intPt = li.getIntersection(0);
     bool isAdjacentSegments = isSameSegString && isAdjacentInRing(ss0, segIndex0, segIndex1);
     if (isAdjacentSegments) return _noInvalidInterSection;
 
     if (isSameSegString && (!_isInvertedRingValid)) {
-      return TopologyValidationError.RING_SELF_INTERSECTION;
+      return TopologyValidationError.kRingSelfIntersection;
     }
-    if (intPt.equals2D(p01) || intPt.equals2D(p11)) return _noInvalidInterSection;
+    if (intPt.equals2D(p01) || intPt.equals2D(p11)) {
+      return _noInvalidInterSection;
+    }
 
     Coordinate e00 = p00;
     Coordinate e01 = p01;
@@ -100,7 +102,7 @@ class PolygonIntersectionAnalyzer implements NSegmentIntersector {
     }
     bool hasCrossing = PolygonNodeTopology.isCrossing(intPt, e00, e01, e10, e11);
     if (hasCrossing) {
-      return TopologyValidationError.SELF_INTERSECTION;
+      return TopologyValidationError.kSelfIntersection;
     }
     if (isSameSegString && _isInvertedRingValid) {
       addSelfTouch(ss0, intPt, e00, e01, e10, e11);

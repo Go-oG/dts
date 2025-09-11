@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/distance.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -23,7 +22,7 @@ class MinimumClearance {
 
   double _minClearance = 0;
 
-  Array<Coordinate?>? _minClearancePts;
+  List<Coordinate?>? _minClearancePts;
 
   MinimumClearance(this.inputGeom);
 
@@ -34,19 +33,18 @@ class MinimumClearance {
 
   LineString getLine() {
     compute();
-    if ((_minClearancePts == null) || (_minClearancePts![0] == null)) {
+    if (_minClearancePts == null || _minClearancePts![0] == null) {
       return inputGeom.factory.createLineString();
     }
-
-    return inputGeom.factory.createLineString2(_minClearancePts!.asArray());
+    return inputGeom.factory
+        .createLineString2(_minClearancePts!.nonNulls.toList());
   }
 
   void compute() {
     if (_minClearancePts != null) {
       return;
     }
-
-    _minClearancePts = Array(2);
+    _minClearancePts = List.filled(2, null);
     _minClearance = double.maxFinite;
     if (inputGeom.isEmpty()) {
       return;
@@ -62,11 +60,9 @@ class MinimumClearance {
 class MinClearanceDistance implements ItemDistance<FacetSequence, dynamic> {
   double _minDist = double.maxFinite;
 
-  final Array<Coordinate> _minPts = Array(2);
+  final List<Coordinate?> _minPts = List.filled(2, null);
 
-  Array<Coordinate> getCoordinates() {
-    return _minPts;
-  }
+  List<Coordinate?> getCoordinates() => _minPts.toList();
 
   @override
   double distance(final b1, final b2) {

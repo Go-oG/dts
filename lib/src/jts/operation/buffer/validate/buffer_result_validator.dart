@@ -7,9 +7,9 @@ import 'package:dts/src/jts/geom/polygon.dart';
 import 'buffer_distance_validator.dart';
 
 class BufferResultValidator {
-  static bool VERBOSE = false;
+  static bool kVerbose = false;
 
-  static const double _MAX_ENV_DIFF_FRAC = 0.012;
+  static const double _kMaxEnvDiffFrac = 0.012;
 
   static bool isValid2(Geometry g, double distance, Geometry result) {
     final validator = BufferResultValidator(g, distance, result);
@@ -77,7 +77,7 @@ class BufferResultValidator {
   }
 
   void report(String checkName) {
-    if (!VERBOSE) {
+    if (!kVerbose) {
       return;
     }
   }
@@ -112,7 +112,7 @@ class BufferResultValidator {
       return;
     }
 
-    double padding = distance * _MAX_ENV_DIFF_FRAC;
+    double padding = distance * _kMaxEnvDiffFrac;
     if (padding == 0.0) {
       padding = 0.001;
     }

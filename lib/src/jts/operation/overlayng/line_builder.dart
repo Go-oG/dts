@@ -1,5 +1,3 @@
-import 'package:d_util/d_util.dart';
-import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
@@ -26,8 +24,8 @@ class NgLineBuilder {
 
   final List<LineString> _lines = [];
 
-  NgLineBuilder(InputGeometry inputGeom, this.graph, this._hasResultArea, this._opCode,
-      this.geometryFactory) {
+  NgLineBuilder(InputGeometry inputGeom, this.graph, this._hasResultArea,
+      this._opCode, this.geometryFactory) {
     _inputAreaIndex = inputGeom.getAreaIndex();
   }
 
@@ -77,7 +75,8 @@ class NgLineBuilder {
         return false;
       }
     }
-    if ((_isAllowMixedResult && (_opCode == OverlayOpCode.intersection)) && lbl.isBoundaryTouch()) {
+    if ((_isAllowMixedResult && (_opCode == OverlayOpCode.intersection)) &&
+        lbl.isBoundaryTouch()) {
       return true;
     }
     int aLoc = effectiveLocation(lbl, 0);
@@ -119,9 +118,7 @@ class NgLineBuilder {
     CoordinateList pts = CoordinateList();
     pts.add3(edge.orig(), false);
     edge.addCoordinates(pts);
-    Array<Coordinate> ptsOut = pts.toCoordinateArray2(isForward);
-    LineString line = geometryFactory.createLineString2(ptsOut);
-    return line;
+    return geometryFactory.createLineString2(pts.toCoordinateList(isForward));
   }
 
   void addResultLinesMerged() {
@@ -174,9 +171,8 @@ class NgLineBuilder {
       }
       e = nextLineEdgeUnvisited(e.symOE());
     } while (e != null);
-    Array<Coordinate> ptsOut = pts.toCoordinateArray2(isForward);
-    LineString line = geometryFactory.createLineString2(ptsOut);
-    return line;
+
+    return geometryFactory.createLineString2(pts.toCoordinateList(isForward));
   }
 
   static OverlayEdge? nextLineEdgeUnvisited(OverlayEdge node) {

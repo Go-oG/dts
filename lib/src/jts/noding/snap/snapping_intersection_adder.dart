@@ -65,7 +65,8 @@ class SnappingIntersectionAdder implements NSegmentIntersector {
     }
   }
 
-  static bool isAdjacent(SegmentString ss0, int segIndex0, SegmentString ss1, int segIndex1) {
+  static bool isAdjacent(
+      SegmentString ss0, int segIndex0, SegmentString ss1, int segIndex1) {
     if (ss0 != ss1) return false;
 
     bool isAdjacent = (segIndex0 - segIndex1).abs() == 1;
@@ -73,7 +74,8 @@ class SnappingIntersectionAdder implements NSegmentIntersector {
 
     if (ss0.isClosed()) {
       int maxSegIndex = ss0.size() - 1;
-      if (((segIndex0 == 0) && (segIndex1 == maxSegIndex)) || ((segIndex1 == 0) && (segIndex0 == maxSegIndex))) {
+      if (((segIndex0 == 0) && (segIndex1 == maxSegIndex)) ||
+          ((segIndex1 == 0) && (segIndex0 == maxSegIndex))) {
         return true;
       }
     }

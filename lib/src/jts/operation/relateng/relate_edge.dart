@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/polygon_node_topology.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/dimension.dart';
@@ -9,7 +9,8 @@ import 'package:dts/src/jts/util/assert.dart';
 import 'relate_node.dart';
 
 class RelateEdge {
-  static RelateEdge create(RelateNGNode node, Coordinate dirPt, bool isA, int dim, bool isForward) {
+  static RelateEdge create(
+      RelateNGNode node, Coordinate dirPt, bool isA, int dim, bool isForward) {
     if (dim == Dimension.A) {
       return RelateEdge(node, dirPt, isA, isForward);
     }
@@ -64,7 +65,8 @@ class RelateEdge {
     setLocationsLine(isA);
   }
 
-  RelateEdge.of2(this._node, this.dirPt, bool isA, int locLeft, int locRight, int locLine) {
+  RelateEdge.of2(this._node, this.dirPt, bool isA, int locLeft, int locRight,
+      int locLine) {
     setLocations(isA, locLeft, locRight, locLine);
   }
 
@@ -113,7 +115,8 @@ class RelateEdge {
   }
 
   int compareToEdge(Coordinate edgeDirPt) {
-    return PolygonNodeTopology.compareAngle(_node.getCoordinate(), dirPt, edgeDirPt);
+    return PolygonNodeTopology.compareAngle(
+        _node.getCoordinate(), dirPt, edgeDirPt);
   }
 
   void merge(bool isA, Coordinate dirPt, int dim, bool isForward) {

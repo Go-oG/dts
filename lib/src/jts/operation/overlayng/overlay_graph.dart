@@ -1,4 +1,3 @@
- import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 
 import 'overlay_edge.dart';
@@ -31,7 +30,7 @@ class OverlayGraph {
     return resultEdges;
   }
 
-  OverlayEdge addEdge(Array<Coordinate> pts, OverlayLabel label) {
+  OverlayEdge addEdge(List<Coordinate> pts, OverlayLabel label) {
     OverlayEdge e = OverlayEdge.createEdgePair(pts, label);
     insert(e);
     insert(e.symOE());
@@ -44,7 +43,7 @@ class OverlayGraph {
     if (nodeEdge != null) {
       nodeEdge.insert(e);
     } else {
-      _nodeMap.put(e.orig(), e);
+      _nodeMap[e.orig()] = e;
     }
   }
 }

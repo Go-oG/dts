@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart' show ListIterator, ListExt;
 import 'package:dts/src/jts/algorithm/boundary_node_rule.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
@@ -27,14 +27,12 @@ class Edge extends GraphComponent {
   static void updateIMS(Label label, IntersectionMatrix im) {
     im.setAtLeastIfValid(label.getLocation2(0, Position.on), label.getLocation2(1, Position.on), 1);
     if (label.isArea()) {
-      im.setAtLeastIfValid(
-          label.getLocation2(0, Position.left), label.getLocation2(1, Position.left), 2);
-      im.setAtLeastIfValid(
-          label.getLocation2(0, Position.right), label.getLocation2(1, Position.right), 2);
+      im.setAtLeastIfValid(label.getLocation2(0, Position.left), label.getLocation2(1, Position.left), 2);
+      im.setAtLeastIfValid(label.getLocation2(0, Position.right), label.getLocation2(1, Position.right), 2);
     }
   }
 
-  Array<Coordinate> pts;
+  List<Coordinate> pts;
 
   Envelope? _env;
 
@@ -60,21 +58,14 @@ class Edge extends GraphComponent {
     this.name = name;
   }
 
-  Array<Coordinate> getCoordinates() {
-    return pts;
-  }
+  List<Coordinate> getCoordinates() => pts;
 
   Coordinate getCoordinate2(int i) {
     return pts[i];
   }
 
   @override
-  Coordinate? getCoordinate() {
-    if (pts.length > 0) {
-      return pts[0];
-    }
-    return null;
-  }
+  Coordinate? getCoordinate() => pts.firstOrNull;
 
   Envelope getEnvelope() {
     if (_env == null) {
@@ -126,10 +117,7 @@ class Edge extends GraphComponent {
   }
 
   Edge getCollapsedEdge() {
-    Array<Coordinate> newPts = Array(2);
-    newPts[0] = pts[0];
-    newPts[1] = pts[1];
-    return Edge(newPts, Label.toLineLabel(label!));
+    return Edge([pts[0], pts[1]], Label.toLineLabel(label!));
   }
 
   void setIsolated(bool isIsolated) {
@@ -172,7 +160,7 @@ class Edge extends GraphComponent {
     final int prime = 31;
     int result = 1;
     result = (prime * result) + pts.length;
-    if (pts.length > 0) {
+    if (pts.isNotEmpty) {
       Coordinate p0 = pts[0];
       Coordinate p1 = pts[pts.length - 1];
       if (1 == p0.compareTo(p1)) {
@@ -230,7 +218,7 @@ class EdgeList {
   void add(Edge e) {
     _edges.add(e);
     final oca = OrientedCoordinateArray(e.getCoordinates());
-    _ocaMap.put(oca, e);
+    _ocaMap[oca] = e;
   }
 
   void addAll(List<Edge> edgeColl) {
@@ -244,13 +232,11 @@ class EdgeList {
   }
 
   Edge? findEqualEdge(Edge e) {
-    OrientedCoordinateArray oca = OrientedCoordinateArray(e.getCoordinates());
-    return _ocaMap.get(oca);
+    final oca = OrientedCoordinateArray(e.getCoordinates());
+    return _ocaMap[oca];
   }
 
-  ListIterator<Edge> iterator() {
-    return _edges.listIterator();
-  }
+  ListIterator<Edge> iterator() => _edges.listIterator();
 
   Edge get(int i) {
     return _edges.get(i);
@@ -360,10 +346,12 @@ class EdgeEnd implements Comparable<EdgeEnd> {
 
 class DirectedEdge extends EdgeEnd {
   static int depthFactor(int currLocation, int nextLocation) {
-    if ((currLocation == Location.exterior) && (nextLocation == Location.interior)) {
+    if (currLocation == Location.exterior && nextLocation == Location.interior) {
       return 1;
-    } else if ((currLocation == Location.interior) && (nextLocation == Location.exterior))
+    }
+    if (currLocation == Location.interior && nextLocation == Location.exterior) {
       return -1;
+    }
 
     return 0;
   }
@@ -384,7 +372,7 @@ class DirectedEdge extends EdgeEnd {
 
   EdgeRing? _minEdgeRing;
 
-  final Array<int> _depth = [0, -999, -999].toArray();
+  final List<int> _depth = [0, -999, -999];
 
   DirectedEdge(super.edge, this.isForward) {
     if (isForward) {
@@ -530,12 +518,12 @@ abstract class EdgeEndStar {
 
   List<EdgeEnd>? edgeList;
 
-  final Array<int> _ptInAreaLocation = [Location.none, Location.none].toArray();
+  final List<int> _ptInAreaLocation = [Location.none, Location.none];
 
   void insert(EdgeEnd e);
 
   void insertEdgeEnd(EdgeEnd e, Object obj) {
-    edgeMap.put(e, obj);
+    edgeMap[e] = obj;
     edgeList = null;
   }
 
@@ -571,11 +559,11 @@ abstract class EdgeEndStar {
     return (edgeList!.get(iNextCW));
   }
 
-  void computeLabelling(Array<GeometryGraph> geomGraph) {
+  void computeLabelling(List<GeometryGraph> geomGraph) {
     computeEdgeEndLabels(geomGraph[0].getBoundaryNodeRule()!);
     propagateSideLabels(0);
     propagateSideLabels(1);
-    Array<bool> hasDimensionalCollapseEdge = [false, false].toArray();
+    List<bool> hasDimensionalCollapseEdge = [false, false];
     for (var e in edgeList!) {
       Label label = e.getLabel()!;
       for (int geomi = 0; geomi < 2; geomi++) {
@@ -608,10 +596,9 @@ abstract class EdgeEndStar {
     }
   }
 
-  int getLocation(int geomIndex, Coordinate p, Array<GeometryGraph> geom) {
+  int getLocation(int geomIndex, Coordinate p, List<GeometryGraph> geom) {
     if (_ptInAreaLocation[geomIndex] == Location.none) {
-      _ptInAreaLocation[geomIndex] =
-          SimplePointInAreaLocator.locateS(p, geom[geomIndex].getGeometry()!);
+      _ptInAreaLocation[geomIndex] = SimplePointInAreaLocator.locateS(p, geom[geomIndex].getGeometry()!);
     }
     return _ptInAreaLocation[geomIndex];
   }
@@ -651,8 +638,7 @@ abstract class EdgeEndStar {
     int startLoc = Location.none;
     for (var e in edgeList!) {
       Label label = e.getLabel()!;
-      if (label.isArea2(geomIndex) &&
-          (label.getLocation2(geomIndex, Position.left) != Location.none)) {
+      if (label.isArea2(geomIndex) && (label.getLocation2(geomIndex, Position.left) != Location.none)) {
         startLoc = label.getLocation2(geomIndex, Position.left);
       }
     }
@@ -678,8 +664,7 @@ abstract class EdgeEndStar {
           }
           currLoc = leftLoc;
         } else {
-          Assert.isTrue(label.getLocation2(geomIndex, Position.left) == Location.none,
-              "found single null side");
+          Assert.isTrue(label.getLocation2(geomIndex, Position.left) == Location.none, "found single null side");
           label.setLocation2(geomIndex, Position.right, currLoc);
           label.setLocation2(geomIndex, Position.left, currLoc);
         }
@@ -762,7 +747,7 @@ class DirectedEdgeStar extends EdgeEndStar {
   }
 
   @override
-  void computeLabelling(Array<GeometryGraph> geom) {
+  void computeLabelling(List<GeometryGraph> geom) {
     super.computeLabelling(geom);
     _label = Label.of(Location.none);
     for (var ee in iterator()) {
@@ -928,8 +913,9 @@ class DirectedEdgeStar extends EdgeEndStar {
     int targetLastDepth = de.getDepth(Position.right);
     int nextDepth = computeDepths2(edgeIndex + 1, edgeList!.length, startDepth);
     int lastDepth = computeDepths2(0, edgeIndex, nextDepth);
-    if (lastDepth != targetLastDepth)
+    if (lastDepth != targetLastDepth) {
       throw TopologyException("depth mismatch at ${de.getCoordinate()}");
+    }
   }
 
   int computeDepths2(int startIndex, int endIndex, int startDepth) {
@@ -997,11 +983,11 @@ class EdgeIntersectionList {
 
   EdgeIntersection add(Coordinate intPt, int segmentIndex, double dist) {
     final eiNew = EdgeIntersection(intPt, segmentIndex, dist);
-    final ei = _nodeMap.get(eiNew);
+    final ei = _nodeMap[eiNew];
     if (ei != null) {
       return ei;
     }
-    _nodeMap.put(eiNew, eiNew);
+    _nodeMap[eiNew] = eiNew;
     return eiNew;
   }
 
@@ -1035,20 +1021,13 @@ class EdgeIntersectionList {
   }
 
   Edge createSplitEdge(EdgeIntersection ei0, EdgeIntersection ei1) {
-    int npts = (ei1.segmentIndex - ei0.segmentIndex) + 2;
     Coordinate lastSegStartPt = edge.pts[ei1.segmentIndex];
     bool useIntPt1 = (ei1.dist > 0.0) || (!ei1.coord.equals2D(lastSegStartPt));
-    if (!useIntPt1) {
-      npts--;
-    }
-    Array<Coordinate> pts = Array(npts);
-    int ipt = 0;
-    pts[ipt++] = Coordinate.of(ei0.coord);
+    List<Coordinate> pts = [Coordinate.of(ei0.coord)];
     for (int i = ei0.segmentIndex + 1; i <= ei1.segmentIndex; i++) {
-      pts[ipt++] = edge.pts[i];
+      pts.add(edge.pts[i]);
     }
-    if (useIntPt1) pts[ipt] = ei1.coord;
-
+    if (useIntPt1) pts.add(ei1.coord);
     return Edge(pts, Label(edge.label!));
   }
 }

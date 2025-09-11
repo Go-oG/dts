@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/geom/precision_model.dart';
@@ -10,7 +10,7 @@ import 'mcindex_noder.dart';
 import 'noder.dart';
 
 class IteratedNoder implements Noder {
-  static const int MAX_ITER = 5;
+  static const int kMaxIter = 5;
 
   PrecisionModel pm;
 
@@ -18,7 +18,7 @@ class IteratedNoder implements Noder {
 
   List<SegmentString>? nodedSegStrings;
 
-  int _maxIter = MAX_ITER;
+  int _maxIter = kMaxIter;
 
   IteratedNoder(this.pm) {
     li = RobustLineIntersector();

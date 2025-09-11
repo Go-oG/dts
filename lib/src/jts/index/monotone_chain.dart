@@ -6,7 +6,7 @@ import '../geom/line_segment.dart';
 import '../geom/quadrant.dart';
 
 class MonotoneChain<T> {
-  Array<Coordinate> pts;
+  List<Coordinate> pts;
   final int _start;
   final int _end;
   final T? context;
@@ -59,7 +59,8 @@ class MonotoneChain<T> {
     computeSelect(searchEnv, _start, _end, mcs);
   }
 
-  void computeSelect(Envelope searchEnv, int start0, int end0, MonotoneChainSelectAction mcs) {
+  void computeSelect(
+      Envelope searchEnv, int start0, int end0, MonotoneChainSelectAction mcs) {
     Coordinate p0 = pts[start0];
     Coordinate p1 = pts[end0];
     if ((end0 - start0) == 1) {
@@ -83,8 +84,10 @@ class MonotoneChain<T> {
     computeOverlaps2(_start, _end, mc, mc._start, mc._end, 0.0, mco);
   }
 
-  void computeOverlaps3(MonotoneChain mc, double overlapTolerance, MonotoneChainOverlapAction mco) {
-    computeOverlaps2(_start, _end, mc, mc._start, mc._end, overlapTolerance, mco);
+  void computeOverlaps3(MonotoneChain mc, double overlapTolerance,
+      MonotoneChainOverlapAction mco) {
+    computeOverlaps2(
+        _start, _end, mc, mc._start, mc._end, overlapTolerance, mco);
   }
 
   void computeOverlaps2(
@@ -126,8 +129,8 @@ class MonotoneChain<T> {
     }
   }
 
-  bool overlaps(
-      Coordinate p1, Coordinate p2, Coordinate q1, Coordinate q2, double overlapTolerance) {
+  bool overlaps(Coordinate p1, Coordinate p2, Coordinate q1, Coordinate q2,
+      double overlapTolerance) {
     double minq = Math.minD(q1.x, q2.x);
     double maxq = Math.maxD(q1.x, q2.x);
     double minp = Math.minD(p1.x, p2.x);
@@ -155,19 +158,21 @@ class MonotoneChain<T> {
     return true;
   }
 
-  bool overlaps2(
-      int start0, int end0, MonotoneChain mc, int start1, int end1, double overlapTolerance) {
+  bool overlaps2(int start0, int end0, MonotoneChain mc, int start1, int end1,
+      double overlapTolerance) {
     if (overlapTolerance > 0.0) {
-      return overlaps(pts[start0], pts[end0], mc.pts[start1], mc.pts[end1], overlapTolerance);
+      return overlaps(pts[start0], pts[end0], mc.pts[start1], mc.pts[end1],
+          overlapTolerance);
     }
-    return Envelope.intersects4(pts[start0], pts[end0], mc.pts[start1], mc.pts[end1]);
+    return Envelope.intersects4(
+        pts[start0], pts[end0], mc.pts[start1], mc.pts[end1]);
   }
 }
 
 class MonotoneChainBuilder {
   MonotoneChainBuilder._();
 
-  static List<MonotoneChain> getChains<T>(Array<Coordinate> pts, [T? context]) {
+  static List<MonotoneChain> getChains<T>(List<Coordinate> pts, [T? context]) {
     List<MonotoneChain> mcList = [];
     if (pts.isEmpty) {
       return mcList;
@@ -175,16 +180,17 @@ class MonotoneChainBuilder {
     int chainStart = 0;
     do {
       int chainEnd = findChainEnd(pts, chainStart);
-      MonotoneChain mc = MonotoneChain(pts, chainStart, chainEnd, context);
+      final mc = MonotoneChain(pts, chainStart, chainEnd, context);
       mcList.add(mc);
       chainStart = chainEnd;
     } while (chainStart < (pts.length - 1));
     return mcList;
   }
 
-  static int findChainEnd(Array<Coordinate> pts, int start) {
+  static int findChainEnd(List<Coordinate> pts, int start) {
     int safeStart = start;
-    while ((safeStart < (pts.length - 1)) && pts[safeStart].equals2D(pts[safeStart + 1])) {
+    while ((safeStart < (pts.length - 1)) &&
+        pts[safeStart].equals2D(pts[safeStart + 1])) {
       safeStart++;
     }
     if (safeStart >= (pts.length - 1)) {

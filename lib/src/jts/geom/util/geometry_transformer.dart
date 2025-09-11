@@ -1,5 +1,3 @@
-import 'package:d_util/d_util.dart';
-
 import '../coordinate.dart';
 import '../coordinate_sequence.dart';
 import '../geometry.dart';
@@ -39,18 +37,24 @@ class GeometryTransformer {
 
     if (inputGeom is LineString) return transformLineString(inputGeom, null);
 
-    if (inputGeom is MultiLineString) return transformMultiLineString(inputGeom, null);
+    if (inputGeom is MultiLineString) {
+      return transformMultiLineString(inputGeom, null);
+    }
 
     if (inputGeom is Polygon) return transformPolygon(inputGeom, null);
 
-    if (inputGeom is MultiPolygon) return transformMultiPolygon(inputGeom, null);
+    if (inputGeom is MultiPolygon) {
+      return transformMultiPolygon(inputGeom, null);
+    }
 
-    if (inputGeom is GeometryCollection) return transformGeometryCollection(inputGeom, null);
+    if (inputGeom is GeometryCollection) {
+      return transformGeometryCollection(inputGeom, null);
+    }
 
-    throw IllegalArgumentException("Unknown Geometry subtype: ${inputGeom.runtimeType}");
+    throw ArgumentError("Unknown Geometry subtype: ${inputGeom.runtimeType}");
   }
 
-  CoordinateSequence createCoordinateSequence(Array<Coordinate> coords) {
+  CoordinateSequence createCoordinateSequence(List<Coordinate> coords) {
     return factory.csFactory.create(coords);
   }
 
@@ -135,7 +139,7 @@ class GeometryTransformer {
       holes.add(hole);
     }
     if (isAllValidLinearRings) {
-      return factory.createPolygon(shell as LinearRing, Array());
+      return factory.createPolygon(shell as LinearRing, []);
     } else {
       List<Geometry> components = [];
       if (shell != null) {
@@ -176,7 +180,7 @@ class GeometryTransformer {
       transGeomList.add(transformGeom);
     }
     if (_preserveGeometryCollectionType) {
-      return factory.createGeomCollection(GeometryFactory.toGeometryArray(transGeomList)!);
+      return factory.createGeomCollection(transGeomList);
     }
     return factory.buildGeometry(transGeomList);
   }

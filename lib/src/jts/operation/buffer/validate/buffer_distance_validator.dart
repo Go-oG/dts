@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/distance/discrete_hausdorff_distance.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -12,7 +11,7 @@ import '../../../geom/geometry_collection.dart';
 import '../../../geom/multi_polygon.dart';
 
 class BufferDistanceValidator {
-  static const double _MAX_DISTANCE_DIFF_FRAC = 0.012;
+  static const double _kMaxDistanceDiffFrac = 0.012;
 
   Geometry input;
 
@@ -39,8 +38,8 @@ class BufferDistanceValidator {
   BufferDistanceValidator(this.input, this._bufDistance, this.result);
 
   bool isValidF() {
-    double posDistance = Math.abs(_bufDistance);
-    double distDelta = _MAX_DISTANCE_DIFF_FRAC * posDistance;
+    double posDistance = _bufDistance.abs();
+    double distDelta = _kMaxDistanceDiffFrac * posDistance;
     _minValidDistance = posDistance - distDelta;
     _maxValidDistance = posDistance + distDelta;
     if (input.isEmpty() || result.isEmpty()) {
@@ -103,7 +102,7 @@ class BufferDistanceValidator {
     _minDistanceFound = distOp.distance();
     if (_minDistanceFound < minDist) {
       isValid = false;
-      Array<Coordinate> pts = distOp.nearestPoints();
+      final pts = distOp.nearestPoints();
       _errorLocation = distOp.nearestPoints()[1];
       _errorIndicator = g1.factory.createLineString2(pts);
       _errMsg = "Distance between buffer curve and input is too small ($_minDistanceFound at)";
@@ -116,7 +115,7 @@ class BufferDistanceValidator {
     _maxDistanceFound = haus.orientedDistance();
     if (_maxDistanceFound > maxDist) {
       isValid = false;
-      Array<Coordinate> pts = haus.getCoordinates();
+      final pts = haus.getCoordinates();
       _errorLocation = pts[1];
       _errorIndicator = input.factory.createLineString2(pts);
       _errMsg = "Distance between buffer curve and input is too large ($_maxDistanceFound)})";

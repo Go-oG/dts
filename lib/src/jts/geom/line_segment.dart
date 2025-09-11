@@ -1,14 +1,8 @@
-import 'package:d_util/d_util.dart';
-import 'package:dts/src/jts/algorithm/distance.dart';
-import 'package:dts/src/jts/algorithm/intersection.dart';
-import 'package:dts/src/jts/algorithm/line_intersector.dart';
-import 'package:dts/src/jts/algorithm/orientation.dart';
-import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
-import 'package:dts/src/jts/math/math.dart';
+import 'dart:math';
 
-import 'coordinate.dart';
-import 'geometry_factory.dart';
-import 'line_string.dart';
+import 'package:d_util/d_util.dart';
+
+import '../../../dts.dart';
 
 class LineSegment implements Comparable<LineSegment> {
   Coordinate p0;
@@ -16,8 +10,7 @@ class LineSegment implements Comparable<LineSegment> {
 
   LineSegment(this.p0, this.p1);
 
-  LineSegment.of2(double x0, double y0, double x1, double y1)
-      : this(Coordinate(x0, y0), Coordinate(x1, y1));
+  LineSegment.of2(double x0, double y0, double x1, double y1) : this(Coordinate(x0, y0), Coordinate(x1, y1));
 
   LineSegment.of(LineSegment ls) : this(ls.p0, ls.p1);
 
@@ -43,19 +36,19 @@ class LineSegment implements Comparable<LineSegment> {
   }
 
   double minX() {
-    return Math.minD(p0.x, p1.x);
+    return min(p0.x, p1.x);
   }
 
   double maxX() {
-    return Math.maxD(p0.x, p1.x);
+    return max(p0.x, p1.x);
   }
 
   double minY() {
-    return Math.minD(p0.y, p1.y);
+    return min(p0.y, p1.y);
   }
 
   double maxY() {
-    return Math.maxD(p0.y, p1.y);
+    return max(p0.y, p1.y);
   }
 
   double getLength() {
@@ -74,11 +67,11 @@ class LineSegment implements Comparable<LineSegment> {
     int orient0 = Orientation.index(p0, p1, seg.p0);
     int orient1 = Orientation.index(p0, p1, seg.p1);
     if ((orient0 >= 0) && (orient1 >= 0)) {
-      return Math.max(orient0, orient1).toInt();
+      return max(orient0, orient1).toInt();
     }
 
     if ((orient0 <= 0) && (orient1 <= 0)) {
-      return Math.min(orient0, orient1).toInt();
+      return min(orient0, orient1).toInt();
     }
 
     return 0;
@@ -99,7 +92,7 @@ class LineSegment implements Comparable<LineSegment> {
   }
 
   double angle() {
-    return Math.atan2(p1.y - p0.y, p1.x - p0.x);
+    return atan2(p1.y - p0.y, p1.x - p0.x);
   }
 
   Coordinate midPoint() {
@@ -149,7 +142,9 @@ class LineSegment implements Comparable<LineSegment> {
     double ux = 0.0;
     double uy = 0.0;
     if (offsetDistance != 0.0) {
-      if (len <= 0.0) throw ("Cannot compute offset from zero-length line segment");
+      if (len <= 0.0) {
+        throw ("Cannot compute offset from zero-length line segment");
+      }
 
       ux = (offsetDistance * dx) / len;
       uy = (offsetDistance * dy) / len;
@@ -180,7 +175,9 @@ class LineSegment implements Comparable<LineSegment> {
     double segFrac = projectionFactor(inputPt);
     if (segFrac < 0.0) {
       segFrac = 0.0;
-    } else if ((segFrac > 1.0) || Double.isNaN(segFrac)) segFrac = 1.0;
+    } else if ((segFrac > 1.0) || segFrac.isNaN) {
+      segFrac = 1.0;
+    }
 
     return segFrac;
   }
@@ -229,12 +226,12 @@ class LineSegment implements Comparable<LineSegment> {
     double A = p1.y - p0.y;
     double B = p0.x - p1.x;
     double C = (p0.y * (p1.x - p0.x)) - (p0.x * (p1.y - p0.y));
-    double A2plusB2 = (A * A) + (B * B);
-    double A2subB2 = (A * A) - (B * B);
+    double a2PlusB2 = (A * A) + (B * B);
+    double a2SubB2 = (A * A) - (B * B);
     double x = p.x;
     double y = p.y;
-    double rx = ((((-A2subB2) * x) - (((2 * A) * B) * y)) - ((2 * A) * C)) / A2plusB2;
-    double ry = (((A2subB2 * y) - (((2 * A) * B) * x)) - ((2 * B) * C)) / A2plusB2;
+    double rx = (((-a2SubB2 * x) - (2 * A * B * y)) - (2 * A * C)) / a2PlusB2;
+    double ry = ((a2SubB2 * y) - (2 * A * B * x) - (2 * B * C)) / a2PlusB2;
     Coordinate coord = p.copy();
     coord.x = rx;
     coord.y = ry;
@@ -253,18 +250,18 @@ class LineSegment implements Comparable<LineSegment> {
     return p1;
   }
 
-  Array<Coordinate> closestPoints(LineSegment line) {
+  List<Coordinate> closestPoints(LineSegment line) {
     Coordinate? intPt = intersection(line);
     if (intPt != null) {
-      return [intPt, intPt].toArray();
+      return [intPt, intPt];
     }
-    Array<Coordinate> closestPt = Array(2);
+    List<Coordinate> closestPt;
     double minDistance = double.maxFinite;
     double dist;
     Coordinate close00 = closestPoint(line.p0);
     minDistance = close00.distance(line.p0);
-    closestPt[0] = close00;
-    closestPt[1] = line.p0;
+    closestPt = [close00, line.p0];
+
     Coordinate close01 = closestPoint(line.p1);
     dist = close01.distance(line.p1);
     if (dist < minDistance) {
@@ -304,10 +301,10 @@ class LineSegment implements Comparable<LineSegment> {
   }
 
   LineString? toGeometry(GeometryFactory geomFactory) {
-    return geomFactory.createLineString2([p0, p1].toArray());
+    return geomFactory.createLineString2([p0, p1]);
   }
 
-  int OLDhashCode() {
+  int oldHashCode() {
     int bits0 = Double.doubleToLongBits(p0.x);
     bits0 ^= Double.doubleToLongBits(p0.y) * 31;
     int hash0 = ((bits0)) ^ (bits0 >> 32);

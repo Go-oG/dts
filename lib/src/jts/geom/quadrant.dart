@@ -1,13 +1,10 @@
 import 'coordinate.dart';
 
 class Quadrant {
-  static const int NE = 0;
-
-  static const int NW = 1;
-
-  static const int SW = 2;
-
-  static const int SE = 3;
+  static const int kNe = 0;
+  static const int kNw = 1;
+  static const int kSw = 2;
+  static const int kSe = 3;
 
   static int quadrant(double dx, double dy) {
     if ((dx == 0.0) && (dy == 0.0)) {
@@ -16,14 +13,14 @@ class Quadrant {
 
     if (dx >= 0.0) {
       if (dy >= 0.0) {
-        return NE;
+        return kNe;
       } else {
-        return SE;
+        return kSe;
       }
     } else if (dy >= 0.0) {
-      return NW;
+      return kNw;
     } else {
-      return SW;
+      return kSw;
     }
   }
 
@@ -34,14 +31,14 @@ class Quadrant {
 
     if (p1.x >= p0.x) {
       if (p1.y >= p0.y) {
-        return NE;
-      } else {
-        return SE;
+        return kNe;
       }
-    } else if (p1.y >= p0.y)
-      return NW;
-    else
-      return SW;
+      return kSe;
+    }
+    if (p1.y >= p0.y) {
+      return kNw;
+    }
+    return kSw;
   }
 
   static bool isOpposite(int quad1, int quad2) {
@@ -67,13 +64,13 @@ class Quadrant {
   }
 
   static bool isInHalfPlane(int quad, int halfPlane) {
-    if (halfPlane == SE) {
-      return (quad == SE) || (quad == SW);
+    if (halfPlane == kSe) {
+      return (quad == kSe) || (quad == kSw);
     }
     return (quad == halfPlane) || (quad == (halfPlane + 1));
   }
 
   static bool isNorthern(int quad) {
-    return (quad == NE) || (quad == NW);
+    return (quad == kNe) || (quad == kNw);
   }
 }

@@ -31,7 +31,8 @@ class _PredicateTracer implements TopologyPredicate {
   bool requireCovers(bool isSourceA) => _pred.requireCovers(isSourceA);
 
   @override
-  bool requireExteriorCheck(bool isSourceA) => _pred.requireExteriorCheck(isSourceA);
+  bool requireExteriorCheck(bool isSourceA) =>
+      _pred.requireExteriorCheck(isSourceA);
 
   @override
   void init(int dimA, int dimB) {
@@ -47,7 +48,8 @@ class _PredicateTracer implements TopologyPredicate {
 
   @override
   void updateDimension(int locA, int locB, int dimension) {
-    String desc = ("A:${Location.toLocationSymbol(locA)}/B:${Location.toLocationSymbol(locB)} -> $dimension");
+    String desc =
+        ("A:${Location.toLocationSymbol(locA)}/B:${Location.toLocationSymbol(locB)} -> $dimension");
     String ind = "";
     bool isChanged = isDimChanged(locA, locB, dimension);
     if (isChanged) {

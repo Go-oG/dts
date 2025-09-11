@@ -54,7 +54,8 @@ class NodeSections {
       NodeSection ns = _sections[i];
       if (ns.isArea() && hasMultiplePolygonSections(_sections, i)) {
         List<NodeSection> polySections = collectPolygonSections(_sections, i);
-        List<NodeSection> nsConvert = PolygonNodeConverter.convert(polySections);
+        List<NodeSection> nsConvert =
+            PolygonNodeConverter.convert(polySections);
         node.addEdges2(nsConvert);
         i += polySections.length;
       } else {
@@ -77,7 +78,8 @@ class NodeSections {
     return ns.isSamePolygon(nsNext);
   }
 
-  static List<NodeSection> collectPolygonSections(List<NodeSection> sections, int i) {
+  static List<NodeSection> collectPolygonSections(
+      List<NodeSection> sections, int i) {
     List<NodeSection> polySections = [];
     NodeSection polySection = sections[i];
     while ((i < sections.length) && polySection.isSamePolygon(sections[i])) {

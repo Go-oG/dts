@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 
@@ -19,7 +18,7 @@ class Orientation {
     return CGAlgorithmsDD.orientationIndex(p1, p2, q);
   }
 
-  static bool isCCW(Array<Coordinate> ring) {
+  static bool isCCW(List<Coordinate> ring) {
     return isCCW2(CoordinateArraySequence.of2(ring, 2, 0));
   }
 
@@ -49,7 +48,8 @@ class Orientation {
     int iDownLow = iUpHi;
     do {
       iDownLow = (iDownLow + 1) % nPts;
-    } while ((iDownLow != iUpHi) && (ring.getOrdinate(iDownLow, Coordinate.kY) == upHiPt.y));
+    } while ((iDownLow != iUpHi) &&
+        (ring.getOrdinate(iDownLow, Coordinate.kY) == upHiPt.y));
     Coordinate downLowPt = ring.getCoordinate(iDownLow);
     int iDownHi = (iDownLow > 0) ? iDownLow - 1 : nPts - 1;
     Coordinate downHiPt = ring.getCoordinate(iDownHi);
@@ -67,7 +67,7 @@ class Orientation {
     }
   }
 
-  static bool isCCWArea(Array<Coordinate> ring) {
+  static bool isCCWArea(List<Coordinate> ring) {
     return Area.ofRingSigned(ring) < 0;
   }
 }

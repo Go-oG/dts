@@ -1,8 +1,8 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 
 class MortonCode {
-  static const int MAX_LEVEL = 16;
+  static const int kMaxLevel = 16;
 
   static int size(int level) {
     checkLevel(level);
@@ -26,8 +26,8 @@ class MortonCode {
   }
 
   static void checkLevel(int level) {
-    if (level > MAX_LEVEL) {
-      throw IllegalArgumentException("Level must be in range 0 to $MAX_LEVEL");
+    if (level > kMaxLevel) {
+      throw IllegalArgumentException("Level must be in range 0 to $kMaxLevel");
     }
   }
 

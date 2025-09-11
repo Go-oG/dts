@@ -24,11 +24,13 @@ class ConsistentPolygonRingChecker {
     }
   }
 
-  List<DirectedEdge> getPotentialResultAreaEdges(DirectedEdgeStar deStar, OverlayOpCode opCode) {
+  List<DirectedEdge> getPotentialResultAreaEdges(
+      DirectedEdgeStar deStar, OverlayOpCode opCode) {
     List<DirectedEdge> resultAreaEdgeList = [];
     for (var it in deStar.iterator()) {
       DirectedEdge de = it as DirectedEdge;
-      if (isPotentialResultAreaEdge(de, opCode) || isPotentialResultAreaEdge(de.getSym(), opCode)) {
+      if (isPotentialResultAreaEdge(de, opCode) ||
+          isPotentialResultAreaEdge(de.getSym(), opCode)) {
         resultAreaEdgeList.add(de);
       }
     }
@@ -38,7 +40,8 @@ class ConsistentPolygonRingChecker {
   bool isPotentialResultAreaEdge(DirectedEdge de, OverlayOpCode opCode) {
     Label label = de.label!;
     if ((label.isArea() && (!de.isInteriorAreaEdge())) &&
-        OverlayOp.isResultOfOp2(label.getLocation2(0, Position.right), label.getLocation2(1, Position.right), opCode)) {
+        OverlayOp.isResultOfOp2(label.getLocation2(0, Position.right),
+            label.getLocation2(1, Position.right), opCode)) {
       return true;
     }
     return false;
@@ -47,7 +50,8 @@ class ConsistentPolygonRingChecker {
   static const int scaningForIncoming = 1;
   static const int linkingToOutgoing = 2;
 
-  void testLinkResultDirectedEdges(DirectedEdgeStar deStar, OverlayOpCode opCode) {
+  void testLinkResultDirectedEdges(
+      DirectedEdgeStar deStar, OverlayOpCode opCode) {
     final ringEdges = getPotentialResultAreaEdges(deStar, opCode);
     DirectedEdge? firstOut;
     DirectedEdge? incoming;
@@ -82,7 +86,8 @@ class ConsistentPolygonRingChecker {
     }
     if (state == linkingToOutgoing) {
       if (firstOut == null) {
-        throw TopologyException("no outgoing dirEdge found", deStar.getCoordinate());
+        throw TopologyException(
+            "no outgoing dirEdge found", deStar.getCoordinate());
       }
     }
   }

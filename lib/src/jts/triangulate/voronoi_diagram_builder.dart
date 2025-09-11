@@ -1,5 +1,4 @@
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -25,7 +24,7 @@ class VoronoiDiagramBuilder {
   }
 
   void setSites(List<Coordinate> coords) {
-    siteCoords = DelaunayTriangulationBuilder.unique(CoordinateArrays.toCoordinateArray(coords));
+    siteCoords = DelaunayTriangulationBuilder.unique(coords);
   }
 
   void setClipEnvelope(Envelope clipEnv) {
@@ -45,7 +44,8 @@ class VoronoiDiagramBuilder {
       double expandBy = _diagramEnv!.diameter;
       _diagramEnv!.expandBy(expandBy);
     }
-    final vertices = DelaunayTriangulationBuilder.toVertices(siteCoords.rawList);
+    final vertices =
+        DelaunayTriangulationBuilder.toVertices(siteCoords.rawList);
     subdiv = QuadEdgeSubdivision(_diagramEnv!, tolerance);
     final triangulator = IncrementalDelaunayTriangulator(subdiv!);
     triangulator.forceConvex(false);
@@ -79,6 +79,6 @@ class VoronoiDiagramBuilder {
         clipped.add(result);
       }
     }
-    return geom.factory.createGeomCollection(GeometryFactory.toGeometryArray(clipped)!);
+    return geom.factory.createGeomCollection(clipped);
   }
 }

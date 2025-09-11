@@ -20,7 +20,9 @@ class PreparedLineStringIntersects {
       bool segsIntersect = prepLine.getIntersectionFinder().intersects(lineSegStr);
       if (segsIntersect) return true;
     }
-    if ((geom.getDimension() == 2) && prepLine.isAnyTargetComponentInTest(geom)) return true;
+    if ((geom.getDimension() == 2) && prepLine.isAnyTargetComponentInTest(geom)) {
+      return true;
+    }
 
     if (geom.hasDimension(0)) return isAnyTestPointInTarget(geom);
 

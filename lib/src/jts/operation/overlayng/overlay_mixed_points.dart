@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
@@ -16,8 +15,8 @@ import 'overlay_ng.dart';
 import 'overlay_util.dart';
 
 class OverlayMixedPoints {
-  static Geometry overlay(
-      OverlayOpCode opCode, Geometry geom0, Geometry geom1, PrecisionModel? pm) {
+  static Geometry overlay(OverlayOpCode opCode, Geometry geom0, Geometry geom1,
+      PrecisionModel? pm) {
     return OverlayMixedPoints(opCode, geom0, geom1, pm).getResult();
   }
 
@@ -43,7 +42,8 @@ class OverlayMixedPoints {
 
   OverlayMixedPoints(this._opCode, Geometry geom0, Geometry geom1, this.pm) {
     geometryFactory = geom0.factory;
-    _resultDim = OverlayUtil.resultDimension(_opCode, geom0.getDimension(), geom1.getDimension());
+    _resultDim = OverlayUtil.resultDimension(
+        _opCode, geom0.getDimension(), geom1.getDimension());
     if (geom0.getDimension() == 0) {
       _geomPoint = geom0;
       _geomNonPointInput = geom1;
@@ -59,7 +59,7 @@ class OverlayMixedPoints {
     _geomNonPoint = prepareNonPoint(_geomNonPointInput);
     _geomNonPointDim = _geomNonPoint.getDimension();
     _locator = createLocator(_geomNonPoint);
-    Array<Coordinate> coords = extractCoordinates(_geomPoint, pm);
+    List<Coordinate> coords = extractCoordinates(_geomPoint, pm);
     switch (_opCode) {
       case OverlayOpCode.intersection:
         return computeIntersection(coords);
@@ -87,11 +87,11 @@ class OverlayMixedPoints {
     return geomPrep;
   }
 
-  Geometry computeIntersection(Array<Coordinate> coords) {
+  Geometry computeIntersection(List<Coordinate> coords) {
     return createPointResult(findPoints(true, coords));
   }
 
-  Geometry computeUnion(Array<Coordinate> coords) {
+  Geometry computeUnion(List<Coordinate> coords) {
     List<Point> resultPointList = findPoints(false, coords);
     List<LineString>? resultLineList;
     if (_geomNonPointDim == 1) {
@@ -105,7 +105,7 @@ class OverlayMixedPoints {
         resultPolyList, resultLineList, resultPointList, geometryFactory);
   }
 
-  Geometry computeDifference(Array<Coordinate> coords) {
+  Geometry computeDifference(List<Coordinate> coords) {
     if (_isPointRHS) {
       return copyNonPoint();
     }
@@ -113,16 +113,15 @@ class OverlayMixedPoints {
   }
 
   Geometry createPointResult(List<Point> points) {
-    if (points.size == 0) {
+    if (points.isEmpty) {
       return geometryFactory.createEmpty(0);
-    } else if (points.size == 1) {
-      return points.get(0);
+    } else if (points.length == 1) {
+      return points.first;
     }
-    Array<Point> pointsArray = GeometryFactory.toPointArray(points);
-    return geometryFactory.createMultiPoint(pointsArray);
+    return geometryFactory.createMultiPoint(points);
   }
 
-  List<Point> findPoints(bool isCovered, Array<Coordinate> coords) {
+  List<Point> findPoints(bool isCovered, List<Coordinate> coords) {
     Set<Coordinate> resultCoords = <Coordinate>{};
     for (Coordinate coord in coords) {
       if (hasLocation(isCovered, coord)) {
@@ -155,16 +154,17 @@ class OverlayMixedPoints {
     return _geomNonPoint.copy();
   }
 
-  static Array<Coordinate> extractCoordinates(Geometry points, PrecisionModel? pm) {
+  static List<Coordinate> extractCoordinates(
+      Geometry points, PrecisionModel? pm) {
     CoordinateList coords = CoordinateList();
     points.apply(
-      CoordinateFilter2((coord) {
+      CoordinateFilterWrap((coord) {
         Coordinate p = OverlayUtil.round(coord, pm);
         coords.add3(p, false);
       }),
     );
 
-    return coords.toCoordinateArray();
+    return coords.toCoordinateList();
   }
 
   static List<Polygon> extractPolygons(Geometry geom) {

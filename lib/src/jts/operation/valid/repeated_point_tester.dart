@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_collection.dart';
@@ -21,19 +20,24 @@ class RepeatedPointTester {
 
     if (g is Point) {
       return false;
-    } else if (g is MultiPoint)
+    }
+    if (g is MultiPoint) {
       return false;
-    else if (g is LineString)
-      return hasRepeatedPoint(((g)).getCoordinates());
-    else if (g is Polygon)
+    }
+    if (g is LineString) {
+      return hasRepeatedPoint(g.getCoordinates());
+    }
+    if (g is Polygon) {
       return hasRepeatedPoint4(((g)));
-    else if (g is GeometryCollection)
+    }
+    if (g is GeometryCollection) {
       return hasRepeatedPoint3(((g)));
-    else
-      throw "UnsupportedOperationException ${g.runtimeType}";
+    }
+
+    throw "UnsupportedOperationException ${g.runtimeType}";
   }
 
-  bool hasRepeatedPoint(Array<Coordinate> coord) {
+  bool hasRepeatedPoint(List<Coordinate> coord) {
     for (int i = 1; i < coord.length; i++) {
       if (coord[i - 1] == coord[i]) {
         _repeatedCoord = coord[i];

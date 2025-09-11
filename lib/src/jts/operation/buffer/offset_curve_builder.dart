@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/position.dart';
@@ -21,13 +20,13 @@ class OffsetCurveBuilder {
     return bufParams;
   }
 
-  Array<Coordinate>? getLineCurve(Array<Coordinate> inputPts, double distance) {
+  List<Coordinate>? getLineCurve(List<Coordinate> inputPts, double distance) {
     _distance = distance;
     if (isLineOffsetEmpty(distance)) {
       return null;
     }
 
-    double posDistance = Math.abs(distance);
+    double posDistance = distance.abs();
     OffsetSegmentGenerator segGen = getSegGen(posDistance);
     if (inputPts.length <= 1) {
       computePointCurve(inputPts[0], segGen);
@@ -38,8 +37,7 @@ class OffsetCurveBuilder {
       computeLineBufferCurve(inputPts, segGen);
     }
 
-    Array<Coordinate> lineCoord = segGen.getCoordinates();
-    return lineCoord;
+    return segGen.getCoordinates();
   }
 
   bool isLineOffsetEmpty(double distance) {
@@ -54,7 +52,8 @@ class OffsetCurveBuilder {
     return false;
   }
 
-  Array<Coordinate>? getRingCurve(Array<Coordinate> inputPts, int side, double distance) {
+  List<Coordinate>? getRingCurve(
+      List<Coordinate> inputPts, int side, double distance) {
     _distance = distance;
     if (inputPts.length <= 2) {
       return getLineCurve(inputPts, distance);
@@ -68,35 +67,29 @@ class OffsetCurveBuilder {
     return segGen.getCoordinates();
   }
 
-  Array<Coordinate>? getOffsetCurve(Array<Coordinate> inputPts, double distance) {
+  List<Coordinate>? getOffsetCurve(List<Coordinate> inputPts, double distance) {
     _distance = distance;
     if (distance == 0.0) {
       return null;
     }
 
     bool isRightSide = distance < 0.0;
-    double posDistance = Math.abs(distance);
+    double posDistance = distance.abs();
     OffsetSegmentGenerator segGen = getSegGen(posDistance);
     if (inputPts.length <= 1) {
       computePointCurve(inputPts[0], segGen);
     } else {
       computeOffsetCurve(inputPts, isRightSide, segGen);
     }
-    Array<Coordinate> curvePts = segGen.getCoordinates();
+    List<Coordinate> curvePts = segGen.getCoordinates();
     if (isRightSide) {
       CoordinateArrays.reverse(curvePts);
     }
-
     return curvePts;
   }
 
-  static Array<Coordinate> copyCoordinates(Array<Coordinate> pts) {
-    Array<Coordinate> copy = Array(pts.length);
-    for (int i = 0; i < copy.length; i++) {
-      copy[i] = pts[i].copy();
-    }
-    return copy;
-  }
+  static List<Coordinate> copyCoordinates(List<Coordinate> pts) =>
+      pts.map((e) => e.copy()).toList();
 
   OffsetSegmentGenerator getSegGen(double distance) {
     return OffsetSegmentGenerator(precisionModel, bufParams, distance);
@@ -117,9 +110,10 @@ class OffsetCurveBuilder {
     }
   }
 
-  void computeLineBufferCurve(Array<Coordinate> inputPts, OffsetSegmentGenerator segGen) {
+  void computeLineBufferCurve(
+      List<Coordinate> inputPts, OffsetSegmentGenerator segGen) {
     double distTol = simplifyTolerance(_distance);
-    Array<Coordinate> simp1 = BufferInputLineSimplifier.simplify2(inputPts, distTol);
+    final simp1 = BufferInputLineSimplifier.simplify2(inputPts, distTol);
     int n1 = simp1.length - 1;
     segGen.initSideSegments(simp1[0], simp1[1], Position.left);
     for (int i = 2; i <= n1; i++) {
@@ -127,7 +121,7 @@ class OffsetCurveBuilder {
     }
     segGen.addLastSegment();
     segGen.addLineEndCap(simp1[n1 - 1], simp1[n1]);
-    Array<Coordinate> simp2 = BufferInputLineSimplifier.simplify2(inputPts, -distTol);
+    final simp2 = BufferInputLineSimplifier.simplify2(inputPts, -distTol);
     int n2 = simp2.length - 1;
     segGen.initSideSegments(simp2[n2], simp2[n2 - 1], Position.left);
     for (int i = n2 - 2; i >= 0; i--) {
@@ -138,12 +132,12 @@ class OffsetCurveBuilder {
     segGen.closeRing();
   }
 
-  void computeSingleSidedBufferCurve(
-      Array<Coordinate> inputPts, bool isRightSide, OffsetSegmentGenerator segGen) {
+  void computeSingleSidedBufferCurve(List<Coordinate> inputPts,
+      bool isRightSide, OffsetSegmentGenerator segGen) {
     double distTol = simplifyTolerance(_distance);
     if (isRightSide) {
       segGen.addSegments(inputPts, true);
-      Array<Coordinate> simp2 = BufferInputLineSimplifier.simplify2(inputPts, -distTol);
+      final simp2 = BufferInputLineSimplifier.simplify2(inputPts, -distTol);
       int n2 = simp2.length - 1;
       segGen.initSideSegments(simp2[n2], simp2[n2 - 1], Position.left);
       segGen.addFirstSegment();
@@ -152,7 +146,7 @@ class OffsetCurveBuilder {
       }
     } else {
       segGen.addSegments(inputPts, false);
-      Array<Coordinate> simp1 = BufferInputLineSimplifier.simplify2(inputPts, distTol);
+      final simp1 = BufferInputLineSimplifier.simplify2(inputPts, distTol);
       int n1 = simp1.length - 1;
       segGen.initSideSegments(simp1[0], simp1[1], Position.left);
       segGen.addFirstSegment();
@@ -164,11 +158,11 @@ class OffsetCurveBuilder {
     segGen.closeRing();
   }
 
-  void computeOffsetCurve(
-      Array<Coordinate> inputPts, bool isRightSide, OffsetSegmentGenerator segGen) {
-    double distTol = simplifyTolerance(Math.abs(_distance));
+  void computeOffsetCurve(List<Coordinate> inputPts, bool isRightSide,
+      OffsetSegmentGenerator segGen) {
+    double distTol = simplifyTolerance(_distance.abs());
     if (isRightSide) {
-      Array<Coordinate> simp2 = BufferInputLineSimplifier.simplify2(inputPts, -distTol);
+      final simp2 = BufferInputLineSimplifier.simplify2(inputPts, -distTol);
       int n2 = simp2.length - 1;
       segGen.initSideSegments(simp2[n2], simp2[n2 - 1], Position.left);
       segGen.addFirstSegment();
@@ -176,7 +170,7 @@ class OffsetCurveBuilder {
         segGen.addNextSegment(simp2[i], true);
       }
     } else {
-      Array<Coordinate> simp1 = BufferInputLineSimplifier.simplify2(inputPts, distTol);
+      final simp1 = BufferInputLineSimplifier.simplify2(inputPts, distTol);
       int n1 = simp1.length - 1;
       segGen.initSideSegments(simp1[0], simp1[1], Position.left);
       segGen.addFirstSegment();
@@ -187,13 +181,14 @@ class OffsetCurveBuilder {
     segGen.addLastSegment();
   }
 
-  void computeRingBufferCurve(Array<Coordinate> inputPts, int side, OffsetSegmentGenerator segGen) {
+  void computeRingBufferCurve(
+      List<Coordinate> inputPts, int side, OffsetSegmentGenerator segGen) {
     double distTol = simplifyTolerance(_distance);
     if (side == Position.right) {
       distTol = -distTol;
     }
 
-    Array<Coordinate> simp = BufferInputLineSimplifier.simplify2(inputPts, distTol);
+    final simp = BufferInputLineSimplifier.simplify2(inputPts, distTol);
     int n = simp.length - 1;
     segGen.initSideSegments(simp[n - 1], simp[0], side);
     for (int i = 1; i <= n; i++) {

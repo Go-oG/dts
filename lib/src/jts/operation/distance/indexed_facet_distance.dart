@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/index/strtree/item_distance.dart';
@@ -9,7 +8,7 @@ import 'facet_sequence_tree_builder.dart';
 import 'geometry_location.dart';
 
 class IndexedFacetDistance {
-  static final _FACET_SEQ_DIST = FacetSequenceDistance();
+  static final _kFacetSeqDist = FacetSequenceDistance();
 
   static double distance2(Geometry g1, Geometry g2) {
     IndexedFacetDistance dist = IndexedFacetDistance(g1);
@@ -21,7 +20,7 @@ class IndexedFacetDistance {
     return dist.isWithinDistance(g2, distance);
   }
 
-  static Array<Coordinate>? nearestPoints2(Geometry g1, Geometry g2) {
+  static List<Coordinate>? nearestPoints2(Geometry g1, Geometry g2) {
     IndexedFacetDistance dist = IndexedFacetDistance(g1);
     return dist.nearestPoints(g2);
   }
@@ -36,39 +35,40 @@ class IndexedFacetDistance {
 
   double distance(Geometry g) {
     final tree2 = FacetSequenceTreeBuilder.build(g);
-    final obj = _cachedTree.nearestNeighbour2(tree2, _FACET_SEQ_DIST)!;
+    final obj = _cachedTree.nearestNeighbour2(tree2, _kFacetSeqDist)!;
     FacetSequence fs1 = obj[0];
     FacetSequence fs2 = obj[1];
     return fs1.distance(fs2);
   }
 
-  Array<GeometryLocation> nearestLocations(Geometry g) {
+  List<GeometryLocation> nearestLocations(Geometry g) {
     final tree2 = FacetSequenceTreeBuilder.build(g);
-    final obj = _cachedTree.nearestNeighbour2(tree2, _FACET_SEQ_DIST)!;
+    final obj = _cachedTree.nearestNeighbour2(tree2, _kFacetSeqDist)!;
     FacetSequence fs1 = obj[0];
     FacetSequence fs2 = obj[1];
     return fs1.nearestLocations(fs2);
   }
 
-  Array<Coordinate>? nearestPoints(Geometry g) {
-    Array<GeometryLocation> minDistanceLocation = nearestLocations(g);
+  List<Coordinate>? nearestPoints(Geometry g) {
+    List<GeometryLocation> minDistanceLocation = nearestLocations(g);
     return toPoints(minDistanceLocation);
   }
 
-  static Array<Coordinate>? toPoints(Array<GeometryLocation>? locations) {
+  static List<Coordinate>? toPoints(List<GeometryLocation>? locations) {
     if (locations == null) {
       return null;
     }
 
-    return [locations[0].getCoordinate(), locations[1].getCoordinate()].toArray();
+    return [locations[0].getCoordinate(), locations[1].getCoordinate()];
   }
 
   bool isWithinDistance(Geometry g, double maxDistance) {
-    double envDist = _baseGeometry.getEnvelopeInternal().distance(g.getEnvelopeInternal());
+    double envDist =
+        _baseGeometry.getEnvelopeInternal().distance(g.getEnvelopeInternal());
     if (envDist > maxDistance) return false;
 
     STRtree tree2 = FacetSequenceTreeBuilder.build(g);
-    return _cachedTree.isWithinDistance(tree2, _FACET_SEQ_DIST, maxDistance);
+    return _cachedTree.isWithinDistance(tree2, _kFacetSeqDist, maxDistance);
   }
 }
 

@@ -1,4 +1,3 @@
- import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
@@ -22,9 +21,10 @@ class TaggedLineStringSimplifier {
 
   late TaggedLineString _line;
 
-  late Array<Coordinate> _linePts;
+  late List<Coordinate> _linePts;
 
-  TaggedLineStringSimplifier(this._inputIndex, this._outputIndex, this._jumpChecker);
+  TaggedLineStringSimplifier(
+      this._inputIndex, this._outputIndex, this._jumpChecker);
 
   void simplify(TaggedLineString line, double distanceTolerance) {
     _line = line;
@@ -49,7 +49,7 @@ class TaggedLineStringSimplifier {
         isValidToSimplify = false;
       }
     }
-    Array<double> distance = Array(1);
+    List<double> distance = List.filled(1, 0);
     int furthestPtIndex = findFurthestPoint(_linePts, i, j, distance);
     if (distance[0] > distanceTolerance) {
       isValidToSimplify = false;
@@ -75,7 +75,8 @@ class TaggedLineStringSimplifier {
       LineSegment lastSeg = _line.getResultSegment(-1);
       LineSegment simpSeg = LineSegment(lastSeg.p0, firstSeg.p1);
       Coordinate endPt = firstSeg.p0;
-      if ((simpSeg.distance(endPt) <= distanceTolerance) && _isTopologyValid2(_line, firstSeg, lastSeg, simpSeg)) {
+      if ((simpSeg.distance(endPt) <= distanceTolerance) &&
+          _isTopologyValid2(_line, firstSeg, lastSeg, simpSeg)) {
         _inputIndex.remove(firstSeg);
         _inputIndex.remove(lastSeg);
         _outputIndex.remove(firstSeg);
@@ -86,7 +87,8 @@ class TaggedLineStringSimplifier {
     }
   }
 
-  int findFurthestPoint(Array<Coordinate> pts, int i, int j, Array<double> maxDistance) {
+  int findFurthestPoint(
+      List<Coordinate> pts, int i, int j, List<double> maxDistance) {
     LineSegment seg = LineSegment.empty();
     seg.p0 = pts[i];
     seg.p1 = pts[j];
@@ -113,12 +115,15 @@ class TaggedLineStringSimplifier {
     return newSeg;
   }
 
-  bool _isTopologyValid(TaggedLineString line, int sectionStart, int sectionEnd, LineSegment flatSeg) {
+  bool _isTopologyValid(TaggedLineString line, int sectionStart, int sectionEnd,
+      LineSegment flatSeg) {
     if (hasOutputIntersection(flatSeg)) {
       return false;
     }
 
-    if (_hasInputIntersection2(line, sectionStart, sectionEnd, flatSeg)) return false;
+    if (_hasInputIntersection2(line, sectionStart, sectionEnd, flatSeg)) {
+      return false;
+    }
 
     if (_jumpChecker.hasJump(line, sectionStart, sectionEnd, flatSeg)) {
       return false;
@@ -127,7 +132,8 @@ class TaggedLineStringSimplifier {
     return true;
   }
 
-  bool _isTopologyValid2(TaggedLineString line, LineSegment seg1, LineSegment seg2, LineSegment flatSeg) {
+  bool _isTopologyValid2(TaggedLineString line, LineSegment seg1,
+      LineSegment seg2, LineSegment flatSeg) {
     if (isCollinear(seg1.p0, flatSeg)) {
       return true;
     }
@@ -165,12 +171,14 @@ class TaggedLineStringSimplifier {
     return _hasInputIntersection2(null, -1, -1, flatSeg);
   }
 
-  bool _hasInputIntersection2(TaggedLineString? line, int excludeStart, int excludeEnd, LineSegment flatSeg) {
+  bool _hasInputIntersection2(TaggedLineString? line, int excludeStart,
+      int excludeEnd, LineSegment flatSeg) {
     final querySegs = _inputIndex.query(flatSeg);
     for (var i in querySegs) {
       TaggedLineSegment querySeg = i as TaggedLineSegment;
       if (hasInvalidIntersection(querySeg, flatSeg)) {
-        if ((line != null) && isInLineSection(line, excludeStart, excludeEnd, querySeg)) {
+        if ((line != null) &&
+            isInLineSection(line, excludeStart, excludeEnd, querySeg)) {
           continue;
         }
 
@@ -180,7 +188,8 @@ class TaggedLineStringSimplifier {
     return false;
   }
 
-  static bool isInLineSection(TaggedLineString line, int excludeStart, int excludeEnd, TaggedLineSegment seg) {
+  static bool isInLineSection(TaggedLineString line, int excludeStart,
+      int excludeEnd, TaggedLineSegment seg) {
     if (seg.getParent() != line.getParent()) {
       return false;
     }

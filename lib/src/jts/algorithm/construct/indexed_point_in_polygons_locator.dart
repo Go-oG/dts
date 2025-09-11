@@ -7,7 +7,9 @@ import 'package:dts/src/jts/geom/location.dart';
 import 'package:dts/src/jts/geom/util/polygonal_extracter.dart';
 import 'package:dts/src/jts/index/strtree/strtree.dart';
 
-class IndexedPointInPolygonsLocator with InitMixin implements PointOnGeometryLocator {
+class IndexedPointInPolygonsLocator
+    with InitMixin
+    implements PointOnGeometryLocator {
   final Geometry _geom;
   late STRtree<IndexedPointInAreaLocator> _index;
 
@@ -21,7 +23,8 @@ class IndexedPointInPolygonsLocator with InitMixin implements PointOnGeometryLoc
     _index = STRtree();
     for (int i = 0; i < polys.size; i++) {
       Geometry poly = polys.get(i);
-      _index.insert(poly.getEnvelopeInternal(), IndexedPointInAreaLocator(poly));
+      _index.insert(
+          poly.getEnvelopeInternal(), IndexedPointInAreaLocator(poly));
     }
   }
 

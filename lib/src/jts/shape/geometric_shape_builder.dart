@@ -39,8 +39,8 @@ abstract class GeometricShapeBuilder {
   Envelope getSquareExtent() {
     double radius = getRadius();
     Coordinate centre = getCentre()!;
-    return Envelope.fromLTRB(
-        centre.x - radius, centre.y - radius, centre.x + radius, centre.y + radius);
+    return Envelope.fromLTRB(centre.x - radius, centre.y - radius,
+        centre.x + radius, centre.y + radius);
   }
 
   void setNumPoints(int numPts) {

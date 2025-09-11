@@ -1,6 +1,6 @@
 import 'dart:collection';
+import 'dart:math';
 
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -15,7 +15,7 @@ class GeometrySnapper {
   static double computeOverlaySnapTolerance(Geometry g) {
     double snapTolerance = computeSizeBasedSnapTolerance(g);
     PrecisionModel pm = g.getPrecisionModel();
-    if (pm.getType() == PrecisionModel.FIXED) {
+    if (pm.getType().isFixed) {
       double fixedSnapTol = ((1 / pm.getScale()) * 2) / 1.415;
       if (fixedSnapTol > snapTolerance) snapTolerance = fixedSnapTol;
     }
@@ -30,19 +30,20 @@ class GeometrySnapper {
   }
 
   static double computeOverlaySnapTolerance2(Geometry g0, Geometry g1) {
-    return Math.minD(computeOverlaySnapTolerance(g0), computeOverlaySnapTolerance(g1));
+    return min(
+        computeOverlaySnapTolerance(g0), computeOverlaySnapTolerance(g1));
   }
 
-  static Array<Geometry> snap(Geometry g0, Geometry g1, double snapTolerance) {
-    Array<Geometry> snapGeom = Array(2);
+  static List<Geometry> snap(Geometry g0, Geometry g1, double snapTolerance) {
     GeometrySnapper snapper0 = GeometrySnapper(g0);
-    snapGeom[0] = snapper0.snapTo(g1, snapTolerance)!;
+    Geometry rg1 = snapper0.snapTo(g1, snapTolerance)!;
     GeometrySnapper snapper1 = GeometrySnapper(g1);
-    snapGeom[1] = snapper1.snapTo(snapGeom[0], snapTolerance)!;
-    return snapGeom;
+    Geometry rg2 = snapper1.snapTo(rg1, snapTolerance)!;
+    return [rg1, rg2];
   }
 
-  static Geometry snapToSelf2(Geometry geom, double snapTolerance, bool cleanResult) {
+  static Geometry snapToSelf2(
+      Geometry geom, double snapTolerance, bool cleanResult) {
     GeometrySnapper snapper0 = GeometrySnapper(geom);
     return snapper0.snapToSelf(snapTolerance, cleanResult);
   }
@@ -52,13 +53,13 @@ class GeometrySnapper {
   GeometrySnapper(this._srcGeom);
 
   Geometry? snapTo(Geometry snapGeom, double snapTolerance) {
-    Array<Coordinate> snapPts = extractTargetCoordinates(snapGeom);
+    List<Coordinate> snapPts = extractTargetCoordinates(snapGeom);
     final snapTrans = SnapTransformer(snapTolerance, snapPts);
     return snapTrans.transform(_srcGeom);
   }
 
   Geometry snapToSelf(double snapTolerance, bool cleanResult) {
-    Array<Coordinate> snapPts = extractTargetCoordinates(_srcGeom);
+    List<Coordinate> snapPts = extractTargetCoordinates(_srcGeom);
     final snapTrans = SnapTransformer(snapTolerance, snapPts, true);
     Geometry snappedGeom = snapTrans.transform(_srcGeom)!;
     Geometry result = snappedGeom;
@@ -68,22 +69,22 @@ class GeometrySnapper {
     return result;
   }
 
-  Array<Coordinate> extractTargetCoordinates(Geometry g) {
+  List<Coordinate> extractTargetCoordinates(Geometry g) {
     Set<Coordinate> ptSet = SplayTreeSet();
-    Array<Coordinate> pts = g.getCoordinates();
+    final pts = g.getCoordinates();
     for (int i = 0; i < pts.length; i++) {
       ptSet.add(pts[i]);
     }
-    return ptSet.toArray();
+    return ptSet.toList();
   }
 
-  double computeSnapTolerance(Array<Coordinate> ringPts) {
+  double computeSnapTolerance(List<Coordinate> ringPts) {
     double minSegLen = computeMinimumSegmentLength(ringPts);
     double snapTol = minSegLen / 10;
     return snapTol;
   }
 
-  double computeMinimumSegmentLength(Array<Coordinate> pts) {
+  double computeMinimumSegmentLength(List<Coordinate> pts) {
     double minSegLen = double.maxFinite;
     for (int i = 0; i < (pts.length - 1); i++) {
       double segLen = pts[i].distance(pts[i + 1]);

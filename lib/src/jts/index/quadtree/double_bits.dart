@@ -1,13 +1,13 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 
 class DoubleBits {
-  static const int EXPONENT_BIAS = 1023;
+  static const int kExponentBias = 1023;
 
   static double powerOf2(int exp) {
     if ((exp > 1023) || (exp < (-1022))) {
       throw ("Exponent out of bounds");
     }
-    int expBias = exp + EXPONENT_BIAS;
+    int expBias = exp + kExponentBias;
     int bits = expBias << 52;
     return Double.longBitsToDouble(bits);
   }
@@ -63,7 +63,7 @@ class DoubleBits {
   }
 
   int getExponent() {
-    return biasedExponent() - EXPONENT_BIAS;
+    return biasedExponent() - kExponentBias;
   }
 
   void zeroLowerBits(int nBits) {

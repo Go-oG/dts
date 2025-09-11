@@ -1,31 +1,30 @@
- import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/triangle.dart';
 
 class VWLineSimplifier {
-  static Array<Coordinate> simplify2(Array<Coordinate> pts, double distanceTolerance) {
-    VWLineSimplifier simp = VWLineSimplifier(pts, distanceTolerance);
-    return simp.simplify();
+  static List<Coordinate> simplify2(
+      List<Coordinate> pts, double distanceTolerance) {
+    return VWLineSimplifier(pts, distanceTolerance).simplify();
   }
 
-  Array<Coordinate> pts;
+  List<Coordinate> pts;
   late double tolerance;
 
   VWLineSimplifier(this.pts, double distanceTolerance) {
     tolerance = distanceTolerance * distanceTolerance;
   }
 
-  Array<Coordinate> simplify() {
+  List<Coordinate> simplify() {
     VWVertex vwLine = VWVertex.buildLine(pts)!;
     double minArea = tolerance;
     do {
       minArea = simplifyVertex(vwLine);
     } while (minArea < tolerance);
-    Array<Coordinate> simp = vwLine.getCoordinates();
+    final simp = vwLine.getCoordinates();
     if (simp.length < 2) {
-      return [simp[0].copy(), simp[0].copy()].toArray();
+      return [simp[0].copy(), simp[0].copy()];
     }
     return CoordinateArrays.copyDeep(simp);
   }
@@ -54,7 +53,7 @@ class VWLineSimplifier {
 }
 
 class VWVertex {
-  static VWVertex? buildLine(Array<Coordinate> pts) {
+  static VWVertex? buildLine(List<Coordinate> pts) {
     VWVertex? first;
     VWVertex? prev;
     for (int i = 0; i < pts.length; i++) {
@@ -70,7 +69,7 @@ class VWVertex {
     return first;
   }
 
-  static double MAX_AREA = double.maxFinite;
+  static double kMaxArea = double.maxFinite;
 
   Coordinate pt;
 
@@ -78,7 +77,7 @@ class VWVertex {
 
   VWVertex? _next;
 
-  double _area = MAX_AREA;
+  double _area = kMaxArea;
 
   bool _isLive = true;
 
@@ -94,10 +93,10 @@ class VWVertex {
 
   void updateArea() {
     if ((_prev == null) || (_next == null)) {
-      _area = MAX_AREA;
+      _area = kMaxArea;
       return;
     }
-    _area = Math.abs(Triangle.area2(_prev!.pt, pt, _next!.pt));
+    _area = (Triangle.area2(_prev!.pt, pt, _next!.pt)).abs();
   }
 
   double getArea() {
@@ -126,13 +125,13 @@ class VWVertex {
     return result;
   }
 
-  Array<Coordinate> getCoordinates() {
+  List<Coordinate> getCoordinates() {
     CoordinateList coords = CoordinateList();
     VWVertex? curr = this;
     do {
       coords.add3(curr!.pt, false);
       curr = curr._next;
     } while (curr != null);
-    return coords.toCoordinateArray();
+    return coords.toCoordinateList();
   }
 }

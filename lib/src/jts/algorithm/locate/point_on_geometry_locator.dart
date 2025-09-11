@@ -1,4 +1,5 @@
-import 'package:d_util/d_util.dart';
+import 'dart:math' as m;
+
 import 'package:dts/src/jts/algorithm/point_location.dart';
 import 'package:dts/src/jts/algorithm/ray_crossing_counter.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -160,16 +161,15 @@ class _IntervalIndexedGeometry {
       if (!line.isClosed()) {
         continue;
       }
-      Array<Coordinate> pts = line.getCoordinates();
-      _addLine(pts);
+      _addLine(line.getCoordinates());
     }
   }
 
-  void _addLine(Array<Coordinate> pts) {
+  void _addLine(List<Coordinate> pts) {
     for (int i = 1; i < pts.length; i++) {
       LineSegment seg = LineSegment(pts[i - 1], pts[i]);
-      double min = Math.minD(seg.p0.y, seg.p1.y);
-      double max = Math.maxD(seg.p0.y, seg.p1.y);
+      double min = m.min(seg.p0.y, seg.p1.y);
+      double max = m.max(seg.p0.y, seg.p1.y);
       _index.insert(min, max, seg);
     }
   }

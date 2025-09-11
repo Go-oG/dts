@@ -1,4 +1,3 @@
- import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 
@@ -12,17 +11,17 @@ class NBoundarySegmentNoder implements Noder {
   @override
   void computeNodes(List<SegmentString> segStrings) {
     Set<_Segment> segSet = <_Segment>{};
-    addSegments2(segStrings, segSet);
-    _segList = extractSegments(segSet);
+    _addSegments2(segStrings, segSet);
+    _segList = _extractSegments(segSet);
   }
 
-  static void addSegments2(List<SegmentString> segStrings, Set<_Segment> segSet) {
+  static void _addSegments2(List<SegmentString> segStrings, Set<_Segment> segSet) {
     for (SegmentString ss in segStrings) {
-      addSegments(ss, segSet);
+      _addSegments(ss, segSet);
     }
   }
 
-  static void addSegments(SegmentString segString, Set<_Segment> segSet) {
+  static void _addSegments(SegmentString segString, Set<_Segment> segSet) {
     for (int i = 0; i < (segString.size() - 1); i++) {
       Coordinate p0 = segString.getCoordinate(i);
       Coordinate p1 = segString.getCoordinate(i + 1);
@@ -35,14 +34,14 @@ class NBoundarySegmentNoder implements Noder {
     }
   }
 
-  static List<SegmentString> extractSegments(Set<_Segment> segSet) {
+  static List<SegmentString> _extractSegments(Set<_Segment> segSet) {
     List<SegmentString> segList = [];
     for (_Segment seg in segSet) {
       SegmentString ss = seg.getSegmentString();
       int i = seg.getIndex();
       Coordinate p0 = ss.getCoordinate(i);
       Coordinate p1 = ss.getCoordinate(i + 1);
-      SegmentString segStr = BasicSegmentString([p0, p1].toArray(), ss.getData());
+      SegmentString segStr = BasicSegmentString([p0, p1], ss.getData());
       segList.add(segStr);
     }
     return segList;

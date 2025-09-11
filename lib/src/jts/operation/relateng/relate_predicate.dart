@@ -131,12 +131,12 @@ class _Contains extends IMPredicate {
 
   @override
   bool requireCovers(bool isSourceA) {
-    return isSourceA == RelateGeometry.GEOM_A;
+    return isSourceA == RelateGeometry.kGeomA;
   }
 
   @override
   bool requireExteriorCheck(bool isSourceA) {
-    return isSourceA == RelateGeometry.GEOM_B;
+    return isSourceA == RelateGeometry.kGeomB;
   }
 
   @override
@@ -152,7 +152,7 @@ class _Contains extends IMPredicate {
 
   @override
   bool isDetermined() {
-    return intersectsExteriorOf(RelateGeometry.GEOM_A);
+    return intersectsExteriorOf(RelateGeometry.kGeomA);
   }
 
   @override
@@ -169,12 +169,12 @@ class _WithIn extends IMPredicate {
 
   @override
   bool requireCovers(bool isSourceA) {
-    return isSourceA == RelateGeometry.GEOM_B;
+    return isSourceA == RelateGeometry.kGeomB;
   }
 
   @override
   bool requireExteriorCheck(bool isSourceA) {
-    return isSourceA == RelateGeometry.GEOM_A;
+    return isSourceA == RelateGeometry.kGeomA;
   }
 
   @override
@@ -190,7 +190,7 @@ class _WithIn extends IMPredicate {
 
   @override
   bool isDetermined() {
-    return intersectsExteriorOf(RelateGeometry.GEOM_B);
+    return intersectsExteriorOf(RelateGeometry.kGeomB);
   }
 
   @override
@@ -207,12 +207,12 @@ class _Covers extends IMPredicate {
 
   @override
   bool requireCovers(bool isSourceA) {
-    return isSourceA == RelateGeometry.GEOM_A;
+    return isSourceA == RelateGeometry.kGeomA;
   }
 
   @override
   bool requireExteriorCheck(bool isSourceA) {
-    return isSourceA == RelateGeometry.GEOM_B;
+    return isSourceA == RelateGeometry.kGeomB;
   }
 
   @override
@@ -228,7 +228,7 @@ class _Covers extends IMPredicate {
 
   @override
   bool isDetermined() {
-    return intersectsExteriorOf(RelateGeometry.GEOM_A);
+    return intersectsExteriorOf(RelateGeometry.kGeomA);
   }
 
   @override
@@ -245,12 +245,12 @@ class _CoveredBy extends IMPredicate {
 
   @override
   bool requireCovers(bool isSourceA) {
-    return isSourceA == RelateGeometry.GEOM_B;
+    return isSourceA == RelateGeometry.kGeomB;
   }
 
   @override
   bool requireExteriorCheck(bool isSourceA) {
-    return isSourceA == RelateGeometry.GEOM_A;
+    return isSourceA == RelateGeometry.kGeomA;
   }
 
   @override
@@ -266,7 +266,7 @@ class _CoveredBy extends IMPredicate {
 
   @override
   bool isDetermined() {
-    return intersectsExteriorOf(RelateGeometry.GEOM_B);
+    return intersectsExteriorOf(RelateGeometry.kGeomB);
   }
 
   @override
@@ -284,15 +284,18 @@ class _Crosses extends IMPredicate {
   @override
   void init(int dimA, int dimB) {
     super.init(dimA, dimB);
-    bool isBothPointsOrAreas = ((dimA == Dimension.P) && (dimB == Dimension.P)) ||
-        ((dimA == Dimension.A) && (dimB == Dimension.A));
+    bool isBothPointsOrAreas =
+        ((dimA == Dimension.P) && (dimB == Dimension.P)) ||
+            ((dimA == Dimension.A) && (dimB == Dimension.A));
     require(!isBothPointsOrAreas);
   }
 
   @override
   bool isDetermined() {
     if ((dimA == Dimension.L) && (dimB == Dimension.L)) {
-      if (getDimension(Location.interior, Location.interior) > Dimension.P) return true;
+      if (getDimension(Location.interior, Location.interior) > Dimension.P) {
+        return true;
+      }
     } else if (dimA < dimB) {
       if (isIntersects(Location.interior, Location.interior) &&
           isIntersects(Location.interior, Location.exterior)) {
@@ -332,10 +335,11 @@ class _EqualsTopo extends IMPredicate {
 
   @override
   bool isDetermined() {
-    bool isEitherExteriorIntersects = ((isIntersects(Location.interior, Location.exterior) ||
-                isIntersects(Location.boundary, Location.exterior)) ||
-            isIntersects(Location.exterior, Location.interior)) ||
-        isIntersects(Location.exterior, Location.boundary);
+    bool isEitherExteriorIntersects =
+        ((isIntersects(Location.interior, Location.exterior) ||
+                    isIntersects(Location.boundary, Location.exterior)) ||
+                isIntersects(Location.exterior, Location.interior)) ||
+            isIntersects(Location.exterior, Location.boundary);
     return isEitherExteriorIntersects;
   }
 
@@ -397,7 +401,8 @@ class _Touches extends IMPredicate {
 
   @override
   bool isDetermined() {
-    bool isInteriorsIntersects = isIntersects(Location.interior, Location.interior);
+    bool isInteriorsIntersects =
+        isIntersects(Location.interior, Location.interior);
     return isInteriorsIntersects;
   }
 

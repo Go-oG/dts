@@ -39,11 +39,13 @@ class RandomPointsBuilder extends GeometricShapeBuilder {
       }
       pts[i++] = p;
     }
-    return geomFactory.createMultiPoint4(pts);
+    return geomFactory.createMultiPoint4(pts.toList());
   }
 
   bool isInExtent(Coordinate p) {
-    if (_extentLocator != null) return _extentLocator!.locate(p) != Location.exterior;
+    if (_extentLocator != null) {
+      return _extentLocator!.locate(p) != Location.exterior;
+    }
 
     return getExtent()!.containsCoordinate(p);
   }

@@ -42,13 +42,16 @@ class LocationIndexOfPoint {
     return closestAfter;
   }
 
-  LinearLocation indexOfFromStart(Coordinate inputPt, LinearLocation? minIndex) {
+  LinearLocation indexOfFromStart(
+      Coordinate inputPt, LinearLocation? minIndex) {
     double minDistance = double.maxFinite;
     int minComponentIndex = 0;
     int minSegmentIndex = 0;
     double minFrac = -1.0;
     LineSegment seg = LineSegment.empty();
-    for (LinearIterator it = LinearIterator.of(linearGeom); it.hasNext(); it.next()) {
+    for (LinearIterator it = LinearIterator.of(linearGeom);
+        it.hasNext();
+        it.next()) {
       if (!it.isEndOfLine()) {
         seg.p0 = it.getSegmentStart();
         seg.p1 = it.getSegmentEnd()!;
@@ -72,7 +75,8 @@ class LocationIndexOfPoint {
     if (minDistance == double.maxFinite) {
       return LinearLocation.of3(minIndex!);
     }
-    LinearLocation loc = LinearLocation(minComponentIndex, minSegmentIndex, minFrac);
+    LinearLocation loc =
+        LinearLocation(minComponentIndex, minSegmentIndex, minFrac);
     return loc;
   }
 }

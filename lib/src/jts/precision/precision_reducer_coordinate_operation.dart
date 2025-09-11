@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -8,32 +7,32 @@ import 'package:dts/src/jts/geom/precision_model.dart';
 import 'package:dts/src/jts/geom/util/geom_editor.dart';
 
 class PrecisionReducerCoordinateOperation extends CoordinateOperation {
-  PrecisionModel targetPM;
+  final PrecisionModel targetPM;
 
   bool removeCollapsed = true;
 
   PrecisionReducerCoordinateOperation(this.targetPM, this.removeCollapsed);
 
   @override
-  Array<Coordinate>? edit2(Array<Coordinate> coordinates, Geometry geom) {
+  List<Coordinate>? edit2(List<Coordinate> coordinates, Geometry geom) {
     if (coordinates.isEmpty) {
       return null;
     }
 
-    Array<Coordinate> reducedCoords = Array(coordinates.length);
+    List<Coordinate> reducedCoords = [];
     for (int i = 0; i < coordinates.length; i++) {
       Coordinate coord = Coordinate.of(coordinates[i]);
       targetPM.makePrecise(coord);
-      reducedCoords[i] = coord;
+      reducedCoords.add(coord);
     }
     CoordinateList noRepeatedCoordList = CoordinateList(reducedCoords, false);
-    Array<Coordinate> noRepeatedCoords = noRepeatedCoordList.toCoordinateArray();
+    final noRepeatedCoords = noRepeatedCoordList.toCoordinateList();
     int minLength = 0;
     if (geom is LineString) minLength = 2;
 
     if (geom is LinearRing) minLength = 4;
 
-    Array<Coordinate>? collapsedCoords = reducedCoords;
+    List<Coordinate>? collapsedCoords = reducedCoords;
     if (removeCollapsed) {
       collapsedCoords = null;
     }

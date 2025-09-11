@@ -1,30 +1,30 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/math/math.dart';
 
 import 'coordinate.dart';
 
 final class Envelope implements Comparable<Envelope> {
   static bool intersects3(Coordinate p1, Coordinate p2, Coordinate q) {
-    return ((q.x >= Math.min(p1.x, p2.x)) && (q.x <= Math.max(p1.x, p2.x))) &&
-        ((q.y >= Math.min(p1.y, p2.y)) && (q.y <= Math.max(p1.y, p2.y)));
+    return ((q.x >= min(p1.x, p2.x)) && (q.x <= max(p1.x, p2.x))) &&
+        ((q.y >= min(p1.y, p2.y)) && (q.y <= max(p1.y, p2.y)));
   }
 
-  static bool intersects4(Coordinate p1, Coordinate p2, Coordinate q1, Coordinate q2) {
-    double minq = Math.minD(q1.x, q2.x);
-    double maxq = Math.maxD(q1.x, q2.x);
-    double minp = Math.minD(p1.x, p2.x);
-    double maxp = Math.maxD(p1.x, p2.x);
+  static bool intersects4(
+      Coordinate p1, Coordinate p2, Coordinate q1, Coordinate q2) {
+    double minq = min(q1.x, q2.x);
+    double maxq = max(q1.x, q2.x);
+    double minp = min(p1.x, p2.x);
+    double maxp = max(p1.x, p2.x);
     if (minp > maxq) return false;
 
     if (maxp < minq) return false;
 
-    minq = Math.minD(q1.y, q2.y);
-    maxq = Math.maxD(q1.y, q2.y);
-    minp = Math.minD(p1.y, p2.y);
-    maxp = Math.maxD(p1.y, p2.y);
+    minq = min(q1.y, q2.y);
+    maxq = max(q1.y, q2.y);
+    minp = min(p1.y, p2.y);
+    maxp = max(p1.y, p2.y);
     if (minp > maxq) return false;
 
     return !(maxp < minq);
@@ -52,7 +52,8 @@ final class Envelope implements Comparable<Envelope> {
     initWithLTRB(l, t, r, b);
   }
 
-  Envelope.fromRect(Rect rect) : this.fromLTRB(rect.left, rect.top, rect.right, rect.bottom);
+  Envelope.fromRect(Rect rect)
+      : this.fromLTRB(rect.left, rect.top, rect.right, rect.bottom);
 
   void initWithLTRB(double l, double t, double r, double b) {
     _minX = min(l, r);
@@ -162,7 +163,8 @@ final class Envelope implements Comparable<Envelope> {
     }
   }
 
-  void expandToIncludeCoordinate(Coordinate p) => expandToIncludePoint(p.x, p.y);
+  void expandToIncludeCoordinate(Coordinate p) =>
+      expandToIncludePoint(p.x, p.y);
 
   void expandToIncludePoint(double x, double y) {
     if (isNull) {
@@ -202,10 +204,10 @@ final class Envelope implements Comparable<Envelope> {
   Envelope intersection(Envelope env) {
     if ((isNull || env.isNull) || (!intersects(env))) return Envelope();
 
-    double intMinX = Math.maxD(_minX, env._minX);
-    double intMinY = Math.maxD(_minY, env._minY);
-    double intMaxX = Math.minD(_maxX, env._maxX);
-    double intMaxY = Math.minD(_maxY, env._maxY);
+    double intMinX = max(_minX, env._minX);
+    double intMinY = max(_minY, env._minY);
+    double intMaxX = min(_maxX, env._maxX);
+    double intMaxY = min(_maxY, env._maxY);
     return Envelope.fromLTRB(intMinX, intMinY, intMaxX, intMaxY);
   }
 
@@ -213,7 +215,8 @@ final class Envelope implements Comparable<Envelope> {
     if (isNull || other.isNull) {
       return false;
     }
-    return !((((other._minX > _maxX) || (other._maxX < _minX)) || (other._minY > _maxY)) ||
+    return !((((other._minX > _maxX) || (other._maxX < _minX)) ||
+            (other._minY > _maxY)) ||
         (other._maxY < _minY));
   }
 
@@ -228,16 +231,16 @@ final class Envelope implements Comparable<Envelope> {
     if (isNull) {
       return false;
     }
-    double envMinX = Math.minD(a.x, b.x);
+    double envMinX = min(a.x, b.x);
     if (envMinX > _maxX) return false;
 
-    double envMaxX = Math.maxD(a.x, b.x);
+    double envMaxX = max(a.x, b.x);
     if (envMaxX < _minX) return false;
 
-    double envMinY = Math.minD(a.y, b.y);
+    double envMinY = min(a.y, b.y);
     if (envMinY > _maxY) return false;
 
-    double envMaxY = Math.maxD(a.y, b.y);
+    double envMaxY = max(a.y, b.y);
     if (envMaxY < _minY) return false;
 
     return true;
@@ -280,7 +283,8 @@ final class Envelope implements Comparable<Envelope> {
     if (isNull || other.isNull) {
       return false;
     }
-    return (((other.minX >= _minX) && (other.maxX <= _maxX)) && (other.minY >= _minY)) &&
+    return (((other.minX >= _minX) && (other.maxX <= _maxX)) &&
+            (other.minY >= _minY)) &&
         (other.maxY <= _maxY);
   }
 
@@ -354,7 +358,8 @@ final class Envelope implements Comparable<Envelope> {
     if (isNull) {
       return other.isNull;
     }
-    return (((_maxX == other.maxX) && (_maxY == other.maxY)) && (_minX == other.minX)) &&
+    return (((_maxX == other.maxX) && (_maxY == other.maxY)) &&
+            (_minX == other.minX)) &&
         (_minY == other.minY);
   }
 }

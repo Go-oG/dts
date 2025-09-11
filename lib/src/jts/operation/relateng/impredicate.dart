@@ -13,7 +13,7 @@ abstract class IMPredicate extends BasicPredicate {
     return dim0 >= dim1;
   }
 
-  static const int _dimUnknown = Dimension.Dontcare;
+  static const int _dimUnknown = Dimension.kDontCare;
 
   int dimA = 0;
 

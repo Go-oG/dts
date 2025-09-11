@@ -1,4 +1,5 @@
-import 'package:d_util/d_util.dart';
+import 'dart:math';
+
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -22,15 +23,15 @@ final class CGAlgorithms {
 
   CGAlgorithms._();
 
-  static bool isPointInRing(Coordinate p, Array<Coordinate> ring) {
+  static bool isPointInRing(Coordinate p, List<Coordinate> ring) {
     return locatePointInRing(p, ring) != Location.exterior;
   }
 
-  static int locatePointInRing(Coordinate p, Array<Coordinate> ring) {
+  static int locatePointInRing(Coordinate p, List<Coordinate> ring) {
     return RayCrossingCounter.locatePointInRing(p, ring);
   }
 
-  static bool isOnLine(Coordinate p, Array<Coordinate> pt) {
+  static bool isOnLine(Coordinate p, List<Coordinate> pt) {
     for (int i = 1; i < pt.length; i++) {
       Coordinate p0 = pt[i - 1];
       Coordinate p1 = pt[i];
@@ -41,10 +42,10 @@ final class CGAlgorithms {
     return false;
   }
 
-  static bool isCCW(Array<Coordinate> ring) {
+  static bool isCCW(List<Coordinate> ring) {
     int nPts = ring.length - 1;
     if (nPts < 3) {
-      throw IllegalArgumentException(
+      throw ArgumentError(
           "Ring has fewer than 4 points, so orientation cannot be determined");
     }
 
@@ -94,7 +95,8 @@ final class CGAlgorithms {
     }
 
     double len2 = ((B.x - A.x) * (B.x - A.x)) + ((B.y - A.y) * (B.y - A.y));
-    double r = (((p.x - A.x) * (B.x - A.x)) + ((p.y - A.y) * (B.y - A.y))) / len2;
+    double r =
+        (((p.x - A.x) * (B.x - A.x)) + ((p.y - A.y) * (B.y - A.y))) / len2;
     if (r <= 0.0) {
       return p.distance(A);
     }
@@ -103,19 +105,22 @@ final class CGAlgorithms {
       return p.distance(B);
     }
 
-    double s = (((A.y - p.y) * (B.x - A.x)) - ((A.x - p.x) * (B.y - A.y))) / len2;
-    return Math.abs(s) * Math.sqrt(len2);
+    double s =
+        (((A.y - p.y) * (B.x - A.x)) - ((A.x - p.x) * (B.y - A.y))) / len2;
+    return s.abs() * sqrt(len2);
   }
 
-  static double distancePointLinePerpendicular(Coordinate p, Coordinate A, Coordinate B) {
+  static double distancePointLinePerpendicular(
+      Coordinate p, Coordinate A, Coordinate B) {
     double len2 = ((B.x - A.x) * (B.x - A.x)) + ((B.y - A.y) * (B.y - A.y));
-    double s = (((A.y - p.y) * (B.x - A.x)) - ((A.x - p.x) * (B.y - A.y))) / len2;
-    return Math.abs(s) * Math.sqrt(len2);
+    double s =
+        (((A.y - p.y) * (B.x - A.x)) - ((A.x - p.x) * (B.y - A.y))) / len2;
+    return s.abs() * sqrt(len2);
   }
 
-  static double distancePointLine(Coordinate p, Array<Coordinate> line) {
-    if (line.length == 0) {
-      throw IllegalArgumentException("Line array must contain at least one vertex");
+  static double distancePointLine(Coordinate p, List<Coordinate> line) {
+    if (line.isEmpty) {
+      throw ArgumentError("Line array must contain at least one vertex");
     }
 
     double minDistance = p.distance(line[0]);
@@ -128,7 +133,8 @@ final class CGAlgorithms {
     return minDistance;
   }
 
-  static double distanceLineLine(Coordinate A, Coordinate B, Coordinate C, Coordinate D) {
+  static double distanceLineLine(
+      Coordinate A, Coordinate B, Coordinate C, Coordinate D) {
     if (A == B) {
       return distancePointLine2(A, C, D);
     }
@@ -165,7 +171,7 @@ final class CGAlgorithms {
     return 0.0;
   }
 
-  static double signedArea(Array<Coordinate> ring) {
+  static double signedArea(List<Coordinate> ring) {
     if (ring.length < 3) {
       return 0.0;
     }
@@ -235,14 +241,14 @@ final class CGAlgorithms3D {
   CGAlgorithms3D._();
 
   static double distance(Coordinate p0, Coordinate p1) {
-    if (Double.isNaN(p0.z) || Double.isNaN(p1.z)) {
+    if (p0.z.isNaN || p1.z.isNaN) {
       return p0.distance(p1);
     }
 
     double dx = p0.x - p1.x;
     double dy = p0.y - p1.y;
     double dz = p0.z - p1.z;
-    return Math.sqrt(((dx * dx) + (dy * dy)) + (dz * dz));
+    return sqrt(((dx * dx) + (dy * dy)) + (dz * dz));
   }
 
   static double distancePointSegment(Coordinate p, Coordinate A, Coordinate B) {
@@ -250,10 +256,10 @@ final class CGAlgorithms3D {
       return distance(p, A);
     }
 
-    double len2 =
-        (((B.x - A.x) * (B.x - A.x)) + ((B.y - A.y) * (B.y - A.y))) + ((B.z - A.z) * (B.z - A.z));
-    if (Double.isNaN(len2)) {
-      throw IllegalArgumentException("Ordinates must not be NaN");
+    double len2 = (((B.x - A.x) * (B.x - A.x)) + ((B.y - A.y) * (B.y - A.y))) +
+        ((B.z - A.z) * (B.z - A.z));
+    if (len2.isNaN) {
+      throw ArgumentError("Ordinates must not be NaN");
     }
 
     double r = ((((p.x - A.x) * (B.x - A.x)) + ((p.y - A.y) * (B.y - A.y))) +
@@ -273,10 +279,11 @@ final class CGAlgorithms3D {
     double dx = p.x - qx;
     double dy = p.y - qy;
     double dz = p.z - qz;
-    return Math.sqrt(((dx * dx) + (dy * dy)) + (dz * dz));
+    return sqrt((dx * dx) + (dy * dy) + (dz * dz));
   }
 
-  static double distanceSegmentSegment(Coordinate A, Coordinate B, Coordinate C, Coordinate D) {
+  static double distanceSegmentSegment(
+      Coordinate A, Coordinate B, Coordinate C, Coordinate D) {
     if (A.equals3D(B)) {
       return distancePointSegment(A, C, D);
     }
@@ -291,8 +298,8 @@ final class CGAlgorithms3D {
     double d = Vector3D.dot2(A, B, C, A);
     double e = Vector3D.dot2(C, D, C, A);
     double denom = (a * c) - (b * b);
-    if (Double.isNaN(denom)) {
-      throw IllegalArgumentException("Ordinates must not be NaN");
+    if (denom.isNaN) {
+      throw ArgumentError("Ordinates must not be NaN");
     }
 
     double s;
@@ -405,20 +412,26 @@ final class CGAlgorithmsDD {
     return 0;
   }
 
-  static Coordinate? intersection(Coordinate p1, Coordinate p2, Coordinate q1, Coordinate q2) {
+  static Coordinate? intersection(
+      Coordinate p1, Coordinate p2, Coordinate q1, Coordinate q2) {
     DD px = DD.valueOf(p1.y).selfSubtract2(p2.y);
     DD py = DD.valueOf(p2.x).selfSubtract2(p1.x);
-    DD pw = DD.valueOf(p1.x).selfMultiply2(p2.y).selfSubtract(DD.valueOf(p2.x).selfMultiply2(p1.y));
+    DD pw = DD
+        .valueOf(p1.x)
+        .selfMultiply2(p2.y)
+        .selfSubtract(DD.valueOf(p2.x).selfMultiply2(p1.y));
     DD qx = DD.valueOf(q1.y).selfSubtract2(q2.y);
     DD qy = DD.valueOf(q2.x).selfSubtract2(q1.x);
-    DD qw = DD.valueOf(q1.x).selfMultiply2(q2.y).selfSubtract(DD.valueOf(q2.x).selfMultiply2(q1.y));
+    DD qw = DD
+        .valueOf(q1.x)
+        .selfMultiply2(q2.y)
+        .selfSubtract(DD.valueOf(q2.x).selfMultiply2(q1.y));
     DD x = py.multiply(qw).selfSubtract(qy.multiply(pw));
     DD y = qx.multiply(pw).selfSubtract(px.multiply(qw));
     DD w = px.multiply(qy).selfSubtract(qx.multiply(py));
     double xInt = x.selfDivide(w).doubleValue();
     double yInt = y.selfDivide(w).doubleValue();
-    if ((Double.isNaN(xInt) || (Double.isInfinite(xInt) || Double.isNaN(yInt))) ||
-        Double.isInfinite(yInt)) {
+    if (xInt.isNaN || xInt.isInfinite || yInt.isNaN || yInt.isInfinite) {
       return null;
     }
     return Coordinate(xInt, yInt);

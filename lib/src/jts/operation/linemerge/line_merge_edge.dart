@@ -7,5 +7,4 @@ class LineMergeEdge extends PGEdge {
   LineString getLine() {
     return line;
   }
-
 }

@@ -9,8 +9,8 @@ import '../geometry.dart';
 import '../linear_ring.dart';
 
 class SineStarFactory extends GeometricShapeFactory {
-  static Geometry create(
-      Coordinate origin, double size, int nPts, int nArms, double armLengthRatio) {
+  static Geometry create(Coordinate origin, double size, int nPts, int nArms,
+      double armLengthRatio) {
     SineStarFactory gsf = SineStarFactory();
     gsf.setCentre(origin);
     gsf.setSize(size);
@@ -63,7 +63,7 @@ class SineStarFactory extends GeometricShapeFactory {
       pts[iPt++] = coord(x, y);
     }
     pts[iPt] = Coordinate.of(pts[0]);
-    LinearRing ring = geomFact.createLinearRings(pts);
+    LinearRing ring = geomFact.createLinearRings(pts.toList());
     return geomFact.createPolygon(ring);
   }
 }

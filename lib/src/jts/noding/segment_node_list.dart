@@ -25,19 +25,19 @@ class SegmentNodeList {
   }
 
   SegmentNode add(Coordinate intPt, int segmentIndex) {
-    final eiNew = SegmentNode(_edge, intPt, segmentIndex, _edge.getSegmentOctant(segmentIndex));
+    final eiNew = SegmentNode(
+        _edge, intPt, segmentIndex, _edge.getSegmentOctant(segmentIndex));
     final ei = nodeMap.get(eiNew);
     if (ei != null) {
-      Assert.isTrue(ei.coord.equals2D(intPt), "Found equal nodes with different coordinates");
+      Assert.isTrue(ei.coord.equals2D(intPt),
+          "Found equal nodes with different coordinates");
       return ei;
     }
     nodeMap[eiNew] = eiNew;
     return eiNew;
   }
 
-  Iterable<SegmentNode> iterator() {
-    return nodeMap.values;
-  }
+  Iterable<SegmentNode> iterator()=> nodeMap.values;
 
   void addEndpoints() {
     int maxSegIndex = _edge.size() - 1;
@@ -57,7 +57,6 @@ class SegmentNodeList {
   void findCollapsesFromExistingVertices(List collapsedVertexIndexes) {
     for (int i = 0; i < (_edge.size() - 2); i++) {
       Coordinate p0 = _edge.getCoordinate(i);
-      Coordinate p1 = _edge.getCoordinate(i + 1);
       Coordinate p2 = _edge.getCoordinate(i + 2);
       if (p0.equals2D(p2)) {
         collapsedVertexIndexes.add(i + 1);
@@ -66,12 +65,10 @@ class SegmentNodeList {
   }
 
   void findCollapsesFromInsertedNodes(List collapsedVertexIndexes) {
-    Array<int> collapsedVertexIndex = Array(1);
-    //TODO 校验
+    List<int> collapsedVertexIndex = [0];
     final it = iterator().iterator;
     it.moveNext();
     SegmentNode eiPrev = it.current;
-
     while (it.moveNext()) {
       SegmentNode ei = it.current;
       bool isCollapsed = findCollapseIndex(eiPrev, ei, collapsedVertexIndex);
@@ -81,7 +78,7 @@ class SegmentNodeList {
     }
   }
 
-  bool findCollapseIndex(SegmentNode ei0, SegmentNode ei1, Array<int> collapsedVertexIndex) {
+  bool findCollapseIndex(SegmentNode ei0, SegmentNode ei1, List<int> collapsedVertexIndex) {
     if (!ei0.coord.equals2D(ei1.coord)) return false;
 
     int numVerticesBetween = ei1.segmentIndex - ei0.segmentIndex;
@@ -111,25 +108,27 @@ class SegmentNodeList {
   }
 
   void checkSplitEdgesCorrectness(List<SegmentString> splitEdges) {
-    Array<Coordinate> edgePts = _edge.getCoordinates();
+    List<Coordinate> edgePts = _edge.getCoordinates();
     SegmentString split0 = splitEdges.first;
     Coordinate pt0 = split0.getCoordinate(0);
     if (!pt0.equals2D(edgePts[0])) throw ("bad split edge start point at $pt0");
 
     SegmentString splitn = splitEdges.last;
-    Array<Coordinate> splitnPts = splitn.getCoordinates();
+    List<Coordinate> splitnPts = splitn.getCoordinates();
     Coordinate ptn = splitnPts[splitnPts.length - 1];
-    if (!ptn.equals2D(edgePts[edgePts.length - 1])) throw ("bad split edge end point at $ptn");
+    if (!ptn.equals2D(edgePts[edgePts.length - 1])) {
+      throw ("bad split edge end point at $ptn");
+    }
   }
 
   SegmentString createSplitEdge(SegmentNode ei0, SegmentNode ei1) {
-    Array<Coordinate> pts = createSplitEdgePts(ei0, ei1);
+    List<Coordinate> pts = createSplitEdgePts(ei0, ei1);
     return NodedSegmentString(pts, _edge.getData());
   }
 
-  Array<Coordinate> createSplitEdgePts(SegmentNode ei0, SegmentNode ei1) {
+  List<Coordinate> createSplitEdgePts(SegmentNode ei0, SegmentNode ei1) {
     int npts = (ei1.segmentIndex - ei0.segmentIndex) + 2;
-    if (npts == 2) return [Coordinate.of(ei0.coord), Coordinate.of(ei1.coord)].toArray();
+    if (npts == 2) return [Coordinate.of(ei0.coord), Coordinate.of(ei1.coord)];
 
     Coordinate lastSegStartPt = _edge.getCoordinate(ei1.segmentIndex);
     bool useIntPt1 = ei1.isInterior() || (!ei1.coord.equals2D(lastSegStartPt));
@@ -144,13 +143,12 @@ class SegmentNodeList {
     }
     if (useIntPt1) pts[ipt] = ei1.coord.copy();
 
-    return pts;
+    return pts.toList();
   }
 
-  Array<Coordinate> getSplitCoordinates() {
+  List<Coordinate> getSplitCoordinates() {
     CoordinateList coordList = CoordinateList();
     addEndpoints();
-    //TODO 校验
     var it = iterator().iterator;
     it.moveNext();
     SegmentNode eiPrev = it.current;
@@ -160,11 +158,12 @@ class SegmentNodeList {
       addEdgeCoordinates(eiPrev, ei, coordList);
       eiPrev = ei;
     }
-    return coordList.toCoordinateArray();
+    return coordList.toCoordinateList();
   }
 
-  void addEdgeCoordinates(SegmentNode ei0, SegmentNode ei1, CoordinateList coordList) {
-    Array<Coordinate> pts = createSplitEdgePts(ei0, ei1);
+  void addEdgeCoordinates(
+      SegmentNode ei0, SegmentNode ei1, CoordinateList coordList) {
+    List<Coordinate> pts = createSplitEdgePts(ei0, ei1);
     coordList.add2(pts, false);
   }
 }

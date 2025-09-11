@@ -1,4 +1,3 @@
- import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/distance.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -6,20 +5,18 @@ import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 
 class BufferInputLineSimplifier {
-  static Array<Coordinate> simplify2(Array<Coordinate> inputLine, double distanceTol) {
-    BufferInputLineSimplifier simp = BufferInputLineSimplifier(inputLine);
-    return simp.simplify(distanceTol);
+  static List<Coordinate> simplify2(
+      List<Coordinate> inputLine, double distanceTol) {
+    return BufferInputLineSimplifier(inputLine).simplify(distanceTol);
   }
 
-  static const int _DELETE = 1;
-
-  final Array<Coordinate> _inputLine;
+  final List<Coordinate> _inputLine;
 
   double distanceTol = 0;
 
   bool _isRing = false;
 
-  late Array<bool> _isDeleted;
+  late List<bool> _isDeleted;
 
   int _angleOrientation = Orientation.counterClockwise;
 
@@ -27,14 +24,14 @@ class BufferInputLineSimplifier {
     _isRing = CoordinateArrays.isRing(_inputLine);
   }
 
-  Array<Coordinate> simplify(double distanceTol) {
-    this.distanceTol = Math.abs(distanceTol);
+  List<Coordinate> simplify(double distanceTol) {
+    this.distanceTol = distanceTol.abs();
     _angleOrientation = Orientation.counterClockwise;
     if (distanceTol < 0) {
       _angleOrientation = Orientation.clockwise;
     }
 
-    _isDeleted = Array()[_inputLine.length];
+    _isDeleted = List.filled(_inputLine.length, false);
     bool isChanged = false;
     do {
       isChanged = deleteShallowConcavities();
@@ -75,14 +72,14 @@ class BufferInputLineSimplifier {
     return next;
   }
 
-  Array<Coordinate> collapseLine() {
+  List<Coordinate> collapseLine() {
     CoordinateList coordList = CoordinateList();
     for (int i = 0; i < _inputLine.length; i++) {
       if (!_isDeleted[i]) {
         coordList.add(_inputLine[i]);
       }
     }
-    return coordList.toCoordinateArray();
+    return coordList.toCoordinateList();
   }
 
   bool isDeletable(int i0, int i1, int i2, double distanceTol) {
@@ -100,10 +97,11 @@ class BufferInputLineSimplifier {
     return isShallowSampled(p0, p1, i0, i2, distanceTol);
   }
 
-  static const int _NUM_PTS_TO_CHECK = 10;
+  static const int _kNumPtsToCheck = 10;
 
-  bool isShallowSampled(Coordinate p0, Coordinate p2, int i0, int i2, double distanceTol) {
-    int inc = (i2 - i0) ~/ _NUM_PTS_TO_CHECK;
+  bool isShallowSampled(
+      Coordinate p0, Coordinate p2, int i0, int i2, double distanceTol) {
+    int inc = (i2 - i0) ~/ _kNumPtsToCheck;
     if (inc <= 0) {
       inc = 1;
     }
@@ -116,7 +114,8 @@ class BufferInputLineSimplifier {
     return true;
   }
 
-  static bool isShallow(Coordinate p0, Coordinate p1, Coordinate p2, double distanceTol) {
+  static bool isShallow(
+      Coordinate p0, Coordinate p1, Coordinate p2, double distanceTol) {
     double dist = Distance.pointToSegment(p1, p0, p2);
     return dist < distanceTol;
   }

@@ -17,11 +17,13 @@ import 'triangle_visitor.dart';
 import 'vertex.dart';
 
 class QuadEdgeSubdivision {
-  static void getTriangleEdges2(QuadEdge startQE, Array<QuadEdge> triEdge) {
+  static void getTriangleEdges2(QuadEdge startQE, List<QuadEdge> triEdge) {
     triEdge[0] = startQE;
     triEdge[1] = triEdge[0].lNext();
     triEdge[2] = triEdge[1].lNext();
-    if (triEdge[2].lNext() != triEdge[0]) throw ("Edges do not form a triangle");
+    if (triEdge[2].lNext() != triEdge[0]) {
+      throw ("Edges do not form a triangle");
+    }
   }
 
   static const double _kEdgeCoincidenceTolFactor = 1000;
@@ -55,7 +57,8 @@ class QuadEdgeSubdivision {
     _frameVertex[0] = Vertex((env.maxX + env.minX) / 2.0, env.maxY + frameSize);
     _frameVertex[1] = Vertex(env.minX - frameSize, env.minY - frameSize);
     _frameVertex[2] = Vertex(env.maxX + frameSize, env.minY - frameSize);
-    _frameEnv = Envelope.of(_frameVertex[0].getCoordinate(), _frameVertex[1].getCoordinate());
+    _frameEnv = Envelope.of(
+        _frameVertex[0].getCoordinate(), _frameVertex[1].getCoordinate());
     _frameEnv.expandToIncludeCoordinate(_frameVertex[2].getCoordinate());
   }
 
@@ -189,9 +192,9 @@ class QuadEdgeSubdivision {
   }
 
   bool isFrameBorderEdge(QuadEdge e) {
-    Array<QuadEdge> leftTri = Array(3);
+    List<QuadEdge> leftTri = List.filled(3, e);
     getTriangleEdges2(e, leftTri);
-    Array<QuadEdge> rightTri = Array(3);
+    List<QuadEdge> rightTri = List.filled(3, e);
     getTriangleEdges2(e.sym(), rightTri);
     Vertex vLeftTriOther = e.lNext().dest();
     if (isFrameVertex(vLeftTriOther)) {
@@ -309,7 +312,7 @@ class QuadEdgeSubdivision {
     while (edgeStack.isNotEmpty) {
       QuadEdge edge = edgeStack.pop();
       if (!visitedEdges.contains(edge)) {
-        Array<QuadEdge>? triEdges =
+        final triEdges =
             fetchTriangleToVisit(edge, edgeStack, includeFrame, visitedEdges);
         if (triEdges != null) {
           triVisitor.visit(triEdges);
@@ -318,9 +321,9 @@ class QuadEdgeSubdivision {
     }
   }
 
-  final Array<QuadEdge> _triEdges = Array(3);
+  final List<QuadEdge?> _triEdges = List.filled(3, null);
 
-  Array<QuadEdge>? fetchTriangleToVisit(
+  List<QuadEdge>? fetchTriangleToVisit(
       QuadEdge edge, Stack edgeStack, bool includeFrame, Set visitedEdges) {
     QuadEdge curr = edge;
     int edgeCount = 0;
@@ -328,17 +331,15 @@ class QuadEdgeSubdivision {
     do {
       _triEdges[edgeCount] = curr;
       if (isFrameEdge(curr)) isFrame = true;
-
       QuadEdge sym = curr.sym();
       if (!visitedEdges.contains(sym)) edgeStack.push(sym);
-
       visitedEdges.add(curr);
       edgeCount++;
       curr = curr.lNext();
     } while (curr != edge);
     if (isFrame && (!includeFrame)) return null;
 
-    return _triEdges;
+    return _triEdges.nonNulls.toList();
   }
 
   List getTriangleEdges(bool includeFrame) {
@@ -347,13 +348,13 @@ class QuadEdgeSubdivision {
     return visitor.getTriangleEdges();
   }
 
-  List<Array<Vertex>> getTriangleVertices(bool includeFrame) {
+  List<List<Vertex>> getTriangleVertices(bool includeFrame) {
     TriangleVertexListVisitor visitor = TriangleVertexListVisitor();
     visitTriangles(visitor, includeFrame);
     return visitor.getTriangleVertices();
   }
 
-  List<Array<Coordinate>> getTriangleCoordinates(bool includeFrame) {
+  List<List<Coordinate>> getTriangleCoordinates(bool includeFrame) {
     TriangleCoordinatesVisitor visitor = TriangleCoordinatesVisitor();
     visitTriangles(visitor, includeFrame);
     return visitor.getTriangles();
@@ -361,41 +362,32 @@ class QuadEdgeSubdivision {
 
   Geometry getEdges2(GeometryFactory geomFact) {
     final quadEdges = getPrimaryEdges(false);
-    Array<LineString> edges = Array(quadEdges.size);
-    int i = 0;
-    for (Iterator it = quadEdges.iterator; it.moveNext();) {
-      QuadEdge qe = it.current;
-      edges[i++] = geomFact
-          .createLineString2([qe.orig().getCoordinate(), qe.dest().getCoordinate()].toArray());
-    }
+    List<LineString> edges = quadEdges
+        .map((qe) => geomFact.createLineString2(
+            [qe.orig().getCoordinate(), qe.dest().getCoordinate()]))
+        .toList();
     return geomFact.createMultiLineString(edges);
   }
 
   Geometry getTriangles2(GeometryFactory geomFact) {
     final triPtsList = getTriangleCoordinates(false);
-    Array<Polygon> tris = Array(triPtsList.size);
-    int i = 0;
-    for (var it = triPtsList.iterator; it.moveNext();) {
-      Array<Coordinate> triPt = it.current;
-      tris[i++] = geomFact.createPolygon(geomFact.createLinearRings(triPt));
-    }
+    List<Polygon> tris = triPtsList
+        .map((e) => geomFact.createPolygon(geomFact.createLinearRings(e)))
+        .toList();
     return geomFact.createGeomCollection(tris);
   }
 
   Geometry getTriangles(bool includeFrame, GeometryFactory geomFact) {
     final triPtsList = getTriangleCoordinates(includeFrame);
-    Array<Polygon> tris = Array(triPtsList.size);
-    int i = 0;
-    for (var it = triPtsList.iterator; it.moveNext();) {
-      Array<Coordinate> triPt = it.current;
-      tris[i++] = geomFact.createPolygon(geomFact.createLinearRings(triPt));
-    }
+    List<Polygon> tris = triPtsList
+        .map((e) => geomFact.createPolygon(geomFact.createLinearRings(e)))
+        .toList();
     return geomFact.createGeomCollection(tris);
   }
 
   Geometry getVoronoiDiagram(GeometryFactory geomFact) {
     final vorCells = getVoronoiCellPolygons(geomFact);
-    return geomFact.createGeomCollection(GeometryFactory.toGeometryArray(vorCells)!);
+    return geomFact.createGeomCollection(vorCells);
   }
 
   List<Polygon> getVoronoiCellPolygons(GeometryFactory geomFact) {
@@ -423,7 +415,7 @@ class QuadEdgeSubdivision {
     if (coordList.size < 4) {
       coordList.add3(coordList.last, true);
     }
-    Array<Coordinate> pts = coordList.toCoordinateArray();
+    final pts = coordList.toCoordinateList();
     Polygon cellPoly = geomFact.createPolygon(geomFact.createLinearRings(pts));
     Vertex v = startQE.orig();
     cellPoly.userData = v.getCoordinate();
@@ -447,10 +439,10 @@ class QuadEdgeSubdivision {
 class TriangleCoordinatesVisitor implements TriangleVisitor {
   CoordinateList coordList = CoordinateList();
 
-  final List<Array<Coordinate>> _triCoords = [];
+  final List<List<Coordinate>> _triCoords = [];
 
   @override
-  void visit(Array<QuadEdge> triEdges) {
+  void visit(List<QuadEdge> triEdges) {
     coordList.clear();
     for (int i = 0; i < 3; i++) {
       Vertex v = triEdges[i].orig();
@@ -458,7 +450,7 @@ class TriangleCoordinatesVisitor implements TriangleVisitor {
     }
     if (coordList.size > 0) {
       coordList.closeRing();
-      Array<Coordinate> pts = coordList.toCoordinateArray();
+      final pts = coordList.toCoordinateList();
       if (pts.length != 4) {
         return;
       }
@@ -466,40 +458,36 @@ class TriangleCoordinatesVisitor implements TriangleVisitor {
     }
   }
 
-  List<Array<Coordinate>> getTriangles() {
-    return _triCoords;
-  }
+  List<List<Coordinate>> getTriangles() => _triCoords;
 }
 
 class TriangleEdgesListVisitor implements TriangleVisitor {
-  final List<Array<QuadEdge>> _triList = [];
+  final List<List<QuadEdge>> _triList = [];
 
   @override
-  void visit(Array<QuadEdge> triEdges) {
-    _triList.add([triEdges[0], triEdges[1], triEdges[2]].toArray());
+  void visit(List<QuadEdge> triEdges) {
+    _triList.add([triEdges[0], triEdges[1], triEdges[2]]);
   }
 
-  List<Array<QuadEdge>> getTriangleEdges() {
-    return _triList;
-  }
+  List<List<QuadEdge>> getTriangleEdges() => _triList;
 }
 
 class TriangleVertexListVisitor implements TriangleVisitor {
-  List<Array<Vertex>> triList = [];
+  List<List<Vertex>> triList = [];
 
   @override
-  void visit(Array<QuadEdge> triEdges) {
-    triList.add([triEdges[0].orig(), triEdges[1].orig(), triEdges[2].orig()].toArray());
+  void visit(List<QuadEdge> triEdges) {
+    triList.add([triEdges[0].orig(), triEdges[1].orig(), triEdges[2].orig()]);
   }
 
-  List<Array<Vertex>> getTriangleVertices() {
+  List<List<Vertex>> getTriangleVertices() {
     return triList;
   }
 }
 
 class TriangleCircumcentreVisitor implements TriangleVisitor {
   @override
-  void visit(Array<QuadEdge> triEdges) {
+  void visit(List<QuadEdge> triEdges) {
     Coordinate a = triEdges[0].orig().getCoordinate();
     Coordinate b = triEdges[1].orig().getCoordinate();
     Coordinate c = triEdges[2].orig().getCoordinate();

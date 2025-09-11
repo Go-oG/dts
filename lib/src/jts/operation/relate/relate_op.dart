@@ -12,7 +12,8 @@ class RelateOp extends GeometryGraphOperation {
     return im;
   }
 
-  static IntersectionMatrix relate2(Geometry a, Geometry b, BoundaryNodeRule boundaryNodeRule) {
+  static IntersectionMatrix relate2(
+      Geometry a, Geometry b, BoundaryNodeRule boundaryNodeRule) {
     RelateOp relOp = RelateOp(a, b, boundaryNodeRule);
     IntersectionMatrix im = relOp.getIntersectionMatrix();
     return im;

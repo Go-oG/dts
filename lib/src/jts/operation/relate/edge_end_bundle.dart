@@ -10,7 +10,8 @@ class EdgeEndBundle extends EdgeEnd {
   final List<EdgeEnd> _edgeEnds = [];
 
   EdgeEndBundle.of(BoundaryNodeRule? boundaryNodeRule, EdgeEnd e)
-    : super.of2(e.getEdge(), e.getCoordinate(), e.getDirectedCoordinate(), Label(e.getLabel()!)) {
+      : super.of2(e.getEdge(), e.getCoordinate(), e.getDirectedCoordinate(),
+            Label(e.getLabel()!)) {
     insert(e);
   }
 

@@ -1,17 +1,16 @@
- import 'dart:math';
+import 'dart:math';
 
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/angle.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/triangle.dart';
 import 'package:dts/src/jts/math/math.dart';
 
 class CornerArea {
-  static const double DEFAULT_SMOOTH_WEIGHT = 0.0;
+  static const double kDefaultSmoothWeight = 0.0;
 
   final double _smoothWeight;
 
-  CornerArea([this._smoothWeight = DEFAULT_SMOOTH_WEIGHT]);
+  CornerArea([this._smoothWeight = kDefaultSmoothWeight]);
 
   double area(Coordinate pp, Coordinate p, Coordinate pn) {
     double area = Triangle.area2(pp, p, pn);

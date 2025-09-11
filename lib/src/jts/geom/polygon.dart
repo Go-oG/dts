@@ -15,17 +15,16 @@ import 'precision_model.dart';
 
 class Polygon extends BaseGeometry<Polygon> implements Polygonal {
   late LinearRing shell;
-  late Array<LinearRing> holes;
+  late List<LinearRing> holes;
 
-  Polygon.of(LinearRing? shell, PrecisionModel precisionModel, int srid)
-      : this.of2(shell, Array<LinearRing>(0), precisionModel, srid);
+  Polygon.of(LinearRing? shell, PrecisionModel precisionModel, int srid) : this.of2(shell, [], precisionModel, srid);
 
-  Polygon.of2(LinearRing? shell, Array<LinearRing>? holes, PrecisionModel pm, int srid)
+  Polygon.of2(LinearRing? shell, List<LinearRing>? holes, PrecisionModel pm, int srid)
       : this(shell, holes, GeometryFactory(pm: pm, srid: srid));
 
-  Polygon(LinearRing? shell, Array<LinearRing>? holes, GeometryFactory factory) : super(factory) {
+  Polygon(LinearRing? shell, List<LinearRing>? holes, GeometryFactory factory) : super(factory) {
     this.shell = shell ?? factory.createLinearRing();
-    this.holes = holes ?? Array(0);
+    this.holes = holes ?? [];
 
     if (Geometry.hasNullElements(this.holes)) {
       throw IllegalArgumentException("holes must not contain null elements");
@@ -41,23 +40,14 @@ class Polygon extends BaseGeometry<Polygon> implements Polygonal {
   }
 
   @override
-  Array<Coordinate> getCoordinates() {
+  List<Coordinate> getCoordinates() {
     if (isEmpty()) {
-      return Array(0);
+      return [];
     }
-    Array<Coordinate> coordinates = Array(getNumPoints());
-    int k = -1;
-    Array<Coordinate> shellCoordinates = shell.getCoordinates();
-    for (int x = 0; x < shellCoordinates.length; x++) {
-      k++;
-      coordinates[k] = shellCoordinates[x];
-    }
+    List<Coordinate> coordinates = [];
+    coordinates.addAll(shell.getCoordinates());
     for (int i = 0; i < holes.length; i++) {
-      Array<Coordinate> childCoordinates = holes[i].getCoordinates();
-      for (int j = 0; j < childCoordinates.length; j++) {
-        k++;
-        coordinates[k] = childCoordinates[j];
-      }
+      coordinates.addAll(holes[i].getCoordinates());
     }
     return coordinates;
   }
@@ -158,13 +148,11 @@ class Polygon extends BaseGeometry<Polygon> implements Polygonal {
     if (isEmpty()) {
       return factory.createMultiLineString();
     }
-    Array<LinearRing> rings = Array(holes.length + 1);
-    rings[0] = shell;
-    for (int i = 0; i < holes.length; i++) {
-      rings[i + 1] = holes[i];
+    List<LinearRing> rings = [shell];
+    rings.addAll(holes);
+    if (rings.length <= 1) {
+      return factory.createLinearRing2(rings[0].getCoordinateSequence());
     }
-    if (rings.length <= 1) return factory.createLinearRing2(rings[0].getCoordinateSequence());
-
     return factory.createMultiLineString(rings);
   }
 
@@ -237,10 +225,7 @@ class Polygon extends BaseGeometry<Polygon> implements Polygonal {
   @override
   Polygon copyInternal() {
     LinearRing shellCopy = shell.copy() as LinearRing;
-    Array<LinearRing> holeCopies = Array(holes.length);
-    for (int i = 0; i < holes.length; i++) {
-      holeCopies[i] = (holes[i].copy() as LinearRing);
-    }
+    List<LinearRing> holeCopies = holes.map((e) => e.copy() as LinearRing).toList();
     return Polygon(shellCopy, holeCopies, factory);
   }
 
@@ -329,10 +314,8 @@ class Polygon extends BaseGeometry<Polygon> implements Polygonal {
   @override
   Polygon reverseInternal() {
     LinearRing shell = getExteriorRing().reverse();
-    Array<LinearRing> holes = Array(getNumInteriorRing());
-    for (int i = 0; i < holes.length; i++) {
-      holes[i] = getInteriorRingN(i).reverse();
-    }
+    int count = getNumInteriorRing();
+    List<LinearRing> holes = List.generate(count, (i) => getInteriorRingN(i).reverse());
     return factory.createPolygon(shell, holes);
   }
 }

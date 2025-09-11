@@ -101,7 +101,7 @@ class RelatePointLocator {
         return DimensionLocation.locationArea(locPoly);
       }
     }
-    return _lineBoundary!.isBoundary(p) ? DimensionLocation.LINE_BOUNDARY : DimensionLocation.LINE_INTERIOR;
+    return _lineBoundary!.isBoundary(p) ? DimensionLocation.kLineBoundary : DimensionLocation.kLineInterior;
   }
 
   int locateNode(Coordinate p, Geometry? parentPolygonal) {
@@ -118,11 +118,11 @@ class RelatePointLocator {
 
   int locateWithDim2(Coordinate p, bool isNode, Geometry? parentPolygonal) {
     if (_isEmpty) {
-      return DimensionLocation.EXTERIOR;
+      return DimensionLocation.kExterior;
     }
 
     if (isNode && ((geom is Polygon) || (geom is MultiPolygon))) {
-      return DimensionLocation.AREA_BOUNDARY;
+      return DimensionLocation.kAreaBoundary;
     }
 
     int dimLoc = computeDimLocation(p, isNode, parentPolygonal);
@@ -148,7 +148,7 @@ class RelatePointLocator {
         return DimensionLocation.locationPoint(locPt);
       }
     }
-    return DimensionLocation.EXTERIOR;
+    return DimensionLocation.kExterior;
   }
 
   int locateOnPoints(Coordinate p) {

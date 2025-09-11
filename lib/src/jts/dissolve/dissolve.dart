@@ -64,7 +64,8 @@ class LineDissolver {
     bool doneStart = false;
     for (int i = 1; i < seq.size(); i++) {
       DissolveHalfEdge? e =
-          ((_graph.addEdge(seq.getCoordinate(i - 1), seq.getCoordinate(i))) as DissolveHalfEdge?);
+          ((_graph.addEdge(seq.getCoordinate(i - 1), seq.getCoordinate(i)))
+              as DissolveHalfEdge?);
       if (e == null) {
         continue;
       }
@@ -175,7 +176,7 @@ class LineDissolver {
   }
 
   void _addLine(CoordinateList line) {
-    _lines.add(factory.createLineString2(line.toCoordinateArray()));
+    _lines.add(factory.createLineString2(line.toCoordinateList()));
   }
 
   void _stackEdges(HalfEdge node) {

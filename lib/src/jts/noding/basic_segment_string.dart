@@ -1,11 +1,10 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 
 import 'octant.dart';
 import 'segment_string.dart';
 
 class BasicSegmentString extends SegmentString {
-  Array<Coordinate> pts;
+  List<Coordinate> pts;
 
   Object? data;
 
@@ -32,9 +31,7 @@ class BasicSegmentString extends SegmentString {
   }
 
   @override
-  Array<Coordinate> getCoordinates() {
-    return pts;
-  }
+  List<Coordinate> getCoordinates() => pts;
 
   @override
   bool isClosed() {

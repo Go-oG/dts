@@ -1,5 +1,3 @@
-import 'package:d_util/d_util.dart';
-
 import '../../operation/buffer/buffer_op.dart';
 import '../../operation/overlay/overlay_op.dart';
 import '../../operation/overlayng/overlay_ngrobust.dart';
@@ -19,11 +17,8 @@ import '../prep/prepared_geometry.dart';
 
 class GeometryFixer {
   static final bool _defaultKeepMulti = true;
-  static Geometry fix(Geometry geom) {
-    return fix2(geom, _defaultKeepMulti);
-  }
 
-  static Geometry fix2(Geometry geom, bool isKeepMulti) {
+  static Geometry fix(Geometry geom, [bool isKeepMulti = true]) {
     GeometryFixer fix = GeometryFixer(geom);
     fix.setKeepMulti(isKeepMulti);
     return fix.getResult();
@@ -104,9 +99,8 @@ class GeometryFixer {
         pts.add(fixPt);
       }
     }
-    if ((!_isKeepMulti) && (pts.size == 1)) return pts.get(0);
-
-    return factory.createMultiPoint(GeometryFactory.toPointArray(pts));
+    if (!_isKeepMulti && pts.length == 1) return pts.first;
+    return factory.createMultiPoint(pts);
   }
 
   Geometry fixLinearRing(LinearRing geom) {
@@ -121,8 +115,8 @@ class GeometryFixer {
   Geometry? fixLinearRingElement(LinearRing geom) {
     if (geom.isEmpty()) return null;
 
-    Array<Coordinate> pts = geom.getCoordinates();
-    Array<Coordinate> ptsFix = fixCoordinates(pts);
+    final pts = geom.getCoordinates();
+    final ptsFix = fixCoordinates(pts);
     if (_isKeepCollapsed) {
       if (ptsFix.length == 1) {
         return factory.createPoint2(ptsFix[0]);
@@ -152,8 +146,8 @@ class GeometryFixer {
   Geometry? fixLineStringElement(LineString geom) {
     if (geom.isEmpty()) return null;
 
-    Array<Coordinate> pts = geom.getCoordinates();
-    Array<Coordinate> ptsFix = fixCoordinates(pts);
+    final pts = geom.getCoordinates();
+    final ptsFix = fixCoordinates(pts);
     if (_isKeepCollapsed && (ptsFix.length == 1)) {
       return factory.createPoint2(ptsFix[0]);
     }
@@ -163,8 +157,8 @@ class GeometryFixer {
     return factory.createLineString2(ptsFix);
   }
 
-  static Array<Coordinate> fixCoordinates(Array<Coordinate> pts) {
-    Array<Coordinate> ptsClean = CoordinateArrays.removeRepeatedOrInvalidPoints(pts);
+  static List<Coordinate> fixCoordinates(List<Coordinate> pts) {
+    final ptsClean = CoordinateArrays.removeRepeatedOrInvalidPoints(pts);
     return CoordinateArrays.copyDeep(ptsClean);
   }
 
@@ -183,13 +177,13 @@ class GeometryFixer {
       }
       fixed.add(fix);
     }
-    if (fixed.size == 1) {
-      if ((!_isKeepMulti) || (fixed.get(0) is! LineString)) return fixed.get(0);
+    if (fixed.length == 1) {
+      if ((!_isKeepMulti) || (fixed.first is! LineString)) return fixed.first;
     }
     if (isMixed) {
-      return factory.createGeomCollection(GeometryFactory.toGeometryArray(fixed)!);
+      return factory.createGeomCollection(fixed);
     }
-    return factory.createMultiLineString(GeometryFactory.toLineStringArray(fixed.cast()));
+    return factory.createMultiLineString(fixed.cast());
   }
 
   Geometry fixPolygon(Polygon geom) {
@@ -218,7 +212,7 @@ class GeometryFixer {
     List<Geometry> shells = [];
     classifyHoles(fixShell, holesFixed, holes, shells);
     Geometry polyWithHoles = difference(fixShell, holes);
-    if (shells.size == 0) {
+    if (shells.isEmpty) {
       return polyWithHoles;
     }
     shells.add(polyWithHoles);
@@ -236,8 +230,8 @@ class GeometryFixer {
     return holes;
   }
 
-  void classifyHoles(
-      Geometry shell, List<Geometry> holesFixed, List<Geometry> holes, List<Geometry> shells) {
+  void classifyHoles(Geometry shell, List<Geometry> holesFixed,
+      List<Geometry> holes, List<Geometry> shells) {
     PreparedGeom shellPrep = PreparedGeomFactory.prepare(shell);
     for (Geometry hole in holesFixed) {
       if (shellPrep.intersects(hole)) {
@@ -249,21 +243,22 @@ class GeometryFixer {
   }
 
   Geometry difference(Geometry shell, List<Geometry>? holes) {
-    if ((holes == null) || (holes.size == 0)) {
+    if (holes == null || holes.isEmpty) {
       return shell;
     }
 
     Geometry? holesUnion = union(holes);
-    return OverlayNGRobust.overlay(shell, holesUnion!, OverlayOpCode.difference);
+    return OverlayNGRobust.overlay(
+        shell, holesUnion!, OverlayOpCode.difference);
   }
 
   Geometry? union(List<Geometry> polys) {
-    if (polys.size == 0) {
+    if (polys.isEmpty) {
       return factory.createPolygon();
     }
 
-    if (polys.size == 1) {
-      return polys.get(0);
+    if (polys.length == 1) {
+      return polys.first;
     }
     return OverlayNGRobust.union2(polys);
   }
@@ -282,21 +277,21 @@ class GeometryFixer {
         polys.add(polyFix);
       }
     }
-    if (polys.size == 0) {
+    if (polys.isEmpty) {
       return factory.createMultiPolygon();
     }
     Geometry result = union(polys)!;
     if (_isKeepMulti && (result is Polygon)) {
-      result = factory.createMultiPolygon([result].toArray());
+      result = factory.createMultiPolygon([result]);
     }
 
     return result;
   }
 
   Geometry fixCollection(GeometryCollection geom) {
-    Array<Geometry> geomRep = Array(geom.getNumGeometries());
+    List<Geometry> geomRep = [];
     for (int i = 0; i < geom.getNumGeometries(); i++) {
-      geomRep[i] = fix3(geom.getGeometryN(i), _isKeepCollapsed, _isKeepMulti);
+      geomRep.add(fix3(geom.getGeometryN(i), _isKeepCollapsed, _isKeepMulti));
     }
     return factory.createGeomCollection(geomRep);
   }

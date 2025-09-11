@@ -1,8 +1,9 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 
 final class HCoordinate {
-  static Coordinate intersection(Coordinate p1, Coordinate p2, Coordinate q1, Coordinate q2) {
+  static Coordinate intersection(
+      Coordinate p1, Coordinate p2, Coordinate q1, Coordinate q2) {
     double px = p1.y - p2.y;
     double py = p2.x - p1.x;
     double pw = (p1.x * p2.y) - (p2.x * p1.y);
@@ -14,7 +15,9 @@ final class HCoordinate {
     double w = (px * qy) - (qx * py);
     double xInt = x / w;
     double yInt = y / w;
-    if ((Double.isNaN(xInt) || (Double.isInfinite(xInt) || Double.isNaN(yInt))) || Double.isInfinite(yInt)) {
+    if ((Double.isNaN(xInt) ||
+            (Double.isInfinite(xInt) || Double.isNaN(yInt))) ||
+        Double.isInfinite(yInt)) {
       throw "NotRepresentableException";
     }
     return Coordinate(xInt, yInt);

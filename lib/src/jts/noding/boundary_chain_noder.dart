@@ -1,4 +1,3 @@
- import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 
@@ -12,27 +11,23 @@ class NBoundaryChainNoder implements Noder {
   @override
   void computeNodes(List<SegmentString> segStrings) {
     Set<_Segment> segSet = <_Segment>{};
-    Array<_BoundaryChainMap> boundaryChains = Array(segStrings.length);
-
-    addSegments(segStrings, segSet, boundaryChains);
-    markBoundarySegments(segSet);
-    _chainList = extractChains(boundaryChains);
+    List<_BoundaryChainMap?> boundaryChains = List.filled(segStrings.length, null);
+    _addSegments(segStrings, segSet, boundaryChains);
+    _markBoundarySegments(segSet);
+    _chainList = _extractChains(boundaryChains.nonNulls);
   }
 
-  static void addSegments(
-    List<SegmentString> segStrings,
-    Set<_Segment> segSet,
-    Array<_BoundaryChainMap> boundaryChains,
-  ) {
+  static void _addSegments(
+      List<SegmentString> segStrings, Set<_Segment> segSet, List<_BoundaryChainMap?> boundaryChains) {
     int i = 0;
     for (SegmentString ss in segStrings) {
-      _BoundaryChainMap chainMap = _BoundaryChainMap(ss);
+      final chainMap = _BoundaryChainMap(ss);
       boundaryChains[i++] = chainMap;
-      addSegments2(ss, chainMap, segSet);
+      _addSegments2(ss, chainMap, segSet);
     }
   }
 
-  static void addSegments2(SegmentString segString, _BoundaryChainMap chainMap, Set<_Segment> segSet) {
+  static void _addSegments2(SegmentString segString, _BoundaryChainMap chainMap, Set<_Segment> segSet) {
     for (int i = 0; i < (segString.size() - 1); i++) {
       Coordinate p0 = segString.getCoordinate(i);
       Coordinate p1 = segString.getCoordinate(i + 1);
@@ -45,17 +40,18 @@ class NBoundaryChainNoder implements Noder {
     }
   }
 
-  static void markBoundarySegments(Set<_Segment> segSet) {
+  static void _markBoundarySegments(Set<_Segment> segSet) {
     for (_Segment seg in segSet) {
       seg.markBoundary();
     }
   }
 
-  static List<SegmentString> extractChains(Array<_BoundaryChainMap> boundaryChains) {
+  static List<SegmentString> _extractChains(Iterable<_BoundaryChainMap> boundaryChains) {
     List<SegmentString> chainList = [];
-    boundaryChains.each((chainMap, index) {
+    for (var chainMap in boundaryChains) {
       chainMap.createChains(chainList);
-    });
+    }
+
     return chainList;
   }
 
@@ -68,10 +64,10 @@ class NBoundaryChainNoder implements Noder {
 class _BoundaryChainMap {
   final SegmentString _segString;
 
-  late Array<bool> _isBoundary;
+  late List<bool> _isBoundary;
 
   _BoundaryChainMap(this._segString) {
-    _isBoundary = Array(_segString.size() - 1);
+    _isBoundary = List.filled(_segString.size() - 1, false);
   }
 
   void setBoundarySegment(int index) {
@@ -91,10 +87,9 @@ class _BoundaryChainMap {
   }
 
   static SegmentString createChain(SegmentString segString, int startIndex, int endIndex) {
-    Array<Coordinate> pts = Array((endIndex - startIndex) + 1);
-    int ipts = 0;
+    List<Coordinate> pts = [];
     for (int i = startIndex; i < (endIndex + 1); i++) {
-      pts[ipts++] = segString.getCoordinate(i).copy();
+      pts.add(segString.getCoordinate(i).copy());
     }
     return BasicSegmentString(pts, segString.getData());
   }

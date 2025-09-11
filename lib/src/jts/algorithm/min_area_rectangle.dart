@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
@@ -9,16 +8,16 @@ import 'package:dts/src/jts/geom/polygon.dart';
 import 'convex_hull.dart';
 import 'rectangle.dart';
 
-class MinimumAreaRectangle {
+class MinAreaRectangle {
   static Geometry getMinimumRectangle(Geometry geom) {
-    return MinimumAreaRectangle(geom)._getMinimumRectangle();
+    return MinAreaRectangle(geom)._getMinimumRectangle();
   }
 
   final Geometry _inputGeom;
 
   final bool _isConvex;
 
-  MinimumAreaRectangle(this._inputGeom, [this._isConvex = false]);
+  MinAreaRectangle(this._inputGeom, [this._isConvex = false]);
 
   Geometry _getMinimumRectangle() {
     if (_inputGeom.isEmpty()) {
@@ -32,7 +31,7 @@ class MinimumAreaRectangle {
   }
 
   Geometry _computeConvex(Geometry convexGeom) {
-    Array<Coordinate> convexHullPts;
+    List<Coordinate> convexHullPts;
     if (convexGeom is Polygon) {
       convexHullPts = ((convexGeom)).getExteriorRing().getCoordinates();
     } else {
@@ -48,7 +47,7 @@ class MinimumAreaRectangle {
     return _computeConvexRing(convexHullPts);
   }
 
-  Polygon _computeConvexRing(Array<Coordinate> ring) {
+  Polygon _computeConvexRing(List<Coordinate> ring) {
     double minRectangleArea = double.maxFinite;
     int minRectangleBaseIndex = -1;
     int minRectangleDiamIndex = -1;
@@ -72,8 +71,8 @@ class MinimumAreaRectangle {
         rightSideIndex = diameterIndex;
       }
       rightSideIndex = _findFurthestVertex(ring, segDiam, rightSideIndex, -1);
-      double rectWidth = segDiam.distancePerpendicular(ring[leftSideIndex]) +
-          segDiam.distancePerpendicular(ring[rightSideIndex]);
+      double rectWidth =
+          segDiam.distancePerpendicular(ring[leftSideIndex]) + segDiam.distancePerpendicular(ring[rightSideIndex]);
       double rectArea = segDiam.getLength() * rectWidth;
       if (rectArea < minRectangleArea) {
         minRectangleArea = rectArea;
@@ -93,7 +92,7 @@ class MinimumAreaRectangle {
     );
   }
 
-  int _findFurthestVertex(Array<Coordinate> pts, LineSegment baseSeg, int startIndex, int orient) {
+  int _findFurthestVertex(List<Coordinate> pts, LineSegment baseSeg, int startIndex, int orient) {
     double maxDistance = _orientedDistance(baseSeg, pts[startIndex], orient);
     double nextDistance = maxDistance;
     int maxIndex = startIndex;
@@ -114,24 +113,24 @@ class MinimumAreaRectangle {
   bool _isFurtherOrEqual(double d1, double d2, int orient) {
     switch (orient) {
       case 0:
-        return Math.abs(d1) >= Math.abs(d2);
+        return d1.abs() >= d2.abs();
       case 1:
         return d1 >= d2;
       case -1:
         return d1 <= d2;
     }
-    throw IllegalArgumentException("Invalid orientation index: $orient");
+    throw ArgumentError("Invalid orientation index: $orient");
   }
 
   static double _orientedDistance(LineSegment seg, Coordinate p, int orient) {
     double dist = seg.distancePerpendicularOriented(p);
     if (orient == 0) {
-      return Math.abs(dist);
+      return dist.abs();
     }
     return dist;
   }
 
-  static int _nextIndex(Array<Coordinate> ring, int index) {
+  static int _nextIndex(List<Coordinate> ring, int index) {
     index++;
     if (index >= (ring.length - 1)) {
       index = 0;
@@ -140,7 +139,7 @@ class MinimumAreaRectangle {
     return index;
   }
 
-  static LineString _computeMaximumLine(Array<Coordinate> pts, GeometryFactory factory) {
+  static LineString _computeMaximumLine(List<Coordinate> pts, GeometryFactory factory) {
     Coordinate? ptMinX;
     Coordinate? ptMaxX;
     Coordinate? ptMinY;
@@ -169,6 +168,6 @@ class MinimumAreaRectangle {
       p0 = ptMinY!;
       p1 = ptMaxY!;
     }
-    return factory.createLineString2([p0.copy(), p1.copy()].toArray());
+    return factory.createLineString2([p0.copy(), p1.copy()]);
   }
 }

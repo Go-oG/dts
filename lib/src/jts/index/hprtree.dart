@@ -72,7 +72,8 @@ class HPRtree<T> implements SpatialIndex<T> {
     }
   }
 
-  void queryNode(int layerIndex, int nodeOffset, Envelope searchEnv, ItemVisitor<T> visitor) {
+  void queryNode(int layerIndex, int nodeOffset, Envelope searchEnv,
+      ItemVisitor<T> visitor) {
     int layerStart = _layerStartIndex![layerIndex];
     int nodeIndex = layerStart + nodeOffset;
     if (!intersects(_nodeBounds, nodeIndex, searchEnv)) {
@@ -89,14 +90,15 @@ class HPRtree<T> implements SpatialIndex<T> {
   }
 
   static bool intersects(Array<double> bounds, int nodeIndex, Envelope env) {
-    bool isBeyond = (((env.maxX < bounds[nodeIndex]) || (env.maxY < bounds[nodeIndex + 1])) ||
+    bool isBeyond = (((env.maxX < bounds[nodeIndex]) ||
+                (env.maxY < bounds[nodeIndex + 1])) ||
             (env.minX > bounds[nodeIndex + 2])) ||
         (env.minY > bounds[nodeIndex + 3]);
     return !isBeyond;
   }
 
-  void queryNodeChildren(
-      int layerIndex, int blockOffset, Envelope searchEnv, ItemVisitor<T> visitor) {
+  void queryNodeChildren(int layerIndex, int blockOffset, Envelope searchEnv,
+      ItemVisitor<T> visitor) {
     int layerStart = _layerStartIndex![layerIndex];
     int layerEnd = _layerStartIndex![layerIndex + 1];
     for (int i = 0; i < _nodeCapacity; i++) {
@@ -230,7 +232,8 @@ class HPRtree<T> implements SpatialIndex<T> {
     }
   }
 
-  void updateNodeBounds(int nodeIndex, double minX, double minY, double maxX, double maxY) {
+  void updateNodeBounds(
+      int nodeIndex, double minX, double minY, double maxX, double maxY) {
     final nodeBounds = _nodeBounds;
     if (minX < nodeBounds[nodeIndex]) {
       nodeBounds[nodeIndex] = minX;

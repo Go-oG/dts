@@ -15,7 +15,8 @@ class InvalidSegmentDetector implements NSegmentIntersector {
   }
 
   @override
-  void processIntersections(SegmentString ssAdj, int iAdj, SegmentString ssTarget, int iTarget) {
+  void processIntersections(
+      SegmentString ssAdj, int iAdj, SegmentString ssTarget, int iTarget) {
     CoverageRing target = ((ssTarget) as CoverageRing);
     CoverageRing adj = ((ssAdj as CoverageRing));
     if (target.isKnown2(iTarget)) {
@@ -40,7 +41,8 @@ class InvalidSegmentDetector implements NSegmentIntersector {
     }
   }
 
-  bool _isEqual(Coordinate t0, Coordinate t1, Coordinate adj0, Coordinate adj1) {
+  bool _isEqual(
+      Coordinate t0, Coordinate t1, Coordinate adj0, Coordinate adj1) {
     if (t0.equals2D(adj0) && t1.equals2D(adj1)) {
       return true;
     }
@@ -52,12 +54,14 @@ class InvalidSegmentDetector implements NSegmentIntersector {
     return false;
   }
 
-  bool _isInvalid(Coordinate tgt0, Coordinate tgt1, Coordinate adj0, Coordinate adj1, CoverageRing adj, int indexAdj) {
+  bool _isInvalid(Coordinate tgt0, Coordinate tgt1, Coordinate adj0,
+      Coordinate adj1, CoverageRing adj, int indexAdj) {
     if (_isCollinearOrInterior(tgt0, tgt1, adj0, adj1, adj, indexAdj)) {
       return true;
     }
 
-    if ((_distanceTol > 0) && _isNearlyParallel(tgt0, tgt1, adj0, adj1, _distanceTol)) {
+    if ((_distanceTol > 0) &&
+        _isNearlyParallel(tgt0, tgt1, adj0, adj1, _distanceTol)) {
       return true;
     }
 
@@ -89,7 +93,8 @@ class InvalidSegmentDetector implements NSegmentIntersector {
     return isInterior;
   }
 
-  bool _isInteriorSegment(Coordinate intVertex, Coordinate tgt0, Coordinate tgt1, CoverageRing adj, int indexAdj) {
+  bool _isInteriorSegment(Coordinate intVertex, Coordinate tgt0,
+      Coordinate tgt1, CoverageRing adj, int indexAdj) {
     Coordinate tgtEnd = (intVertex.equals2D(tgt0)) ? tgt1 : tgt0;
     Coordinate adjPrev = adj.findVertexPrev(indexAdj, intVertex);
     Coordinate adjNext = adj.findVertexNext(indexAdj, intVertex);
@@ -101,24 +106,28 @@ class InvalidSegmentDetector implements NSegmentIntersector {
       adjPrev = adjNext;
       adjNext = temp;
     }
-    bool isInterior = PolygonNodeTopology.isInteriorSegment(intVertex, adjPrev, adjNext, tgtEnd);
+    bool isInterior = PolygonNodeTopology.isInteriorSegment(
+        intVertex, adjPrev, adjNext, tgtEnd);
     return isInterior;
   }
 
-  static bool _isNearlyParallel(Coordinate p00, Coordinate p01, Coordinate p10, Coordinate p11, double distanceTol) {
+  static bool _isNearlyParallel(Coordinate p00, Coordinate p01, Coordinate p10,
+      Coordinate p11, double distanceTol) {
     LineSegment line0 = LineSegment(p00, p01);
     LineSegment line1 = LineSegment(p10, p11);
     LineSegment proj0 = line0.project3(line1)!;
     LineSegment proj1 = line1.project3(line0)!;
 
-    if ((proj0.getLength() <= distanceTol) || (proj1.getLength() <= distanceTol)) {
+    if ((proj0.getLength() <= distanceTol) ||
+        (proj1.getLength() <= distanceTol)) {
       return false;
     }
 
     if (proj0.p0.distance(proj1.p1) < proj0.p0.distance(proj1.p0)) {
       proj1.reverse();
     }
-    return (proj0.p0.distance(proj1.p0) <= distanceTol) && (proj0.p1.distance(proj1.p1) <= distanceTol);
+    return (proj0.p0.distance(proj1.p0) <= distanceTol) &&
+        (proj0.p1.distance(proj1.p1) <= distanceTol);
   }
 
   @override

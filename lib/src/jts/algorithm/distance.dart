@@ -6,7 +6,8 @@ import 'package:dts/src/jts/math/math.dart';
 final class Distance {
   Distance._();
 
-  static double segmentToSegment(Coordinate A, Coordinate B, Coordinate C, Coordinate D) {
+  static double segmentToSegment(
+      Coordinate A, Coordinate B, Coordinate C, Coordinate D) {
     if (A == B) {
       return Distance.pointToSegment(A, C, D);
     }
@@ -43,9 +44,10 @@ final class Distance {
     return 0.0;
   }
 
-  static double pointToSegmentString(Coordinate p, Array<Coordinate> line) {
+  static double pointToSegmentString(Coordinate p, List<Coordinate> line) {
     if (line.isEmpty) {
-      throw IllegalArgumentException("Line array must contain at least one vertex");
+      throw IllegalArgumentException(
+          "Line array must contain at least one vertex");
     }
 
     double minDistance = p.distance(line[0]);
@@ -64,7 +66,8 @@ final class Distance {
     }
 
     double len2 = ((B.x - A.x) * (B.x - A.x)) + ((B.y - A.y) * (B.y - A.y));
-    double r = (((p.x - A.x) * (B.x - A.x)) + ((p.y - A.y) * (B.y - A.y))) / len2;
+    double r =
+        (((p.x - A.x) * (B.x - A.x)) + ((p.y - A.y) * (B.y - A.y))) / len2;
     if (r <= 0.0) {
       return p.distance(A);
     }
@@ -73,7 +76,8 @@ final class Distance {
       return p.distance(B);
     }
 
-    double s = (((A.y - p.y) * (B.x - A.x)) - ((A.x - p.x) * (B.y - A.y))) / len2;
+    double s =
+        (((A.y - p.y) * (B.x - A.x)) - ((A.x - p.x) * (B.y - A.y))) / len2;
     return Math.abs(s) * Math.sqrt(len2);
   }
 
@@ -83,7 +87,8 @@ final class Distance {
     }
 
     double len2 = ((B.x - A.x) * (B.x - A.x)) + ((B.y - A.y) * (B.y - A.y));
-    double r = (((p.x - A.x) * (B.x - A.x)) + ((p.y - A.y) * (B.y - A.y))) / len2;
+    double r =
+        (((p.x - A.x) * (B.x - A.x)) + ((p.y - A.y) * (B.y - A.y))) / len2;
     if (r <= 0.0) {
       return p.distanceSq(A);
     }
@@ -92,19 +97,24 @@ final class Distance {
       return p.distanceSq(B);
     }
 
-    double s = (((A.y - p.y) * (B.x - A.x)) - ((A.x - p.x) * (B.y - A.y))) / len2;
+    double s =
+        (((A.y - p.y) * (B.x - A.x)) - ((A.x - p.x) * (B.y - A.y))) / len2;
     return (s * s) * len2;
   }
 
-  static double pointToLinePerpendicular(Coordinate p, Coordinate A, Coordinate B) {
+  static double pointToLinePerpendicular(
+      Coordinate p, Coordinate A, Coordinate B) {
     double len2 = ((B.x - A.x) * (B.x - A.x)) + ((B.y - A.y) * (B.y - A.y));
-    double s = (((A.y - p.y) * (B.x - A.x)) - ((A.x - p.x) * (B.y - A.y))) / len2;
+    double s =
+        (((A.y - p.y) * (B.x - A.x)) - ((A.x - p.x) * (B.y - A.y))) / len2;
     return Math.abs(s) * Math.sqrt(len2);
   }
 
-  static double pointToLinePerpendicularSigned(Coordinate p, Coordinate A, Coordinate B) {
+  static double pointToLinePerpendicularSigned(
+      Coordinate p, Coordinate A, Coordinate B) {
     double len2 = ((B.x - A.x) * (B.x - A.x)) + ((B.y - A.y) * (B.y - A.y));
-    double s = (((A.y - p.y) * (B.x - A.x)) - ((A.x - p.x) * (B.y - A.y))) / len2;
+    double s =
+        (((A.y - p.y) * (B.x - A.x)) - ((A.x - p.x) * (B.y - A.y))) / len2;
     return s * Math.sqrt(len2);
   }
 }

@@ -13,7 +13,8 @@ abstract class LineIntersector {
   static const int kPointIntersection = 1;
   static const int kCollinearIntersection = 2;
 
-  static double computeEdgeDistance(Coordinate p, Coordinate p0, Coordinate p1) {
+  static double computeEdgeDistance(
+      Coordinate p, Coordinate p0, Coordinate p1) {
     double dx = Math.abs(p1.x - p0.x);
     double dy = Math.abs(p1.y - p0.y);
     double dist = -1.0;
@@ -42,7 +43,8 @@ abstract class LineIntersector {
     return dist;
   }
 
-  static double nonRobustComputeEdgeDistance(Coordinate p, Coordinate p1, Coordinate p2) {
+  static double nonRobustComputeEdgeDistance(
+      Coordinate p, Coordinate p1, Coordinate p2) {
     double dx = p.x - p1.x;
     double dy = p.y - p1.y;
     double dist = MathUtil.hypot(dx, dy);
@@ -92,7 +94,8 @@ abstract class LineIntersector {
     return result == kCollinearIntersection;
   }
 
-  void computeIntersection2(Coordinate p1, Coordinate p2, Coordinate p3, Coordinate p4) {
+  void computeIntersection2(
+      Coordinate p1, Coordinate p2, Coordinate p3, Coordinate p4) {
     inputLines[0][0] = p1;
     inputLines[0][1] = p2;
     inputLines[1][0] = p3;
@@ -100,7 +103,8 @@ abstract class LineIntersector {
     result = computeIntersect(p1, p2, p3, p4);
   }
 
-  int computeIntersect(Coordinate p1, Coordinate p2, Coordinate q1, Coordinate q2);
+  int computeIntersect(
+      Coordinate p1, Coordinate p2, Coordinate q1, Coordinate q2);
 
   bool isEndPoint() {
     return hasIntersection() && (!isProper);
@@ -184,8 +188,8 @@ abstract class LineIntersector {
   }
 
   double getEdgeDistance(int segmentIndex, int intIndex) {
-    double dist = computeEdgeDistance(
-        intPt[intIndex], inputLines[segmentIndex][0], inputLines[segmentIndex][1]);
+    double dist = computeEdgeDistance(intPt[intIndex],
+        inputLines[segmentIndex][0], inputLines[segmentIndex][1]);
     return dist;
   }
 }

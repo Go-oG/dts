@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/location.dart';
@@ -30,10 +29,10 @@ class IndexedDistanceToPoint {
     return Location.exterior != _ptLocater.locate(pt.getCoordinate()!);
   }
 
-  Array<Coordinate>? nearestPoints(Point pt) {
+  List<Coordinate>? nearestPoints(Point pt) {
     if (_isInArea(pt)) {
       Coordinate p = pt.getCoordinate()!;
-      return Array.list([p.copy(), p.copy()]);
+      return [p.copy(), p.copy()];
     }
     return _facetDistance.nearestPoints(pt);
   }

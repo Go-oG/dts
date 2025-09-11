@@ -46,7 +46,6 @@ class PolygonTriangulator {
 
   List<Tri> triangulatePolygon(Polygon poly) {
     final polyShell = PolygonHoleJoiner.join(poly);
-    List<Tri> triList = PolygonEarClipper.triangulate(polyShell);
-    return triList;
+    return PolygonEarClipper.triangulate(polyShell);
   }
 }

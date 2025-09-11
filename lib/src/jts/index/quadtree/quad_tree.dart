@@ -6,7 +6,7 @@ import 'package:dts/src/jts/index/spatial_index.dart';
 import 'package:dts/src/jts/util/assert.dart';
 
 import '../../geom/coordinate.dart';
-import '../Interval_size.dart';
+import '../interval_size.dart';
 import 'double_bits.dart';
 
 class Quadtree<T> implements SpatialIndex<T> {

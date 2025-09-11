@@ -35,15 +35,15 @@ class Vertex {
     p = Coordinate.of(coord);
   }
 
-  double getX()=> p.x;
+  double getX() => p.x;
 
-  double getY()=> p.y;
+  double getY() => p.y;
 
   double getZ() => p.z;
 
   void setZ(double z) => p.z = z;
 
-  Coordinate getCoordinate() =>p;
+  Coordinate getCoordinate() => p;
 
   bool equals(Vertex x) {
     if ((p.x == x.getX()) && (p.y == x.getY())) {
@@ -70,7 +70,9 @@ class Vertex {
 
     if (sa < 0.0) return kRight;
 
-    if (((a.getX() * b.getX()) < 0.0) || ((a.getY() * b.getY()) < 0.0)) return kBehind;
+    if (((a.getX() * b.getX()) < 0.0) || ((a.getY() * b.getY()) < 0.0)) {
+      return kBehind;
+    }
 
     if (a.magn() < b.magn()) return kBeyond;
 
@@ -114,7 +116,8 @@ class Vertex {
   }
 
   bool isCCW(Vertex b, Vertex c) {
-    return (((b.p.x - p.x) * (c.p.y - p.y)) - ((b.p.y - p.y) * (c.p.x - p.x))) > 0;
+    return (((b.p.x - p.x) * (c.p.y - p.y)) - ((b.p.y - p.y) * (c.p.x - p.x))) >
+        0;
   }
 
   bool rightOf(QuadEdge e) {
@@ -128,13 +131,16 @@ class Vertex {
   HCoordinate bisector(Vertex a, Vertex b) {
     double dx = b.getX() - a.getX();
     double dy = b.getY() - a.getY();
-    HCoordinate l1 = HCoordinate(a.getX() + (dx / 2.0), a.getY() + (dy / 2.0), 1.0);
-    HCoordinate l2 = HCoordinate((a.getX() - dy) + (dx / 2.0), (a.getY() + dx) + (dy / 2.0), 1.0);
+    HCoordinate l1 =
+        HCoordinate(a.getX() + (dx / 2.0), a.getY() + (dy / 2.0), 1.0);
+    HCoordinate l2 = HCoordinate(
+        (a.getX() - dy) + (dx / 2.0), (a.getY() + dx) + (dy / 2.0), 1.0);
     return HCoordinate.of2(l1, l2);
   }
 
   double distance(Vertex v1, Vertex v2) {
-    return Math.sqrt(Math.pow(v2.getX() - v1.getX(), 2.0) + Math.pow(v2.getY() - v1.getY(), 2.0));
+    return Math.sqrt(Math.pow(v2.getX() - v1.getX(), 2.0) +
+        Math.pow(v2.getY() - v1.getY(), 2.0));
   }
 
   double circumRadiusRatio(Vertex b, Vertex c) {
@@ -183,11 +189,13 @@ class Vertex {
     double dy = getY() - y0;
     double t = ((d * dx) - (b * dy)) / det;
     double u = (((-c) * dx) + (a * dy)) / det;
-    double z = (v0.getZ() + (t * (v1.getZ() - v0.getZ()))) + (u * (v2.getZ() - v0.getZ()));
+    double z = (v0.getZ() + (t * (v1.getZ() - v0.getZ()))) +
+        (u * (v2.getZ() - v0.getZ()));
     return z;
   }
 
-  static double interpolateZ2(Coordinate p, Coordinate v0, Coordinate v1, Coordinate v2) {
+  static double interpolateZ2(
+      Coordinate p, Coordinate v0, Coordinate v1, Coordinate v2) {
     double x0 = v0.x;
     double y0 = v0.y;
     double a = v1.x - x0;

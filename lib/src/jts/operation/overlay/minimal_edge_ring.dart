@@ -1,4 +1,3 @@
-
 import 'package:dts/src/jts/geomgraph/edge.dart';
 import 'package:dts/src/jts/geomgraph/edge_ring.dart';
 

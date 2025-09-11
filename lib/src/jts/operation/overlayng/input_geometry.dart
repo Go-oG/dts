@@ -63,7 +63,8 @@ class InputGeometry {
   }
 
   bool isAllPoints() {
-    return ((getDimension(0) == 0) && (geom[1] != null)) && (getDimension(1) == 0);
+    return ((getDimension(0) == 0) && (geom[1] != null)) &&
+        (getDimension(1) == 0);
   }
 
   bool hasPoints() {

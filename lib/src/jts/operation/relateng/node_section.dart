@@ -141,6 +141,7 @@ class NodeSection implements Comparable<NodeSection> {
 class NodeSectionEdgeAngleComparator implements CComparator<NodeSection> {
   @override
   int compare(NodeSection ns1, NodeSection ns2) {
-    return PolygonNodeTopology.compareAngle(ns1._nodePt, ns1.getVertex(0)!, ns2.getVertex(0)!);
+    return PolygonNodeTopology.compareAngle(
+        ns1._nodePt, ns1.getVertex(0)!, ns2.getVertex(0)!);
   }
 }

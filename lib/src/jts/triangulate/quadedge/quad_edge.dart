@@ -193,5 +193,4 @@ class QuadEdge {
   LineSegment toLineSegment() {
     return LineSegment(_vertex!.getCoordinate(), dest().getCoordinate());
   }
-
 }

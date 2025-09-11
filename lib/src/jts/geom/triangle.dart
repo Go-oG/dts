@@ -21,8 +21,11 @@ class Triangle {
     return Orientation.counterClockwise == Orientation.index(a, b, c);
   }
 
-  static bool intersects(Coordinate a, Coordinate b, Coordinate c, Coordinate p) {
-    int exteriorIndex = (isCCW2(a, b, c)) ? Orientation.clockwise : Orientation.counterClockwise;
+  static bool intersects(
+      Coordinate a, Coordinate b, Coordinate c, Coordinate p) {
+    int exteriorIndex = (isCCW2(a, b, c))
+        ? Orientation.clockwise
+        : Orientation.counterClockwise;
     if (exteriorIndex == Orientation.index(a, b, p)) return false;
 
     if (exteriorIndex == Orientation.index(b, c, p)) return false;
@@ -36,7 +39,8 @@ class Triangle {
     double dx = b.x - a.x;
     double dy = b.y - a.y;
     HCoordinate l1 = HCoordinate(a.x + (dx / 2.0), a.y + (dy / 2.0), 1.0);
-    HCoordinate l2 = HCoordinate((a.x - dy) + (dx / 2.0), (a.y + dx) + (dy / 2.0), 1.0);
+    HCoordinate l2 =
+        HCoordinate((a.x - dy) + (dx / 2.0), (a.y + dx) + (dy / 2.0), 1.0);
     return HCoordinate.of2(l1, l2);
   }
 
@@ -127,7 +131,8 @@ class Triangle {
   }
 
   static double area2(Coordinate a, Coordinate b, Coordinate c) {
-    return Math.abs((((c.x - a.x) * (b.y - a.y)) - ((b.x - a.x) * (c.y - a.y))) / 2);
+    return Math.abs(
+        (((c.x - a.x) * (b.y - a.y)) - ((b.x - a.x) * (c.y - a.y))) / 2);
   }
 
   static double signedArea2(Coordinate a, Coordinate b, Coordinate c) {
@@ -149,7 +154,8 @@ class Triangle {
     return area3D;
   }
 
-  static double interpolateZ2(Coordinate p, Coordinate v0, Coordinate v1, Coordinate v2) {
+  static double interpolateZ2(
+      Coordinate p, Coordinate v0, Coordinate v1, Coordinate v2) {
     double x0 = v0.x;
     double y0 = v0.y;
     double a = v1.x - x0;

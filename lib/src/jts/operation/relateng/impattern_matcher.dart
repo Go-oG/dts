@@ -40,7 +40,7 @@ class IMPatternMatcher extends IMPredicate {
   }
 
   static bool isInteraction(int imDim) {
-    return (imDim == Dimension.True) || (imDim >= Dimension.P);
+    return (imDim == Dimension.kTrue) || (imDim >= Dimension.P);
   }
 
   @override
@@ -48,12 +48,12 @@ class IMPatternMatcher extends IMPredicate {
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
         int patternEntry = _patternMatrix.get(i, j);
-        if (patternEntry == Dimension.Dontcare) {
+        if (patternEntry == Dimension.kDontCare) {
           continue;
         }
 
         int matrixVal = getDimension(i, j);
-        if (patternEntry == Dimension.True) {
+        if (patternEntry == Dimension.kTrue) {
           if (matrixVal < 0) {
             return false;
           }

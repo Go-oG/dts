@@ -6,7 +6,8 @@ class Assert {
     throw AssertionFailedException(message ?? "");
   }
 
-  static void equals(Object expectedValue, Object actualValue, [String? message]) {
+  static void equals(Object expectedValue, Object actualValue,
+      [String? message]) {
     if (actualValue != expectedValue) {
       throw AssertionFailedException(
         "Expected $expectedValue but encountered $actualValue ${message != null ? ": $message" : ""}",
@@ -15,7 +16,8 @@ class Assert {
   }
 
   static void shouldNeverReachHere([String? message]) {
-    throw AssertionFailedException("Should never reach here${message != null ? ": $message" : ""}");
+    throw AssertionFailedException(
+        "Should never reach here${message != null ? ": $message" : ""}");
   }
 }
 

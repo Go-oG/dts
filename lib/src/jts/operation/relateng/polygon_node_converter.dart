@@ -17,12 +17,14 @@ class PolygonNodeConverter {
     List<NodeSection> convertedSections = [];
     int nextShellIndex = shellIndex;
     do {
-      nextShellIndex = convertShellAndHoles(sections, nextShellIndex, convertedSections);
+      nextShellIndex =
+          convertShellAndHoles(sections, nextShellIndex, convertedSections);
     } while (nextShellIndex != shellIndex);
     return convertedSections;
   }
 
-  static int convertShellAndHoles(List<NodeSection> sections, int shellIndex, List<NodeSection> convertedSections) {
+  static int convertShellAndHoles(List<NodeSection> sections, int shellIndex,
+      List<NodeSection> convertedSections) {
     NodeSection shellSection = sections.get(shellIndex);
     Coordinate? inVertex = shellSection.getVertex(0);
     int i = next(sections, shellIndex);
@@ -54,8 +56,10 @@ class PolygonNodeConverter {
     return convertedSections;
   }
 
-  static NodeSection createSection(NodeSection ns, Coordinate? v0, Coordinate? v1) {
-    return NodeSection(ns.isA(), Dimension.A, ns.id, 0, ns.getPolygonal(), ns.isNodeAtVertex(), v0, ns.nodePt(), v1);
+  static NodeSection createSection(
+      NodeSection ns, Coordinate? v0, Coordinate? v1) {
+    return NodeSection(ns.isA(), Dimension.A, ns.id, 0, ns.getPolygonal(),
+        ns.isNodeAtVertex(), v0, ns.nodePt(), v1);
   }
 
   static List<NodeSection> extractUnique(List<NodeSection> sections) {

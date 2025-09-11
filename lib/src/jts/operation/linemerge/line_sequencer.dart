@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart' show ListIterator, Integer, Array, ListExt;
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_component_filter.dart';
@@ -113,9 +113,11 @@ class LineSequencer {
     _sequencedGeometry = buildSequencedGeometry(sequences);
     _isSequenceable = true;
     int finalLineCount = _sequencedGeometry!.getNumGeometries();
-    Assert.isTrue(_lineCount == finalLineCount, "Lines were missing from result");
     Assert.isTrue(
-      (_sequencedGeometry is LineString) || (_sequencedGeometry is MultiLineString),
+        _lineCount == finalLineCount, "Lines were missing from result");
+    Assert.isTrue(
+      (_sequencedGeometry is LineString) ||
+          (_sequencedGeometry is MultiLineString),
       "Result is not lineal",
     );
   }
@@ -155,7 +157,8 @@ class LineSequencer {
     addReverseSubPath(startDESym, lit, false);
     while (lit.hasPrevious()) {
       DirectedEdgePG prev = lit.previous();
-      DirectedEdgePG? unvisitedOutDE = findUnvisitedBestOrientedDE(prev.getFromNode());
+      DirectedEdgePG? unvisitedOutDE =
+          findUnvisitedBestOrientedDE(prev.getFromNode());
       if (unvisitedOutDE != null) {
         addReverseSubPath(unvisitedOutDE.getSym()!, lit, true);
       }
@@ -180,7 +183,8 @@ class LineSequencer {
     return unvisitedDE;
   }
 
-  void addReverseSubPath(DirectedEdgePG de, ListIterator<DirectedEdgePG> lit, bool expectedClosed) {
+  void addReverseSubPath(DirectedEdgePG de, ListIterator<DirectedEdgePG> lit,
+      bool expectedClosed) {
     PGNode endNode = de.getToNode();
     PGNode? fromNode;
     while (true) {
@@ -216,14 +220,17 @@ class LineSequencer {
     PGNode startNode = startEdge.getFromNode();
     PGNode endNode = endEdge.getToNode();
     bool flipSeq = false;
-    bool hasDegree1Node = (startNode.getDegree() == 1) || (endNode.getDegree() == 1);
+    bool hasDegree1Node =
+        (startNode.getDegree() == 1) || (endNode.getDegree() == 1);
     if (hasDegree1Node) {
       bool hasObviousStartNode = false;
-      if ((endEdge.getToNode().getDegree() == 1) && (!endEdge.getEdgeDirection())) {
+      if ((endEdge.getToNode().getDegree() == 1) &&
+          (!endEdge.getEdgeDirection())) {
         hasObviousStartNode = true;
         flipSeq = true;
       }
-      if ((startEdge.getFromNode().getDegree() == 1) && startEdge.getEdgeDirection()) {
+      if ((startEdge.getFromNode().getDegree() == 1) &&
+          startEdge.getEdgeDirection()) {
         hasObviousStartNode = true;
         flipSeq = false;
       }
@@ -266,19 +273,19 @@ class LineSequencer {
       }
     }
     if (lines.size == 0) {
-      return _factory!.createMultiLineString(Array<LineString>(0));
+      return _factory!.createMultiLineString([]);
     }
 
     return _factory!.buildGeometry(lines);
   }
 
   static LineString _reverse2(LineString line) {
-    Array<Coordinate> pts = line.getCoordinates();
+    List<Coordinate> pts = line.getCoordinates();
     Array<Coordinate> revPts = Array(pts.length);
     int len = pts.length;
     for (int i = 0; i < len; i++) {
       revPts[(len - 1) - i] = Coordinate.of(pts[i]);
     }
-    return line.factory.createLineString2(revPts);
+    return line.factory.createLineString2(revPts.toList());
   }
 }

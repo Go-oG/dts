@@ -12,12 +12,8 @@ class Tri {
   static final String _kInvalidTriIndex = "Invalid Tri index";
 
   static Geometry toGeometry(List<Tri> tris, GeometryFactory geomFact) {
-    Array<Geometry> geoms = Array(tris.size);
-    int i = 0;
-    for (Tri tri in tris) {
-      geoms[i++] = tri.toPolygon(geomFact);
-    }
-    return geomFact.createGeomCollection(geoms);
+    return geomFact
+        .createGeomCollection(tris.map((e) => e.toPolygon(geomFact)).toList());
   }
 
   static double area<T extends Tri>(List<T> triList) {
@@ -38,7 +34,7 @@ class Tri {
     return Tri(p0, p1, p2);
   }
 
-  static Tri create(Array<Coordinate> pts) {
+  static Tri create(List<Coordinate> pts) {
     return Tri(pts[0], pts[1], pts[2]);
   }
 
@@ -108,8 +104,8 @@ class Tri {
     flip2(tri, index, index1, adj0, adj1, opp0, opp1);
   }
 
-  void flip2(Tri tri, int index0, int index1, Coordinate adj0, Coordinate adj1, Coordinate opp0,
-      Coordinate opp1) {
+  void flip2(Tri tri, int index0, int index1, Coordinate adj0, Coordinate adj1,
+      Coordinate opp0, Coordinate opp1) {
     setCoordinates(opp1, opp0, adj0);
     tri.setCoordinates(opp0, opp1, adj1);
     Array<Tri?> adjacent = getAdjacentTris(tri, index0, index1);
@@ -185,10 +181,6 @@ class Tri {
     Tri? tri = getAdjacent(index);
     if (tri == null) return;
 
-    ///TODO 改动
-    // assert this.isAdjacent(tri);
-    // assert tri.isAdjacent(this);
-
     Coordinate e0 = getCoordinate(index);
     Coordinate e1 = getCoordinate(next(index));
     int indexNeighbor = tri.getIndex2(this);
@@ -204,9 +196,6 @@ class Tri {
         Coordinate p10 = tri.getCoordinate(j);
         Coordinate p11 = tri.getCoordinate(next(j));
         li.computeIntersection2(p00, p01, p10, p11);
-
-        ///TODO 改动
-        // assert !li.isProper();
       }
     }
   }
@@ -356,7 +345,7 @@ class Tri {
 
   Polygon toPolygon(GeometryFactory geomFact) {
     return geomFact.createPolygon(
-      geomFact.createLinearRings([p0.copy(), p1.copy(), p2.copy(), p0.copy()].toArray()),
+      geomFact.createLinearRings([p0.copy(), p1.copy(), p2.copy(), p0.copy()]),
       null,
     );
   }

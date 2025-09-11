@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -10,11 +9,11 @@ class LineLimiter {
 
   Coordinate? _lastOutside;
 
-  List<Array<Coordinate>>? _sections;
+  List<List<Coordinate>>? _sections;
 
   LineLimiter(this._limitEnv);
 
-  List<Array<Coordinate>> limit(Array<Coordinate> pts) {
+  List<List<Coordinate>> limit(List<Coordinate> pts) {
     _lastOutside = null;
     _ptList = null;
     _sections = [];
@@ -78,7 +77,7 @@ class LineLimiter {
       _ptList!.add3(_lastOutside!, false);
       _lastOutside = null;
     }
-    Array<Coordinate> section = _ptList!.toCoordinateArray();
+    List<Coordinate> section = _ptList!.toCoordinateList();
     _sections!.add(section);
     _ptList = null;
   }

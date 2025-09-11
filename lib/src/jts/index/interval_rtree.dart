@@ -51,7 +51,8 @@ class SortedPackedIntervalRTree<T> {
     }
   }
 
-  void buildLevel(List<IntervalRTreeNode<T>> src, List<IntervalRTreeNode<T>> dest) {
+  void buildLevel(
+      List<IntervalRTreeNode<T>> src, List<IntervalRTreeNode<T>> dest) {
     dest.clear();
     for (int i = 0; i < src.size; i += 2) {
       final n1 = src[i];

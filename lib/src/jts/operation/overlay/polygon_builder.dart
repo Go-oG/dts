@@ -30,7 +30,8 @@ class OPolygonBuilder {
     PGPlanarGraph.linkResultDirectedEdges2(nodes);
     List<OMaximalEdgeRing> maxEdgeRings = buildMaximalEdgeRings(dirEdges);
     List<EdgeRing> freeHoleList = [];
-    final edgeRings = buildMinimalEdgeRings(maxEdgeRings, shellList, freeHoleList);
+    final edgeRings =
+        buildMinimalEdgeRings(maxEdgeRings, shellList, freeHoleList);
     sortShellsAndHoles(edgeRings, shellList, freeHoleList);
     placeFreeHoles(shellList, freeHoleList);
   }
@@ -95,7 +96,8 @@ class OPolygonBuilder {
     }
   }
 
-  void sortShellsAndHoles(List<EdgeRing> edgeRings, List shellList, List freeHoleList) {
+  void sortShellsAndHoles(
+      List<EdgeRing> edgeRings, List shellList, List freeHoleList) {
     for (var er in edgeRings) {
       if (er.isHole()) {
         freeHoleList.add(er);
@@ -109,15 +111,18 @@ class OPolygonBuilder {
     for (var hole in freeHoleList) {
       if (hole.getShell() == null) {
         EdgeRing? shell = findEdgeRingContaining(hole, shellList);
-        if (shell == null)
-          throw TopologyException("unable to assign hole to a shell", hole.getCoordinate(0));
+        if (shell == null) {
+          throw TopologyException(
+              "unable to assign hole to a shell", hole.getCoordinate(0));
+        }
 
         hole.setShell(shell);
       }
     }
   }
 
-  static EdgeRing? findEdgeRingContaining(EdgeRing testEr, List<EdgeRing> shellList) {
+  static EdgeRing? findEdgeRingContaining(
+      EdgeRing testEr, List<EdgeRing> shellList) {
     final testRing = testEr.getLinearRing()!;
 
     Envelope testEnv = testRing.getEnvelopeInternal();
@@ -131,10 +136,12 @@ class OPolygonBuilder {
 
       if (!tryShellEnv.contains(testEnv)) continue;
 
-      testPt =
-          CoordinateArrays.ptNotInList(testRing.getCoordinates(), tryShellRing.getCoordinates())!;
+      testPt = CoordinateArrays.ptNotInList(
+          testRing.getCoordinates(), tryShellRing.getCoordinates())!;
       bool isContained = false;
-      if (PointLocation.isInRing(testPt, tryShellRing.getCoordinates())) isContained = true;
+      if (PointLocation.isInRing(testPt, tryShellRing.getCoordinates())) {
+        isContained = true;
+      }
 
       if (isContained) {
         if ((minShell == null) || minShellEnv!.contains(tryShellEnv)) {

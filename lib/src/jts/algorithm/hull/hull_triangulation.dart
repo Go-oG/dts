@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -24,15 +23,16 @@ class HullTriangulation {
     return _toTris(subdiv);
   }
 
-  static List<HullTri> _toTris(QuadEdgeSubdivision subdiv) {
+  static List<HullTri> _toTris(QuadEdgeSubdivision subDiv) {
     _HullTriVisitor visitor = _HullTriVisitor();
-    subdiv.visitTriangles(visitor, false);
+    subDiv.visitTriangles(visitor, false);
     List<HullTri> triList = visitor.getTriangles();
     TriangulationBuilder.build(triList);
     return triList;
   }
 
-  static Geometry union<T extends Tri>(List<T> triList, GeometryFactory geomFactory) {
+  static Geometry union<T extends Tri>(
+      List<T> triList, GeometryFactory geomFactory) {
     List<Polygon> polys = [];
     for (Tri tri in triList) {
       Polygon poly = tri.toPolygon(geomFactory);
@@ -41,16 +41,16 @@ class HullTriangulation {
     return CoverageUnionNG.union(geomFactory.buildGeometry(polys));
   }
 
-  static Geometry traceBoundaryPolygon(List<HullTri> triList, GeometryFactory geomFactory) {
-    if (triList.size == 1) {
-      Tri tri = triList.get(0);
+  static Geometry traceBoundaryPolygon(
+      List<HullTri> triList, GeometryFactory geomFactory) {
+    if (triList.length == 1) {
+      Tri tri = triList.first;
       return tri.toPolygon(geomFactory);
     }
-    Array<Coordinate> pts = _traceBoundary(triList);
-    return geomFactory.createPolygon3(pts);
+    return geomFactory.createPolygon3(_traceBoundary(triList));
   }
 
-  static Array<Coordinate> _traceBoundary(List<HullTri> triList) {
+  static List<Coordinate> _traceBoundary(List<HullTri> triList) {
     HullTri triStart = _findBorderTri(triList)!;
     CoordinateList coordList = CoordinateList();
     HullTri tri = triStart;
@@ -65,7 +65,7 @@ class HullTriangulation {
       tri = nextBorderTri(tri);
     } while (tri != triStart);
     coordList.closeRing();
-    return coordList.toCoordinateArray();
+    return coordList.toCoordinateList();
   }
 
   static HullTri? _findBorderTri(List<HullTri> triList) {
@@ -98,7 +98,7 @@ class _HullTriVisitor implements TriangleVisitor {
   List<HullTri> triList = [];
 
   @override
-  void visit(Array<QuadEdge> triEdges) {
+  void visit(List<QuadEdge> triEdges) {
     Coordinate p0 = triEdges[0].orig().getCoordinate();
     Coordinate p1 = triEdges[1].orig().getCoordinate();
     Coordinate p2 = triEdges[2].orig().getCoordinate();

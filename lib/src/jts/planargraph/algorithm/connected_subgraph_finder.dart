@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/planargraph/graph_component.dart';
 import 'package:dts/src/jts/planargraph/node.dart';
 import 'package:dts/src/jts/planargraph/planar_graph.dart';

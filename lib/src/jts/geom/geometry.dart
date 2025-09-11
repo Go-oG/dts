@@ -55,7 +55,7 @@ abstract class Geometry implements Comparable<Geometry> {
     srid = factory.srid;
   }
 
-  static bool hasNonEmptyElements(Array<Geometry> geometries) {
+  static bool hasNonEmptyElements(List<Geometry> geometries) {
     for (int i = 0; i < geometries.length; i++) {
       if (!geometries[i].isEmpty()) {
         return true;
@@ -64,7 +64,7 @@ abstract class Geometry implements Comparable<Geometry> {
     return false;
   }
 
-  static bool hasNullElements(Array<Object?> array) {
+  static bool hasNullElements(List<Object?> array) {
     for (int i = 0; i < array.length; i++) {
       if (array[i] == null) {
         return true;
@@ -87,7 +87,7 @@ abstract class Geometry implements Comparable<Geometry> {
 
   Coordinate? getCoordinate();
 
-  Array<Coordinate> getCoordinates();
+  List<Coordinate> getCoordinates();
 
   int getNumPoints();
 
@@ -176,7 +176,9 @@ abstract class Geometry implements Comparable<Geometry> {
   }
 
   bool intersects(Geometry g) {
-    if (!getEnvelopeInternal().intersects(g.getEnvelopeInternal())) return false;
+    if (!getEnvelopeInternal().intersects(g.getEnvelopeInternal())) {
+      return false;
+    }
 
     if (isRectangle()) {
       return RectangleIntersects.intersects2(this as Polygon, g);
@@ -188,7 +190,9 @@ abstract class Geometry implements Comparable<Geometry> {
   }
 
   bool crosses(Geometry g) {
-    if (!getEnvelopeInternal().intersects(g.getEnvelopeInternal())) return false;
+    if (!getEnvelopeInternal().intersects(g.getEnvelopeInternal())) {
+      return false;
+    }
 
     return relate(g).isCrosses(getDimension(), g.getDimension());
   }

@@ -2,54 +2,54 @@ import 'package:dts/src/jts/geom/dimension.dart';
 import 'package:dts/src/jts/geom/location.dart';
 
 class DimensionLocation {
-  static const int EXTERIOR = Location.exterior;
+  static const int kExterior = Location.exterior;
 
-  static const int POINT_INTERIOR = 103;
+  static const int kPointInterior = 103;
 
-  static const int LINE_INTERIOR = 110;
+  static const int kLineInterior = 110;
 
-  static const int LINE_BOUNDARY = 111;
+  static const int kLineBoundary = 111;
 
-  static const int AREA_INTERIOR = 120;
+  static const int kAreaInterior = 120;
 
-  static const int AREA_BOUNDARY = 121;
+  static const int kAreaBoundary = 121;
 
   static int locationArea(int loc) {
     switch (loc) {
       case Location.interior:
-        return AREA_INTERIOR;
+        return kAreaInterior;
       case Location.boundary:
-        return AREA_BOUNDARY;
+        return kAreaBoundary;
     }
-    return EXTERIOR;
+    return kExterior;
   }
 
   static int locationLine(int loc) {
     switch (loc) {
       case Location.interior:
-        return LINE_INTERIOR;
+        return kLineInterior;
       case Location.boundary:
-        return LINE_BOUNDARY;
+        return kLineBoundary;
     }
-    return EXTERIOR;
+    return kExterior;
   }
 
   static int locationPoint(int loc) {
     switch (loc) {
       case Location.interior:
-        return POINT_INTERIOR;
+        return kPointInterior;
     }
-    return EXTERIOR;
+    return kExterior;
   }
 
   static int location(int dimLoc) {
     switch (dimLoc) {
-      case POINT_INTERIOR:
-      case LINE_INTERIOR:
-      case AREA_INTERIOR:
+      case kPointInterior:
+      case kLineInterior:
+      case kAreaInterior:
         return Location.interior;
-      case LINE_BOUNDARY:
-      case AREA_BOUNDARY:
+      case kLineBoundary:
+      case kAreaBoundary:
         return Location.boundary;
     }
     return Location.exterior;
@@ -57,20 +57,20 @@ class DimensionLocation {
 
   static int dimension(int dimLoc) {
     switch (dimLoc) {
-      case POINT_INTERIOR:
+      case kPointInterior:
         return Dimension.P;
-      case LINE_INTERIOR:
-      case LINE_BOUNDARY:
+      case kLineInterior:
+      case kLineBoundary:
         return Dimension.L;
-      case AREA_INTERIOR:
-      case AREA_BOUNDARY:
+      case kAreaInterior:
+      case kAreaBoundary:
         return Dimension.A;
     }
-    return Dimension.False;
+    return Dimension.kFalse;
   }
 
   static int dimension2(int dimLoc, int exteriorDim) {
-    if (dimLoc == EXTERIOR) {
+    if (dimLoc == kExterior) {
       return exteriorDim;
     }
 

@@ -42,7 +42,9 @@ class PGPlanarGraph {
     if (node == null) return false;
 
     Label? label = node.getLabel();
-    if ((label != null) && (label.getLocation(geomIndex) == Location.boundary)) return true;
+    if ((label != null) && (label.getLocation(geomIndex) == Location.boundary)) {
+      return true;
+    }
 
     return false;
   }
@@ -119,8 +121,9 @@ class PGPlanarGraph {
     for (var e in edges) {
       final eCoord = e.getCoordinates();
       if (matchInSameDirection(p0, p1, eCoord[0], eCoord[1])) return e;
-      if (matchInSameDirection(p0, p1, eCoord[eCoord.length - 1], eCoord[eCoord.length - 2]))
+      if (matchInSameDirection(p0, p1, eCoord[eCoord.length - 1], eCoord[eCoord.length - 2])) {
         return e;
+      }
     }
     return null;
   }

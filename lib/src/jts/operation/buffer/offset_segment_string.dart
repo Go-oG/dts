@@ -29,7 +29,7 @@ class OffsetSegmentString {
     _ptList.add(bufPt);
   }
 
-  void addPts2(Array<Coordinate> pt, bool isForward) {
+  void addPts2(List<Coordinate> pt, bool isForward) {
     if (isForward) {
       for (int i = 0; i < pt.length; i++) {
         addPt(pt[i]);
@@ -67,9 +67,7 @@ class OffsetSegmentString {
 
   void reverse() {}
 
-  Array<Coordinate> getCoordinates() {
-    return Array.list(_ptList);
-  }
+  List<Coordinate> getCoordinates() => _ptList;
 
   @override
   String toString() {

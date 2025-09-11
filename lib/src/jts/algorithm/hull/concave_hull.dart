@@ -28,8 +28,7 @@ class ConcaveHull {
     return concaveHullByLengthRatio2(geom, lengthRatio, false);
   }
 
-  static Geometry concaveHullByLengthRatio2(
-      Geometry geom, double lengthRatio, bool isHolesAllowed) {
+  static Geometry concaveHullByLengthRatio2(Geometry geom, double lengthRatio, bool isHolesAllowed) {
     ConcaveHull hull = ConcaveHull(geom);
     hull.setMaximumEdgeLengthRatio(lengthRatio);
     hull.setHolesAllowed(isHolesAllowed);
@@ -53,6 +52,7 @@ class ConcaveHull {
 
   double _maxEdgeLengthRatio = -1;
 
+  // ignore: unused_field
   double _alpha = -1;
 
   bool _isHolesAllowed = false;

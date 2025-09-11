@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -70,7 +69,8 @@ class BufferBuilder {
     precisionModel ??= g.getPrecisionModel();
 
     geomFact = g.factory;
-    final curveSetBuilder = BufferCurveSetBuilder(g, distance, precisionModel, _bufParams);
+    final curveSetBuilder =
+        BufferCurveSetBuilder(g, distance, precisionModel, _bufParams);
     curveSetBuilder.setInvertOrientation(_isInvertOrientation);
     final bufferSegStrList = curveSetBuilder.getCurves();
     if (bufferSegStrList.isEmpty) {
@@ -103,8 +103,8 @@ class BufferBuilder {
     return noder;
   }
 
-  void computeNodedEdges(
-      List<SegmentString> bufferSegStrList, PrecisionModel precisionModel, bool isNodingValidated) {
+  void computeNodedEdges(List<SegmentString> bufferSegStrList,
+      PrecisionModel precisionModel, bool isNodingValidated) {
     Noder noder = getNoder(precisionModel);
     noder.computeNodes(bufferSegStrList);
     final nodedSegStrings = noder.getNodedSubstrings()!;
@@ -114,7 +114,7 @@ class BufferBuilder {
     }
 
     for (var segStr in nodedSegStrings) {
-      Array<Coordinate> pts = segStr.getCoordinates();
+      final pts = segStr.getCoordinates();
       if ((pts.length == 2) && pts[0].equals2D(pts[1])) continue;
 
       Label oldLabel = segStr.getData() as Label;
@@ -156,7 +156,8 @@ class BufferBuilder {
     return subgraphList.reversed.toList();
   }
 
-  void buildSubGraphs(List<BufferSubgraph> subgraphList, PolygonBuilder polyBuilder) {
+  void buildSubGraphs(
+      List<BufferSubgraph> subgraphList, PolygonBuilder polyBuilder) {
     List<BufferSubgraph> processedGraphs = [];
     for (var subgraph in subgraphList) {
       Coordinate p = subgraph.getRightmostCoordinate()!;

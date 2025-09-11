@@ -1,4 +1,5 @@
-import 'package:d_util/d_util.dart';
+import 'dart:math';
+
 import 'package:dts/src/jts/geom/point.dart';
 
 import 'coordinate.dart';
@@ -24,7 +25,7 @@ class OctagonalEnvelope {
     return x - y;
   }
 
-  static final double _SQRT2 = Math.sqrt(2.0);
+  static final double _kSqrt2 = sqrt(2.0);
 
   double _minX = double.nan;
 
@@ -97,13 +98,9 @@ class OctagonalEnvelope {
     return _maxB;
   }
 
-  bool isNull() {
-    return Double.isNaN(_minX);
-  }
+  bool isNull() => _minX.isNaN;
 
-  void setToNull() {
-    _minX = double.nan;
-  }
+  void setToNull() => _minX = double.nan;
 
   void expandToInclude5(Geometry g) {
     g.apply4(BoundingOctagonComponentFilter(this));
@@ -199,7 +196,7 @@ class OctagonalEnvelope {
   void expandBy(double distance) {
     if (isNull()) return;
 
-    double diagonalDistance = _SQRT2 * distance;
+    double diagonalDistance = _kSqrt2 * distance;
     _minX -= distance;
     _maxX += distance;
     _minY -= distance;
@@ -308,12 +305,10 @@ class OctagonalEnvelope {
       return geomFactory.createPoint2(px00);
     }
     if (coordList.size == 2) {
-      Array<Coordinate> pts = coordList.toCoordinateArray();
-      return geomFactory.createLineString2(pts);
+      return geomFactory.createLineString2(coordList.toCoordinateList());
     }
     coordList.add3(px00, false);
-    Array<Coordinate> pts = coordList.toCoordinateArray();
-    return geomFactory.createPolygon(geomFactory.createLinearRings(pts));
+    return geomFactory.createPolygon(geomFactory.createLinearRings(coordList.toCoordinateList()));
   }
 }
 

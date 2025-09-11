@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -14,26 +13,30 @@ import 'coverage_ring.dart';
 import 'invalid_segment_detector.dart';
 
 class CoveragePolygonValidator {
-  static Geometry validateS(Geometry targetPolygon, Array<Geometry> adjPolygons) {
-    CoveragePolygonValidator v = CoveragePolygonValidator(targetPolygon, adjPolygons);
+  static Geometry validateS(
+      Geometry targetPolygon, List<Geometry> adjPolygons) {
+    CoveragePolygonValidator v =
+        CoveragePolygonValidator(targetPolygon, adjPolygons);
     return v.validate();
   }
 
-  static Geometry validateS2(Geometry targetPolygon, Array<Geometry> adjPolygons, double gapWidth) {
-    CoveragePolygonValidator v = CoveragePolygonValidator(targetPolygon, adjPolygons);
+  static Geometry validateS2(
+      Geometry targetPolygon, List<Geometry> adjPolygons, double gapWidth) {
+    CoveragePolygonValidator v =
+        CoveragePolygonValidator(targetPolygon, adjPolygons);
     v.setGapWidth(gapWidth);
     return v.validate();
   }
 
   late Geometry _targetGeom;
   late GeometryFactory geomFactory;
-  late Array<Geometry> _adjGeoms;
+  late List<Geometry> _adjGeoms;
 
   double _gapWidth = 0.0;
 
   List<CoveragePolygon>? _adjCovPolygons;
 
-  CoveragePolygonValidator(Geometry geom, Array<Geometry> adjGeoms) {
+  CoveragePolygonValidator(Geometry geom, List<Geometry> adjGeoms) {
     _targetGeom = geom;
     _adjGeoms = adjGeoms;
     geomFactory = _targetGeom.factory;
@@ -62,7 +65,8 @@ class CoveragePolygonValidator {
     return covPolys;
   }
 
-  void _checkTargetRings(List<CoverageRing> targetRings, List<CoverageRing> adjRings, Envelope targetEnv) {
+  void _checkTargetRings(List<CoverageRing> targetRings,
+      List<CoverageRing> adjRings, Envelope targetEnv) {
     _markMatchedSegments(targetRings, adjRings, targetEnv);
     if (CoverageRing.isKnownS(targetRings)) {
       return;
@@ -72,7 +76,7 @@ class CoveragePolygonValidator {
     _markInvalidInteriorSegments(targetRings, _adjCovPolygons!);
   }
 
-  static List<Polygon> _extractPolygons(Array<Geometry> geoms) {
+  static List<Polygon> _extractPolygons(List<Geometry> geoms) {
     List<Polygon> polygons = [];
     for (var geom in geoms) {
       PolygonExtracter.getPolygons2(geom, polygons);
@@ -84,7 +88,8 @@ class CoveragePolygonValidator {
     return geomFactory.createLineString();
   }
 
-  void _markMatchedSegments(List<CoverageRing> targetRings, List<CoverageRing> adjRngs, Envelope targetEnv) {
+  void _markMatchedSegments(List<CoverageRing> targetRings,
+      List<CoverageRing> adjRngs, Envelope targetEnv) {
     Map<_CoverageRingSegment, _CoverageRingSegment> segmentMap = {};
     _markMatchedSegments2(targetRings, targetEnv, segmentMap);
     _markMatchedSegments2(adjRngs, targetEnv, segmentMap);
@@ -104,27 +109,29 @@ class CoveragePolygonValidator {
         }
         _CoverageRingSegment seg = _CoverageRingSegment.create(ring, i);
         if (segmentMap.containsKey(seg)) {
-          _CoverageRingSegment segMatch = segmentMap.get(seg)!;
+          _CoverageRingSegment segMatch = segmentMap[seg]!;
           seg.match(segMatch);
         } else {
-          segmentMap.put(seg, seg);
+          segmentMap[seg] = seg;
         }
       }
     }
   }
 
-  void _markInvalidInteractingSegments(
-      List<CoverageRing> targetRings, List<CoverageRing> adjRings, double distanceTolerance) {
+  void _markInvalidInteractingSegments(List<CoverageRing> targetRings,
+      List<CoverageRing> adjRings, double distanceTolerance) {
     InvalidSegmentDetector detector = InvalidSegmentDetector(distanceTolerance);
-    final segSetMutInt = MCIndexSegmentSetMutualIntersector(targetRings, null, distanceTolerance);
+    final segSetMutInt = MCIndexSegmentSetMutualIntersector(
+        targetRings, null, distanceTolerance);
     segSetMutInt.process(adjRings, detector);
   }
 
-  static const _RING_SECTION_STRIDE = 1000;
+  static const _kRingSectionStride = 1000;
 
-  void _markInvalidInteriorSegments(List<CoverageRing> targetRings, List<CoveragePolygon> adjCovPolygons) {
+  void _markInvalidInteriorSegments(
+      List<CoverageRing> targetRings, List<CoveragePolygon> adjCovPolygons) {
     for (CoverageRing ring in targetRings) {
-      int stride = _RING_SECTION_STRIDE;
+      int stride = _kRingSectionStride;
       for (int i = 0; i < (ring.size() - 1); i += stride) {
         int iEnd = i + stride;
         if (iEnd >= ring.size()) {
@@ -136,7 +143,8 @@ class CoveragePolygonValidator {
     }
   }
 
-  void _markInvalidInteriorSection(CoverageRing ring, int iStart, int iEnd, List<CoveragePolygon> adjPolygons) {
+  void _markInvalidInteriorSection(CoverageRing ring, int iStart, int iEnd,
+      List<CoveragePolygon> adjPolygons) {
     Envelope sectionEnv = ring.getEnvelope(iStart, iEnd);
     for (CoveragePolygon adjPoly in adjPolygons) {
       if (adjPoly.intersectsEnv(sectionEnv)) {
@@ -147,7 +155,8 @@ class CoveragePolygonValidator {
     }
   }
 
-  void _markInvalidInteriorSegment(CoverageRing ring, int i, CoveragePolygon adjPoly) {
+  void _markInvalidInteriorSegment(
+      CoverageRing ring, int i, CoveragePolygon adjPoly) {
     if (ring.isKnown2(i)) {
       return;
     }
@@ -166,12 +175,13 @@ class CoveragePolygonValidator {
     for (CoverageRing ring in rings) {
       ring.createInvalidLines(geomFactory, lines);
     }
-    if (lines.size == 0) {
+    if (lines.isEmpty) {
       return _createEmptyResult();
-    } else if (lines.size == 1) {
-      return lines.get(0);
     }
-    return geomFactory.createMultiLineString(GeometryFactory.toLineStringArray(lines));
+    if (lines.length == 1) {
+      return lines.first;
+    }
+    return geomFactory.createMultiLineString(lines);
   }
 }
 
@@ -194,7 +204,9 @@ class _CoverageRingSegment extends LineSegment {
 
   int indexOpp = -1;
 
-  _CoverageRingSegment(Coordinate p0, Coordinate p1, CoverageRing ring, int index) : super(p0, p1) {
+  _CoverageRingSegment(
+      Coordinate p0, Coordinate p1, CoverageRing ring, int index)
+      : super(p0, p1) {
     if (p1.compareTo(p0) < 0) {
       super.reverse();
       ringOpp = ring;

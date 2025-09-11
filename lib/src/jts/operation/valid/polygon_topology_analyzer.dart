@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/algorithm/point_location.dart';
 import 'package:dts/src/jts/algorithm/polygon_node_topology.dart';
@@ -18,7 +17,7 @@ import 'polygon_ring.dart';
 class PolygonTopologyAnalyzer {
   static bool isRingNested(LinearRing test, LinearRing target) {
     Coordinate p0 = test.getCoordinateN(0);
-    Array<Coordinate> targetPts = target.getCoordinates();
+    final targetPts = target.getCoordinates();
     int loc = PointLocation.locateInRing(p0, targetPts);
     if (loc == Location.exterior) {
       return false;
@@ -42,10 +41,11 @@ class PolygonTopologyAnalyzer {
     return next;
   }
 
-  static bool isIncidentSegmentInRing(Coordinate p0, Coordinate p1, Array<Coordinate> ringPts) {
+  static bool isIncidentSegmentInRing(
+      Coordinate p0, Coordinate p1, List<Coordinate> ringPts) {
     int index = intersectingSegIndex(ringPts, p0);
     if (index < 0) {
-      throw IllegalArgumentException("Segment vertex does not intersect ring");
+      throw ArgumentError("Segment vertex does not intersect ring");
     }
     Coordinate rPrev = findRingVertexPrev(ringPts, index, p0);
     Coordinate rNext = findRingVertexNext(ringPts, index, p0);
@@ -58,7 +58,8 @@ class PolygonTopologyAnalyzer {
     return PolygonNodeTopology.isInteriorSegment(p0, rPrev, rNext, p1);
   }
 
-  static Coordinate findRingVertexPrev(Array<Coordinate> ringPts, int index, Coordinate node) {
+  static Coordinate findRingVertexPrev(
+      List<Coordinate> ringPts, int index, Coordinate node) {
     int iPrev = index;
     Coordinate prev = ringPts[iPrev];
     while (node.equals2D(prev)) {
@@ -68,7 +69,8 @@ class PolygonTopologyAnalyzer {
     return prev;
   }
 
-  static Coordinate findRingVertexNext(Array<Coordinate> ringPts, int index, Coordinate node) {
+  static Coordinate findRingVertexNext(
+      List<Coordinate> ringPts, int index, Coordinate node) {
     int iNext = index + 1;
     Coordinate next = ringPts[iNext];
     while (node.equals2D(next)) {
@@ -78,7 +80,7 @@ class PolygonTopologyAnalyzer {
     return next;
   }
 
-  static int ringIndexPrev(Array<Coordinate> ringPts, int index) {
+  static int ringIndexPrev(List<Coordinate> ringPts, int index) {
     if (index == 0) {
       return ringPts.length - 2;
     }
@@ -86,7 +88,7 @@ class PolygonTopologyAnalyzer {
     return index - 1;
   }
 
-  static int ringIndexNext(Array<Coordinate> ringPts, int index) {
+  static int ringIndexNext(List<Coordinate> ringPts, int index) {
     if (index >= (ringPts.length - 2)) {
       return 0;
     }
@@ -94,7 +96,7 @@ class PolygonTopologyAnalyzer {
     return index + 1;
   }
 
-  static int intersectingSegIndex(Array<Coordinate> ringPts, Coordinate pt) {
+  static int intersectingSegIndex(List<Coordinate> ringPts, Coordinate pt) {
     for (int i = 0; i < (ringPts.length - 1); i++) {
       if (PointLocation.isOnSegment(pt, ringPts[i], ringPts[i + 1])) {
         if (pt.equals2D(ringPts[i + 1])) {
@@ -177,7 +179,8 @@ class PolygonTopologyAnalyzer {
       return;
     }
 
-    List<SegmentString> segStrings = createSegmentStrings(geom, isInvertedRingValid);
+    List<SegmentString> segStrings =
+        createSegmentStrings(geom, isInvertedRingValid);
     _polyRings = getPolygonRings(segStrings);
     _intFinder = analyzeIntersections(segStrings);
     if (_intFinder.hasDoubleTouch()) {
@@ -186,15 +189,18 @@ class PolygonTopologyAnalyzer {
     }
   }
 
-  PolygonIntersectionAnalyzer analyzeIntersections(List<SegmentString> segStrings) {
-    PolygonIntersectionAnalyzer segInt = PolygonIntersectionAnalyzer(isInvertedRingValid);
+  PolygonIntersectionAnalyzer analyzeIntersections(
+      List<SegmentString> segStrings) {
+    PolygonIntersectionAnalyzer segInt =
+        PolygonIntersectionAnalyzer(isInvertedRingValid);
     MCIndexNoder noder = MCIndexNoder();
     noder.setSegmentIntersector(segInt);
     noder.computeNodes(segStrings);
     return segInt;
   }
 
-  static List<SegmentString> createSegmentStrings(Geometry geom, bool isInvertedRingValid) {
+  static List<SegmentString> createSegmentStrings(
+      Geometry geom, bool isInvertedRingValid) {
     List<SegmentString> segStrings = [];
     if (geom is LinearRing) {
       segStrings.add(createSegString(geom, null));
@@ -237,7 +243,7 @@ class PolygonTopologyAnalyzer {
   }
 
   static SegmentString createSegString(LinearRing ring, PolygonRing? polyRing) {
-    Array<Coordinate> pts = ring.getCoordinates();
+    var pts = ring.getCoordinates();
     if (CoordinateArrays.hasRepeatedPoints(pts)) {
       pts = CoordinateArrays.removeRepeatedPoints(pts);
     }

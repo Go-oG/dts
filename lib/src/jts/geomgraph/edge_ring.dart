@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/algorithm/point_location.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -49,9 +48,7 @@ abstract class EdgeRing {
     return _isHole;
   }
 
-  Coordinate getCoordinate(int i) {
-    return _pts.get(i);
-  }
+  Coordinate getCoordinate(int i) => _pts[i];
 
   LinearRing? getLinearRing() {
     return _ring;
@@ -81,22 +78,13 @@ abstract class EdgeRing {
   }
 
   Polygon toPolygon(GeometryFactory geometryFactory) {
-    Array<LinearRing> holeLR = Array(_holes.length);
-    int i = 0;
-    for (var e in _holes) {
-      holeLR[i] = e.getLinearRing()!;
-      i++;
-    }
-
+    List<LinearRing> holeLR = _holes.map((e) => e.getLinearRing()!).toList();
     return geometryFactory.createPolygon(getLinearRing(), holeLR);
   }
 
   void computeRing() {
     if (_ring != null) return;
-
-    Array<Coordinate> coord = _pts.toArray();
-
-    _ring = geometryFactory.createLinearRings(coord);
+    _ring = geometryFactory.createLinearRings(_pts.toList());
     _isHole = Orientation.isCCW(_ring!.getCoordinates());
   }
 
@@ -142,7 +130,8 @@ abstract class EdgeRing {
     DirectedEdge? de = startDe!;
     do {
       Node node = de!.getNode();
-      int degree = ((node.getEdges() as DirectedEdgeStar)).getOutgoingDegree2(this);
+      int degree =
+          ((node.getEdges() as DirectedEdgeStar)).getOutgoingDegree2(this);
       if (degree > _maxNodeDegree) _maxNodeDegree = degree;
       de = getNext(de);
     } while (de != startDe);
@@ -173,7 +162,7 @@ abstract class EdgeRing {
   }
 
   void addPoints(Edge edge, bool isForward, bool isFirstEdge) {
-    Array<Coordinate> edgePts = edge.getCoordinates();
+    final edgePts = edge.getCoordinates();
     if (isForward) {
       int startIndex = 1;
       if (isFirstEdge) startIndex = 0;

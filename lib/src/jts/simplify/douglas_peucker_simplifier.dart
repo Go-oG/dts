@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -39,7 +38,8 @@ class DouglasPeuckerSimplifier {
     if (inputGeom.isEmpty()) {
       return inputGeom.copy();
     }
-    return DPTransformer(_isEnsureValidTopology, distanceTolerance).transform(inputGeom);
+    return DPTransformer(_isEnsureValidTopology, distanceTolerance)
+        .transform(inputGeom);
   }
 }
 
@@ -51,15 +51,16 @@ class DPTransformer extends GeometryTransformer {
   DPTransformer(this.isEnsureValidTopology, this.distanceTolerance);
 
   @override
-  CoordinateSequence transformCoordinates(CoordinateSequence coords, Geometry? parent) {
+  CoordinateSequence transformCoordinates(
+      CoordinateSequence coords, Geometry? parent) {
     bool isPreserveEndpoint = parent is! LinearRing;
-    Array<Coordinate> inputPts = coords.toCoordinateArray();
-    Array<Coordinate> newPts;
+    final inputPts = coords.toCoordinateArray();
+    List<Coordinate> newPts;
     if (inputPts.isEmpty) {
-      newPts = Array(0);
+      newPts = [];
     } else {
-      newPts =
-          DouglasPeuckerLineSimplifier.simplify2(inputPts, distanceTolerance, isPreserveEndpoint);
+      newPts = DouglasPeuckerLineSimplifier.simplify2(
+          inputPts, distanceTolerance, isPreserveEndpoint);
     }
     return factory.csFactory.create(newPts);
   }
@@ -95,7 +96,8 @@ class DPTransformer extends GeometryTransformer {
   }
 
   Geometry createValidArea(Geometry rawAreaGeom) {
-    bool isValidArea = (rawAreaGeom.getDimension() == 2) && rawAreaGeom.isValid();
+    bool isValidArea =
+        (rawAreaGeom.getDimension() == 2) && rawAreaGeom.isValid();
     if (isEnsureValidTopology && (!isValidArea)) {
       return rawAreaGeom.buffer(0.0);
     }

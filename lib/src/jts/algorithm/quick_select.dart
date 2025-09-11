@@ -1,6 +1,6 @@
 import 'dart:math';
 
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 
 class QuickSelect<T> {
   static final random = Random();
@@ -24,9 +24,11 @@ class QuickSelect<T> {
         T iValue = list[i] as T;
         if (value == iValue) {
           return i;
-        } else if (compareFun(value, pivot) > 0 && compareFun(iValue, pivot) > 0) {
+        } else if (compareFun(value, pivot) > 0 &&
+            compareFun(iValue, pivot) > 0) {
           temp[tempLength++] = iValue;
-        } else if (compareFun(value, pivot) < 0 && compareFun(iValue, pivot) < 0) {
+        } else if (compareFun(value, pivot) < 0 &&
+            compareFun(iValue, pivot) < 0) {
           temp[tempLength++] = iValue;
         }
       }
@@ -36,7 +38,8 @@ class QuickSelect<T> {
     return -1;
   }
 
-  static int quickFindIndex<T>(List<T> list, T value, CompareFun<T> compareFun) {
+  static int quickFindIndex<T>(
+      List<T> list, T value, CompareFun<T> compareFun) {
     return QuickSelect(list, compareFun).findIndex(value);
   }
 }

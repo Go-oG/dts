@@ -16,8 +16,8 @@ class OpEdgeSetIntersector {
 
   int idCounter = 0;
 
-  OpEdgeSetIntersector(
-      List<RelateSegmentString> edgesA, List<RelateSegmentString> edgesB, this.envelope) {
+  OpEdgeSetIntersector(List<RelateSegmentString> edgesA,
+      List<RelateSegmentString> edgesB, this.envelope) {
     addEdges(edgesA);
     addEdges(edgesB);
     _index.build();
@@ -30,7 +30,8 @@ class OpEdgeSetIntersector {
   }
 
   void addToIndex(SegmentString segStr) {
-    final segChains = MonotoneChainBuilder.getChains(segStr.getCoordinates(), segStr);
+    final segChains =
+        MonotoneChainBuilder.getChains(segStr.getCoordinates(), segStr);
     for (MonotoneChain mc in segChains) {
       if ((envelope == null) || envelope!.intersects(mc.getEnvelope())) {
         mc.id = (idCounter++);
@@ -43,7 +44,8 @@ class OpEdgeSetIntersector {
   void process(EdgeSegmentIntersector intersector) {
     final overlapAction = EdgeSegmentOverlapAction(intersector);
     for (MonotoneChain queryChain in _monoChains) {
-      List<MonotoneChain> overlapChains = _index.query(queryChain.getEnvelope());
+      List<MonotoneChain> overlapChains =
+          _index.query(queryChain.getEnvelope());
       for (MonotoneChain testChain in overlapChains) {
         if (testChain.id <= queryChain.id) {
           continue;

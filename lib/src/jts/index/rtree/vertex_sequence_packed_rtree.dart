@@ -1,31 +1,28 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/math/math.dart';
 
 import '../../geom/coordinate.dart';
 import '../../geom/envelope.dart';
 
 class VertexSequencePackedRtree {
-  final Array<Coordinate> _items;
+  final List<Coordinate> _items;
   final int _nodeCapacity = 16;
-  late Array<int> _levelOffset;
-  late Array<Envelope?> _bounds;
-  late Array<bool> _isRemoved;
+  late List<int> _levelOffset;
+  late List<Envelope?> _bounds;
+  late List<bool> _isRemoved;
 
   VertexSequencePackedRtree(this._items) {
-    _isRemoved = Array(_items.length);
+    _isRemoved = List.filled(_items.length, false);
     build();
   }
 
-  Array<Envelope?> getBounds() {
-    return _bounds.copy();
-  }
+  List<Envelope?> getBounds() => _bounds.toList();
 
   void build() {
     _levelOffset = computeLevelOffsets();
     _bounds = createBounds();
   }
 
-  Array<int> computeLevelOffsets() {
+  List<int> computeLevelOffsets() {
     List<int> offsets = [];
     offsets.add(0);
     int levelSize = _items.length;
@@ -35,36 +32,37 @@ class VertexSequencePackedRtree {
       currOffset += levelSize;
       offsets.add(currOffset);
     } while (levelSize > 1);
-    return offsets.toArray();
+    return offsets;
   }
 
   int levelNodeCount(int numNodes) {
     return MathUtil.ceil(numNodes, _nodeCapacity);
   }
 
-  Array<Envelope> createBounds() {
+  List<Envelope> createBounds() {
     int boundsSize = _levelOffset[_levelOffset.length - 1] + 1;
-    Array<Envelope> bounds = Array(boundsSize);
+    List<Envelope?> bounds = List.filled(boundsSize, null);
     fillItemBounds(bounds);
     for (int lvl = 1; lvl < _levelOffset.length; lvl++) {
       fillLevelBounds(lvl, bounds);
     }
-    return bounds;
+    return bounds.nonNulls.toList();
   }
 
-  void fillLevelBounds(int lvl, Array<Envelope> bounds) {
+  void fillLevelBounds(int lvl, List<Envelope?> bounds) {
     int levelStart = _levelOffset[lvl - 1];
     int levelEnd = _levelOffset[lvl];
     int nodeStart = levelStart;
     int levelBoundIndex = _levelOffset[lvl];
     do {
       int nodeEnd = MathUtil.clampMax(nodeStart + _nodeCapacity, levelEnd);
-      bounds[levelBoundIndex++] = computeNodeEnvelope(bounds, nodeStart, nodeEnd);
+      bounds[levelBoundIndex++] =
+          computeNodeEnvelope(bounds, nodeStart, nodeEnd);
       nodeStart = nodeEnd;
     } while (nodeStart < levelEnd);
   }
 
-  void fillItemBounds(Array<Envelope> bounds) {
+  void fillItemBounds(List<Envelope?> bounds) {
     int nodeStart = 0;
     int boundIndex = 0;
     do {
@@ -74,15 +72,17 @@ class VertexSequencePackedRtree {
     } while (nodeStart < _items.length);
   }
 
-  static Envelope computeNodeEnvelope(Array<Envelope> bounds, int start, int end) {
+  static Envelope computeNodeEnvelope(
+      List<Envelope?> bounds, int start, int end) {
     Envelope env = Envelope();
     for (int i = start; i < end; i++) {
-      env.expandToInclude(bounds[i]);
+      env.expandToInclude(bounds[i]!);
     }
     return env;
   }
 
-  static Envelope computeItemEnvelope(Array<Coordinate> items, int start, int end) {
+  static Envelope computeItemEnvelope(
+      List<Coordinate> items, int start, int end) {
     Envelope env = Envelope();
     for (int i = start; i < end; i++) {
       env.expandToIncludeCoordinate(items[i]);
@@ -90,15 +90,15 @@ class VertexSequencePackedRtree {
     return env;
   }
 
-  Array<int> query(Envelope queryEnv) {
+  List<int> query(Envelope queryEnv) {
     List<int> resultList = [];
     int level = _levelOffset.length - 1;
     queryNode(queryEnv, level, 0, resultList);
-    Array<int> result = resultList.toArray();
-    return result;
+    return resultList;
   }
 
-  void queryNode(Envelope queryEnv, int level, int nodeIndex, List<int> resultList) {
+  void queryNode(
+      Envelope queryEnv, int level, int nodeIndex, List<int> resultList) {
     int boundsIndex = _levelOffset[level] + nodeIndex;
     Envelope? nodeEnv = _bounds[boundsIndex];
     if (nodeEnv == null) return;
@@ -115,7 +115,8 @@ class VertexSequencePackedRtree {
     }
   }
 
-  void queryNodeRange(Envelope queryEnv, int level, int nodeStartIndex, List<int> resultList) {
+  void queryNodeRange(
+      Envelope queryEnv, int level, int nodeStartIndex, List<int> resultList) {
     int levelMax = levelSize(level);
     for (int i = 0; i < _nodeCapacity; i++) {
       int index = nodeStartIndex + i;
@@ -139,7 +140,9 @@ class VertexSequencePackedRtree {
       }
 
       Coordinate p = _items[index];
-      if ((!_isRemoved[index]) && queryEnv.containsCoordinate(p)) resultList.add(index);
+      if ((!_isRemoved[index]) && queryEnv.containsCoordinate(p)) {
+        resultList.add(index);
+      }
     }
   }
 

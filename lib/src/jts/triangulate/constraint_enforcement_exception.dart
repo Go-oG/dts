@@ -1,6 +1,6 @@
 import 'package:dts/src/jts/geom/coordinate.dart';
-class ConstraintEnforcementException {
 
+class ConstraintEnforcementException {
   final String message;
   Coordinate? pt;
 

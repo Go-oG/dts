@@ -9,18 +9,18 @@ class PolygonizeDirectedEdge extends DirectedEdgePG {
 
   int label = -1;
 
-  PolygonizeDirectedEdge(super.from, super.to, super.directionPt, super.edgeDirection);
-
+  PolygonizeDirectedEdge(
+      super.from, super.to, super.directionPt, super.edgeDirection);
 
   bool isInRing() {
-        return _edgeRing != null;
-    }
+    return _edgeRing != null;
+  }
 
   void setRing(EdgeRingO? edgeRing) {
     _edgeRing = edgeRing;
   }
 
   EdgeRingO? getRing() {
-        return _edgeRing;
-    }
+    return _edgeRing;
+  }
 }

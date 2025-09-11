@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
@@ -9,20 +8,20 @@ import 'package:dts/src/jts/geom/polygon.dart';
 
 import 'convex_hull.dart';
 
-class MinimumDiameter {
+class MinDiameter {
   static Geometry getMinimumRectangleS(Geometry geom) {
-    return MinimumDiameter(geom).getMinimumRectangle();
+    return MinDiameter(geom).getMinimumRectangle();
   }
 
   static Geometry getMinimumDiameter(Geometry geom) {
-    return MinimumDiameter(geom).getDiameter();
+    return MinDiameter(geom).getDiameter();
   }
 
-  late final Geometry inputGeom;
+  final Geometry inputGeom;
 
-  late final bool isConvex;
+  final bool isConvex;
 
-  Array<Coordinate>? _convexHullPts;
+  List<Coordinate>? _convexHullPts;
 
   LineSegment? _minBaseSeg = LineSegment.empty();
 
@@ -32,7 +31,7 @@ class MinimumDiameter {
 
   double _minWidth = 0.0;
 
-  MinimumDiameter(this.inputGeom, [this.isConvex = false]);
+  MinDiameter(this.inputGeom, [this.isConvex = false]);
 
   double getLength() {
     _computeMinimumDiameter();
@@ -46,14 +45,13 @@ class MinimumDiameter {
 
   LineString getSupportingSegment() {
     _computeMinimumDiameter();
-    return inputGeom.factory.createLineString2([_minBaseSeg!.p0, _minBaseSeg!.p1].toArray());
+    return inputGeom.factory.createLineString2([_minBaseSeg!.p0, _minBaseSeg!.p1]);
   }
 
   LineString getDiameter() {
     _computeMinimumDiameter();
-
     Coordinate basePt = _minBaseSeg!.project(_minWidthPt!);
-    return inputGeom.factory.createLineString2([basePt, _minWidthPt!].toArray());
+    return inputGeom.factory.createLineString2([basePt, _minWidthPt!]);
   }
 
   void _computeMinimumDiameter() {
@@ -89,11 +87,12 @@ class MinimumDiameter {
       _minWidthPt = _convexHullPts![0];
       _minBaseSeg!.p0 = _convexHullPts![0];
       _minBaseSeg!.p1 = _convexHullPts![1];
-    } else
+    } else {
       _computeConvexRingMinDiameter(_convexHullPts!);
+    }
   }
 
-  void _computeConvexRingMinDiameter(Array<Coordinate> pts) {
+  void _computeConvexRingMinDiameter(List<Coordinate> pts) {
     _minWidth = double.maxFinite;
     int currMaxIndex = 1;
     LineSegment seg = LineSegment.empty();
@@ -104,7 +103,7 @@ class MinimumDiameter {
     }
   }
 
-  int _findMaxPerpDistance(Array<Coordinate> pts, LineSegment seg, int startIndex) {
+  int _findMaxPerpDistance(List<Coordinate> pts, LineSegment seg, int startIndex) {
     double maxPerpDistance = seg.distancePerpendicular(pts[startIndex]);
     double nextPerpDistance = maxPerpDistance;
     int maxIndex = startIndex;
@@ -128,7 +127,7 @@ class MinimumDiameter {
     return maxIndex;
   }
 
-  static int _nextIndex(Array<Coordinate> pts, int index) {
+  static int _nextIndex(List<Coordinate> pts, int index) {
     index++;
     if (index >= pts.length) {
       index = 0;
@@ -178,11 +177,11 @@ class MinimumDiameter {
     Coordinate p1 = minParaLine.lineIntersection(maxPerpLine)!;
     Coordinate p2 = minParaLine.lineIntersection(minPerpLine)!;
     Coordinate p3 = maxParaLine.lineIntersection(minPerpLine)!;
-    LinearRing shell = inputGeom.factory.createLinearRings([p0, p1, p2, p3, p0].toArray());
+    LinearRing shell = inputGeom.factory.createLinearRings([p0, p1, p2, p3, p0]);
     return inputGeom.factory.createPolygon(shell);
   }
 
-  static LineString _computeMaximumLine(Array<Coordinate> pts, GeometryFactory factory) {
+  static LineString _computeMaximumLine(List<Coordinate> pts, GeometryFactory factory) {
     Coordinate? ptMinX;
     Coordinate? ptMaxX;
     Coordinate? ptMinY;
@@ -211,7 +210,7 @@ class MinimumDiameter {
       p0 = ptMinY!;
       p1 = ptMaxY!;
     }
-    return factory.createLineString2([p0.copy(), p1.copy()].toArray());
+    return factory.createLineString2([p0.copy(), p1.copy()]);
   }
 
   static double _computeC(double a, double b, Coordinate p) {
@@ -221,7 +220,7 @@ class MinimumDiameter {
   static LineSegment _computeSegmentForLine(double a, double b, double c) {
     Coordinate p0;
     Coordinate p1;
-    if (Math.abs(b) > Math.abs(a)) {
+    if (b.abs() > a.abs()) {
       p0 = Coordinate(0.0, c / b);
       p1 = Coordinate(1.0, (c / b) - (a / b));
     } else {

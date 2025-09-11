@@ -94,7 +94,8 @@ class NgPolygonBuilder {
     return shell;
   }
 
-  static void assignHoles(OverlayEdgeRing shell, List<OverlayEdgeRing> edgeRings) {
+  static void assignHoles(
+      OverlayEdgeRing shell, List<OverlayEdgeRing> edgeRings) {
     for (OverlayEdgeRing er in edgeRings) {
       if (er.isHole) {
         er.setShell(shell);
@@ -102,12 +103,14 @@ class NgPolygonBuilder {
     }
   }
 
-  void placeFreeHoles(List<OverlayEdgeRing> shellList, List<OverlayEdgeRing> freeHoleList) {
+  void placeFreeHoles(
+      List<OverlayEdgeRing> shellList, List<OverlayEdgeRing> freeHoleList) {
     for (OverlayEdgeRing hole in freeHoleList) {
       if (hole.getShell() == null) {
         OverlayEdgeRing? shell = hole.findEdgeRingContaining(shellList);
         if (_isEnforcePolygonal && (shell == null)) {
-          throw TopologyException("unable to assign free hole to a shell", hole.getCoordinate());
+          throw TopologyException(
+              "unable to assign free hole to a shell", hole.getCoordinate());
         }
         hole.setShell(shell);
       }

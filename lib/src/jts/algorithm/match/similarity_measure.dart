@@ -53,7 +53,8 @@ class HausdorffSimilarityMeasure implements SimilarityMeasure {
 
   @override
   double measure(Geometry g1, Geometry g2) {
-    double distance = DiscreteHausdorffDistance.distanceS2(g1, g2, _densifyFraction);
+    double distance =
+        DiscreteHausdorffDistance.distanceS2(g1, g2, _densifyFraction);
     if (distance == 0.0) {
       return 1.0;
     }

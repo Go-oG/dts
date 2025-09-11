@@ -9,5 +9,5 @@ class RelateNodeFactory extends NodeFactory {
   @override
   Node createNode(Coordinate coord) {
     return RelateNode(coord, EdgeEndBundleStar());
-    }
+  }
 }

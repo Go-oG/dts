@@ -73,7 +73,8 @@ class EdgeKey implements Comparable<EdgeKey> {
     if (other is! EdgeKey) {
       return false;
     }
-    return (((_p0x == other._p0x) && (_p0y == other._p0y)) && (_p1x == other._p1x)) &&
+    return (((_p0x == other._p0x) && (_p0y == other._p0y)) &&
+            (_p1x == other._p1x)) &&
         (_p1y == other._p1y);
   }
 

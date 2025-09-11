@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:d_util/d_util.dart';
+import 'package:collection/collection.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -13,7 +13,7 @@ import 'package:dts/src/jts/geom/point.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 import 'package:dts/src/jts/operation/distance/indexed_facet_distance.dart';
 
-class MaximumInscribedCircle with InitMixin {
+class MaximumInscribedCircle {
   static Point getCenterS(Geometry polygonal, double tolerance) {
     return MaximumInscribedCircle(polygonal, tolerance).getCenter();
   }
@@ -79,7 +79,7 @@ class MaximumInscribedCircle with InitMixin {
 
   LineString getRadiusLine() {
     _compute();
-    return factory.createLineString2([_centerPt.copy(), radiusPt.copy()].toArray());
+    return factory.createLineString2([_centerPt.copy(), radiusPt.copy()]);
   }
 
   double _distanceToBoundary(Point p) {
@@ -97,10 +97,12 @@ class MaximumInscribedCircle with InitMixin {
     return _distanceToBoundary(pt);
   }
 
+  bool _init = false;
   void _compute() {
-    if (getAndMarkInit()) {
+    if (_init) {
       return;
     }
+    _init = true;
     PriorityQueue<_Cell> cellQueue = PriorityQueue();
     _createInitialGrid(_inputGeom.getEnvelopeInternal(), cellQueue);
     _Cell farthestCell = _createInterorPointCell(_inputGeom);
@@ -128,7 +130,7 @@ class MaximumInscribedCircle with InitMixin {
     _centerCell = farthestCell;
     _centerPt = Coordinate(_centerCell.x, _centerCell.y);
     _centerPoint = factory.createPoint2(_centerPt);
-    Array<Coordinate> nearestPts = _indexedDistance.nearestPoints(_centerPoint)!;
+    final nearestPts = _indexedDistance.nearestPoints(_centerPoint)!;
     radiusPt = nearestPts[0].copy();
     _radiusPoint = factory.createPoint2(radiusPt);
   }

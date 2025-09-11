@@ -116,7 +116,8 @@ class SweepLineIndex {
     }
   }
 
-  void processOverlaps(int start, int end, SweepLineInterval s0, SweepLineOverlapAction action) {
+  void processOverlaps(
+      int start, int end, SweepLineInterval s0, SweepLineOverlapAction action) {
     for (int i = start; i < end; i++) {
       SweepLineEvent ev = events[i];
       if (ev.isInsert()) {

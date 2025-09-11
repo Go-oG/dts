@@ -34,7 +34,8 @@ class BufferParameters {
 
   BufferParameters.empty();
 
-  BufferParameters(int quadrantSegments, int endCapStyle, int joinStyle, double mitreLimit) {
+  BufferParameters(
+      int quadrantSegments, int endCapStyle, int joinStyle, double mitreLimit) {
     setQuadrantSegments(quadrantSegments);
     setEndCapStyle(endCapStyle);
     setJoinStyle(joinStyle);

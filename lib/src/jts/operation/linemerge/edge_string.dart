@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
@@ -13,7 +12,7 @@ class EdgeString {
 
   final List<LineMergeDirectedEdge> _directedEdges = [];
 
-  Array<Coordinate>? _coordinates;
+  List<Coordinate>? _coordinates;
 
   EdgeString(this.factory);
 
@@ -21,7 +20,7 @@ class EdgeString {
     _directedEdges.add(directedEdge);
   }
 
-  Array<Coordinate> getCoordinates() {
+  List<Coordinate> getCoordinates() {
     if (_coordinates == null) {
       int forwardDirectedEdges = 0;
       int reverseDirectedEdges = 0;
@@ -38,7 +37,7 @@ class EdgeString {
           directedEdge.getEdgeDirection(),
         );
       }
-      _coordinates = coordinateList.toCoordinateArray();
+      _coordinates = coordinateList.toCoordinateList();
       if (reverseDirectedEdges > forwardDirectedEdges) {
         CoordinateArrays.reverse(_coordinates!);
       }

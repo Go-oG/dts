@@ -20,7 +20,8 @@ class TaggedLinesSimplifier {
       _inputIndex.add2(i);
     }
     for (var i in taggedLines) {
-      final tlss = TaggedLineStringSimplifier(_inputIndex, _outputIndex, jumpChecker);
+      final tlss =
+          TaggedLineStringSimplifier(_inputIndex, _outputIndex, jumpChecker);
       tlss.simplify(i, distanceTolerance);
     }
   }

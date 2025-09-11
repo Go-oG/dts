@@ -48,7 +48,9 @@ class GeomRelate {
     if (((b.getDimension() == 1) && (a.getDimension() < 1)) && (b.getLength() > 0.0)) {
       return false;
     }
-    if (!a.getEnvelopeInternal().contains(b.getEnvelopeInternal())) return false;
+    if (!a.getEnvelopeInternal().contains(b.getEnvelopeInternal())) {
+      return false;
+    }
 
     return RelateOp.relate(a, b).isContains();
   }
@@ -82,7 +84,9 @@ class GeomRelate {
     if (_isRelateNG) {
       return RelateNG.relate4(a, b, RelatePredicate.crosses());
     }
-    if (!a.getEnvelopeInternal().intersects(b.getEnvelopeInternal())) return false;
+    if (!a.getEnvelopeInternal().intersects(b.getEnvelopeInternal())) {
+      return false;
+    }
 
     return RelateOp.relate(a, b).isCrosses(a.getDimension(), b.getDimension());
   }
@@ -107,7 +111,9 @@ class GeomRelate {
     if (_isRelateNG) {
       return RelateNG.relate4(a, b, RelatePredicate.overlaps());
     }
-    if (!a.getEnvelopeInternal().intersects(b.getEnvelopeInternal())) return false;
+    if (!a.getEnvelopeInternal().intersects(b.getEnvelopeInternal())) {
+      return false;
+    }
 
     return RelateOp.relate(a, b).isOverlaps(a.getDimension(), b.getDimension());
   }
@@ -116,7 +122,9 @@ class GeomRelate {
     if (_isRelateNG) {
       return RelateNG.relate4(a, b, RelatePredicate.touches());
     }
-    if (!a.getEnvelopeInternal().intersects(b.getEnvelopeInternal())) return false;
+    if (!a.getEnvelopeInternal().intersects(b.getEnvelopeInternal())) {
+      return false;
+    }
 
     return RelateOp.relate(a, b).isTouches(a.getDimension(), b.getDimension());
   }

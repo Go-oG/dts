@@ -26,6 +26,4 @@ class EdgeNodingValidator {
   void checkValid() {
     _nv.checkValid();
   }
-
-
 }

@@ -29,7 +29,8 @@ class IntersectionPointBuilder {
   void addResultPoints() {
     for (OverlayEdge nodeEdge in _graph.getNodeEdges()) {
       if (isResultPoint(nodeEdge)) {
-        Point pt = geometryFactory.createPoint2(nodeEdge.getCoordinate().copy());
+        Point pt =
+            geometryFactory.createPoint2(nodeEdge.getCoordinate().copy());
         _points.add(pt);
       }
     }

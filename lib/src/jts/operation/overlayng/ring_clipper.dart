@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -29,18 +28,19 @@ class RingClipper {
     _clipEnvMaxX = _clipEnv.maxX;
   }
 
-  Array<Coordinate> clip(Array<Coordinate> pts) {
+  List<Coordinate> clip(List<Coordinate> pts) {
     for (int edgeIndex = 0; edgeIndex < 4; edgeIndex++) {
       bool closeRing = edgeIndex == 3;
       pts = clipToBoxEdge(pts, edgeIndex, closeRing);
-      if (pts.length == 0) {
+      if (pts.isEmpty) {
         return pts;
       }
     }
     return pts;
   }
 
-  Array<Coordinate> clipToBoxEdge(Array<Coordinate> pts, int edgeIndex, bool closeRing) {
+  List<Coordinate> clipToBoxEdge(
+      List<Coordinate> pts, int edgeIndex, bool closeRing) {
     CoordinateList ptsClip = CoordinateList();
     Coordinate p0 = pts[pts.length - 1];
     for (int i = 0; i < pts.length; i++) {
@@ -63,7 +63,7 @@ class RingClipper {
         ptsClip.add(start.copy());
       }
     }
-    return ptsClip.toCoordinateArray();
+    return ptsClip.toCoordinateList();
   }
 
   Coordinate intersection(Coordinate a, Coordinate b, int edgeIndex) {

@@ -26,7 +26,8 @@ class PointBuilder {
       if (n.isInResult) continue;
       if (n.isIncidentEdgeInResult()) continue;
 
-      if ((n.getEdges()!.getDegree() == 0) || (opCode == OverlayOpCode.intersection)) {
+      if ((n.getEdges()!.getDegree() == 0) ||
+          (opCode == OverlayOpCode.intersection)) {
         Label label = n.label!;
         if (OverlayOp.isResultOfOp(label, opCode)) {
           filterCoveredNodeToPoint(n);

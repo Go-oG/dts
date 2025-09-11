@@ -56,8 +56,7 @@ class GeometryGraph extends PGPlanarGraph {
     return SimpleMCSweepLineIntersector();
   }
 
-  GeometryGraph.of(int argIndex, Geometry parentGeom)
-      : this(argIndex, parentGeom, BoundaryNodeRule.ogcSfsBR);
+  GeometryGraph.of(int argIndex, Geometry parentGeom) : this(argIndex, parentGeom, BoundaryNodeRule.ogcSfsBR);
 
   GeometryGraph(this._argIndex, this._parentGeom, this._boundaryNodeRule) {
     if (_parentGeom != null) {
@@ -115,20 +114,33 @@ class GeometryGraph extends PGPlanarGraph {
     }
     if (g is Polygon) {
       addPolygon(g);
-    } else if (g is LineString)
+      return;
+    }
+    if (g is LineString) {
       addLineString(g);
-    else if (g is Point)
+      return;
+    }
+    if (g is Point) {
       addPoint(g);
-    else if (g is MultiPoint)
+      return;
+    }
+    if (g is MultiPoint) {
       addCollection(g);
-    else if (g is MultiLineString)
+      return;
+    }
+    if (g is MultiLineString) {
       addCollection(g);
-    else if (g is MultiPolygon)
+      return;
+    }
+    if (g is MultiPolygon) {
       addCollection(g);
-    else if (g is GeometryCollection)
+      return;
+    }
+    if (g is GeometryCollection) {
       addCollection(g);
-    else
-      throw "UnsupportedOperationException";
+      return;
+    }
+    throw UnSupportError();
   }
 
   void addCollection(GeometryCollection gc) {
@@ -147,7 +159,7 @@ class GeometryGraph extends PGPlanarGraph {
       return;
     }
 
-    Array<Coordinate> coord = CoordinateArrays.removeRepeatedPoints(lr.getCoordinates());
+    final coord = CoordinateArrays.removeRepeatedPoints(lr.getCoordinates());
     if (coord.length < 4) {
       _hasTooFewPoints = true;
       _invalidPoint = coord[0];
@@ -174,7 +186,7 @@ class GeometryGraph extends PGPlanarGraph {
   }
 
   void addLineString(LineString line) {
-    Array<Coordinate> coord = CoordinateArrays.removeRepeatedPoints(line.getCoordinates());
+    final coord = CoordinateArrays.removeRepeatedPoints(line.getCoordinates());
     if (coord.length < 2) {
       _hasTooFewPoints = true;
       _invalidPoint = coord[0];
@@ -190,7 +202,7 @@ class GeometryGraph extends PGPlanarGraph {
 
   void addEdge(Edge e) {
     insertEdge(e);
-    Array<Coordinate> coord = e.getCoordinates();
+    final coord = e.getCoordinates();
     insertPoint(_argIndex, coord[0], Location.boundary);
     insertPoint(_argIndex, coord[coord.length - 1], Location.boundary);
   }
@@ -202,16 +214,14 @@ class GeometryGraph extends PGPlanarGraph {
   SegmentIntersector computeSelfNodes(LineIntersector li, bool computeRingSelfNodes) {
     SegmentIntersector si = SegmentIntersector(li, true, false);
     EdgeSetIntersector esi = createEdgeSetIntersector();
-    bool isRings =
-        ((_parentGeom is LinearRing) || (_parentGeom is Polygon)) || (_parentGeom is MultiPolygon);
+    bool isRings = ((_parentGeom is LinearRing) || (_parentGeom is Polygon)) || (_parentGeom is MultiPolygon);
     bool computeAllSegments = computeRingSelfNodes || (!isRings);
     esi.computeIntersections(edges, si, computeAllSegments);
     addSelfIntersectionNodes(_argIndex);
     return si;
   }
 
-  SegmentIntersector computeEdgeIntersections(
-      GeometryGraph g, LineIntersector li, bool includeProper) {
+  SegmentIntersector computeEdgeIntersections(GeometryGraph g, LineIntersector li, bool includeProper) {
     SegmentIntersector si = SegmentIntersector(li, includeProper, true);
     si.setBoundaryNodes(getBoundaryNodes(), g.getBoundaryNodes());
     EdgeSetIntersector esi = createEdgeSetIntersector();

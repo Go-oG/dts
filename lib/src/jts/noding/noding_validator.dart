@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -27,7 +26,7 @@ class NodingValidator {
   }
 
   void checkCollapses2(SegmentString ss) {
-    Array<Coordinate> pts = ss.getCoordinates();
+    List<Coordinate> pts = ss.getCoordinates();
     for (int i = 0; i < (pts.length - 2); i++) {
       checkCollapse(pts[i], pts[i + 1], pts[i + 2]);
     }
@@ -35,7 +34,11 @@ class NodingValidator {
 
   void checkCollapse(Coordinate p0, Coordinate p1, Coordinate p2) {
     if (p0 == p2) {
-      throw "found non-noded collapse at ${_fact.createLineString2([p0, p1, p2].toArray())}";
+      throw "found non-noded collapse at ${_fact.createLineString2([
+            p0,
+            p1,
+            p2
+          ])}";
     }
   }
 
@@ -48,8 +51,8 @@ class NodingValidator {
   }
 
   void checkInteriorIntersections3(SegmentString ss0, SegmentString ss1) {
-    Array<Coordinate> pts0 = ss0.getCoordinates();
-    Array<Coordinate> pts1 = ss1.getCoordinates();
+    final pts0 = ss0.getCoordinates();
+    final pts1 = ss1.getCoordinates();
     for (int i0 = 0; i0 < (pts0.length - 1); i0++) {
       for (int i1 = 0; i1 < (pts1.length - 1); i1++) {
         checkInteriorIntersections2(ss0, i0, ss1, i1);
@@ -74,7 +77,8 @@ class NodingValidator {
     }
   }
 
-  bool hasInteriorIntersection(LineIntersector li, Coordinate p0, Coordinate p1) {
+  bool hasInteriorIntersection(
+      LineIntersector li, Coordinate p0, Coordinate p1) {
     for (int i = 0; i < li.getIntersectionNum(); i++) {
       Coordinate intPt = li.getIntersection(i);
       if (!(intPt == p0 || intPt == p1)) return true;
@@ -84,15 +88,16 @@ class NodingValidator {
 
   void checkEndPtVertexIntersections() {
     for (var ss in segStrings) {
-      Array<Coordinate> pts = ss.getCoordinates();
+      final pts = ss.getCoordinates();
       checkEndPtVertexIntersections2(pts[0], segStrings);
       checkEndPtVertexIntersections2(pts[pts.length - 1], segStrings);
     }
   }
 
-  void checkEndPtVertexIntersections2(Coordinate testPt, List<SegmentString> segStrings) {
+  void checkEndPtVertexIntersections2(
+      Coordinate testPt, List<SegmentString> segStrings) {
     for (var ss in segStrings) {
-      Array<Coordinate> pts = ss.getCoordinates();
+      final pts = ss.getCoordinates();
       for (int j = 1; j < (pts.length - 1); j++) {
         if (pts[j] == testPt) {
           throw "found endpt/interior pt intersection at index $j :pt $testPt";

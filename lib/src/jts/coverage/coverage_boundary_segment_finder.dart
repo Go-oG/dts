@@ -4,14 +4,15 @@ import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 
 class CoverageBoundarySegmentFinder implements CoordinateSequenceFilter {
-  static Set<LineSegment> findBoundarySegments(Array<Geometry> geoms) {
+  static Set<LineSegment> findBoundarySegments(List<Geometry> geoms) {
     Set<LineSegment> segs = <LineSegment>{};
     CoverageBoundarySegmentFinder finder = CoverageBoundarySegmentFinder(segs);
     geoms.each((e, i) => e.apply2(finder));
     return segs;
   }
 
-  static bool isBoundarySegment(Set<LineSegment> boundarySegs, CoordinateSequence seq, int i) {
+  static bool isBoundarySegment(
+      Set<LineSegment> boundarySegs, CoordinateSequence seq, int i) {
     LineSegment seg = _createSegment(seq, i);
     return boundarySegs.contains(seg);
   }
@@ -35,7 +36,8 @@ class CoverageBoundarySegmentFinder implements CoordinateSequenceFilter {
   }
 
   static LineSegment _createSegment(CoordinateSequence seq, int i) {
-    LineSegment seg = LineSegment(seq.getCoordinate(i), seq.getCoordinate(i + 1));
+    LineSegment seg =
+        LineSegment(seq.getCoordinate(i), seq.getCoordinate(i + 1));
     seg.normalize();
     return seg;
   }

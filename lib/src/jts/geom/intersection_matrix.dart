@@ -8,36 +8,27 @@ class IntersectionMatrix {
 
   IntersectionMatrix() {
     _matrix = Array.matrix(3);
-    setAll(Dimension.False);
+    setAll(Dimension.kFalse);
   }
 
   IntersectionMatrix.of(String elements) {
     _matrix = Array.matrix(3);
-    setAll(Dimension.False);
+    setAll(Dimension.kFalse);
     set(elements);
   }
 
   IntersectionMatrix.of2(IntersectionMatrix other) {
     _matrix = Array.matrix(3);
-    setAll(Dimension.False);
-    _matrix[Location.interior][Location.interior] =
-        other._matrix[Location.interior][Location.interior];
-    _matrix[Location.interior][Location.boundary] =
-        other._matrix[Location.interior][Location.boundary];
-    _matrix[Location.interior][Location.exterior] =
-        other._matrix[Location.interior][Location.exterior];
-    _matrix[Location.boundary][Location.interior] =
-        other._matrix[Location.boundary][Location.interior];
-    _matrix[Location.boundary][Location.boundary] =
-        other._matrix[Location.boundary][Location.boundary];
-    _matrix[Location.boundary][Location.exterior] =
-        other._matrix[Location.boundary][Location.exterior];
-    _matrix[Location.exterior][Location.interior] =
-        other._matrix[Location.exterior][Location.interior];
-    _matrix[Location.exterior][Location.boundary] =
-        other._matrix[Location.exterior][Location.boundary];
-    _matrix[Location.exterior][Location.exterior] =
-        other._matrix[Location.exterior][Location.exterior];
+    setAll(Dimension.kFalse);
+    _matrix[Location.interior][Location.interior] = other._matrix[Location.interior][Location.interior];
+    _matrix[Location.interior][Location.boundary] = other._matrix[Location.interior][Location.boundary];
+    _matrix[Location.interior][Location.exterior] = other._matrix[Location.interior][Location.exterior];
+    _matrix[Location.boundary][Location.interior] = other._matrix[Location.boundary][Location.interior];
+    _matrix[Location.boundary][Location.boundary] = other._matrix[Location.boundary][Location.boundary];
+    _matrix[Location.boundary][Location.exterior] = other._matrix[Location.boundary][Location.exterior];
+    _matrix[Location.exterior][Location.interior] = other._matrix[Location.exterior][Location.interior];
+    _matrix[Location.exterior][Location.boundary] = other._matrix[Location.exterior][Location.boundary];
+    _matrix[Location.exterior][Location.exterior] = other._matrix[Location.exterior][Location.exterior];
   }
 
   void add(IntersectionMatrix im) {
@@ -49,7 +40,7 @@ class IntersectionMatrix {
   }
 
   static bool isTrue(int actualDimensionValue) {
-    if ((actualDimensionValue >= 0) || (actualDimensionValue == Dimension.True)) {
+    if ((actualDimensionValue >= 0) || (actualDimensionValue == Dimension.kTrue)) {
       return true;
     }
     return false;
@@ -60,11 +51,10 @@ class IntersectionMatrix {
       return true;
     }
     if ((requiredDimensionSymbol == Dimension.symTrue) &&
-        ((actualDimensionValue >= 0) || (actualDimensionValue == Dimension.True))) {
+        ((actualDimensionValue >= 0) || (actualDimensionValue == Dimension.kTrue))) {
       return true;
     }
-    if ((requiredDimensionSymbol == Dimension.symFalse) &&
-        (actualDimensionValue == Dimension.False)) {
+    if ((requiredDimensionSymbol == Dimension.symFalse) && (actualDimensionValue == Dimension.kFalse)) {
       return true;
     }
     if ((requiredDimensionSymbol == Dimension.symP) && (actualDimensionValue == Dimension.P)) {
@@ -112,8 +102,7 @@ class IntersectionMatrix {
     for (int i = 0; i < minimumDimensionSymbols.length; i++) {
       int row = i ~/ 3;
       int col = i % 3;
-      setAtLeast2(
-          row, col, Dimension.toDimensionValue(minimumDimensionSymbols.substring(i, i + 1)));
+      setAtLeast2(row, col, Dimension.toDimensionValue(minimumDimensionSymbols.substring(i, i + 1)));
     }
   }
 
@@ -130,10 +119,10 @@ class IntersectionMatrix {
   }
 
   bool isDisjoint() {
-    return (((_matrix[Location.interior][Location.interior] == Dimension.False) &&
-                (_matrix[Location.interior][Location.boundary] == Dimension.False)) &&
-            (_matrix[Location.boundary][Location.interior] == Dimension.False)) &&
-        (_matrix[Location.boundary][Location.boundary] == Dimension.False);
+    return (((_matrix[Location.interior][Location.interior] == Dimension.kFalse) &&
+                (_matrix[Location.interior][Location.boundary] == Dimension.kFalse)) &&
+            (_matrix[Location.boundary][Location.interior] == Dimension.kFalse)) &&
+        (_matrix[Location.boundary][Location.boundary] == Dimension.kFalse);
   }
 
   bool isIntersects() {
@@ -145,12 +134,11 @@ class IntersectionMatrix {
       return isTouches(dimensionOfGeometryB, dimensionOfGeometryA);
     }
     if ((((((dimensionOfGeometryA == Dimension.A) && (dimensionOfGeometryB == Dimension.A)) ||
-                    ((dimensionOfGeometryA == Dimension.L) &&
-                        (dimensionOfGeometryB == Dimension.L))) ||
+                    ((dimensionOfGeometryA == Dimension.L) && (dimensionOfGeometryB == Dimension.L))) ||
                 ((dimensionOfGeometryA == Dimension.L) && (dimensionOfGeometryB == Dimension.A))) ||
             ((dimensionOfGeometryA == Dimension.P) && (dimensionOfGeometryB == Dimension.A))) ||
         ((dimensionOfGeometryA == Dimension.P) && (dimensionOfGeometryB == Dimension.L))) {
-      return (_matrix[Location.interior][Location.interior] == Dimension.False) &&
+      return (_matrix[Location.interior][Location.interior] == Dimension.kFalse) &&
           ((isTrue(_matrix[Location.interior][Location.boundary]) ||
                   isTrue(_matrix[Location.boundary][Location.interior])) ||
               isTrue(_matrix[Location.boundary][Location.boundary]));
@@ -179,14 +167,14 @@ class IntersectionMatrix {
 
   bool isWithin() {
     return (isTrue(_matrix[Location.interior][Location.interior]) &&
-            (_matrix[Location.interior][Location.exterior] == Dimension.False)) &&
-        (_matrix[Location.boundary][Location.exterior] == Dimension.False);
+            (_matrix[Location.interior][Location.exterior] == Dimension.kFalse)) &&
+        (_matrix[Location.boundary][Location.exterior] == Dimension.kFalse);
   }
 
   bool isContains() {
     return (isTrue(_matrix[Location.interior][Location.interior]) &&
-            (_matrix[Location.exterior][Location.interior] == Dimension.False)) &&
-        (_matrix[Location.exterior][Location.boundary] == Dimension.False);
+            (_matrix[Location.exterior][Location.interior] == Dimension.kFalse)) &&
+        (_matrix[Location.exterior][Location.boundary] == Dimension.kFalse);
   }
 
   bool isCovers() {
@@ -194,9 +182,8 @@ class IntersectionMatrix {
                 isTrue(_matrix[Location.interior][Location.boundary])) ||
             isTrue(_matrix[Location.boundary][Location.interior])) ||
         isTrue(_matrix[Location.boundary][Location.boundary]);
-    return (hasPointInCommon &&
-            (_matrix[Location.exterior][Location.interior] == Dimension.False)) &&
-        (_matrix[Location.exterior][Location.boundary] == Dimension.False);
+    return (hasPointInCommon && (_matrix[Location.exterior][Location.interior] == Dimension.kFalse)) &&
+        (_matrix[Location.exterior][Location.boundary] == Dimension.kFalse);
   }
 
   bool isCoveredBy() {
@@ -204,9 +191,8 @@ class IntersectionMatrix {
                 isTrue(_matrix[Location.interior][Location.boundary])) ||
             isTrue(_matrix[Location.boundary][Location.interior])) ||
         isTrue(_matrix[Location.boundary][Location.boundary]);
-    return (hasPointInCommon &&
-            (_matrix[Location.interior][Location.exterior] == Dimension.False)) &&
-        (_matrix[Location.boundary][Location.exterior] == Dimension.False);
+    return (hasPointInCommon && (_matrix[Location.interior][Location.exterior] == Dimension.kFalse)) &&
+        (_matrix[Location.boundary][Location.exterior] == Dimension.kFalse);
   }
 
   bool isEquals(int dimensionOfGeometryA, int dimensionOfGeometryB) {
@@ -214,10 +200,10 @@ class IntersectionMatrix {
       return false;
     }
     return (((isTrue(_matrix[Location.interior][Location.interior]) &&
-                    (_matrix[Location.interior][Location.exterior] == Dimension.False)) &&
-                (_matrix[Location.boundary][Location.exterior] == Dimension.False)) &&
-            (_matrix[Location.exterior][Location.interior] == Dimension.False)) &&
-        (_matrix[Location.exterior][Location.boundary] == Dimension.False);
+                    (_matrix[Location.interior][Location.exterior] == Dimension.kFalse)) &&
+                (_matrix[Location.boundary][Location.exterior] == Dimension.kFalse)) &&
+            (_matrix[Location.exterior][Location.interior] == Dimension.kFalse)) &&
+        (_matrix[Location.exterior][Location.boundary] == Dimension.kFalse);
   }
 
   bool isOverlaps(int dimensionOfGeometryA, int dimensionOfGeometryB) {

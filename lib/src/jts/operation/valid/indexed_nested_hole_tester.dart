@@ -33,7 +33,9 @@ final class IndexedNestedHoleTester {
       for (LinearRing testHole in results) {
         if (hole == testHole) continue;
 
-        if (!testHole.getEnvelopeInternal().covers(hole.getEnvelopeInternal())) continue;
+        if (!testHole.getEnvelopeInternal().covers(hole.getEnvelopeInternal())) {
+          continue;
+        }
 
         if (PolygonTopologyAnalyzer.isRingNested(hole, testHole)) {
           _nestedPt = hole.getCoordinateN(0);

@@ -1,7 +1,5 @@
 import 'dart:math';
 
- import 'package:d_util/d_util.dart';
-import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geomgraph/edge.dart';
 import 'package:dts/src/jts/geomgraph/index/segment_intersector.dart';
 
@@ -22,7 +20,9 @@ class SimpleEdgeSetIntersector extends EdgeSetIntersector {
     nOverlaps = 0;
     for (var edge0 in edges) {
       for (var edge1 in edges) {
-        if (testAllSegments || (edge0 != edge1)) computeIntersects(edge0, edge1, si);
+        if (testAllSegments || (edge0 != edge1)) {
+          computeIntersects(edge0, edge1, si);
+        }
       }
     }
   }
@@ -38,8 +38,8 @@ class SimpleEdgeSetIntersector extends EdgeSetIntersector {
   }
 
   void computeIntersects(Edge e0, Edge e1, SegmentIntersector si) {
-    Array<Coordinate> pts0 = e0.getCoordinates();
-    Array<Coordinate> pts1 = e1.getCoordinates();
+    final pts0 = e0.getCoordinates();
+    final pts1 = e1.getCoordinates();
     for (int i0 = 0; i0 < (pts0.length - 1); i0++) {
       for (int i1 = 0; i1 < (pts1.length - 1); i1++) {
         si.addIntersections(e0, i0, e1, i1);
@@ -87,7 +87,7 @@ class SimpleMCSweepLineIntersector extends EdgeSetIntersector {
 
   void _addEdge2(Edge edge, Object? edgeSet) {
     MonotoneChainEdge mce = edge.getMonotoneChainEdge();
-    Array<int> startIndex = mce.getStartIndexes();
+    final startIndex = mce.getStartIndexes();
     for (int i = 0; i < (startIndex.length - 1); i++) {
       final mc = GMonotoneChain(mce, i);
       final insertEvent = SweepLineEventG(edgeSet, mce.getMinX(i), mc);
@@ -98,8 +98,8 @@ class SimpleMCSweepLineIntersector extends EdgeSetIntersector {
 
   void prepareEvents() {
     events.sort();
-    for (int i = 0; i < events.size; i++) {
-      SweepLineEventG ev = events.get(i);
+    for (int i = 0; i < events.length; i++) {
+      SweepLineEventG ev = events[i];
       if (ev.isDelete()) {
         ev.getInsertEvent()!.setDeleteEventIndex(i);
       }
@@ -109,8 +109,8 @@ class SimpleMCSweepLineIntersector extends EdgeSetIntersector {
   void computeIntersections3(SegmentIntersector si) {
     nOverlaps = 0;
     prepareEvents();
-    for (int i = 0; i < events.size; i++) {
-      SweepLineEventG ev = events.get(i);
+    for (int i = 0; i < events.length; i++) {
+      SweepLineEventG ev = events[i];
       if (ev.isInsert()) {
         processOverlaps(i, ev.getDeleteEventIndex(), ev, si);
       }
@@ -123,9 +123,9 @@ class SimpleMCSweepLineIntersector extends EdgeSetIntersector {
   void processOverlaps(int start, int end, SweepLineEventG ev0, SegmentIntersector si) {
     GMonotoneChain mc0 = ev0.getObject() as GMonotoneChain;
     for (int i = start; i < end; i++) {
-      SweepLineEventG ev1 = events.get(i) as SweepLineEventG;
+      final ev1 = events[i] as SweepLineEventG;
       if (ev1.isInsert()) {
-        GMonotoneChain mc1 = ev1.getObject() as GMonotoneChain;
+        final mc1 = ev1.getObject() as GMonotoneChain;
         if (!ev0.isSameLabel(ev1)) {
           mc0.computeIntersections(mc1, si);
           nOverlaps++;
@@ -170,7 +170,7 @@ class SimpleSweepLineIntersector extends EdgeSetIntersector {
   }
 
   void add2(Edge edge, Object? edgeSet) {
-    Array<Coordinate> pts = edge.getCoordinates();
+    final pts = edge.getCoordinates();
     for (int i = 0; i < (pts.length - 1); i++) {
       final ss = SweepLineSegment(edge, i);
       final insertEvent = SweepLineEventG(edgeSet, ss.getMinX(), null);
@@ -205,7 +205,7 @@ class SimpleSweepLineIntersector extends EdgeSetIntersector {
   void processOverlaps(int start, int end, SweepLineEventG ev0, SegmentIntersector si) {
     SweepLineSegment ss0 = ev0.getObject() as SweepLineSegment;
     for (int i = start; i < end; i++) {
-      SweepLineEventG ev1 = events.get(i);
+      SweepLineEventG ev1 = events[i];
       if (ev1.isInsert()) {
         SweepLineSegment ss1 = ev1.getObject() as SweepLineSegment;
         if (!ev0.isSameLabel(ev1)) {
@@ -218,9 +218,9 @@ class SimpleSweepLineIntersector extends EdgeSetIntersector {
 }
 
 class SweepLineEventG implements Comparable<SweepLineEventG> {
-  static const int _INSERT = 1;
+  static const int _kInsert = 1;
 
-  static const int _DELETE = 2;
+  static const int _kDelete = 2;
 
   Object? _label;
 
@@ -235,20 +235,20 @@ class SweepLineEventG implements Comparable<SweepLineEventG> {
   Object? _obj;
 
   SweepLineEventG(this._label, this._xValue, this._obj) {
-    _eventType = _INSERT;
+    _eventType = _kInsert;
   }
 
   SweepLineEventG.of(double x, this._insertEvent) {
-    _eventType = _DELETE;
+    _eventType = _kDelete;
     _xValue = x;
   }
 
   bool isInsert() {
-    return _eventType == _INSERT;
+    return _eventType == _kInsert;
   }
 
   bool isDelete() {
-    return _eventType == _DELETE;
+    return _eventType == _kDelete;
   }
 
   SweepLineEventG? getInsertEvent() {

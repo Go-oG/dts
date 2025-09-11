@@ -1,9 +1,8 @@
- import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 
 class OrientedCoordinateArray implements Comparable<OrientedCoordinateArray> {
-  Array<Coordinate> pts;
+  List<Coordinate> pts;
 
   bool _orientation = false;
 
@@ -11,7 +10,7 @@ class OrientedCoordinateArray implements Comparable<OrientedCoordinateArray> {
     _orientation = orientation(pts);
   }
 
-  static bool orientation(Array<Coordinate> pts) {
+  static bool orientation(List<Coordinate> pts) {
     return CoordinateArrays.increasingDirection(pts) == 1;
   }
 
@@ -21,7 +20,8 @@ class OrientedCoordinateArray implements Comparable<OrientedCoordinateArray> {
     return comp;
   }
 
-  static int compareOriented(Array<Coordinate> pts1, bool orientation1, Array<Coordinate> pts2, bool orientation2) {
+  static int compareOriented(List<Coordinate> pts1, bool orientation1,
+      List<Coordinate> pts2, bool orientation2) {
     int dir1 = (orientation1) ? 1 : -1;
     int dir2 = (orientation2) ? 1 : -1;
     int limit1 = (orientation1) ? pts1.length : -1;

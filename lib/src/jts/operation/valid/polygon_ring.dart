@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
@@ -99,7 +99,8 @@ final class PolygonRing {
     }
   }
 
-  void addSelfTouch(Coordinate origin, Coordinate e00, Coordinate e01, Coordinate e10, Coordinate e11) {
+  void addSelfTouch(Coordinate origin, Coordinate e00, Coordinate e01,
+      Coordinate e10, Coordinate e11) {
     _selfNodes ??= [];
     _selfNodes!.add(PolygonRingSelfNode(origin, e00, e01, e10, e11));
   }
@@ -139,7 +140,8 @@ final class PolygonRing {
     }
   }
 
-  Coordinate? scanForHoleCycle(PolygonRingTouch currentTouch, PolygonRing root, List<PolygonRingTouch> touchStack) {
+  Coordinate? scanForHoleCycle(PolygonRingTouch currentTouch, PolygonRing root,
+      List<PolygonRingTouch> touchStack) {
     PolygonRing ring = currentTouch.getRing();
     Coordinate currentPt = currentTouch.getCoordinate();
     for (PolygonRingTouch touch in ring.getTouches()) {

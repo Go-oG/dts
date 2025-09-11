@@ -16,16 +16,16 @@ import 'point.dart';
 import 'polygon.dart';
 import 'precision_model.dart';
 
-class GeometryCollection<T extends BaseGeometry> extends BaseGeometry<GeometryCollection<T>> {
-  late Array<T> geometries;
+class GeometryCollection<T extends Geometry> extends BaseGeometry<GeometryCollection<T>> {
+  late List<T> geometries;
 
   GeometryCollectionDimension? _geomCollDim;
 
-  GeometryCollection.of(Array<T>? geometries, PrecisionModel pm, int srid)
+  GeometryCollection.of(List<T>? geometries, PrecisionModel pm, int srid)
       : this(geometries, GeometryFactory(pm: pm, srid: srid));
 
-  GeometryCollection(Array<T>? geometries, GeometryFactory factory) : super(factory) {
-    this.geometries = geometries ?? Array(0);
+  GeometryCollection(List<T>? geometries, GeometryFactory factory) : super(factory) {
+    this.geometries = geometries ?? List.empty(growable: false);
     if (Geometry.hasNullElements(this.geometries)) {
       throw IllegalArgumentException("geometries must not contain null elements");
     }
@@ -42,14 +42,12 @@ class GeometryCollection<T extends BaseGeometry> extends BaseGeometry<GeometryCo
   }
 
   @override
-  Array<Coordinate> getCoordinates() {
-    Array<Coordinate> coordinates = Array(getNumPoints());
-    int k = -1;
+  List<Coordinate> getCoordinates() {
+    List<Coordinate> coordinates = [];
     for (int i = 0; i < geometries.length; i++) {
-      Array<Coordinate> childCoordinates = geometries[i].getCoordinates();
+      final childCoordinates = geometries[i].getCoordinates();
       for (int j = 0; j < childCoordinates.length; j++) {
-        k++;
-        coordinates[k] = childCoordinates[j];
+        coordinates.add(childCoordinates[j]);
       }
     }
     return coordinates;
@@ -79,7 +77,7 @@ class GeometryCollection<T extends BaseGeometry> extends BaseGeometry<GeometryCo
 
   @override
   int getBoundaryDimension() {
-    int dimension = Dimension.False;
+    int dimension = Dimension.kFalse;
     for (int i = 0; i < geometries.length; i++) {
       dimension = Math.max(dimension, (geometries[i]).getBoundaryDimension()).toInt();
     }
@@ -161,7 +159,7 @@ class GeometryCollection<T extends BaseGeometry> extends BaseGeometry<GeometryCo
 
   @override
   void apply2(CoordinateSequenceFilter filter) {
-    if (geometries.length == 0) return;
+    if (geometries.isEmpty) return;
 
     for (int i = 0; i < geometries.length; i++) {
       geometries[i].apply2(filter);
@@ -195,10 +193,7 @@ class GeometryCollection<T extends BaseGeometry> extends BaseGeometry<GeometryCo
 
   @override
   GeometryCollection<T> copyInternal() {
-    Array<T> geometries = Array(this.geometries.length);
-    for (int i = 0; i < geometries.length; i++) {
-      geometries[i] = this.geometries[i].copy() as T;
-    }
+    final List<T> geometries = this.geometries.map((e) => e.copy() as T).toList();
     return GeometryCollection(geometries, factory);
   }
 
@@ -222,9 +217,9 @@ class GeometryCollection<T extends BaseGeometry> extends BaseGeometry<GeometryCo
   @override
   int compareToSameClass(Object o) {
     Set<T> theseElements = SplayTreeSet();
-    theseElements.addAll(geometries.asList());
+    theseElements.addAll(geometries);
     Set<T> otherElements = SplayTreeSet();
-    otherElements.addAll((o as GeometryCollection<T>).geometries.asList());
+    otherElements.addAll((o as GeometryCollection<T>).geometries);
     return compare(theseElements, otherElements);
   }
 
@@ -251,16 +246,12 @@ class GeometryCollection<T extends BaseGeometry> extends BaseGeometry<GeometryCo
 
   @override
   GeometryCollection<T> reverseInternal() {
-    Array<T> geometries = Array(this.geometries.length);
-    for (int i = 0; i < geometries.length; i++) {
-      geometries[i] = this.geometries[i].reverse() as T;
-    }
-    return GeometryCollection(geometries, factory);
+    return GeometryCollection(this.geometries.map((e) => (e.reverse() as T)).toList(), factory);
   }
 }
 
 class GeometryCollectionDimension {
-  int _dimension = Dimension.False;
+  int _dimension = Dimension.kFalse;
 
   bool _hasP = false;
 

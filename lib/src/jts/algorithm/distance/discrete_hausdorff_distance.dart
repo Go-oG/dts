@@ -1,4 +1,4 @@
-import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart' show Math;
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -24,7 +24,8 @@ class DiscreteHausdorffDistance {
     return g0.factory.createLineString2(dist.getCoordinates());
   }
 
-  static LineString distanceLine2(Geometry g0, Geometry g1, double densifyFrac) {
+  static LineString distanceLine2(
+      Geometry g0, Geometry g1, double densifyFrac) {
     final dist = DiscreteHausdorffDistance(g0, g1);
     dist.setDensifyFraction(densifyFrac);
     dist.distance();
@@ -36,7 +37,8 @@ class DiscreteHausdorffDistance {
     return dist.orientedDistance();
   }
 
-  static double orientedDistanceS2(Geometry g0, Geometry g1, double densifyFrac) {
+  static double orientedDistanceS2(
+      Geometry g0, Geometry g1, double densifyFrac) {
     final dist = DiscreteHausdorffDistance(g0, g1);
     dist.setDensifyFraction(densifyFrac);
     return dist.orientedDistance();
@@ -48,7 +50,8 @@ class DiscreteHausdorffDistance {
     return g0.factory.createLineString2(dist.getCoordinates());
   }
 
-  static LineString orientedDistanceLine2(Geometry g0, Geometry g1, double densifyFrac) {
+  static LineString orientedDistanceLine2(
+      Geometry g0, Geometry g1, double densifyFrac) {
     final dist = DiscreteHausdorffDistance(g0, g1);
     dist.setDensifyFraction(densifyFrac);
     dist.orientedDistance();
@@ -82,16 +85,15 @@ class DiscreteHausdorffDistance {
     return _ptDist.getDistance();
   }
 
-  Array<Coordinate> getCoordinates() {
-    return _ptDist.getCoordinates();
-  }
+  List<Coordinate> getCoordinates() => _ptDist.getCoordinates();
 
   void _compute(Geometry g0, Geometry g1) {
     _computeOrientedDistance(g0, g1, _ptDist);
     _computeOrientedDistance(g1, g0, _ptDist);
   }
 
-  void _computeOrientedDistance(Geometry discreteGeom, Geometry geom, PointPairDistance ptDist) {
+  void _computeOrientedDistance(
+      Geometry discreteGeom, Geometry geom, PointPairDistance ptDist) {
     _MaxPointDistanceFilter distFilter = _MaxPointDistanceFilter(geom);
     discreteGeom.apply(distFilter);
     ptDist.setMaximum(distFilter.getMaxPointDistance());
@@ -125,7 +127,8 @@ class _MaxPointDistanceFilter implements CoordinateFilter {
   }
 }
 
-class _MaxDensifiedByFractionDistanceFilter implements CoordinateSequenceFilter {
+class _MaxDensifiedByFractionDistanceFilter
+    implements CoordinateSequenceFilter {
   final maxPtDist = PointPairDistance();
 
   final minPtDist = PointPairDistance();

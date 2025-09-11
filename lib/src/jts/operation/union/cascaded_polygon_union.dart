@@ -12,7 +12,7 @@ import 'union_strategy.dart';
 
 class _UnionStrategy implements UnionStrategy {
   @override
-  bool isDoublePrecision()=>true;
+  bool isDoublePrecision() => true;
 
   @override
   Geometry? union(Geometry g0, Geometry g1) {
@@ -80,7 +80,8 @@ class CascadedPolygonUnion {
       Geometry? g0 = getGeometry(geoms, start);
       return unionSafe(g0, null);
     } else if ((end - start) == 2) {
-      return unionSafe(getGeometry(geoms, start), getGeometry(geoms, start + 1));
+      return unionSafe(
+          getGeometry(geoms, start), getGeometry(geoms, start + 1));
     } else {
       int mid = (end + start) ~/ 2;
       Geometry? g0 = _binaryUnion(geoms, start, mid);
@@ -135,7 +136,6 @@ class CascadedPolygonUnion {
     }
     List<Polygon> polygons = PolygonExtracter.getPolygons(g);
     if (polygons.length == 1) return polygons.first;
-
-    return g.factory.createMultiPolygon(GeometryFactory.toPolygonArray(polygons));
+    return g.factory.createMultiPolygon(polygons);
   }
 }

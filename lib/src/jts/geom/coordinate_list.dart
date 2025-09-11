@@ -1,22 +1,15 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 
 class CoordinateList {
   final List<Coordinate> _list = [];
 
-  CoordinateList([Array<Coordinate>? coord, bool allowRepeated = true]) {
+  CoordinateList([List<Coordinate>? coord, bool allowRepeated = true]) {
     if (coord != null) {
       add2(coord, allowRepeated);
     }
   }
 
-  Coordinate getCoordinate(int i) {
-    return (_list.get(i));
-  }
-
-  void add(Coordinate coord) {
-    _list.add(coord);
-  }
+  Coordinate getCoordinate(int i) => _list[i];
 
   void set(int index, Coordinate value) {
     _list[index] = value;
@@ -24,22 +17,26 @@ class CoordinateList {
 
   Coordinate get(int index) => _list[index];
 
-  bool add2(Array<Coordinate> coord, bool allowRepeated) {
+  void add(Coordinate coord) {
+    _list.add(coord);
+  }
+
+  bool add2(List<Coordinate> coord, bool allowRepeated) {
     add4(coord, allowRepeated, true);
     return true;
   }
 
   void add3(Coordinate coord, bool allowRepeated) {
     if (!allowRepeated) {
-      if (_list.size >= 1) {
-        Coordinate last = ((_list.get(_list.size - 1)));
+      if (_list.isNotEmpty) {
+        Coordinate last = _list.last;
         if (last.equals2D(coord)) return;
       }
     }
     _list.add(coord);
   }
 
-  bool add4(Array<Coordinate> coord, bool allowRepeated, bool direction) {
+  bool add4(List<Coordinate> coord, bool allowRepeated, bool direction) {
     if (direction) {
       for (int i = 0; i < coord.length; i++) {
         add3(coord[i], allowRepeated);
@@ -52,7 +49,7 @@ class CoordinateList {
     return true;
   }
 
-  bool add5(Array<Coordinate> coord, bool allowRepeated, int start, int end) {
+  bool add5(List<Coordinate> coord, bool allowRepeated, int start, int end) {
     int inc = 1;
     if (start > end) inc = -1;
 
@@ -69,14 +66,14 @@ class CoordinateList {
 
   void add7(int i, Coordinate coord, bool allowRepeated) {
     if (!allowRepeated) {
-      int size = _list.size;
+      int size = _list.length;
       if (size > 0) {
         if (i > 0) {
-          Coordinate prev = ((_list.get(i - 1)));
+          Coordinate prev = _list[i - 1];
           if (prev.equals2D(coord)) return;
         }
         if (i < size) {
-          Coordinate next = ((_list.get(i)));
+          Coordinate next = _list[i];
           if (next.equals2D(coord)) return;
         }
       }
@@ -94,9 +91,8 @@ class CoordinateList {
   }
 
   void closeRing() {
-    if (_list.size > 0) {
-      Coordinate duplicate = _list.get(0).copy();
-      add3(duplicate, false);
+    if (_list.isNotEmpty) {
+      add3(_list[0].copy(), false);
     }
   }
 
@@ -106,27 +102,16 @@ class CoordinateList {
 
   Coordinate remove(int index) => _list.removeAt(index);
 
-  Array<Coordinate> toCoordinateArray() {
-    return _list.toArray();
-  }
-
-  Array<Coordinate> toCoordinateArray2(bool isForward) {
+  List<Coordinate> toCoordinateList([bool isForward = true]) {
     if (isForward) {
-      return toCoordinateArray();
+      return List.from(_list);
     }
-    int size = _list.size;
-    Array<Coordinate> pts = Array(size);
-    for (int i = 0; i < size; i++) {
-      pts[i] = _list.get((size - i) - 1);
-    }
-    return pts;
+    return _list.reversed.toList();
   }
 
   CoordinateList clone() {
     CoordinateList clone = CoordinateList();
-    for (int i = 0; i < _list.size; i++) {
-      clone._list.add(_list.get(i).clone());
-    }
+    clone._list.addAll(_list.map((e) => e.clone()));
     return clone;
   }
 

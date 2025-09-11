@@ -3,7 +3,7 @@ import 'dart:io';
 late List<String> obj;
 
 void main() {
-outExportFile(Directory("E:/Code/FlutterProject/chart/e_chart/lib/src"));
+  outExportFile(Directory("E:/Code/FlutterProject/chart/e_chart/lib/src"));
 }
 
 void outExportFile(Directory dir) {
@@ -31,7 +31,7 @@ void outExportFile(Directory dir) {
     var path = file.absolute.path;
     path = path.replaceAll("E:/Code/FlutterProject/chart/e_chart/lib", "");
     path = path.replaceAll("\\", "/");
-    path=path.substring(1);
+    path = path.substring(1);
 
     path = "export '$path';";
     print(path);
@@ -61,8 +61,9 @@ void _changeLibraryDep(Directory dir) {
 
   for (var file in fileList) {
     var content = file.readAsStringSync();
- //   content = content.replaceAll("import 'package:dts/src/base.dart';", "import 'package:d_util/d_util.dart';");
-    content = content.replaceAll("import 'package:d_util/d_util.dart;'", "import 'package:d_util/d_util.dart';");
+    //   content = content.replaceAll("import 'package:dts/src/base.dart';", "import 'package:d_util/d_util.dart';");
+    content = content.replaceAll("import 'package:d_util/d_util.dart;'",
+        "import 'package:d_util/d_util.dart';");
     file.writeAsString(content);
   }
 }

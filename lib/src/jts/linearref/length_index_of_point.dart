@@ -11,7 +11,8 @@ class LengthIndexOfPoint {
     return locater.indexOf(inputPt);
   }
 
-  static double indexOfAfter2(Geometry linearGeom, Coordinate inputPt, double minIndex) {
+  static double indexOfAfter2(
+      Geometry linearGeom, Coordinate inputPt, double minIndex) {
     LengthIndexOfPoint locater = LengthIndexOfPoint(linearGeom);
     return locater.indexOfAfter(inputPt, minIndex);
   }
@@ -31,7 +32,8 @@ class LengthIndexOfPoint {
     if (endIndex < minIndex) return endIndex;
 
     double closestAfter = indexOfFromStart(inputPt, minIndex);
-    Assert.isTrue(closestAfter >= minIndex, "computed index is before specified minimum index");
+    Assert.isTrue(closestAfter >= minIndex,
+        "computed index is before specified minimum index");
     return closestAfter;
   }
 
@@ -46,7 +48,8 @@ class LengthIndexOfPoint {
         seg.p0 = it.getSegmentStart();
         seg.p1 = it.getSegmentEnd()!;
         double segDistance = seg.distance(inputPt);
-        double segMeasureToPt = segmentNearestMeasure(seg, inputPt, segmentStartMeasure);
+        double segMeasureToPt =
+            segmentNearestMeasure(seg, inputPt, segmentStartMeasure);
         if ((segDistance < minDistance) && (segMeasureToPt > minIndex)) {
           ptMeasure = segMeasureToPt;
           minDistance = segDistance;
@@ -58,11 +61,14 @@ class LengthIndexOfPoint {
     return ptMeasure;
   }
 
-  double segmentNearestMeasure(LineSegment seg, Coordinate inputPt, double segmentStartMeasure) {
+  double segmentNearestMeasure(
+      LineSegment seg, Coordinate inputPt, double segmentStartMeasure) {
     double projFactor = seg.projectionFactor(inputPt);
     if (projFactor <= 0.0) return segmentStartMeasure;
 
-    if (projFactor <= 1.0) return segmentStartMeasure + (projFactor * seg.getLength());
+    if (projFactor <= 1.0) {
+      return segmentStartMeasure + (projFactor * seg.getLength());
+    }
 
     return segmentStartMeasure + seg.getLength();
   }

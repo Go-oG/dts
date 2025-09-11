@@ -20,7 +20,7 @@ class OverlayResultValidator {
     );
   }
 
-  static const double _TOLERANCE = 1.0E-6;
+  static const double _kTolerance = 1.0E-6;
 
   late Array<Geometry> geom;
 
@@ -30,7 +30,7 @@ class OverlayResultValidator {
 
   Coordinate? _invalidLocation;
 
-  double _boundaryDistanceTolerance = _TOLERANCE;
+  double _boundaryDistanceTolerance = _kTolerance;
 
   final List<Coordinate> _testCoords = [];
 

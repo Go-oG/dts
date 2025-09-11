@@ -1,6 +1,6 @@
-import 'package:d_util/d_util.dart';
+import 'package:collection/collection.dart';
+import 'package:d_util/d_util.dart' show Stack;
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
@@ -15,9 +15,10 @@ final class ConvexHull {
 
   final GeometryFactory geomFactory;
 
-  final Array<Coordinate> _inputPts;
+  final List<Coordinate> _inputPts;
 
-  ConvexHull.of(Geometry geometry) : this(geometry.getCoordinates(), geometry.factory);
+  ConvexHull.of(Geometry geometry)
+      : this(geometry.getCoordinates(), geometry.factory);
 
   ConvexHull(this._inputPts, this.geomFactory);
 
@@ -27,23 +28,23 @@ final class ConvexHull {
       return fewPointsGeom;
     }
 
-    Array<Coordinate> reducedPts = _inputPts;
+    List<Coordinate> reducedPts = _inputPts;
     if (_inputPts.length > _tuningReduceSize) {
       reducedPts = _reduce(_inputPts);
     } else {
       reducedPts = _extractUnique(_inputPts)!;
     }
-    Array<Coordinate> sortedPts = _preSort(reducedPts);
+    List<Coordinate> sortedPts = _preSort(reducedPts);
 
     Stack<Coordinate> cHS = _grahamScan(sortedPts);
 
-    Array<Coordinate> cH = toCoordinateArray(cHS);
+    List<Coordinate> cH = toCoordinateArray(cHS);
 
     return _lineOrPolygon(cH);
   }
 
   Geometry? _createFewPointsResult() {
-    Array<Coordinate>? uniquePts = _extractUnique2(_inputPts, 2);
+    List<Coordinate>? uniquePts = _extractUnique2(_inputPts, 2);
     if (uniquePts == null) {
       return null;
     } else if (uniquePts.isEmpty) {
@@ -55,11 +56,11 @@ final class ConvexHull {
     }
   }
 
-  static Array<Coordinate>? _extractUnique(Array<Coordinate> pts) {
+  static List<Coordinate>? _extractUnique(List<Coordinate> pts) {
     return _extractUnique2(pts, -1);
   }
 
-  static Array<Coordinate>? _extractUnique2(Array<Coordinate> pts, int maxPts) {
+  static List<Coordinate>? _extractUnique2(List<Coordinate> pts, int maxPts) {
     Set<Coordinate> uniquePts = <Coordinate>{};
 
     for (Coordinate pt in pts) {
@@ -68,22 +69,22 @@ final class ConvexHull {
         return null;
       }
     }
-    return CoordinateArrays.toCoordinateArray(uniquePts.toList());
+    return uniquePts.toList();
   }
 
-  Array<Coordinate> toCoordinateArray(Stack<Coordinate> stack) {
-    Array<Coordinate> coordinates = Array<Coordinate>(stack.size);
+  List<Coordinate> toCoordinateArray(Stack<Coordinate> stack) {
+    List<Coordinate> coordinates = [];
     for (int i = 0; i < stack.size; i++) {
       Coordinate coordinate = stack.get(i);
-      coordinates[i] = coordinate;
+      coordinates.add(coordinate);
     }
     return coordinates;
   }
 
-  Array<Coordinate> _reduce(Array<Coordinate> inputPts) {
-    Array<Coordinate>? innerPolyPts = _computeInnerOctolateralRing(inputPts);
+  List<Coordinate> _reduce(List<Coordinate> inputPts) {
+    List<Coordinate>? innerPolyPts = _computeInnerOctolateralRing(inputPts);
     if (innerPolyPts == null) {
-      return inputPts.copy();
+      return [];
     }
 
     Set<Coordinate> reducedSet = <Coordinate>{};
@@ -94,7 +95,7 @@ final class ConvexHull {
         reducedSet.add(item);
       }
     }
-    Array<Coordinate> reducedPts = CoordinateArrays.toCoordinateArray(reducedSet.toList());
+    final reducedPts = reducedSet.toList();
     if (reducedPts.length < 3) {
       return _padArray3(reducedPts);
     }
@@ -102,33 +103,33 @@ final class ConvexHull {
     return reducedPts;
   }
 
-  Array<Coordinate> _padArray3(Array<Coordinate> pts) {
-    Array<Coordinate> pad = Array<Coordinate>(3);
+  List<Coordinate> _padArray3(List<Coordinate> pts) {
+    List<Coordinate> pad = [];
     for (int i = 0; i < pad.length; i++) {
       if (i < pts.length) {
-        pad[i] = pts[i];
+        pad.add(pts[i]);
       } else {
-        pad[i] = pts[0];
+        pad.add(pts[0]);
       }
     }
     return pad;
   }
 
-  Array<Coordinate> _preSort(Array<Coordinate> pts) {
+  List<Coordinate> _preSort(List<Coordinate> pts) {
     Coordinate t;
     for (int i = 1; i < pts.length; i++) {
-      if ((pts[i].y < pts[0].y) || ((pts[i].y == pts[0].y) && (pts[i].x < pts[0].x))) {
+      if ((pts[i].y < pts[0].y) ||
+          ((pts[i].y == pts[0].y) && (pts[i].x < pts[0].x))) {
         t = pts[0];
         pts[0] = pts[i];
         pts[i] = t;
       }
     }
-
-    Array.sortRange(pts, 1, pts.length, _RadialComparator(pts[0]).compare);
+    pts.sortRange(1, pts.length, _RadialComparator(pts[0]).compare);
     return pts;
   }
 
-  Stack<Coordinate> _grahamScan(Array<Coordinate> c) {
+  Stack<Coordinate> _grahamScan(List<Coordinate> c) {
     Coordinate p;
     Stack<Coordinate> ps = Stack();
     ps.push(c[0]);
@@ -170,21 +171,19 @@ final class ConvexHull {
     return false;
   }
 
-  Array<Coordinate>? _computeInnerOctolateralRing(Array<Coordinate> inputPts) {
-    Array<Coordinate> octPts = _computeInnerOctolateralPts(inputPts);
+  List<Coordinate>? _computeInnerOctolateralRing(List<Coordinate> inputPts) {
+    final octPts = _computeInnerOctolateralPts(inputPts);
     CoordinateList coordList = CoordinateList();
     coordList.add2(octPts, false);
     if (coordList.size < 3) {
       return null;
     }
     coordList.closeRing();
-    return coordList.toCoordinateArray();
+    return coordList.toCoordinateList();
   }
 
-  Array<Coordinate> _computeInnerOctolateralPts(Array<Coordinate> inputPts) {
-    Array<Coordinate> pts = Array<Coordinate>(8);
-    pts.fillRange(0, pts.length, inputPts[0]);
-
+  List<Coordinate> _computeInnerOctolateralPts(List<Coordinate> inputPts) {
+    List<Coordinate> pts = List.filled(8, inputPts[0]);
     for (int i = 1; i < inputPts.length; i++) {
       final item = inputPts[i];
       if (item.x < pts[0].x) {
@@ -215,16 +214,16 @@ final class ConvexHull {
     return pts;
   }
 
-  Geometry _lineOrPolygon(Array<Coordinate> coordinates) {
+  Geometry _lineOrPolygon(List<Coordinate> coordinates) {
     coordinates = _cleanRing(coordinates);
     if (coordinates.length == 3) {
-      return geomFactory.createLineString2([coordinates[0], coordinates[1]].toArray());
+      return geomFactory.createLineString2([coordinates[0], coordinates[1]]);
     }
     LinearRing linearRing = geomFactory.createLinearRings(coordinates);
     return geomFactory.createPolygon(linearRing);
   }
 
-  Array<Coordinate> _cleanRing(Array<Coordinate> original) {
+  List<Coordinate> _cleanRing(List<Coordinate> original) {
     Assert.equals(original[0], original[original.length - 1]);
     List<Coordinate> cleanedRing = <Coordinate>[];
     Coordinate? previousDistinctCoordinate;
@@ -235,14 +234,15 @@ final class ConvexHull {
         continue;
       }
       if ((previousDistinctCoordinate != null) &&
-          _isBetween(previousDistinctCoordinate, currentCoordinate, nextCoordinate)) {
+          _isBetween(
+              previousDistinctCoordinate, currentCoordinate, nextCoordinate)) {
         continue;
       }
       cleanedRing.add(currentCoordinate);
       previousDistinctCoordinate = currentCoordinate;
     }
     cleanedRing.add(original[original.length - 1]);
-    return cleanedRing.toArray();
+    return cleanedRing;
   }
 }
 

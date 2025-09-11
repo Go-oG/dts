@@ -69,10 +69,14 @@ class PlanarPolygon3D {
   }
 
   bool intersects(Coordinate intPt) {
-    if (Location.exterior == locate(intPt, poly.getExteriorRing())) return false;
+    if (Location.exterior == locate(intPt, poly.getExteriorRing())) {
+      return false;
+    }
 
     for (int i = 0; i < poly.getNumInteriorRing(); i++) {
-      if (Location.interior == locate(intPt, poly.getInteriorRingN(i))) return false;
+      if (Location.interior == locate(intPt, poly.getInteriorRingN(i))) {
+        return false;
+      }
     }
     return true;
   }
@@ -88,7 +92,8 @@ class PlanarPolygon3D {
     CoordinateSequence seq = ring.getCoordinateSequence();
     CoordinateSequence seqProj = project2(seq, _facingPlane);
     Coordinate ptProj = project(pt, _facingPlane);
-    return Location.exterior != RayCrossingCounter.locatePointInRing2(ptProj, seqProj);
+    return Location.exterior !=
+        RayCrossingCounter.locatePointInRing2(ptProj, seqProj);
   }
 
   static CoordinateSequence project2(CoordinateSequence seq, int facingPlane) {

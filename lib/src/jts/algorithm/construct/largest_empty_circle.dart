@@ -1,4 +1,4 @@
-import 'package:d_util/d_util.dart';
+import 'package:collection/collection.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -13,12 +13,13 @@ import 'package:dts/src/jts/operation/distance/indexed_facet_distance.dart';
 import 'indexed_distance_to_point.dart';
 import 'maximum_inscribed_circle.dart';
 
-class LargestEmptyCircle with InitMixin {
+class LargestEmptyCircle {
   static Point getCenterS(Geometry obstacles, double tolerance) {
     return getCenterS2(obstacles, null, tolerance);
   }
 
-  static Point getCenterS2(Geometry obstacles, Geometry? boundary, double tolerance) {
+  static Point getCenterS2(
+      Geometry obstacles, Geometry? boundary, double tolerance) {
     return LargestEmptyCircle(obstacles, boundary, tolerance).getCenter();
   }
 
@@ -26,7 +27,8 @@ class LargestEmptyCircle with InitMixin {
     return getRadiusLineS2(obstacles, null, tolerance);
   }
 
-  static LineString getRadiusLineS2(Geometry obstacles, Geometry? boundary, double tolerance) {
+  static LineString getRadiusLineS2(
+      Geometry obstacles, Geometry? boundary, double tolerance) {
     return LargestEmptyCircle(obstacles, boundary, tolerance).getRadiusLine();
   }
 
@@ -85,13 +87,12 @@ class LargestEmptyCircle with InitMixin {
 
   LineString getRadiusLine() {
     _compute();
-    LineString radiusLine =
-        _factory.createLineString2(Array.list([_centerPt!.copy(), _radiusPt!.copy()]));
-    return radiusLine;
+    return _factory.createLineString2([_centerPt!.copy(), _radiusPt!.copy()]);
   }
 
   double _distanceToConstraints(Point p) {
-    bool isOutide = Location.exterior == _boundaryPtLocater.locate(p.getCoordinate()!);
+    bool isOutide =
+        Location.exterior == _boundaryPtLocater.locate(p.getCoordinate()!);
     if (isOutide) {
       double boundaryDist = _boundaryDistance.distance(p);
       return -boundaryDist;
@@ -108,7 +109,7 @@ class LargestEmptyCircle with InitMixin {
 
   void _initBoundary() {
     _bounds = _boundary;
-    if ((_bounds == null) || _bounds!.isEmpty()) {
+    if (_bounds == null || _bounds!.isEmpty()) {
       _bounds = _obstacles.convexHull();
     }
     _gridEnv = _bounds!.getEnvelopeInternal();
@@ -118,15 +119,18 @@ class LargestEmptyCircle with InitMixin {
     }
   }
 
+  bool _init = false;
   void _compute() {
     _initBoundary();
-    if (getAndMarkInit()) {
+    if (_init) {
       return;
     }
+    _init = true;
     PriorityQueue<_Cell> cellQueue = PriorityQueue();
     _createInitialGrid(_gridEnv!, cellQueue);
     _farthestCell = _createCentroidCell(_obstacles);
-    int maxIter = MaximumInscribedCircle.computeMaximumIterations(_bounds!, _tolerance);
+    int maxIter =
+        MaximumInscribedCircle.computeMaximumIterations(_bounds!, _tolerance);
     int iter = 0;
     while ((cellQueue.isNotEmpty) && (iter < maxIter)) {
       iter++;
@@ -145,7 +149,7 @@ class LargestEmptyCircle with InitMixin {
     _centerCell = _farthestCell;
     _centerPt = Coordinate(_centerCell.x, _centerCell.y);
     _centerPoint = _factory.createPoint2(_centerPt);
-    Array<Coordinate> nearestPts = _obstacleDistance.nearestPoints(_centerPoint!)!;
+    final nearestPts = _obstacleDistance.nearestPoints(_centerPoint!)!;
     _radiusPt = nearestPts[0].copy();
     _radiusPoint = _factory.createPoint2(_radiusPt);
   }
@@ -210,6 +214,6 @@ class _Cell implements Comparable<_Cell> {
 
   @override
   int compareTo(_Cell o) {
-    return -Double.compare(maxDistance, o.maxDistance);
+    return o.maxDistance.compareTo(maxDistance);
   }
 }

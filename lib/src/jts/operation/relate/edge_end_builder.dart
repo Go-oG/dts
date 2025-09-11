@@ -37,7 +37,8 @@ class EdgeEndBuilder {
     } while (eiCurr != null);
   }
 
-  void createEdgeEndForPrev(Edge edge, List<EdgeEnd> l, EdgeIntersection eiCurr, EdgeIntersection? eiPrev) {
+  void createEdgeEndForPrev(Edge edge, List<EdgeEnd> l, EdgeIntersection eiCurr,
+      EdgeIntersection? eiPrev) {
     int iPrev = eiCurr.segmentIndex;
     if (eiCurr.dist == 0.0) {
       if (iPrev == 0) return;
@@ -45,7 +46,9 @@ class EdgeEndBuilder {
       iPrev--;
     }
     Coordinate pPrev = edge.getCoordinate2(iPrev);
-    if ((eiPrev != null) && (eiPrev.segmentIndex >= iPrev)) pPrev = eiPrev.coord;
+    if ((eiPrev != null) && (eiPrev.segmentIndex >= iPrev)) {
+      pPrev = eiPrev.coord;
+    }
 
     Label label = Label(edge.getLabel()!);
     label.flip();
@@ -53,12 +56,15 @@ class EdgeEndBuilder {
     l.add(e);
   }
 
-  void createEdgeEndForNext(Edge edge, List<EdgeEnd> l, EdgeIntersection eiCurr, EdgeIntersection? eiNext) {
+  void createEdgeEndForNext(Edge edge, List<EdgeEnd> l, EdgeIntersection eiCurr,
+      EdgeIntersection? eiNext) {
     int iNext = eiCurr.segmentIndex + 1;
     if ((iNext >= edge.getNumPoints()) && (eiNext == null)) return;
 
     Coordinate pNext = edge.getCoordinate2(iNext);
-    if ((eiNext != null) && (eiNext.segmentIndex == eiCurr.segmentIndex)) pNext = eiNext.coord;
+    if ((eiNext != null) && (eiNext.segmentIndex == eiCurr.segmentIndex)) {
+      pNext = eiNext.coord;
+    }
 
     EdgeEnd e = EdgeEnd.of2(edge, eiCurr.coord, pNext, Label(edge.getLabel()!));
     l.add(e);

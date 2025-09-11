@@ -13,7 +13,7 @@ import 'package:dts/src/jts/geom/util/affine_transformation.dart';
 class GeometricShapeFactory {
   late final GeometryFactory geomFact;
   late final PrecisionModel precModel;
-  Dimensions dim = Dimensions();
+  final Dimensions dim = Dimensions();
   int nPts = 100;
   double rotationAngle = 0.0;
 
@@ -26,33 +26,19 @@ class GeometricShapeFactory {
     dim.setEnvelope(env);
   }
 
-  void setBase(Coordinate base) {
-    dim.setBase(base);
-  }
+  void setBase(Coordinate base) => dim.base = base;
 
-  void setCentre(Coordinate centre) {
-    dim.setCentre(centre);
-  }
+  void setCentre(Coordinate centre) => dim.centre = centre;
 
-  void setNumPoints(int nPts) {
-    this.nPts = nPts;
-  }
+  void setNumPoints(int nPts) => this.nPts = nPts;
 
-  void setSize(double size) {
-    dim.setSize(size);
-  }
+  void setSize(double size) => dim.setSize(size);
 
-  void setWidth(double width) {
-    dim.setWidth(width);
-  }
+  void setWidth(double width) => dim.setWidth(width);
 
-  void setHeight(double height) {
-    dim.setHeight(height);
-  }
+  void setHeight(double height) => dim.setHeight(height);
 
-  void setRotation(double radians) {
-    rotationAngle = radians;
-  }
+  void setRotation(double radians) => rotationAngle = radians;
 
   T rotate<T extends Geometry>(T geom) {
     if (rotationAngle != 0.0) {
@@ -74,39 +60,37 @@ class GeometricShapeFactory {
       nSide = 1;
     }
 
-    double XsegLen = dim.getEnvelope().width / nSide;
-    double YsegLen = dim.getEnvelope().height / nSide;
+    double xSegLen = dim.getEnvelope().width / nSide;
+    double ySegLen = dim.getEnvelope().height / nSide;
     Array<Coordinate> pts = Array((4 * nSide) + 1);
     Envelope env = dim.getEnvelope();
     for (i = 0; i < nSide; i++) {
-      double x = env.minX + (i * XsegLen);
+      double x = env.minX + (i * xSegLen);
       double y = env.minY;
       pts[ipt++] = coord(x, y);
     }
     for (i = 0; i < nSide; i++) {
       double x = env.maxX;
-      double y = env.minY + (i * YsegLen);
+      double y = env.minY + (i * ySegLen);
       pts[ipt++] = coord(x, y);
     }
     for (i = 0; i < nSide; i++) {
-      double x = env.maxX - (i * XsegLen);
+      double x = env.maxX - (i * xSegLen);
       double y = env.maxY;
       pts[ipt++] = coord(x, y);
     }
     for (i = 0; i < nSide; i++) {
       double x = env.minX;
-      double y = env.maxY - (i * YsegLen);
+      double y = env.maxY - (i * ySegLen);
       pts[ipt++] = coord(x, y);
     }
     pts[ipt++] = Coordinate.of(pts[0]);
-    LinearRing ring = geomFact.createLinearRings(pts);
+    LinearRing ring = geomFact.createLinearRings(pts.toList());
     Polygon poly = geomFact.createPolygon(ring);
     return rotate(poly);
   }
 
-  Polygon createCircle() {
-    return createEllipse();
-  }
+  Polygon createCircle() => createEllipse();
 
   Polygon createEllipse() {
     Envelope env = dim.getEnvelope();
@@ -123,14 +107,12 @@ class GeometricShapeFactory {
       pts[iPt++] = coord(x, y);
     }
     pts[iPt] = Coordinate.of(pts[0]);
-    LinearRing ring = geomFact.createLinearRings(pts);
+    LinearRing ring = geomFact.createLinearRings(pts.toList());
     Polygon poly = geomFact.createPolygon(ring);
     return rotate(poly);
   }
 
-  Polygon createSquircle() {
-    return createSupercircle(4);
-  }
+  Polygon createSquircle() => createSupercircle(4);
 
   Polygon createSupercircle(double power) {
     double recipPow = 1.0 / power;
@@ -161,7 +143,7 @@ class GeometricShapeFactory {
       pts[(8 * nSegsInOct) - i] = coordTrans(-x, y, centre);
     }
     pts[pts.length - 1] = Coordinate.of(pts[0]);
-    LinearRing ring = geomFact.createLinearRings(pts);
+    LinearRing ring = geomFact.createLinearRings(pts.toList());
     Polygon poly = geomFact.createPolygon(ring);
     return rotate(poly);
   }
@@ -186,7 +168,7 @@ class GeometricShapeFactory {
       double y = (yRadius * Angle.sinSnap(ang)) + centreY;
       pts[iPt++] = coord(x, y);
     }
-    LineString line = geomFact.createLineString2(pts);
+    LineString line = geomFact.createLineString2(pts.toList());
     return rotate(line);
   }
 
@@ -212,39 +194,25 @@ class GeometricShapeFactory {
       pts[iPt++] = coord(x, y);
     }
     pts[iPt++] = coord(centreX, centreY);
-    LinearRing ring = geomFact.createLinearRings(pts);
+    LinearRing ring = geomFact.createLinearRings(pts.toList());
     Polygon poly = geomFact.createPolygon(ring);
     return rotate(poly);
   }
 
   Coordinate coord(double x, double y) {
-    Coordinate pt = Coordinate(x, y);
+    final pt = Coordinate(x, y);
     precModel.makePrecise(pt);
     return pt;
   }
 
-  Coordinate coordTrans(double x, double y, Coordinate trans) {
-    return coord(x + trans.x, y + trans.y);
-  }
+  Coordinate coordTrans(double x, double y, Coordinate trans) => coord(x + trans.x, y + trans.y);
 }
 
-class Dimensions {
+final class Dimensions {
   Coordinate? base;
   Coordinate? centre;
   double width = 0;
   double height = 0;
-
-  void setBase(Coordinate base) {
-    this.base = base;
-  }
-
-  Coordinate? getBase() {
-    return base;
-  }
-
-  void setCentre(Coordinate centre) {
-    this.centre = centre;
-  }
 
   Coordinate getCentre() {
     centre ??= Coordinate(base!.x + (width / 2), base!.y + (height / 2));

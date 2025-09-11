@@ -30,7 +30,8 @@ class PolygonBuilder {
     PGPlanarGraph.linkResultDirectedEdges2(nodes);
     List<MaximalEdgeRing> maxEdgeRings = buildMaximalEdgeRings(dirEdges);
     List<MinimalEdgeRing> freeHoleList = [];
-    List<EdgeRing> edgeRings = buildMinimalEdgeRings(maxEdgeRings, _shellList, freeHoleList);
+    List<EdgeRing> edgeRings =
+        buildMinimalEdgeRings(maxEdgeRings, _shellList, freeHoleList);
     sortShellsAndHoles(edgeRings, _shellList, freeHoleList);
     placeFreeHoles(_shellList, freeHoleList);
   }
@@ -98,8 +99,8 @@ class PolygonBuilder {
     }
   }
 
-  void sortShellsAndHoles(
-      List<EdgeRing> edgeRings, List<EdgeRing> shellList, List<EdgeRing> freeHoleList) {
+  void sortShellsAndHoles(List<EdgeRing> edgeRings, List<EdgeRing> shellList,
+      List<EdgeRing> freeHoleList) {
     for (var er in edgeRings) {
       if (er.isHole()) {
         freeHoleList.add(er);
@@ -120,7 +121,8 @@ class PolygonBuilder {
     }
   }
 
-  static EdgeRing? findEdgeRingContaining(EdgeRing testEr, List<EdgeRing> shellList) {
+  static EdgeRing? findEdgeRingContaining(
+      EdgeRing testEr, List<EdgeRing> shellList) {
     LinearRing testRing = testEr.getLinearRing()!;
     Envelope testEnv = testRing.getEnvelopeInternal();
     Coordinate? testPt = testRing.getCoordinateN(0);
@@ -137,10 +139,12 @@ class PolygonBuilder {
         continue;
       }
 
-      testPt =
-          CoordinateArrays.ptNotInList(testRing.getCoordinates(), tryShellRing.getCoordinates());
+      testPt = CoordinateArrays.ptNotInList(
+          testRing.getCoordinates(), tryShellRing.getCoordinates());
       bool isContained = false;
-      if (PointLocation.isInRing(testPt!, tryShellRing.getCoordinates())) isContained = true;
+      if (PointLocation.isInRing(testPt!, tryShellRing.getCoordinates())) {
+        isContained = true;
+      }
 
       if (isContained) {
         if ((minShell == null) || minShellEnv!.contains(tryShellEnv)) {

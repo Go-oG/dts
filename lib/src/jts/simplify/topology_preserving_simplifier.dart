@@ -49,11 +49,12 @@ class LineStringTransformer extends GeometryTransformer {
   LineStringTransformer(this.linestringMap);
 
   @override
-  CoordinateSequence? transformCoordinates(CoordinateSequence coords, Geometry? parent) {
+  CoordinateSequence? transformCoordinates(
+      CoordinateSequence coords, Geometry? parent) {
     if (coords.size() == 0) return null;
 
     if (parent is LineString) {
-      TaggedLineString taggedLine = linestringMap[parent]!;
+      final taggedLine = linestringMap[parent]!;
       return createCoordinateSequence(taggedLine.getResultCoordinates());
     }
     return super.transformCoordinates(coords, parent);

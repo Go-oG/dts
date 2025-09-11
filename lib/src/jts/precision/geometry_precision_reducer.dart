@@ -51,7 +51,8 @@ class GeometryPrecisionReducer {
     if (_isPointwise) {
       reduced = PointwisePrecisionReducerTransformer.reduce(geom, _targetPM)!;
     } else {
-      reduced = PrecisionReducerTransformer.reduce(geom, _targetPM, _removeCollapsed)!;
+      reduced = PrecisionReducerTransformer.reduce(
+          geom, _targetPM, _removeCollapsed)!;
     }
     if (_changePrecisionModel) {
       return changePM(reduced, _targetPM);
@@ -64,7 +65,8 @@ class GeometryPrecisionReducer {
     return geomEditor.edit(geom, NoOpGeometryOperation());
   }
 
-  GeometryEditor createEditor(GeometryFactory geomFactory, PrecisionModel newPM) {
+  GeometryEditor createEditor(
+      GeometryFactory geomFactory, PrecisionModel newPM) {
     if (geomFactory.getPrecisionModel() == newPM) {
       return GeometryEditor.empty();
     }
@@ -74,9 +76,10 @@ class GeometryPrecisionReducer {
     return geomEdit;
   }
 
-  GeometryFactory createFactory(GeometryFactory inputFactory, PrecisionModel pm) {
-    GeometryFactory newFactory =
-        GeometryFactory(pm: pm, srid: inputFactory.srid, csFactory: inputFactory.csFactory);
+  GeometryFactory createFactory(
+      GeometryFactory inputFactory, PrecisionModel pm) {
+    GeometryFactory newFactory = GeometryFactory(
+        pm: pm, srid: inputFactory.srid, csFactory: inputFactory.csFactory);
     return newFactory;
   }
 }

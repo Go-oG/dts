@@ -69,7 +69,8 @@ class OverlapUnion {
     return GeometryCombiner.combine2(disjointPolys);
   }
 
-  Geometry extractByEnvelope(Envelope env, Geometry geom, List<Geometry> disjointGeoms) {
+  Geometry extractByEnvelope(
+      Envelope env, Geometry geom, List<Geometry> disjointGeoms) {
     List<Geometry> intersectingGeoms = [];
     for (int i = 0; i < geom.getNumGeometries(); i++) {
       Geometry elem = geom.getGeometryN(i);
@@ -84,7 +85,9 @@ class OverlapUnion {
   }
 
   Geometry? unionFull(Geometry geom0, Geometry geom1) {
-    if ((geom0.getNumGeometries() == 0) && (geom1.getNumGeometries() == 0)) return geom0.copy();
+    if ((geom0.getNumGeometries() == 0) && (geom1.getNumGeometries() == 0)) {
+      return geom0.copy();
+    }
 
     return unionFun.union(geom0, geom1);
   }
@@ -109,7 +112,8 @@ class OverlapUnion {
     return true;
   }
 
-  List<LineSegment> extractBorderSegments2(Geometry geom0, Geometry? geom1, Envelope env) {
+  List<LineSegment> extractBorderSegments2(
+      Geometry geom0, Geometry? geom1, Envelope env) {
     List<LineSegment> segs = [];
     extractBorderSegments(geom0, env, segs);
     if (geom1 != null) {
@@ -133,7 +137,8 @@ class OverlapUnion {
     return p.x > env.minX && p.x < env.maxX && p.y > env.minY && p.y < env.maxY;
   }
 
-  static void extractBorderSegments(Geometry geom, Envelope env, List<LineSegment> segs) {
+  static void extractBorderSegments(
+      Geometry geom, Envelope env, List<LineSegment> segs) {
     geom.apply2(_CoordinateSequenceFilter(geom, env, segs));
   }
 }
@@ -151,7 +156,8 @@ class _CoordinateSequenceFilter implements CoordinateSequenceFilter {
 
     Coordinate p0 = seq.getCoordinate(i - 1);
     Coordinate p1 = seq.getCoordinate(i);
-    bool isBorder = OverlapUnion.intersects(env, p0, p1) && (!OverlapUnion.containsProperly2(env, p0, p1));
+    bool isBorder = OverlapUnion.intersects(env, p0, p1) &&
+        (!OverlapUnion.containsProperly2(env, p0, p1));
     if (isBorder) {
       LineSegment seg = LineSegment(p0, p1);
       segs.add(seg);

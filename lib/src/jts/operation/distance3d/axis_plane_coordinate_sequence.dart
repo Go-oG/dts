@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -16,15 +15,15 @@ class AxisPlaneCoordinateSequence extends CoordinateSequence {
     return AxisPlaneCoordinateSequence(seq, _kYZIndex);
   }
 
-  static final Array<int> _kXYIndex = [0, 1].toArray();
+  static final List<int> _kXYIndex = const [0, 1];
 
-  static final Array<int> _kXZIndex = [0, 2].toArray();
+  static final List<int> _kXZIndex = const [0, 2];
 
-  static final Array<int> _kYZIndex = [1, 2].toArray();
+  static final List<int> _kYZIndex = const [1, 2];
 
   final CoordinateSequence _seq;
 
-  final Array<int> _indexMap;
+  final List<int> _indexMap;
 
   AxisPlaneCoordinateSequence(this._seq, this._indexMap);
 
@@ -83,7 +82,7 @@ class AxisPlaneCoordinateSequence extends CoordinateSequence {
   }
 
   @override
-  Array<Coordinate> toCoordinateArray() {
+  List<Coordinate> toCoordinateArray() {
     throw UnsupportedError("");
   }
 

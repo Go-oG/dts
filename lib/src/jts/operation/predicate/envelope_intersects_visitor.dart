@@ -22,11 +22,13 @@ class EnvelopeIntersectsVisitor extends ShortCircuitedGeometryVisitor {
       _intersects = true;
       return;
     }
-    if ((elementEnv.minX >= rectEnv.minX) && (elementEnv.maxX <= rectEnv.maxX)) {
+    if ((elementEnv.minX >= rectEnv.minX) &&
+        (elementEnv.maxX <= rectEnv.maxX)) {
       _intersects = true;
       return;
     }
-    if ((elementEnv.minY >= rectEnv.minY) && (elementEnv.maxY <= rectEnv.maxY)) {
+    if ((elementEnv.minY >= rectEnv.minY) &&
+        (elementEnv.maxY <= rectEnv.maxY)) {
       _intersects = true;
       return;
     }

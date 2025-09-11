@@ -1,5 +1,3 @@
- import 'package:d_util/d_util.dart';
-
 import '../../algorithm/angle.dart';
 import '../coordinate.dart';
 import 'affine_transformation.dart';
@@ -46,17 +44,17 @@ class AffineTransformationFactory {
     return AffineTransformation.translationInstance(dx, dy);
   }
 
-  static AffineTransformation? createFromControlVectors4(Array<Coordinate> src, Array<Coordinate> dest) {
+  static AffineTransformation? createFromControlVectors4(List<Coordinate> src, List<Coordinate> dest) {
     if (src.length != dest.length) {
-      throw IllegalArgumentException("Src and Dest arrays are not the same length");
+      throw ArgumentError("Src and Dest arrays are not the same length");
     }
 
-    if (src.length <= 0) {
-      throw IllegalArgumentException("Too few control points");
+    if (src.isEmpty) {
+      throw ArgumentError("Too few control points");
     }
 
     if (src.length > 3) {
-      throw IllegalArgumentException("Too many control points");
+      throw ArgumentError("Too many control points");
     }
 
     if (src.length == 1) {

@@ -110,20 +110,14 @@ class ConformingDelaunayTriangulator {
 
   void computeConvexHull() {
     GeometryFactory fact = GeometryFactory();
-    Array<Coordinate> coords = getPointArray();
-    ConvexHull hull = ConvexHull(coords, fact);
+    ConvexHull hull = ConvexHull(getPointArray(), fact);
     _convexHull = hull.getConvexHull();
   }
 
-  Array<Coordinate> getPointArray() {
-    Array<Coordinate> pts = Array(_initialVertices.size + _segVertices.size);
-    int index = 0;
-    for (var i = _initialVertices.iterator; i.moveNext();) {
-      pts[index++] = i.current.getCoordinate();
-    }
-    for (var i2 = _segVertices.iterator; i2.moveNext();) {
-      pts[index++] = i2.current.getCoordinate();
-    }
+  List<Coordinate> getPointArray() {
+    List<Coordinate> pts = [];
+    pts.addAll(_initialVertices.map((e) => e.getCoordinate()));
+    pts.addAll(_segVertices.map((e) => e.getCoordinate()));
     return pts;
   }
 
@@ -134,7 +128,6 @@ class ConformingDelaunayTriangulator {
     } else {
       v = ConstraintVertex(p);
     }
-
     return v;
   }
 
@@ -145,7 +138,6 @@ class ConformingDelaunayTriangulator {
     } else {
       v = ConstraintVertex(p);
     }
-
     v.setOnConstraint(true);
     return v;
   }
@@ -180,7 +172,7 @@ class ConformingDelaunayTriangulator {
     insertSites(_initialVertices);
   }
 
-  static const int _MAX_SPLIT_ITER = 99;
+  static const int _kMaxSplitIter = 99;
 
   void enforceConstraints() {
     addConstraintVertices();
@@ -189,8 +181,8 @@ class ConformingDelaunayTriangulator {
     do {
       splits = enforceGabriel(_segments);
       count++;
-    } while ((splits > 0) && (count < _MAX_SPLIT_ITER));
-    if (count == _MAX_SPLIT_ITER) {
+    } while ((splits > 0) && (count < _kMaxSplitIter));
+    if (count == _kMaxSplitIter) {
       throw ConstraintEnforcementException(
         "Too many splitting iterations while enforcing constraints.  Last split point was at: ",
         _splitPt,
@@ -216,7 +208,7 @@ class ConformingDelaunayTriangulator {
       ConstraintVertex splitVertex = createVertex2(_splitPt, seg);
       insertSite2(splitVertex);
 
-      Segment s1 = Segment.of2(
+      Segment s1 = Segment.of(
         seg.getStartX(),
         seg.getStartY(),
         seg.getStartZ(),
@@ -225,7 +217,7 @@ class ConformingDelaunayTriangulator {
         splitVertex.getZ(),
         seg.data,
       );
-      Segment s2 = Segment.of2(
+      Segment s2 = Segment.of(
         splitVertex.getX(),
         splitVertex.getY(),
         splitVertex.getZ(),

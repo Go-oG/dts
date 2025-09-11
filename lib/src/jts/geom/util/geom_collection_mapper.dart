@@ -1,6 +1,5 @@
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_collection.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
 
 import 'geometry_mapper.dart';
 
@@ -22,6 +21,6 @@ class GeomCollectionMapper {
         mapped.add(g);
       }
     }
-    return gc.factory.createGeomCollection(GeometryFactory.toGeometryArray(mapped)!);
+    return gc.factory.createGeomCollection(mapped);
   }
 }

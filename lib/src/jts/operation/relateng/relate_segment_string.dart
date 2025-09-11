@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/dimension.dart';
@@ -9,22 +8,20 @@ import 'node_section.dart';
 import 'relate_geometry.dart';
 
 class RelateSegmentString extends BasicSegmentString {
-  static RelateSegmentString createLine(Array<Coordinate> pts, bool isA, int elementId, RelateGeometry parent) {
-    return createSegmentString(pts, isA, Dimension.L, elementId, -1, null, parent);
+  static RelateSegmentString createLine(
+      List<Coordinate> pts, bool isA, int elementId, RelateGeometry parent) {
+    return createSegmentString(
+        pts, isA, Dimension.L, elementId, -1, null, parent);
   }
 
-  static RelateSegmentString createRing(
-    Array<Coordinate> pts,
-    bool isA,
-    int elementId,
-    int ringId,
-    Geometry poly,
-    RelateGeometry parent) {
-    return createSegmentString(pts, isA, Dimension.A, elementId, ringId, poly, parent);
+  static RelateSegmentString createRing(List<Coordinate> pts, bool isA,
+      int elementId, int ringId, Geometry poly, RelateGeometry parent) {
+    return createSegmentString(
+        pts, isA, Dimension.A, elementId, ringId, poly, parent);
   }
 
   static RelateSegmentString createSegmentString(
-    Array<Coordinate> pts,
+    List<Coordinate> pts,
     bool isA,
     int dim,
     int elementId,
@@ -36,7 +33,7 @@ class RelateSegmentString extends BasicSegmentString {
     return RelateSegmentString(pts, isA, dim, elementId, ringId, poly, parent);
   }
 
-  static Array<Coordinate> removeRepeatedPoints(Array<Coordinate> pts) {
+  static List<Coordinate> removeRepeatedPoints(List<Coordinate> pts) {
     if (CoordinateArrays.hasRepeatedPoints(pts)) {
       pts = CoordinateArrays.removeRepeatedPoints(pts);
     }
@@ -53,7 +50,7 @@ class RelateSegmentString extends BasicSegmentString {
   int ringId;
 
   RelateSegmentString(
-    Array<Coordinate> pts,
+    List<Coordinate> pts,
     this.isA,
     this._dimension,
     this.id,
@@ -62,15 +59,17 @@ class RelateSegmentString extends BasicSegmentString {
     this._inputGeom,
   ) : super(pts, null);
 
-  RelateGeometry getGeometry()=>_inputGeom;
+  RelateGeometry getGeometry() => _inputGeom;
 
-  Geometry? getPolygonal()=>_parentPolygonal;
+  Geometry? getPolygonal() => _parentPolygonal;
 
   NodeSection createNodeSection(int segIndex, Coordinate intPt) {
-    bool isNodeAtVertex = intPt.equals2D(getCoordinate(segIndex)) || intPt.equals2D(getCoordinate(segIndex + 1));
+    bool isNodeAtVertex = intPt.equals2D(getCoordinate(segIndex)) ||
+        intPt.equals2D(getCoordinate(segIndex + 1));
     Coordinate? prev = prevVertex(segIndex, intPt);
     Coordinate? next = nextVertex(segIndex, intPt);
-    return NodeSection(isA, _dimension, id, ringId, _parentPolygonal, isNodeAtVertex, prev, intPt, next);
+    return NodeSection(isA, _dimension, id, ringId, _parentPolygonal,
+        isNodeAtVertex, prev, intPt, next);
   }
 
   Coordinate? prevVertex(int segIndex, Coordinate pt) {

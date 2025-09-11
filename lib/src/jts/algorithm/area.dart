@@ -1,11 +1,11 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 
 class Area {
   Area._();
 
-  static double ofRing(Array<Coordinate> ring) {
+  static double ofRing(List<Coordinate> ring) {
     return Math.abs(ofRingSigned(ring));
   }
 
@@ -13,7 +13,7 @@ class Area {
     return Math.abs(ofRingSigned2(ring));
   }
 
-  static double ofRingSigned(Array<Coordinate> ring) {
+  static double ofRingSigned(List<Coordinate> ring) {
     if (ring.length < 3) {
       return 0.0;
     }

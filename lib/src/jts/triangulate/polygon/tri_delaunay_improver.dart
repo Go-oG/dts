@@ -9,14 +9,14 @@ class TriDelaunayImprover {
     improver.improve();
   }
 
-  static final int _MAX_ITERATION = 200;
+  static final int _kMaxIteration = 200;
 
   List<Tri> triList;
 
   TriDelaunayImprover(this.triList);
 
   void improve() {
-    for (int i = 0; i < _MAX_ITERATION; i++) {
+    for (int i = 0; i < _kMaxIteration; i++) {
       int improveCount = improveScan(triList);
       if (improveCount == 0) {
         return;

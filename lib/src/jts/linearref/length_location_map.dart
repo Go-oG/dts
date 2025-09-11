@@ -10,7 +10,8 @@ class LengthLocationMap {
     return locater.getLocation(length);
   }
 
-  static LinearLocation getLocation4(Geometry linearGeom, double length, bool resolveLower) {
+  static LinearLocation getLocation4(
+      Geometry linearGeom, double length, bool resolveLower) {
     LengthLocationMap locater = LengthLocationMap(linearGeom);
     return locater.getLocation2(length, resolveLower);
   }

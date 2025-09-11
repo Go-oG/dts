@@ -1,9 +1,9 @@
-
 import 'package:dts/src/jts/planargraph/directed_edge.dart';
 import 'package:dts/src/jts/util/assert.dart';
 
 class LineMergeDirectedEdge extends DirectedEdgePG {
-  LineMergeDirectedEdge(super.from, super.to, super.directionPt, super.edgeDirection);
+  LineMergeDirectedEdge(
+      super.from, super.to, super.directionPt, super.edgeDirection);
 
   LineMergeDirectedEdge? getNext() {
     if (getToNode().getDegree() != 2) {

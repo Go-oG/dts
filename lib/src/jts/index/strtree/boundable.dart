@@ -41,15 +41,17 @@ class BoundablePair<B> implements Comparable<BoundablePair<B>> {
   }
 
   double maximumDistance() {
-    return EnvelopeDistance.maximumDistance(
-        _boundable1.getBounds() as Envelope, _boundable2.getBounds() as Envelope);
+    return EnvelopeDistance.maximumDistance(_boundable1.getBounds() as Envelope,
+        _boundable2.getBounds() as Envelope);
   }
 
   double distanceF() {
     if (isLeaves()) {
-      return _itemDistance.distance(_boundable1 as ItemBoundable, _boundable2 as ItemBoundable);
+      return _itemDistance.distance(
+          _boundable1 as ItemBoundable, _boundable2 as ItemBoundable);
     }
-    return (_boundable1.getBounds() as Envelope).distance(_boundable2.getBounds() as Envelope);
+    return (_boundable1.getBounds() as Envelope)
+        .distance(_boundable2.getBounds() as Envelope);
   }
 
   double getDistance() {
@@ -175,22 +177,38 @@ class EnvelopeDistance {
     double bminy = b.minY;
     double bmaxx = b.maxX;
     double bmaxy = b.maxY;
-    double dist = maxDistance(aminx, aminy, aminx, amaxy, bminx, bminy, bminx, bmaxy);
-    dist = Math.minD(dist, maxDistance(aminx, aminy, aminx, amaxy, bminx, bminy, bmaxx, bminy));
-    dist = Math.minD(dist, maxDistance(aminx, aminy, aminx, amaxy, bmaxx, bmaxy, bminx, bmaxy));
-    dist = Math.minD(dist, maxDistance(aminx, aminy, aminx, amaxy, bmaxx, bmaxy, bmaxx, bminy));
-    dist = Math.minD(dist, maxDistance(aminx, aminy, amaxx, aminy, bminx, bminy, bminx, bmaxy));
-    dist = Math.minD(dist, maxDistance(aminx, aminy, amaxx, aminy, bminx, bminy, bmaxx, bminy));
-    dist = Math.minD(dist, maxDistance(aminx, aminy, amaxx, aminy, bmaxx, bmaxy, bminx, bmaxy));
-    dist = Math.minD(dist, maxDistance(aminx, aminy, amaxx, aminy, bmaxx, bmaxy, bmaxx, bminy));
-    dist = Math.minD(dist, maxDistance(amaxx, amaxy, aminx, amaxy, bminx, bminy, bminx, bmaxy));
-    dist = Math.minD(dist, maxDistance(amaxx, amaxy, aminx, amaxy, bminx, bminy, bmaxx, bminy));
-    dist = Math.minD(dist, maxDistance(amaxx, amaxy, aminx, amaxy, bmaxx, bmaxy, bminx, bmaxy));
-    dist = Math.minD(dist, maxDistance(amaxx, amaxy, aminx, amaxy, bmaxx, bmaxy, bmaxx, bminy));
-    dist = Math.minD(dist, maxDistance(amaxx, amaxy, amaxx, aminy, bminx, bminy, bminx, bmaxy));
-    dist = Math.minD(dist, maxDistance(amaxx, amaxy, amaxx, aminy, bminx, bminy, bmaxx, bminy));
-    dist = Math.minD(dist, maxDistance(amaxx, amaxy, amaxx, aminy, bmaxx, bmaxy, bminx, bmaxy));
-    dist = Math.minD(dist, maxDistance(amaxx, amaxy, amaxx, aminy, bmaxx, bmaxy, bmaxx, bminy));
+    double dist =
+        maxDistance(aminx, aminy, aminx, amaxy, bminx, bminy, bminx, bmaxy);
+    dist = Math.minD(dist,
+        maxDistance(aminx, aminy, aminx, amaxy, bminx, bminy, bmaxx, bminy));
+    dist = Math.minD(dist,
+        maxDistance(aminx, aminy, aminx, amaxy, bmaxx, bmaxy, bminx, bmaxy));
+    dist = Math.minD(dist,
+        maxDistance(aminx, aminy, aminx, amaxy, bmaxx, bmaxy, bmaxx, bminy));
+    dist = Math.minD(dist,
+        maxDistance(aminx, aminy, amaxx, aminy, bminx, bminy, bminx, bmaxy));
+    dist = Math.minD(dist,
+        maxDistance(aminx, aminy, amaxx, aminy, bminx, bminy, bmaxx, bminy));
+    dist = Math.minD(dist,
+        maxDistance(aminx, aminy, amaxx, aminy, bmaxx, bmaxy, bminx, bmaxy));
+    dist = Math.minD(dist,
+        maxDistance(aminx, aminy, amaxx, aminy, bmaxx, bmaxy, bmaxx, bminy));
+    dist = Math.minD(dist,
+        maxDistance(amaxx, amaxy, aminx, amaxy, bminx, bminy, bminx, bmaxy));
+    dist = Math.minD(dist,
+        maxDistance(amaxx, amaxy, aminx, amaxy, bminx, bminy, bmaxx, bminy));
+    dist = Math.minD(dist,
+        maxDistance(amaxx, amaxy, aminx, amaxy, bmaxx, bmaxy, bminx, bmaxy));
+    dist = Math.minD(dist,
+        maxDistance(amaxx, amaxy, aminx, amaxy, bmaxx, bmaxy, bmaxx, bminy));
+    dist = Math.minD(dist,
+        maxDistance(amaxx, amaxy, amaxx, aminy, bminx, bminy, bminx, bmaxy));
+    dist = Math.minD(dist,
+        maxDistance(amaxx, amaxy, amaxx, aminy, bminx, bminy, bmaxx, bminy));
+    dist = Math.minD(dist,
+        maxDistance(amaxx, amaxy, amaxx, aminy, bmaxx, bmaxy, bminx, bmaxy));
+    dist = Math.minD(dist,
+        maxDistance(amaxx, amaxy, amaxx, aminy, bmaxx, bmaxy, bmaxx, bminy));
     return dist;
   }
 

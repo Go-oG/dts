@@ -21,14 +21,13 @@ import 'precision_model.dart';
 import 'util/geom_editor.dart';
 
 final class GeometryFactory {
-  late final int srid;
-  late final PrecisionModel pm;
-  late CoordinateSequenceFactory csFactory;
+  final int srid;
+  final PrecisionModel pm;
+  final CoordinateSequenceFactory csFactory;
 
-  GeometryFactory({PrecisionModel? pm, this.srid = 0, CoordinateSequenceFactory? csFactory}) {
-    this.pm = pm ?? PrecisionModel();
-    this.csFactory = csFactory ?? getDefaultCoordinateSequenceFactory();
-  }
+  GeometryFactory({PrecisionModel? pm, this.srid = 0, CoordinateSequenceFactory? csFactory})
+      : pm = pm ?? PrecisionModel(),
+        csFactory = csFactory ?? getDefaultCoordinateSequenceFactory();
 
   static Point createPointFromInternalCoord(Coordinate coord, Geometry exemplar) {
     exemplar.getPrecisionModel().makePrecise(coord);
@@ -37,41 +36,6 @@ final class GeometryFactory {
 
   static CoordinateSequenceFactory getDefaultCoordinateSequenceFactory() {
     return CoordinateArraySequenceFactory.instance();
-  }
-
-  static Array<Point> toPointArray(List<Point> points) {
-    return points.toArray();
-  }
-
-  static Array<Geometry>? toGeometryArray(List<Geometry>? geometries) {
-    if (geometries == null) {
-      return null;
-    }
-    return geometries.toArray();
-  }
-
-  static Array<LinearRing> toLinearRingArray(List<LinearRing> linearRings) {
-    return linearRings.toArray();
-  }
-
-  static Array<LineString> toLineStringArray(List<LineString> lineStrings) {
-    return lineStrings.toArray();
-  }
-
-  static Array<Polygon> toPolygonArray(List<Polygon> polygons) {
-    return polygons.toArray();
-  }
-
-  static Array<MultiPolygon> toMultiPolygonArray(List<MultiPolygon> multiPolygons) {
-    return multiPolygons.toArray();
-  }
-
-  static Array<MultiLineString> toMultiLineStringArray(List<MultiLineString> multiLineStrings) {
-    return multiLineStrings.toArray();
-  }
-
-  static Array<MultiPoint> toMultiPointArray(List<MultiPoint> multiPoints) {
-    return multiPoints.toArray();
   }
 
   Geometry toGeometry(Envelope envelope) {
@@ -86,7 +50,7 @@ final class GeometryFactory {
         [
           Coordinate(envelope.minX, envelope.minY),
           Coordinate(envelope.maxX, envelope.maxY),
-        ].toArray(),
+        ],
       );
     }
     return createPolygon(
@@ -97,7 +61,7 @@ final class GeometryFactory {
           Coordinate(envelope.maxX, envelope.maxY),
           Coordinate(envelope.maxX, envelope.minY),
           Coordinate(envelope.minX, envelope.minY),
-        ].toArray(),
+        ],
       ),
       null,
     );
@@ -107,12 +71,10 @@ final class GeometryFactory {
     return pm;
   }
 
-  Point createPoint() {
-    return createPoint3(csFactory.create(Array(0)));
-  }
+  Point createPoint() => createPoint3(csFactory.create([]));
 
   Point createPoint2(Coordinate? coordinate) {
-    return createPoint3(coordinate != null ? csFactory.create([coordinate].toArray()) : null);
+    return createPoint3(coordinate != null ? csFactory.create([coordinate]) : null);
   }
 
   Point createPoint3(CoordinateSequence? cs) {
@@ -121,27 +83,21 @@ final class GeometryFactory {
 
   Point createPoint4(Offset offset) => createPoint2(Coordinate.of2(offset));
 
-  MultiLineString createMultiLineString([Array<LineString>? lineStrings]) {
+  MultiLineString createMultiLineString([List<LineString>? lineStrings]) {
     return MultiLineString(lineStrings, this);
   }
 
-  GeometryCollection createGeomCollection([Array<Geometry>? geometries]) {
-    return GeometryCollection(geometries?.asArray(), this);
+  GeometryCollection createGeomCollection([List<Geometry>? geometries]) {
+    return GeometryCollection(geometries, this);
   }
 
-  MultiPolygon createMultiPolygon([Array<Polygon>? polygons]) {
-    return MultiPolygon.of(polygons, this);
-  }
-
-  MultiPolygon createMultiPolygon2(List<Polygon> polygons) {
-    return createMultiPolygon(Array.list(polygons));
-  }
+  MultiPolygon createMultiPolygon([List<Polygon>? polygons]) => MultiPolygon.of(polygons, this);
 
   LinearRing createLinearRing() {
-    return createLinearRing2(csFactory.create(Array<Coordinate>(0)));
+    return createLinearRing2(csFactory.create([]));
   }
 
-  LinearRing createLinearRings([Array<Coordinate>? coordinates]) {
+  LinearRing createLinearRings([List<Coordinate>? coordinates]) {
     return createLinearRing2(coordinates != null ? csFactory.create(coordinates) : null);
   }
 
@@ -153,33 +109,29 @@ final class GeometryFactory {
     if (coordinates == null) {
       return createLinearRings();
     }
-    return createLinearRings(Array.list(coordinates.map((e) => Coordinate.of2(e))));
+    return createLinearRings(coordinates.map((e) => Coordinate.of2(e)).toList());
   }
 
-  MultiPoint createMultiPoint([Array<Point>? point]) => MultiPoint(point, this);
+  MultiPoint createMultiPoint([List<Point>? point]) => MultiPoint(point, this);
 
-  MultiPoint createMultiPoint2([Array<Coordinate>? coordinates]) {
+  MultiPoint createMultiPoint2([List<Coordinate>? coordinates]) {
     return createMultiPoint3(coordinates != null ? csFactory.create(coordinates) : null);
   }
 
   MultiPoint createMultiPoint3(CoordinateSequence? coordinates) {
     if (coordinates == null) {
-      return createMultiPoint(Array(0));
+      return createMultiPoint([]);
     }
     Array<Point> points = Array(coordinates.size());
     for (int i = 0; i < coordinates.size(); i++) {
-      CoordinateSequence ptSeq = csFactory.create4(
-        1,
-        coordinates.getDimension(),
-        coordinates.getMeasures(),
-      );
+      final ptSeq = csFactory.create4(1, coordinates.getDimension(), coordinates.getMeasures());
       CoordinateSequences.copy(coordinates, i, ptSeq, 0, 1);
       points[i] = createPoint3(ptSeq);
     }
-    return createMultiPoint(points);
+    return createMultiPoint(points.toList());
   }
 
-  MultiPoint createMultiPoint4(Array<Coordinate>? coordinates) {
+  MultiPoint createMultiPoint4(List<Coordinate>? coordinates) {
     return createMultiPoint3(coordinates != null ? csFactory.create(coordinates) : null);
   }
 
@@ -187,31 +139,29 @@ final class GeometryFactory {
     if (point == null) {
       return createMultiPoint();
     }
-    return createMultiPoint2(Array.list(point.map((e) => Coordinate.of2(e))));
+    return createMultiPoint2(point.map((e) => Coordinate.of2(e)).toList());
   }
 
-  Polygon createPolygon([LinearRing? shell, Array<LinearRing>? holes]) {
-    return Polygon(shell, holes, this);
-  }
+  Polygon createPolygon([LinearRing? shell, List<LinearRing>? holes]) => Polygon(shell, holes, this);
 
   Polygon createPolygon2(CoordinateSequence shell) {
     return createPolygon(createLinearRing2(shell));
   }
 
-  Polygon createPolygon3(Array<Coordinate> shell) {
+  Polygon createPolygon3(List<Coordinate> shell) {
     return createPolygon(createLinearRings(shell));
   }
 
   Polygon createPolygon4(List<Coordinate> vertexList, [bool close = true]) {
-    Array<Coordinate> array;
+    List<Coordinate> array;
     if (close) {
       if (vertexList.first != vertexList.last) {
-        array = Array.list([...vertexList, vertexList.first]);
+        array = [...vertexList, vertexList.first];
       } else {
-        array = Array.list(vertexList);
+        array = vertexList;
       }
     } else {
-      array = Array.list(vertexList);
+      array = vertexList;
     }
     return createPolygon3(array);
   }
@@ -240,18 +190,18 @@ final class GeometryFactory {
       return createGeomCollection();
     }
     if (isHeterogeneous || hasGeometryCollection) {
-      return createGeomCollection(toGeometryArray(geomList)!);
+      return createGeomCollection(geomList);
     }
 
     Geometry geom0 = geomList.first;
     bool isCollection = geomList.size > 1;
     if (isCollection) {
       if (geom0 is Polygon) {
-        return createMultiPolygon(toPolygonArray(geomList.cast()));
+        return createMultiPolygon(geomList.cast());
       } else if (geom0 is LineString) {
-        return createMultiLineString(toLineStringArray(geomList.cast()));
+        return createMultiLineString(geomList.cast());
       } else if (geom0 is Point) {
-        return createMultiPoint(toPointArray(geomList.cast()));
+        return createMultiPoint(geomList.cast());
       }
       Assert.shouldNeverReachHere("Unhandled class: ${geom0.runtimeType}");
     }
@@ -259,11 +209,11 @@ final class GeometryFactory {
   }
 
   LineString createLineString([CoordinateSequence? coordinates]) {
-    final v = coordinates ?? csFactory.create(Array());
+    final v = coordinates ?? csFactory.create([]);
     return LineString.of(v, this);
   }
 
-  LineString createLineString2([Array<Coordinate>? coordinates]) {
+  LineString createLineString2([List<Coordinate>? coordinates]) {
     return createLineString(coordinates != null ? csFactory.create(coordinates) : null);
   }
 
@@ -271,8 +221,7 @@ final class GeometryFactory {
     if (coordinates == null) {
       return createLineString2();
     }
-    final array = Array.list(coordinates.map((e) => Coordinate.of2(e)));
-    return createLineString2(array);
+    return createLineString2(coordinates.map((e) => Coordinate.of2(e)).toList());
   }
 
   Geometry createEmpty(int dimension) {

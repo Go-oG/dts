@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/location.dart';
 import 'package:dts/src/jts/geom/position.dart';
 
@@ -120,7 +120,8 @@ class Label {
   }
 
   bool isEqualOnSide(Label lbl, int side) {
-    return elt[0]!.isEqualOnSide(lbl.elt[0]!, side) && elt[1]!.isEqualOnSide(lbl.elt[1]!, side);
+    return elt[0]!.isEqualOnSide(lbl.elt[0]!, side) &&
+        elt[1]!.isEqualOnSide(lbl.elt[1]!, side);
   }
 
   bool allPositionsEqual(int geomIndex, int loc) {

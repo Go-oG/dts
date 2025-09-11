@@ -1,4 +1,3 @@
- import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/quadrant.dart';
 import 'package:dts/src/jts/geomgraph/edge.dart';
@@ -21,9 +20,9 @@ class GMonotoneChain {
 class MonotoneChainEdge {
   Edge e;
 
-  late Array<Coordinate> pts;
+  late List<Coordinate> pts;
 
-  late Array<int> startIndex;
+  late List<int> startIndex;
 
   MonotoneChainEdge(this.e) {
     pts = e.getCoordinates();
@@ -31,13 +30,9 @@ class MonotoneChainEdge {
     startIndex = mcb.getChainStartIndices(pts);
   }
 
-  Array<Coordinate> getCoordinates() {
-    return pts;
-  }
+  List<Coordinate> getCoordinates() => pts;
 
-  Array<int> getStartIndexes() {
-    return startIndex;
-  }
+  List<int> getStartIndexes() => startIndex;
 
   double getMinX(int chainIndex) {
     double x1 = pts[startIndex[chainIndex]].x;
@@ -59,7 +54,8 @@ class MonotoneChainEdge {
     }
   }
 
-  void computeIntersectsForChain2(int chainIndex0, MonotoneChainEdge mce, int chainIndex1, SegmentIntersector si) {
+  void computeIntersectsForChain2(int chainIndex0, MonotoneChainEdge mce,
+      int chainIndex1, SegmentIntersector si) {
     computeIntersectsForChain(
       startIndex[chainIndex0],
       startIndex[chainIndex0 + 1],
@@ -108,21 +104,15 @@ class MonotoneChainEdge {
     }
   }
 
-  bool overlaps(int start0, int end0, MonotoneChainEdge mce, int start1, int end1) {
-    return Envelope.intersects4(pts[start0], pts[end0], mce.pts[start1], mce.pts[end1]);
+  bool overlaps(
+      int start0, int end0, MonotoneChainEdge mce, int start1, int end1) {
+    return Envelope.intersects4(
+        pts[start0], pts[end0], mce.pts[start1], mce.pts[end1]);
   }
 }
 
 class MonotoneChainIndexer {
-  static Array<int> toIntArray(List<int> list) {
-    Array<int> array = Array(list.size);
-    for (int i = 0; i < array.length; i++) {
-      array[i] = list.get(i);
-    }
-    return array;
-  }
-
-  Array<int> getChainStartIndices(Array<Coordinate> pts) {
+  List<int> getChainStartIndices(List<Coordinate> pts) {
     int start = 0;
     List<int> startIndexList = [];
     startIndexList.add(start);
@@ -131,10 +121,10 @@ class MonotoneChainIndexer {
       startIndexList.add(last);
       start = last;
     } while (start < (pts.length - 1));
-    return startIndexList.toArray();
+    return startIndexList;
   }
 
-  Array<int> oldGetChainStartIndices(Array<Coordinate> pts) {
+  List<int> oldGetChainStartIndices(List<Coordinate> pts) {
     int start = 0;
     List<int> startIndexList = [];
     startIndexList.add(start);
@@ -143,10 +133,10 @@ class MonotoneChainIndexer {
       startIndexList.add(last);
       start = last;
     } while (start < (pts.length - 1));
-    return startIndexList.toArray();
+    return startIndexList;
   }
 
-  int findChainEnd(Array<Coordinate> pts, int start) {
+  int findChainEnd(List<Coordinate> pts, int start) {
     int chainQuad = Quadrant.quadrant2(pts[start], pts[start + 1]);
     int last = start + 1;
     while (last < pts.length) {

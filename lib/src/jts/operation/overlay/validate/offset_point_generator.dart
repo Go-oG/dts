@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
@@ -28,15 +27,16 @@ class OffsetPointGenerator {
     return offsetPts;
   }
 
-  void extractPoints(LineString line, double offsetDistance, List<Coordinate> offsetPts) {
-    Array<Coordinate> pts = line.getCoordinates();
-    for (int i = 0; i < (pts.length - 1); i++) {
+  void extractPoints(
+      LineString line, double offsetDistance, List<Coordinate> offsetPts) {
+    final pts = line.getCoordinates();
+    for (int i = 0; i < pts.length - 1; i++) {
       computeOffsetPoints(pts[i], pts[i + 1], offsetDistance, offsetPts);
     }
   }
 
-  void computeOffsetPoints(
-      Coordinate p0, Coordinate p1, double offsetDistance, List<Coordinate> offsetPts) {
+  void computeOffsetPoints(Coordinate p0, Coordinate p1, double offsetDistance,
+      List<Coordinate> offsetPts) {
     double dx = p1.x - p0.x;
     double dy = p1.y - p0.y;
     double len = MathUtil.hypot(dx, dy);

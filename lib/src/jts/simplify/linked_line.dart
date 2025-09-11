@@ -1,22 +1,21 @@
- import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 
 class LinkedLine {
-  static const int _NO_COORD_INDEX = -1;
+  static const int _kNoCoordIndex = -1;
 
-  late final Array<Coordinate> _coord;
+  late final List<Coordinate> _coord;
 
   late bool isRing;
 
   late int _size;
 
-  late Array<int> _next;
+  late List<int> _next;
 
-  late Array<int> _prev;
+  late List<int> _prev;
 
-  LinkedLine(Array<Coordinate> pts) {
+  LinkedLine(List<Coordinate> pts) {
     _coord = pts;
     isRing = CoordinateArrays.isRing(pts);
     _size = (isRing) ? pts.length - 1 : pts.length;
@@ -30,21 +29,21 @@ class LinkedLine {
     return true;
   }
 
-  Array<int> createNextLinks(int size) {
-    Array<int> next = Array(size);
+  List<int> createNextLinks(int size) {
+    List<int> next = List.filled(size, 0);
     for (int i = 0; i < size; i++) {
       next[i] = i + 1;
     }
-    next[size - 1] = (isRing) ? 0 : _NO_COORD_INDEX;
+    next[size - 1] = (isRing) ? 0 : _kNoCoordIndex;
     return next;
   }
 
-  Array<int> createPrevLinks(int size) {
-    Array<int> prev = Array(size);
+  List<int> createPrevLinks(int size) {
+    List<int> prev = List.filled(size, 0);
     for (int i = 0; i < size; i++) {
       prev[i] = i - 1;
     }
-    prev[0] = (isRing) ? size - 1 : _NO_COORD_INDEX;
+    prev[0] = (isRing) ? size - 1 : _kNoCoordIndex;
     return prev;
   }
 
@@ -77,26 +76,27 @@ class LinkedLine {
       return true;
     }
 
-    return ((index >= 0) && (index < _prev.length)) && (_prev[index] != _NO_COORD_INDEX);
+    return ((index >= 0) && (index < _prev.length)) &&
+        (_prev[index] != _kNoCoordIndex);
   }
 
   void remove(int index) {
     int iprev = _prev[index];
     int inext = _next[index];
-    if (iprev != _NO_COORD_INDEX) {
+    if (iprev != _kNoCoordIndex) {
       _next[iprev] = inext;
     }
 
-    if (inext != _NO_COORD_INDEX) {
+    if (inext != _kNoCoordIndex) {
       _prev[inext] = iprev;
     }
 
-    _prev[index] = _NO_COORD_INDEX;
-    _next[index] = _NO_COORD_INDEX;
+    _prev[index] = _kNoCoordIndex;
+    _next[index] = _kNoCoordIndex;
     _size--;
   }
 
-  Array<Coordinate> getCoordinates() {
+  List<Coordinate> getCoordinates() {
     CoordinateList coords = CoordinateList();
     int len = (isRing) ? _coord.length - 1 : _coord.length;
     for (int i = 0; i < len; i++) {
@@ -107,6 +107,6 @@ class LinkedLine {
     if (isRing) {
       coords.closeRing();
     }
-    return coords.toCoordinateArray();
+    return coords.toCoordinateList();
   }
 }

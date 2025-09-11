@@ -1,5 +1,3 @@
- import 'package:d_util/d_util.dart';
-
 import '../geom/coordinate.dart';
 import '../geom/coordinate_sequence.dart';
 import '../geom/envelope.dart';
@@ -21,7 +19,7 @@ class PointLocation {
     return isOnLine;
   }
 
-  static bool isOnLine(Coordinate p, Array<Coordinate> line) {
+  static bool isOnLine(Coordinate p, List<Coordinate> line) {
     for (int i = 1; i < line.length; i++) {
       Coordinate p0 = line[i - 1];
       Coordinate p1 = line[i];
@@ -46,11 +44,11 @@ class PointLocation {
     return false;
   }
 
-  static bool isInRing(Coordinate p, Array<Coordinate> ring) {
+  static bool isInRing(Coordinate p, List<Coordinate> ring) {
     return PointLocation.locateInRing(p, ring) != Location.exterior;
   }
 
-  static int locateInRing(Coordinate p, Array<Coordinate> ring) {
+  static int locateInRing(Coordinate p, List<Coordinate> ring) {
     return RayCrossingCounter.locatePointInRing(p, ring);
   }
 }

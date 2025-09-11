@@ -1,5 +1,3 @@
-import 'package:d_util/d_util.dart';
-
 import '../algorithm/line_intersector.dart';
 import '../geom/coordinate.dart';
 import 'nodable_segment_string.dart';
@@ -9,7 +7,8 @@ import 'segment_node_list.dart';
 import 'segment_string.dart';
 
 class NodedSegmentString extends NodableSegmentString {
-  static List<SegmentString> getNodedSubstrings(List<NodedSegmentString> segStrings) {
+  static List<SegmentString> getNodedSubstrings(
+      List<NodedSegmentString> segStrings) {
     List<SegmentString> resultEdgelist = [];
     getNodedSubstrings2(segStrings, resultEdgelist);
     return resultEdgelist;
@@ -24,13 +23,14 @@ class NodedSegmentString extends NodableSegmentString {
 
   late final SegmentNodeList _nodeList = SegmentNodeList(this);
 
-  Array<Coordinate> pts;
+  List<Coordinate> pts;
 
   Object? data;
 
   NodedSegmentString(this.pts, this.data);
 
-  NodedSegmentString.of(SegmentString ss) : this(ss.getCoordinates(), ss.getData());
+  NodedSegmentString.of(SegmentString ss)
+      : this(ss.getCoordinates(), ss.getData());
 
   @override
   Object? getData() {
@@ -52,23 +52,15 @@ class NodedSegmentString extends NodableSegmentString {
   }
 
   @override
-  Coordinate getCoordinate(int i) {
-    return pts[i];
-  }
+  Coordinate getCoordinate(int i) => pts[i];
 
   @override
-  Array<Coordinate> getCoordinates() {
-    return pts;
-  }
+  List<Coordinate> getCoordinates() => pts;
 
-  Array<Coordinate> getNodedCoordinates() {
-    return _nodeList.getSplitCoordinates();
-  }
+  List<Coordinate> getNodedCoordinates() => _nodeList.getSplitCoordinates();
 
   @override
-  bool isClosed() {
-    return pts[0] == pts[pts.length - 1];
-  }
+  bool isClosed() => pts[0] == pts[pts.length - 1];
 
   bool hasNodes() {
     return _nodeList.size() > 0;
@@ -97,7 +89,8 @@ class NodedSegmentString extends NodableSegmentString {
     addIntersectionNode(intPt, segmentIndex);
   }
 
-  void addIntersection2(LineIntersector li, int segmentIndex, int geomIndex, int intIndex) {
+  void addIntersection2(
+      LineIntersector li, int segmentIndex, int geomIndex, int intIndex) {
     Coordinate intPt = li.getIntersection(intIndex).copy();
     addIntersection(intPt, segmentIndex);
   }

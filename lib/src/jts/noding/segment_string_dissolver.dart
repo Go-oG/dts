@@ -24,17 +24,20 @@ class SegmentStringDissolver {
   }
 
   void dissolve2(SegmentString segString) {
-    OrientedCoordinateArray oca = OrientedCoordinateArray(segString.getCoordinates());
+    OrientedCoordinateArray oca =
+        OrientedCoordinateArray(segString.getCoordinates());
     SegmentString? existing = findMatching(oca, segString);
     if (existing == null) {
       add(oca, segString);
     } else if (_merger != null) {
-      bool isSameOrientation = CoordinateArrays.equals(existing.getCoordinates(), segString.getCoordinates());
+      bool isSameOrientation = CoordinateArrays.equals(
+          existing.getCoordinates(), segString.getCoordinates());
       _merger!.merge(existing, segString, isSameOrientation);
     }
   }
 
-  SegmentString? findMatching(OrientedCoordinateArray oca, SegmentString segString) {
+  SegmentString? findMatching(
+      OrientedCoordinateArray oca, SegmentString segString) {
     return ocaMap.get(oca);
   }
 
@@ -44,5 +47,6 @@ class SegmentStringDissolver {
 }
 
 abstract interface class SegmentStringMerger {
-  void merge(SegmentString mergeTarget, SegmentString ssToMerge, bool isSameOrientation);
+  void merge(SegmentString mergeTarget, SegmentString ssToMerge,
+      bool isSameOrientation);
 }

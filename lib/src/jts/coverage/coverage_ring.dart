@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
@@ -37,7 +36,8 @@ class CoverageRing extends BasicSegmentString {
     }
   }
 
-  static void _addRing(LinearRing ring, bool isShell, List<CoverageRing> rings) {
+  static void _addRing(
+      LinearRing ring, bool isShell, List<CoverageRing> rings) {
     if (ring.isEmpty()) {
       return;
     }
@@ -46,7 +46,7 @@ class CoverageRing extends BasicSegmentString {
   }
 
   static CoverageRing _createRing(LinearRing ring, bool isShell) {
-    Array<Coordinate> pts = ring.getCoordinates();
+    var pts = ring.getCoordinates();
     if (CoordinateArrays.hasRepeatedOrInvalidPoints(pts)) {
       pts = CoordinateArrays.removeRepeatedOrInvalidPoints(pts);
     }
@@ -66,13 +66,14 @@ class CoverageRing extends BasicSegmentString {
 
   final bool _isInteriorOnRight;
 
-  late Array<bool> _isInvalid;
+  late List<bool> _isInvalid;
 
-  late Array<bool> _isMatched;
+  late List<bool> _isMatched;
 
-  CoverageRing(Array<Coordinate> pts, this._isInteriorOnRight) : super(pts, null) {
-    _isInvalid = Array(size() - 1);
-    _isMatched = Array(size() - 1);
+  CoverageRing(List<Coordinate> pts, this._isInteriorOnRight)
+      : super(pts, null) {
+    _isInvalid = List.filled(size() - 1, false);
+    _isMatched = List.filled(size() - 1, false);
   }
 
   Envelope getEnvelope(int start, int end) {
@@ -211,29 +212,28 @@ class CoverageRing extends BasicSegmentString {
     return index + 1;
   }
 
-  LineString _createLine(int startIndex, int endIndex, GeometryFactory geomFactory) {
-    Array<Coordinate> pts = (endIndex < startIndex)
+  LineString _createLine(
+      int startIndex, int endIndex, GeometryFactory geomFactory) {
+    final pts = (endIndex < startIndex)
         ? _extractSectionWrap(startIndex, endIndex)
         : _extractSection(startIndex, endIndex);
     return geomFactory.createLineString2(pts);
   }
 
-  Array<Coordinate> _extractSection(int startIndex, int endIndex) {
-    int size = (endIndex - startIndex) + 1;
-    Array<Coordinate> pts = Array<Coordinate>(size);
-    int ipts = 0;
+  List<Coordinate> _extractSection(int startIndex, int endIndex) {
+    List<Coordinate> pts = [];
     for (int i = startIndex; i <= endIndex; i++) {
-      pts[ipts++] = getCoordinate(i).copy();
+      pts.add(getCoordinate(i).copy());
     }
     return pts;
   }
 
-  Array<Coordinate> _extractSectionWrap(int startIndex, int endIndex) {
+  List<Coordinate> _extractSectionWrap(int startIndex, int endIndex) {
     int sizeV = (endIndex + (size() - startIndex));
-    Array<Coordinate> pts = Array<Coordinate>(sizeV);
+    List<Coordinate> pts = [];
     int index = startIndex;
     for (int i = 0; i < sizeV; i++) {
-      pts[i] = getCoordinate(index).copy();
+      pts.add(getCoordinate(index).copy());
       index = _nextMarkIndex(index);
     }
     return pts;

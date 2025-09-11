@@ -1,8 +1,8 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 
 class HilbertCode {
-  static const int MAX_LEVEL = 16;
+  static const int kMaxLevel = 16;
 
   static int size(int level) {
     checkLevel(level);
@@ -26,8 +26,8 @@ class HilbertCode {
   }
 
   static void checkLevel(int level) {
-    if (level > MAX_LEVEL) {
-      throw IllegalArgumentException("Level must be in range 0 to $MAX_LEVEL");
+    if (level > kMaxLevel) {
+      throw IllegalArgumentException("Level must be in range 0 to $kMaxLevel");
     }
   }
 
@@ -82,7 +82,7 @@ class HilbertCode {
 
   static int levelClamp(int level) {
     int lvl = (level < 1) ? 1 : level;
-    lvl = (lvl > MAX_LEVEL) ? MAX_LEVEL : lvl;
+    lvl = (lvl > kMaxLevel) ? kMaxLevel : lvl;
     return lvl;
   }
 

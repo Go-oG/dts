@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geomgraph/edge.dart';
@@ -58,7 +58,8 @@ class SegmentIntersector {
 
         if (e0.isClosed()) {
           int maxSegIndex = e0.getNumPoints() - 1;
-          if (((segIndex0 == 0) && (segIndex1 == maxSegIndex)) || ((segIndex1 == 0) && (segIndex0 == maxSegIndex))) {
+          if (((segIndex0 == 0) && (segIndex1 == maxSegIndex)) ||
+              ((segIndex1 == 0) && (segIndex0 == maxSegIndex))) {
             return true;
           }
         }

@@ -6,8 +6,8 @@ import 'orientation.dart';
 final class PolygonNodeTopology {
   PolygonNodeTopology._();
 
-  static bool isCrossing(
-      Coordinate nodePt, Coordinate a0, Coordinate a1, Coordinate b0, Coordinate b1) {
+  static bool isCrossing(Coordinate nodePt, Coordinate a0, Coordinate a1,
+      Coordinate b0, Coordinate b1) {
     Coordinate aLo = a0;
     Coordinate aHi = a1;
     if (_isAngleGreater(nodePt, aLo, aHi)) {
@@ -27,7 +27,8 @@ final class PolygonNodeTopology {
     return compBetween0 != compBetween1;
   }
 
-  static bool isInteriorSegment(Coordinate nodePt, Coordinate a0, Coordinate a1, Coordinate b) {
+  static bool isInteriorSegment(
+      Coordinate nodePt, Coordinate a0, Coordinate a1, Coordinate b) {
     Coordinate aLo = a0;
     Coordinate aHi = a1;
     bool isInteriorBetween = true;
@@ -37,11 +38,13 @@ final class PolygonNodeTopology {
       isInteriorBetween = false;
     }
     bool isBetween = _isBetween(nodePt, b, aLo, aHi);
-    bool isInterior = (isBetween && isInteriorBetween) || ((!isBetween) && (!isInteriorBetween));
+    bool isInterior = (isBetween && isInteriorBetween) ||
+        ((!isBetween) && (!isInteriorBetween));
     return isInterior;
   }
 
-  static bool _isBetween(Coordinate origin, Coordinate p, Coordinate e0, Coordinate e1) {
+  static bool _isBetween(
+      Coordinate origin, Coordinate p, Coordinate e0, Coordinate e1) {
     bool isGreater0 = _isAngleGreater(origin, p, e0);
     if (!isGreater0) {
       return false;
@@ -51,7 +54,8 @@ final class PolygonNodeTopology {
     return !isGreater1;
   }
 
-  static int _compareBetween(Coordinate origin, Coordinate p, Coordinate e0, Coordinate e1) {
+  static int _compareBetween(
+      Coordinate origin, Coordinate p, Coordinate e0, Coordinate e1) {
     int comp0 = compareAngle(origin, p, e0);
     if (comp0 == 0) {
       return 0;

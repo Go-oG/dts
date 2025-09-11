@@ -22,8 +22,9 @@ class Plane3D {
   double orientedDistance(Coordinate p) {
     Vector3D pb = Vector3D.of2(p, _basePt);
     double pbdDotNormal = pb.dot(_normal);
-    if (Double.isNaN(pbdDotNormal))
+    if (Double.isNaN(pbdDotNormal)) {
       throw IllegalArgumentException("3D Coordinate has NaN ordinate");
+    }
 
     double d = pbdDotNormal / _normal.length();
     return d;
@@ -48,13 +49,13 @@ class Plane3D {
 
 class Vector3D {
   static double dot2(Coordinate A, Coordinate B, Coordinate C, Coordinate D) {
-    double ABx = B.x - A.x;
-    double ABy = B.y - A.y;
-    double ABz = B.z - A.z;
-    double CDx = D.x - C.x;
-    double CDy = D.y - C.y;
-    double CDz = D.z - C.z;
-    return ((ABx * CDx) + (ABy * CDy)) + (ABz * CDz);
+    double abX = B.x - A.x;
+    double abY = B.y - A.y;
+    double abZ = B.z - A.z;
+    double cdX = D.x - C.x;
+    double cdY = D.y - C.y;
+    double cdZ = D.z - C.z;
+    return abX * cdX + abY * cdY + abZ * cdZ;
   }
 
   static Vector3D create2(double x, double y, double z) {
@@ -873,7 +874,7 @@ class MathUtil {
     return sqrt((x * x) + (y * y));
   }
 
-  static final double _LOG_10 = Math.log(10);
+  static final double _kLog10 = log(10);
 
   static double log10(double x) {
     double ln = Math.log(x);
@@ -881,7 +882,7 @@ class MathUtil {
 
     if (Double.isNaN(ln)) return ln;
 
-    return ln / _LOG_10;
+    return ln / _kLog10;
   }
 
   static int wrap(int index, int max) {
@@ -926,10 +927,10 @@ class MathUtil {
     return min;
   }
 
-  static final double PHI_INV = (sqrt(5) - 1.0) / 2.0;
+  static final double kPhiInv = (sqrt(5) - 1.0) / 2.0;
 
   static double quasirandom(double curr) {
-    return quasirandom2(curr, PHI_INV);
+    return quasirandom2(curr, kPhiInv);
   }
 
   static double quasirandom2(double curr, double alpha) {

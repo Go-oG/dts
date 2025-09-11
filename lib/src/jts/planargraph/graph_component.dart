@@ -11,7 +11,8 @@ abstract class GraphComponentPG {
     }
   }
 
-  static GraphComponentPG? getComponentWithVisitedState(Iterator<GraphComponentPG> i, bool visitedState) {
+  static GraphComponentPG? getComponentWithVisitedState(
+      Iterator<GraphComponentPG> i, bool visitedState) {
     while (i.moveNext()) {
       GraphComponentPG comp = i.current;
       if (comp.isVisited == visitedState) return comp;

@@ -1,5 +1,3 @@
-import 'package:d_util/d_util.dart';
-import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/geometry_filter.dart';
@@ -49,7 +47,7 @@ class ConstrainedDelaunayTriangulator {
   }
 
   List<Tri> triangulatePolygon(Polygon poly) {
-    Array<Coordinate> polyShell = PolygonHoleJoiner.join(poly);
+    final polyShell = PolygonHoleJoiner.join(poly);
     List<Tri> triList = PolygonEarClipper.triangulate(polyShell);
     TriangulationBuilder.build(triList);
     TriDelaunayImprover.improveS(triList);

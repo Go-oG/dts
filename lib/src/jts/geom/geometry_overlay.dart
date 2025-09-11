@@ -31,10 +31,10 @@ class GeometryOverlay {
   }
 
   static Geometry? difference(Geometry a, Geometry b) {
-    if (a.isEmpty()) return OverlayOp.createEmptyResult(OverlayOpCode.difference, a, b, a.factory);
-
+    if (a.isEmpty()) {
+      return OverlayOp.createEmptyResult(OverlayOpCode.difference, a, b, a.factory);
+    }
     if (b.isEmpty()) return a.copy();
-
     Geometry.checkNotGeometryCollection(a);
     Geometry.checkNotGeometryCollection(b);
     return overlay(a, b, OverlayOpCode.difference);
@@ -59,8 +59,7 @@ class GeometryOverlay {
 
   static Geometry? symDifference(Geometry a, Geometry b) {
     if (a.isEmpty() || b.isEmpty()) {
-      if (a.isEmpty() && b.isEmpty())
-        return OverlayOp.createEmptyResult(OverlayOpCode.symDifference, a, b, a.factory);
+      if (a.isEmpty() && b.isEmpty()) return OverlayOp.createEmptyResult(OverlayOpCode.symDifference, a, b, a.factory);
 
       if (a.isEmpty()) return b.copy();
 
@@ -73,8 +72,7 @@ class GeometryOverlay {
 
   static Geometry? union2(Geometry a, Geometry b) {
     if (a.isEmpty() || b.isEmpty()) {
-      if (a.isEmpty() && b.isEmpty())
-        return OverlayOp.createEmptyResult(OverlayOpCode.union, a, b, a.factory);
+      if (a.isEmpty() && b.isEmpty()) return OverlayOp.createEmptyResult(OverlayOpCode.union, a, b, a.factory);
 
       if (a.isEmpty()) return b.copy();
 

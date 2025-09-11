@@ -166,7 +166,8 @@ class IsSimpleOpO {
     return false;
   }
 
-  void addEndpoint(Map<Coordinate, EndpointInfo> endPoints, Coordinate p, bool isClosed) {
+  void addEndpoint(
+      Map<Coordinate, EndpointInfo> endPoints, Coordinate p, bool isClosed) {
     EndpointInfo? eiInfo = endPoints[p];
     if (eiInfo == null) {
       eiInfo = EndpointInfo(p);

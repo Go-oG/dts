@@ -91,7 +91,8 @@ class LineMerger {
       if (de.getEdge()!.isMarked) {
         continue;
       }
-      _edgeStrings.add(buildEdgeStringStartingWith(de as LineMergeDirectedEdge));
+      _edgeStrings
+          .add(buildEdgeStringStartingWith(de as LineMergeDirectedEdge));
     }
   }
 

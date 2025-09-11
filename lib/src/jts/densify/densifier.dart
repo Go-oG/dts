@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
@@ -17,8 +16,8 @@ final class Densifier {
     return densifier.getResultGeometry();
   }
 
-  static Array<Coordinate> _densifyPoints(
-      Array<Coordinate> pts, double distanceTolerance, PrecisionModel precModel) {
+  static List<Coordinate> _densifyPoints(List<Coordinate> pts,
+      double distanceTolerance, PrecisionModel precModel) {
     LineSegment seg = LineSegment.empty();
     CoordinateList coordList = CoordinateList();
     for (int i = 0; i < (pts.length - 1); i++) {
@@ -30,12 +29,12 @@ final class Densifier {
         continue;
       }
 
-      int densifiedSegCount = (Math.ceil(len / distanceTolerance));
+      int densifiedSegCount = (len / distanceTolerance).ceil();
       double densifiedSegLen = len / densifiedSegCount;
       for (int j = 1; j < densifiedSegCount; j++) {
         double segFract = (j * densifiedSegLen) / len;
         Coordinate p = seg.pointAlong(segFract);
-        if ((!Double.isNaN(seg.p0.z)) && (!Double.isNaN(seg.p1.z))) {
+        if (!seg.p0.z.isNaN && !seg.p1.z.isNaN) {
           p.z = (seg.p0.z + (segFract * (seg.p1.z - seg.p0.z)));
         }
         precModel.makePrecise(p);
@@ -46,7 +45,7 @@ final class Densifier {
       coordList.add3(pts[pts.length - 1], false);
     }
 
-    return coordList.toCoordinateArray();
+    return coordList.toCoordinateList();
   }
 
   Geometry inputGeom;
@@ -59,7 +58,7 @@ final class Densifier {
 
   void setDistanceTolerance(double distanceTolerance) {
     if (distanceTolerance <= 0.0) {
-      throw IllegalArgumentException("Tolerance must be positive");
+      throw ArgumentError("Tolerance must be positive");
     }
 
     _distanceTolerance = distanceTolerance;
@@ -70,7 +69,8 @@ final class Densifier {
   }
 
   Geometry? getResultGeometry() {
-    return DensifyTransformer(_distanceTolerance, _isValidated).transform(inputGeom);
+    return DensifyTransformer(_distanceTolerance, _isValidated)
+        .transform(inputGeom);
   }
 }
 
@@ -82,12 +82,13 @@ class DensifyTransformer extends GeometryTransformer {
   DensifyTransformer(this.distanceTolerance, this.isValidated);
 
   @override
-  CoordinateSequence transformCoordinates(CoordinateSequence coords, Geometry? parent) {
-    Array<Coordinate> inputPts = coords.toCoordinateArray();
-    Array<Coordinate> newPts =
-        Densifier._densifyPoints(inputPts, distanceTolerance, parent!.getPrecisionModel());
+  CoordinateSequence transformCoordinates(
+      CoordinateSequence coords, Geometry? parent) {
+    final inputPts = coords.toCoordinateArray();
+    var newPts = Densifier._densifyPoints(
+        inputPts, distanceTolerance, parent!.getPrecisionModel());
     if ((parent is LineString) && (newPts.length == 1)) {
-      newPts = Array<Coordinate>(0);
+      newPts = [];
     }
     return factory.csFactory.create(newPts);
   }

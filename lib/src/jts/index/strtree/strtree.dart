@@ -9,7 +9,8 @@ import 'abstract_strtree.dart';
 import 'boundable.dart';
 import 'item_distance.dart';
 
-class STRtree<T> extends AbstractSTRtree<T, Envelope> implements SpatialIndex<T> {
+class STRtree<T> extends AbstractSTRtree<T, Envelope>
+    implements SpatialIndex<T> {
   static final _xComparator = CComparator2<Boundable<Envelope>>((o1, o2) {
     final v1 = o1.getBounds();
     final v2 = o2.getBounds();
@@ -40,12 +41,15 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope> implements SpatialIndex<T>
   });
 
   @override
-  List<AbstractNode<Envelope>> createParentBoundables(List<Boundable<Envelope>> childBoundables, int newLevel) {
+  List<AbstractNode<Envelope>> createParentBoundables(
+      List<Boundable<Envelope>> childBoundables, int newLevel) {
     Assert.isTrue(childBoundables.isNotEmpty);
     int minLeafCount = Math.ceil(childBoundables.size / getNodeCapacity());
-    List<Boundable<Envelope>> sortedChildBoundables = List.from(childBoundables);
+    List<Boundable<Envelope>> sortedChildBoundables =
+        List.from(childBoundables);
     sortedChildBoundables.sort(_xComparator.compare);
-    Array<List<Boundable<Envelope>>> vv = verticalSlices(sortedChildBoundables, Math.ceil(Math.sqrt(minLeafCount)));
+    Array<List<Boundable<Envelope>>> vv = verticalSlices(
+        sortedChildBoundables, Math.ceil(Math.sqrt(minLeafCount)));
     return createParentBoundablesFromVerticalSlices(vv, newLevel);
   }
 
@@ -56,7 +60,8 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope> implements SpatialIndex<T>
     Assert.isTrue(verticalSlices.isNotEmpty);
     List<AbstractNode<Envelope>> parentBoundables = [];
     for (var i in verticalSlices) {
-      parentBoundables.addAll(createParentBoundablesFromVerticalSlice(i, newLevel));
+      parentBoundables
+          .addAll(createParentBoundablesFromVerticalSlice(i, newLevel));
     }
 
     return parentBoundables;
@@ -69,7 +74,8 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope> implements SpatialIndex<T>
     return super.createParentBoundables(childBoundables, newLevel);
   }
 
-  Array<List<Boundable<Envelope>>> verticalSlices(List<Boundable<Envelope>> childBoundables, int sliceCount) {
+  Array<List<Boundable<Envelope>>> verticalSlices(
+      List<Boundable<Envelope>> childBoundables, int sliceCount) {
     int sliceCapacity = Math.ceil(childBoundables.size / sliceCount);
     Array<List<Boundable<Envelope>>> slices = Array(sliceCount);
     final i = childBoundables.iterator;
@@ -88,7 +94,9 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope> implements SpatialIndex<T>
 
   STRtree.of([super.nodeCapacity = 10, STRtreeNode? super.root]) : super.of();
 
-  STRtree.of2(super.nodeCapacity, List<Boundable<Envelope>> super.itemBoundables) : super.of2();
+  STRtree.of2(
+      super.nodeCapacity, List<Boundable<Envelope>> super.itemBoundables)
+      : super.of2();
 
   @override
   AbstractNode<Envelope> createNode(int level) {
@@ -168,12 +176,14 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope> implements SpatialIndex<T>
     ].toArray();
   }
 
-  bool isWithinDistance(STRtree tree, ItemDistance itemDist, double maxDistance) {
+  bool isWithinDistance(
+      STRtree tree, ItemDistance itemDist, double maxDistance) {
     final bp = BoundablePair(getRoot(), tree.getRoot(), itemDist);
     return isWithinDistance2(bp, maxDistance);
   }
 
-  bool isWithinDistance2(BoundablePair<Envelope> initBndPair, double maxDistance) {
+  bool isWithinDistance2(
+      BoundablePair<Envelope> initBndPair, double maxDistance) {
     double distanceUpperBound = double.infinity;
     final priQ = PriorityQueue<BoundablePair>();
     priQ.add(initBndPair);
@@ -200,7 +210,8 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope> implements SpatialIndex<T>
     return false;
   }
 
-  Array<Object> nearestNeighbour3(Envelope env, T item, ItemDistance itemDist, int k) {
+  Array<Object> nearestNeighbour3(
+      Envelope env, T item, ItemDistance itemDist, int k) {
     if (isEmpty()) return Array(0);
 
     final bnd = ItemBoundable(env, item);
@@ -212,7 +223,8 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope> implements SpatialIndex<T>
     return nearestNeighbourK(initBndPair, double.infinity, k);
   }
 
-  Array<Object> nearestNeighbourK(BoundablePair<Envelope> initBndPair, double maxDistance, int k) {
+  Array<Object> nearestNeighbourK(
+      BoundablePair<Envelope> initBndPair, double maxDistance, int k) {
     double distanceLowerBound = maxDistance;
     final priQ = PriorityQueue<BoundablePair<Envelope>>();
     priQ.add(initBndPair);
@@ -242,7 +254,8 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope> implements SpatialIndex<T>
     return getItems(kNearestNeighbors);
   }
 
-  static Array<Object> getItems(PriorityQueue<BoundablePair<Envelope>> kNearestNeighbors) {
+  static Array<Object> getItems(
+      PriorityQueue<BoundablePair<Envelope>> kNearestNeighbors) {
     Array<Object> items = Array(kNearestNeighbors.length);
     int count = 0;
     while (kNearestNeighbors.isNotEmpty) {

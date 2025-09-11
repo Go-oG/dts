@@ -3,7 +3,7 @@ import 'package:dts/src/jts/geom/coordinate.dart';
 import 'constraint_split_point_finder.dart';
 import 'segment.dart';
 
-class MidpointSplitPointFinder implements ConstraintSplitPointFinder {
+final class MidpointSplitPointFinder implements ConstraintSplitPointFinder {
   @override
   Coordinate findSplitPoint(Segment seg, Coordinate encroachPt) {
     Coordinate p0 = seg.getStart();

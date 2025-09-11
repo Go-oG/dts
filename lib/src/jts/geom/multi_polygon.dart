@@ -1,5 +1,3 @@
-import 'package:d_util/d_util.dart';
-
 import 'dimension.dart';
 import 'geometry.dart';
 import 'geometry_collection.dart';
@@ -10,7 +8,7 @@ import 'polygonal.dart';
 import 'precision_model.dart';
 
 class MultiPolygon extends GeometryCollection<Polygon> implements Polygonal {
-  MultiPolygon(Array<Polygon>? polygons, PrecisionModel pm, int srid)
+  MultiPolygon(List<Polygon>? polygons, PrecisionModel pm, int srid)
       : this.of(polygons, GeometryFactory(pm: pm, srid: srid));
 
   MultiPolygon.of(super.polygons, super.factory);
@@ -48,7 +46,7 @@ class MultiPolygon extends GeometryCollection<Polygon> implements Polygonal {
         allRings.add(rings.getGeometryN(j) as LineString);
       }
     }
-    return factory.createMultiLineString(allRings.toArray());
+    return factory.createMultiLineString(allRings);
   }
 
   @override
@@ -66,19 +64,12 @@ class MultiPolygon extends GeometryCollection<Polygon> implements Polygonal {
 
   @override
   MultiPolygon reverseInternal() {
-    Array<Polygon> polygons = Array(geometries.length);
-    for (int i = 0; i < polygons.length; i++) {
-      polygons[i] = geometries[i].reverse();
-    }
-    return MultiPolygon.of(polygons, factory);
+    return MultiPolygon.of(
+        geometries.map((e) => e.reverse()).toList(), factory);
   }
 
   @override
   MultiPolygon copyInternal() {
-    Array<Polygon> polygons = Array(geometries.length);
-    for (int i = 0; i < polygons.length; i++) {
-      polygons[i] = geometries[i].copy();
-    }
-    return MultiPolygon.of(polygons, factory);
+    return MultiPolygon.of(geometries.map((e) => e.copy()).toList(), factory);
   }
 }

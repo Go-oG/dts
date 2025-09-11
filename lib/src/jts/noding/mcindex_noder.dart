@@ -56,7 +56,8 @@ class MCIndexNoder extends SinglePassNoder {
       List<MonotoneChain> overlapChains = _index.query(queryEnv);
       for (var testChain in overlapChains) {
         if (testChain.id > queryChain.id) {
-          queryChain.computeOverlaps3(testChain, _overlapTolerance, overlapAction);
+          queryChain.computeOverlaps3(
+              testChain, _overlapTolerance, overlapAction);
           nOverlaps++;
         }
         if (segInt!.isDone()) return;
@@ -65,7 +66,8 @@ class MCIndexNoder extends SinglePassNoder {
   }
 
   void add(SegmentString segStr) {
-    List<MonotoneChain> segChains = MonotoneChainBuilder.getChains(segStr.getCoordinates(), segStr);
+    List<MonotoneChain> segChains =
+        MonotoneChainBuilder.getChains(segStr.getCoordinates(), segStr);
     for (var mc in segChains) {
       mc.id = (_idCounter++);
       _index.insert(mc.getEnvelope(_overlapTolerance), mc);

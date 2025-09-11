@@ -10,7 +10,8 @@ class LinearLocation implements Comparable<LinearLocation> {
     return loc;
   }
 
-  static Coordinate pointAlongSegmentByFraction(Coordinate p0, Coordinate p1, double frac) {
+  static Coordinate pointAlongSegmentByFraction(
+      Coordinate p0, Coordinate p1, double frac) {
     if (frac <= 0.0) return p0;
 
     if (frac >= 1.0) return p1;
@@ -27,7 +28,8 @@ class LinearLocation implements Comparable<LinearLocation> {
 
   double _segmentFraction = 0.0;
 
-  LinearLocation(this.componentIndex, this._segmentIndex, this._segmentFraction) {
+  LinearLocation(
+      this.componentIndex, this._segmentIndex, this._segmentFraction) {
     normalize();
   }
 
@@ -36,8 +38,8 @@ class LinearLocation implements Comparable<LinearLocation> {
   LinearLocation.of(int segmentIndex, double segmentFraction)
       : this(0, segmentIndex, segmentFraction);
 
-  LinearLocation.of2(
-      this.componentIndex, this._segmentIndex, this._segmentFraction, bool doNormalize) {
+  LinearLocation.of2(this.componentIndex, this._segmentIndex,
+      this._segmentFraction, bool doNormalize) {
     if (doNormalize) normalize();
   }
 
@@ -95,9 +97,12 @@ class LinearLocation implements Comparable<LinearLocation> {
   }
 
   double getSegmentLength(Geometry linearGeom) {
-    LineString lineComp = (linearGeom.getGeometryN(componentIndex) as LineString);
+    LineString lineComp =
+        (linearGeom.getGeometryN(componentIndex) as LineString);
     int segIndex = _segmentIndex;
-    if (_segmentIndex >= numSegments(lineComp)) segIndex = lineComp.getNumPoints() - 2;
+    if (_segmentIndex >= numSegments(lineComp)) {
+      segIndex = lineComp.getNumPoints() - 2;
+    }
 
     Coordinate p0 = lineComp.getCoordinateN(segIndex);
     Coordinate p1 = lineComp.getCoordinateN(segIndex + 1);
@@ -128,7 +133,8 @@ class LinearLocation implements Comparable<LinearLocation> {
   }
 
   Coordinate getCoordinate(Geometry linearGeom) {
-    LineString lineComp = ((linearGeom.getGeometryN(componentIndex) as LineString));
+    LineString lineComp =
+        ((linearGeom.getGeometryN(componentIndex) as LineString));
     Coordinate p0 = lineComp.getCoordinateN(_segmentIndex);
     if (_segmentIndex >= numSegments(lineComp)) return p0;
 
@@ -137,7 +143,8 @@ class LinearLocation implements Comparable<LinearLocation> {
   }
 
   LineSegment getSegment(Geometry linearGeom) {
-    LineString lineComp = ((linearGeom.getGeometryN(componentIndex) as LineString));
+    LineString lineComp =
+        ((linearGeom.getGeometryN(componentIndex) as LineString));
     Coordinate p0 = lineComp.getCoordinateN(_segmentIndex);
     if (_segmentIndex >= numSegments(lineComp)) {
       Coordinate prev = lineComp.getCoordinateN(lineComp.getNumPoints() - 2);
@@ -148,12 +155,20 @@ class LinearLocation implements Comparable<LinearLocation> {
   }
 
   bool isValid(Geometry linearGeom) {
-    if ((componentIndex < 0) || (componentIndex >= linearGeom.getNumGeometries())) return false;
+    if ((componentIndex < 0) ||
+        (componentIndex >= linearGeom.getNumGeometries())) {
+      return false;
+    }
 
-    LineString lineComp = ((linearGeom.getGeometryN(componentIndex) as LineString));
-    if ((_segmentIndex < 0) || (_segmentIndex > lineComp.getNumPoints())) return false;
+    LineString lineComp =
+        ((linearGeom.getGeometryN(componentIndex) as LineString));
+    if ((_segmentIndex < 0) || (_segmentIndex > lineComp.getNumPoints())) {
+      return false;
+    }
 
-    if ((_segmentIndex == lineComp.getNumPoints()) && (_segmentFraction != 0.0)) return false;
+    if ((_segmentIndex == lineComp.getNumPoints()) && (_segmentFraction != 0.0)) {
+      return false;
+    }
 
     if ((_segmentFraction < 0.0) || (_segmentFraction > 1.0)) return false;
 
@@ -177,7 +192,8 @@ class LinearLocation implements Comparable<LinearLocation> {
     return 0;
   }
 
-  int compareLocationValues(int componentIndex1, int segmentIndex1, double segmentFraction1) {
+  int compareLocationValues(
+      int componentIndex1, int segmentIndex1, double segmentFraction1) {
     if (componentIndex < componentIndex1) return -1;
 
     if (componentIndex > componentIndex1) return 1;
@@ -221,21 +237,29 @@ class LinearLocation implements Comparable<LinearLocation> {
 
     if (_segmentIndex == loc._segmentIndex) return true;
 
-    if (((loc._segmentIndex - _segmentIndex) == 1) && (loc._segmentFraction == 0.0)) return true;
+    if (((loc._segmentIndex - _segmentIndex) == 1) &&
+        (loc._segmentFraction == 0.0)) {
+      return true;
+    }
 
-    if (((_segmentIndex - loc._segmentIndex) == 1) && (_segmentFraction == 0.0)) return true;
+    if (((_segmentIndex - loc._segmentIndex) == 1) && (_segmentFraction == 0.0)) {
+      return true;
+    }
 
     return false;
   }
 
   bool isEndpoint(Geometry linearGeom) {
-    LineString lineComp = ((linearGeom.getGeometryN(componentIndex) as LineString));
+    LineString lineComp =
+        ((linearGeom.getGeometryN(componentIndex) as LineString));
     int nseg = numSegments(lineComp);
-    return (_segmentIndex >= nseg) || ((_segmentIndex == (nseg - 1)) && (_segmentFraction >= 1.0));
+    return (_segmentIndex >= nseg) ||
+        ((_segmentIndex == (nseg - 1)) && (_segmentFraction >= 1.0));
   }
 
   LinearLocation toLowest(Geometry linearGeom) {
-    LineString lineComp = ((linearGeom.getGeometryN(componentIndex) as LineString));
+    LineString lineComp =
+        ((linearGeom.getGeometryN(componentIndex) as LineString));
     int nseg = numSegments(lineComp);
     if (_segmentIndex < nseg) return this;
 

@@ -31,23 +31,23 @@ class RobustLineIntersector extends LineIntersector {
       return LineIntersector.kNoIntersection;
     }
 
-    int Pq1 = Orientation.index(p1, p2, q1);
-    int Pq2 = Orientation.index(p1, p2, q2);
-    if (((Pq1 > 0) && (Pq2 > 0)) || ((Pq1 < 0) && (Pq2 < 0))) {
+    int pq1 = Orientation.index(p1, p2, q1);
+    int pq2 = Orientation.index(p1, p2, q2);
+    if (((pq1 > 0) && (pq2 > 0)) || ((pq1 < 0) && (pq2 < 0))) {
       return LineIntersector.kNoIntersection;
     }
-    int Qp1 = Orientation.index(q1, q2, p1);
-    int Qp2 = Orientation.index(q1, q2, p2);
-    if (((Qp1 > 0) && (Qp2 > 0)) || ((Qp1 < 0) && (Qp2 < 0))) {
+    int qp1 = Orientation.index(q1, q2, p1);
+    int qp2 = Orientation.index(q1, q2, p2);
+    if (((qp1 > 0) && (qp2 > 0)) || ((qp1 < 0) && (qp2 < 0))) {
       return LineIntersector.kNoIntersection;
     }
-    bool collinear = (((Pq1 == 0) && (Pq2 == 0)) && (Qp1 == 0)) && (Qp2 == 0);
+    bool collinear = (((pq1 == 0) && (pq2 == 0)) && (qp1 == 0)) && (qp2 == 0);
     if (collinear) {
       return _computeCollinearIntersection(p1, p2, q1, q2);
     }
     Coordinate? p;
     double z = double.nan;
-    if ((((Pq1 == 0) || (Pq2 == 0)) || (Qp1 == 0)) || (Qp2 == 0)) {
+    if ((((pq1 == 0) || (pq2 == 0)) || (qp1 == 0)) || (qp2 == 0)) {
       isProper = false;
       if (p1.equals2D(q1)) {
         p = p1;
@@ -61,16 +61,16 @@ class RobustLineIntersector extends LineIntersector {
       } else if (p2.equals2D(q2)) {
         p = p2;
         z = _zGet(p2, q2);
-      } else if (Pq1 == 0) {
+      } else if (pq1 == 0) {
         p = q1;
         z = _zGetOrInterpolate(q1, p1, p2);
-      } else if (Pq2 == 0) {
+      } else if (pq2 == 0) {
         p = q2;
         z = _zGetOrInterpolate(q2, p1, p2);
-      } else if (Qp1 == 0) {
+      } else if (qp1 == 0) {
         p = p1;
         z = _zGetOrInterpolate(p1, q1, q2);
-      } else if (Qp2 == 0) {
+      } else if (qp2 == 0) {
         p = p2;
         z = _zGetOrInterpolate(p2, q1, q2);
       }
@@ -236,8 +236,7 @@ class RobustLineIntersector extends LineIntersector {
     return zInterpolated;
   }
 
-  static double _zInterpolate2(
-      Coordinate p, Coordinate p1, Coordinate p2, Coordinate q1, Coordinate q2) {
+  static double _zInterpolate2(Coordinate p, Coordinate p1, Coordinate p2, Coordinate q1, Coordinate q2) {
     double zp = _zInterpolate(p, p1, p2);
     double zq = _zInterpolate(p, q1, q2);
     if (Double.isNaN(zp)) {

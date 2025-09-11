@@ -1,4 +1,3 @@
- import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -12,7 +11,7 @@ import 'package:dts/src/jts/noding/segment_string.dart';
 import 'hot_pixel.dart';
 import 'mcindex_point_snapper.dart';
 
-@deprecated
+@Deprecated("")
 class MCIndexSnapRounder implements Noder {
   final PrecisionModel _pm;
 
@@ -51,7 +50,8 @@ class MCIndexSnapRounder implements Noder {
     computeVertexSnaps(segStrings);
   }
 
-  List<Coordinate> findInteriorIntersections(List<NodedSegmentString> segStrings, LineIntersector li) {
+  List<Coordinate> findInteriorIntersections(
+      List<NodedSegmentString> segStrings, LineIntersector li) {
     final intFinderAdder = InteriorIntersectionFinderAdder(li);
     _noder.setSegmentIntersector(intFinderAdder);
     _noder.computeNodes(segStrings);
@@ -72,7 +72,7 @@ class MCIndexSnapRounder implements Noder {
   }
 
   void computeVertexSnaps2(NodedSegmentString e) {
-    Array<Coordinate> pts0 = e.getCoordinates();
+    final pts0 = e.getCoordinates();
     for (int i = 0; i < pts0.length; i++) {
       HotPixel hotPixel = HotPixel(pts0[i], _scaleFactor);
       bool isNodeAdded = _pointSnapper.snap2(hotPixel, e, i);

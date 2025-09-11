@@ -10,8 +10,8 @@ import '../overlay/overlay_op.dart';
 import 'overlay_util.dart';
 
 final class OverlayPoints {
-  static Geometry overlay(
-      OverlayOpCode opCode, Geometry geom0, Geometry geom1, PrecisionModel? pm) {
+  static Geometry overlay(OverlayOpCode opCode, Geometry geom0, Geometry geom1,
+      PrecisionModel? pm) {
     OverlayPoints overlay = OverlayPoints(opCode, geom0, geom1, pm);
     return overlay.getResult();
   }
@@ -56,8 +56,8 @@ final class OverlayPoints {
     return geometryFactory.buildGeometry(_resultList);
   }
 
-  void computeIntersection(
-      Map<Coordinate, Point> map0, Map<Coordinate, Point> map1, List<Point> resultList) {
+  void computeIntersection(Map<Coordinate, Point> map0,
+      Map<Coordinate, Point> map1, List<Point> resultList) {
     for (var entry in map0.entries) {
       if (map1.containsKey(entry.key)) {
         resultList.add(copyPoint(entry.value));
@@ -65,8 +65,8 @@ final class OverlayPoints {
     }
   }
 
-  void computeDifference(
-      Map<Coordinate, Point> map0, Map<Coordinate, Point> map1, List<Point> resultList) {
+  void computeDifference(Map<Coordinate, Point> map0,
+      Map<Coordinate, Point> map1, List<Point> resultList) {
     for (var entry in map0.entries) {
       if (!map1.containsKey(entry.key)) {
         resultList.add(copyPoint(entry.value));
@@ -74,8 +74,8 @@ final class OverlayPoints {
     }
   }
 
-  void computeUnion(
-      Map<Coordinate, Point> map0, Map<Coordinate, Point> map1, List<Point> resultList) {
+  void computeUnion(Map<Coordinate, Point> map0, Map<Coordinate, Point> map1,
+      List<Point> resultList) {
     for (Point p in map0.values) {
       resultList.add(copyPoint(p));
     }

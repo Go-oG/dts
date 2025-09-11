@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -11,26 +10,26 @@ class PointwisePrecisionReducerTransformer extends GeometryTransformer {
     return trans.transform(geom);
   }
 
-  PrecisionModel targetPM;
+  final PrecisionModel targetPM;
 
   PointwisePrecisionReducerTransformer(this.targetPM);
 
   @override
-  CoordinateSequence? transformCoordinates(CoordinateSequence coordinates, Geometry? parent) {
-    if (coordinates.size() == 0) {
+  CoordinateSequence? transformCoordinates(CoordinateSequence coords, Geometry? parent) {
+    if (coords.size() == 0) {
       return null;
     }
 
-    Array<Coordinate> coordsReduce = reducePointwise(coordinates);
+    final coordsReduce = reducePointwise(coords);
     return factory.csFactory.create(coordsReduce);
   }
 
-  Array<Coordinate> reducePointwise(CoordinateSequence coordinates) {
-    Array<Coordinate> coordReduce = Array(coordinates.size());
+  List<Coordinate> reducePointwise(CoordinateSequence coordinates) {
+    List<Coordinate> coordReduce = [];
     for (int i = 0; i < coordinates.size(); i++) {
       Coordinate coord = coordinates.getCoordinate(i).copy();
       targetPM.makePrecise(coord);
-      coordReduce[i] = coord;
+      coordReduce.add(coord);
     }
     return coordReduce;
   }

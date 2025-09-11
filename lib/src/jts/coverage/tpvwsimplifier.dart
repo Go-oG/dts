@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
- import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/area.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
@@ -12,7 +11,7 @@ import 'corner.dart';
 import 'corner_area.dart';
 
 class TPVWSimplifier {
-  static void simplify(Array<TPVEdge> edges, CornerArea cornerArea, double removableSizeFactor) {
+  static void simplify(List<TPVEdge> edges, CornerArea cornerArea, double removableSizeFactor) {
     TPVWSimplifier simp = TPVWSimplifier(edges);
     simp.setCornerArea(cornerArea);
     simp.setRemovableRingSizeFactor(removableSizeFactor);
@@ -23,7 +22,7 @@ class TPVWSimplifier {
 
   double removableSizeFactor = 1.0;
 
-  final Array<TPVEdge> _edges;
+  final List<TPVEdge> _edges;
 
   TPVWSimplifier(this._edges);
 
@@ -36,7 +35,7 @@ class TPVWSimplifier {
   }
 
   void _simplify() {
-    _EdgeIndex edgeIndex = _EdgeIndex();
+    EdgeIndex edgeIndex = EdgeIndex();
     _add(_edges, edgeIndex);
     for (int i = 0; i < _edges.length; i++) {
       TPVEdge edge = _edges[i];
@@ -44,7 +43,7 @@ class TPVWSimplifier {
     }
   }
 
-  void _add(Array<TPVEdge> edges, _EdgeIndex edgeIndex) {
+  void _add(List<TPVEdge> edges, EdgeIndex edgeIndex) {
     for (TPVEdge edge in edges) {
       edge.updateRemoved(removableSizeFactor);
       if (!edge.isRemoved()) {
@@ -56,9 +55,9 @@ class TPVWSimplifier {
 }
 
 class TPVEdge {
-  static final int _MIN_EDGE_SIZE = 2;
+  static final int _kMinEdgeSize = 2;
 
-  static final int _MIN_RING_SIZE = 4;
+  static final int _kMinRingSize = 4;
 
   late LinkedLine _linkedLine;
 
@@ -66,7 +65,7 @@ class TPVEdge {
 
   late int _nPts;
 
-  Array<Coordinate> pts;
+  List<Coordinate> pts;
 
   VertexSequencePackedRtree? _vertexIndex;
 
@@ -108,9 +107,9 @@ class TPVEdge {
     return pts[index];
   }
 
-  Array<Coordinate> getCoordinates() {
+  List<Coordinate> getCoordinates() {
     if (_isRemoved) {
-      return Array(0);
+      return [];
     }
     return _linkedLine.getCoordinates();
   }
@@ -123,7 +122,7 @@ class TPVEdge {
     return _linkedLine.size();
   }
 
-  void simplify(CornerArea cornerArea, _EdgeIndex edgeIndex) {
+  void simplify(CornerArea cornerArea, EdgeIndex edgeIndex) {
     if (_isRemoved) {
       return;
     }
@@ -132,7 +131,7 @@ class TPVEdge {
     }
 
     double areaTolerance = _distanceTolerance * _distanceTolerance;
-    int minEdgeSize = (_linkedLine.isRing) ? _MIN_RING_SIZE : _MIN_EDGE_SIZE;
+    int minEdgeSize = (_linkedLine.isRing) ? _kMinRingSize : _kMinEdgeSize;
     PriorityQueue<Corner> cornerQueue = _createQueue(areaTolerance, cornerArea);
     while ((cornerQueue.isNotEmpty) && (size() > minEdgeSize)) {
       Corner corner = cornerQueue.removeFirst();
@@ -175,7 +174,7 @@ class TPVEdge {
     return cornerArea.area(pp, p, pn);
   }
 
-  bool _isRemovableF(Corner corner, _EdgeIndex edgeIndex) {
+  bool _isRemovableF(Corner corner, EdgeIndex edgeIndex) {
     Envelope cornerEnv = corner.envelope();
     for (TPVEdge edge in edgeIndex.query(cornerEnv)) {
       if (_hasIntersectingVertex(corner, cornerEnv, edge)) {
@@ -183,7 +182,7 @@ class TPVEdge {
       }
 
       if ((edge != this) && (edge.size() == 2)) {
-        Array<Coordinate> linePts = edge._linkedLine.getCoordinates();
+        final linePts = edge._linkedLine.getCoordinates();
         if (corner.isBaseline(linePts[0], linePts[1])) {
           return false;
         }
@@ -193,7 +192,7 @@ class TPVEdge {
   }
 
   bool _hasIntersectingVertex(Corner corner, Envelope cornerEnv, TPVEdge edge) {
-    Array<int> result = edge._query(cornerEnv);
+    List<int> result = edge._query(cornerEnv);
     for (int index in result) {
       Coordinate v = edge._getCoordinate(index);
       if (corner.isVertex2(v)) {
@@ -214,7 +213,7 @@ class TPVEdge {
     }
   }
 
-  Array<int> _query(Envelope cornerEnv) {
+  List<int> _query(Envelope cornerEnv) {
     if (_vertexIndex == null) {
       _initIndex();
     }
@@ -237,7 +236,7 @@ class TPVEdge {
   }
 }
 
-class _EdgeIndex {
+class EdgeIndex {
   STRtree<TPVEdge> index = STRtree();
 
   void add(TPVEdge edge) {

@@ -1,4 +1,3 @@
- import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geomgraph/edge.dart';
 
@@ -6,11 +5,8 @@ import 'segment_intersector.dart';
 
 class SweepLineSegment {
   Edge edge;
-
-  late Array<Coordinate> pts;
-
+  late List<Coordinate> pts;
   int ptIndex;
-
   SweepLineSegment(this.edge, this.ptIndex) {
     pts = edge.getCoordinates();
   }

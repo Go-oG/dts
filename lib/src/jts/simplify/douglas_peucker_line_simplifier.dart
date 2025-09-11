@@ -2,19 +2,19 @@ import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
- import 'package:d_util/d_util.dart';
 
 class DouglasPeuckerLineSimplifier {
-  static Array<Coordinate> simplify2(Array<Coordinate> pts, double distanceTolerance, bool isPreserveEndpoint) {
-    DouglasPeuckerLineSimplifier simp = DouglasPeuckerLineSimplifier(pts);
+  static List<Coordinate> simplify2(
+      List<Coordinate> pts, double distanceTolerance, bool isPreserveEndpoint) {
+    final simp = DouglasPeuckerLineSimplifier(pts);
     simp.setDistanceTolerance(distanceTolerance);
     simp.setPreserveEndpoint(isPreserveEndpoint);
     return simp.simplify();
   }
 
-  Array<Coordinate> pts;
+  List<Coordinate> pts;
 
-  late Array<bool> _usePt;
+  late List<bool> _usePt;
 
   double distanceTolerance = 0;
 
@@ -30,8 +30,8 @@ class DouglasPeuckerLineSimplifier {
     _isPreserveEndpoint = isPreserveEndpoint;
   }
 
-  Array<Coordinate> simplify() {
-    _usePt = Array(pts.length);
+  List<Coordinate> simplify() {
+    _usePt = List.filled(pts.length, false);
     for (int i = 0; i < pts.length; i++) {
       _usePt[i] = true;
     }
@@ -45,7 +45,7 @@ class DouglasPeuckerLineSimplifier {
     if ((!_isPreserveEndpoint) && CoordinateArrays.isRing(pts)) {
       simplifyRingEndpoint(coordList);
     }
-    return coordList.toCoordinateArray();
+    return coordList.toCoordinateList();
   }
 
   void simplifyRingEndpoint(CoordinateList pts) {

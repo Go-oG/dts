@@ -1,4 +1,4 @@
-import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart' show Stack;
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/position.dart';
@@ -27,7 +27,7 @@ class BufferSubgraph implements Comparable<BufferSubgraph> {
     if (env == null) {
       Envelope edgeEnv = Envelope();
       for (var dirEdge in _dirEdgeList) {
-        Array<Coordinate> pts = dirEdge.getEdge().getCoordinates();
+        List<Coordinate> pts = dirEdge.getEdge().getCoordinates();
         for (int i = 0; i < (pts.length - 1); i++) {
           edgeEnv.expandToIncludeCoordinate(pts[i]);
         }
@@ -116,8 +116,10 @@ class BufferSubgraph implements Comparable<BufferSubgraph> {
         break;
       }
     }
-    if (startEdge == null)
-      throw TopologyException("unable to find edge to compute depths at ${n.getCoordinate()}");
+    if (startEdge == null) {
+      throw TopologyException(
+          "unable to find edge to compute depths at ${n.getCoordinate()}");
+    }
 
     ((n.getEdges() as DirectedEdgeStar)).computeDepths(startEdge);
     for (var i in ((n.getEdges() as DirectedEdgeStar)).iterator()) {
@@ -135,7 +137,8 @@ class BufferSubgraph implements Comparable<BufferSubgraph> {
 
   void findResultEdges() {
     for (var de in _dirEdgeList) {
-      if (((de.getDepth(Position.right) >= 1) && (de.getDepth(Position.left) <= 0)) &&
+      if (((de.getDepth(Position.right) >= 1) &&
+              (de.getDepth(Position.left) <= 0)) &&
           (!de.isInteriorAreaEdge())) {
         de.setInResult(true);
       }

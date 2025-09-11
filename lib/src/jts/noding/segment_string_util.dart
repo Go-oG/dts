@@ -1,6 +1,3 @@
-import 'package:d_util/d_util.dart';
-
-import '../geom/coordinate.dart';
 import '../geom/geometry.dart';
 import '../geom/geometry_factory.dart';
 import '../geom/line_string.dart';
@@ -18,8 +15,7 @@ class SegmentStringUtil {
     List<NodedSegmentString> segStr = [];
     List<LineString> lines = LinearComponentExtracter.getLines(geom);
     for (var line in lines) {
-      Array<Coordinate> pts = line.getCoordinates();
-      segStr.add(NodedSegmentString(pts, geom));
+      segStr.add(NodedSegmentString(line.getCoordinates(), geom));
     }
 
     return segStr;
@@ -28,18 +24,16 @@ class SegmentStringUtil {
   static List<BasicSegmentString> extractBasicSegmentStrings(Geometry geom) {
     List<BasicSegmentString> segStr = [];
     for (var line in LinearComponentExtracter.getLines(geom)) {
-      Array<Coordinate> pts = line.getCoordinates();
-      segStr.add(BasicSegmentString(pts, geom));
+      segStr.add(BasicSegmentString(line.getCoordinates(), geom));
     }
     return segStr;
   }
 
-  static Geometry toGeometry(List<SegmentString> segStrings, GeometryFactory geomFact) {
-    Array<LineString> lines = Array(segStrings.size);
-    int index = 0;
+  static Geometry toGeometry(
+      List<SegmentString> segStrings, GeometryFactory geomFact) {
+    List<LineString> lines = [];
     for (var ss in segStrings) {
-      LineString line = geomFact.createLineString2(ss.getCoordinates());
-      lines[index++] = line;
+      lines.add(geomFact.createLineString2(ss.getCoordinates()));
     }
     if (lines.length == 1) {
       return lines[0];

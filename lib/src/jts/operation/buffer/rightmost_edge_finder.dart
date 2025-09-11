@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/position.dart';
@@ -54,7 +53,7 @@ class RightmostEdgeFinder {
   }
 
   void findRightmostEdgeAtVertex() {
-    Array<Coordinate> pts = _minDe!.getEdge().getCoordinates();
+    List<Coordinate> pts = _minDe!.getEdge().getCoordinates();
     Assert.isTrue(
       _minIndex > 0 && _minIndex < pts.length,
       "rightmost point expected to be interior vertex of edge",
@@ -76,7 +75,7 @@ class RightmostEdgeFinder {
   }
 
   void checkForRightmostCoordinate(DirectedEdge de) {
-    Array<Coordinate> coord = de.getEdge().getCoordinates();
+    List<Coordinate> coord = de.getEdge().getCoordinates();
     for (int i = 0; i < (coord.length - 1); i++) {
       if ((_minCoord == null) || (coord[i].x > _minCoord!.x)) {
         _minDe = de;
@@ -99,7 +98,7 @@ class RightmostEdgeFinder {
 
   int getRightmostSideOfSegment(DirectedEdge de, int i) {
     Edge e = de.getEdge();
-    Array<Coordinate> coord = e.getCoordinates();
+    List<Coordinate> coord = e.getCoordinates();
     if ((i < 0) || ((i + 1) >= coord.length)) {
       return -1;
     }

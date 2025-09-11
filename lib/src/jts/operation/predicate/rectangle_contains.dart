@@ -44,7 +44,8 @@ class RectangleContains {
   }
 
   bool isPointContainedInBoundary(Coordinate pt) {
-    return (((pt.x == rectEnv.minX) || (pt.x == rectEnv.maxX)) || (pt.y == rectEnv.minY)) ||
+    return (((pt.x == rectEnv.minX) || (pt.x == rectEnv.maxX)) ||
+            (pt.y == rectEnv.minY)) ||
         (pt.y == rectEnv.maxY);
   }
 

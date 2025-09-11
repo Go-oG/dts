@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/dimension.dart';
 import 'package:dts/src/jts/geom/location.dart';
@@ -7,7 +6,7 @@ import 'edge_source_info.dart';
 import 'overlay_label.dart';
 
 class OEdge {
-  static bool isCollapsed(Array<Coordinate> pts) {
+  static bool isCollapsed(List<Coordinate> pts) {
     if (pts.length < 2) return true;
 
     if (pts[0].equals2D(pts[1])) return true;
@@ -18,15 +17,15 @@ class OEdge {
     return false;
   }
 
-  Array<Coordinate> pts;
+  List<Coordinate> pts;
 
-  int _aDim = OverlayLabel.DIM_UNKNOWN;
+  int _aDim = OverlayLabel.kDimUnknown;
 
   int _aDepthDelta = 0;
 
   bool _aIsHole = false;
 
-  int _bDim = OverlayLabel.DIM_UNKNOWN;
+  int _bDim = OverlayLabel.kDimUnknown;
 
   int _bDepthDelta = 0;
 
@@ -36,9 +35,7 @@ class OEdge {
     copyInfo(info);
   }
 
-  Array<Coordinate> getCoordinates() {
-    return pts;
-  }
+  List<Coordinate> getCoordinates() => pts;
 
   Coordinate getCoordinate(int index) {
     return pts[index];
@@ -49,7 +46,7 @@ class OEdge {
   }
 
   bool direction() {
-    Array<Coordinate> pts = getCoordinates();
+    List<Coordinate> pts = getCoordinates();
     if (pts.length < 2) {
       throw ("Edge must have >= 2 points");
     }
@@ -89,44 +86,44 @@ class OEdge {
   static void initLabel(OverlayLabel lbl, int geomIndex, int dim, int depthDelta, bool isHole) {
     int dimLabel = labelDim(dim, depthDelta);
     switch (dimLabel) {
-      case OverlayLabel.DIM_NOT_PART:
+      case OverlayLabel.kDimNotPart:
         lbl.initNotPart(geomIndex);
         break;
-      case OverlayLabel.DIM_BOUNDARY:
+      case OverlayLabel.kDimBoundary:
         lbl.initBoundary(geomIndex, locationLeft(depthDelta), locationRight(depthDelta), isHole);
         break;
-      case OverlayLabel.DIM_COLLAPSE:
+      case OverlayLabel.kDimCollapse:
         lbl.initCollapse(geomIndex, isHole);
         break;
-      case OverlayLabel.DIM_LINE:
+      case OverlayLabel.kDimLine:
         lbl.initLine(geomIndex);
         break;
     }
   }
 
   static int labelDim(int dim, int depthDelta) {
-    if (dim == Dimension.False) return OverlayLabel.DIM_NOT_PART;
+    if (dim == Dimension.kFalse) return OverlayLabel.kDimNotPart;
 
-    if (dim == Dimension.L) return OverlayLabel.DIM_LINE;
+    if (dim == Dimension.L) return OverlayLabel.kDimLine;
 
     bool isCollapse = depthDelta == 0;
-    if (isCollapse) return OverlayLabel.DIM_COLLAPSE;
+    if (isCollapse) return OverlayLabel.kDimCollapse;
 
-    return OverlayLabel.DIM_BOUNDARY;
+    return OverlayLabel.kDimBoundary;
   }
 
   bool isShell(int geomIndex) {
     if (geomIndex == 0) {
-      return (_aDim == OverlayLabel.DIM_BOUNDARY) && (!_aIsHole);
+      return (_aDim == OverlayLabel.kDimBoundary) && (!_aIsHole);
     }
-    return (_bDim == OverlayLabel.DIM_BOUNDARY) && (!_bIsHole);
+    return (_bDim == OverlayLabel.kDimBoundary) && (!_bIsHole);
   }
 
   static int locationRight(int depthDelta) {
     int delSignV = delSign(depthDelta);
     switch (delSignV) {
       case 0:
-        return OverlayLabel.LOC_UNKNOWN;
+        return OverlayLabel.kLocUnknown;
       case 1:
         return Location.interior;
       case -1:
@@ -134,14 +131,14 @@ class OEdge {
       default:
         break;
     }
-    return OverlayLabel.LOC_UNKNOWN;
+    return OverlayLabel.kLocUnknown;
   }
 
   static int locationLeft(int depthDelta) {
     int delSignV = delSign(depthDelta);
     switch (delSignV) {
       case 0:
-        return OverlayLabel.LOC_UNKNOWN;
+        return OverlayLabel.kLocUnknown;
       case 1:
         return Location.exterior;
       case -1:
@@ -149,7 +146,7 @@ class OEdge {
       default:
         break;
     }
-    return OverlayLabel.LOC_UNKNOWN;
+    return OverlayLabel.kLocUnknown;
   }
 
   static int delSign(int depthDel) {
@@ -193,8 +190,7 @@ class OEdge {
   }
 
   static String infoString(int index, int dim, bool isHole, int depthDelta) {
-    return (((index == 0 ? "A:" : "B:") + OverlayLabel.dimensionSymbol(dim)) +
-            ringRoleSymbol(dim, isHole)) +
+    return (((index == 0 ? "A:" : "B:") + OverlayLabel.dimensionSymbol(dim)) + ringRoleSymbol(dim, isHole)) +
         depthDelta.toString();
   }
 
@@ -206,6 +202,6 @@ class OEdge {
   }
 
   static bool hasAreaParent(int dim) {
-    return (dim == OverlayLabel.DIM_BOUNDARY) || (dim == OverlayLabel.DIM_COLLAPSE);
+    return (dim == OverlayLabel.kDimBoundary) || (dim == OverlayLabel.kDimCollapse);
   }
 }

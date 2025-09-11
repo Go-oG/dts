@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/distance.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
@@ -30,8 +29,7 @@ class OffsetCurve {
     return oc.getCurve();
   }
 
-  static Geometry? getCurve3(
-      Geometry geom, double distance, int quadSegs, int joinStyle, double mitreLimit) {
+  static Geometry? getCurve3(Geometry geom, double distance, int quadSegs, int joinStyle, double mitreLimit) {
     BufferParameters bufferParams = BufferParameters.empty();
     if (quadSegs >= 0) bufferParams.setQuadrantSegments(quadSegs);
 
@@ -62,7 +60,7 @@ class OffsetCurve {
   late GeometryFactory geomFactory;
 
   OffsetCurve(this.inputGeom, this.distance, [BufferParameters? bufParams]) {
-    _matchDistance = Math.abs(distance) / _kMatchDistanceFactor;
+    _matchDistance = distance.abs() / _kMatchDistanceFactor;
     geomFactory = inputGeom.factory;
     _bufferParams = BufferParameters.empty();
     if (bufParams != null) {
@@ -114,11 +112,10 @@ class OffsetCurve {
     return geom;
   }
 
-  static Array<Coordinate>? rawOffset(LineString line, double distance,
-      [BufferParameters? bufParams]) {
+  static List<Coordinate>? rawOffset(LineString line, double distance, [BufferParameters? bufParams]) {
     bufParams ??= BufferParameters.empty();
-    Array<Coordinate> pts = line.getCoordinates();
-    Array<Coordinate> cleanPts = CoordinateArrays.removeRepeatedOrInvalidPoints(pts);
+    final pts = line.getCoordinates();
+    final cleanPts = CoordinateArrays.removeRepeatedOrInvalidPoints(pts);
     final ocb = OffsetCurveBuilder(line.factory.getPrecisionModel(), bufParams);
     return ocb.getOffsetCurve(cleanPts, distance);
   }
@@ -144,28 +141,28 @@ class OffsetCurve {
   }
 
   List<OffsetCurveSection> computeSections(LineString lineGeom, double distance) {
-    Array<Coordinate> rawCurve = rawOffset(lineGeom, distance, _bufferParams)!;
+    List<Coordinate> rawCurve = rawOffset(lineGeom, distance, _bufferParams)!;
     List<OffsetCurveSection> sections = [];
-    if (rawCurve.length == 0) {
+    if (rawCurve.isEmpty) {
       return sections;
     }
     Polygon bufferPoly = getBufferOriented(lineGeom, distance, _bufferParams);
-    Array<Coordinate> shell = bufferPoly.getExteriorRing().getCoordinates();
+    List<Coordinate> shell = bufferPoly.getExteriorRing().getCoordinates();
     computeCurveSections(shell, rawCurve, sections);
     for (int i = 0; i < bufferPoly.getNumInteriorRing(); i++) {
-      Array<Coordinate> hole = bufferPoly.getInteriorRingN(i).getCoordinates();
+      List<Coordinate> hole = bufferPoly.getInteriorRingN(i).getCoordinates();
       computeCurveSections(hole, rawCurve, sections);
     }
     return sections;
   }
 
-  LineString offsetSegment(Array<Coordinate> pts, double distance) {
+  LineString offsetSegment(List<Coordinate> pts, double distance) {
     LineSegment offsetSeg = LineSegment(pts[0], pts[1]).offset(distance);
-    return geomFactory.createLineString2([offsetSeg.p0, offsetSeg.p1].toArray());
+    return geomFactory.createLineString2([offsetSeg.p0, offsetSeg.p1]);
   }
 
   static Polygon getBufferOriented(LineString geom, double distance, BufferParameters? bufParams) {
-    Geometry buffer = BufferOp.bufferOp3(geom, Math.abs(distance), bufParams);
+    Geometry buffer = BufferOp.bufferOp3(geom, distance.abs(), bufParams);
     Polygon bufferPoly = extractMaxAreaPolygon(buffer);
     if (distance < 0) {
       bufferPoly = bufferPoly.reverse();
@@ -189,16 +186,16 @@ class OffsetCurve {
     return maxPoly!;
   }
 
-  static const double _NOT_IN_CURVE = -1;
+  static const double _kNotInCurve = -1;
 
   void computeCurveSections(
-    Array<Coordinate> bufferRingPts,
-    Array<Coordinate> rawCurve,
+    List<Coordinate> bufferRingPts,
+    List<Coordinate> rawCurve,
     List<OffsetCurveSection> sections,
   ) {
-    Array<double> rawPosition = Array(bufferRingPts.length - 1);
+    List<double> rawPosition = List.filled(bufferRingPts.length - 1, 0);
     for (int i = 0; i < rawPosition.length; i++) {
-      rawPosition[i] = _NOT_IN_CURVE;
+      rawPosition[i] = _kNotInCurve;
     }
     SegmentMCIndex bufferSegIndex = SegmentMCIndex(bufferRingPts);
     int bufferFirstIndex = -1;
@@ -230,12 +227,12 @@ class OffsetCurve {
     Coordinate raw1,
     int rawCurveIndex,
     SegmentMCIndex bufferSegIndex,
-    Array<Coordinate> bufferPts,
-    Array<double> rawCurvePos,
+    List<Coordinate> bufferPts,
+    List<double> rawCurvePos,
   ) {
     Envelope matchEnv = Envelope.of(raw0, raw1);
     matchEnv.expandBy(_matchDistance);
-    MatchCurveSegmentAction matchAction = MatchCurveSegmentAction(
+    final matchAction = MatchCurveSegmentAction(
       raw0,
       raw1,
       rawCurveIndex,
@@ -248,8 +245,8 @@ class OffsetCurve {
   }
 
   void extractSections(
-    Array<Coordinate> ringPts,
-    Array<double> rawCurveLoc,
+    List<Coordinate> ringPts,
+    List<double> rawCurveLoc,
     int startIndex,
     List<OffsetCurveSection> sections,
   ) {
@@ -261,8 +258,7 @@ class OffsetCurve {
       double location = rawCurveLoc[sectionStart];
       int lastIndex = prev(sectionEnd, rawCurveLoc.length);
       double lastLoc = rawCurveLoc[lastIndex];
-      OffsetCurveSection section =
-          OffsetCurveSection.create(ringPts, sectionStart, sectionEnd, location, lastLoc);
+      OffsetCurveSection section = OffsetCurveSection.create(ringPts, sectionStart, sectionEnd, location, lastLoc);
       sections.add(section);
       sectionStart = findSectionStart(rawCurveLoc, sectionEnd);
       if ((sectionCount++) > ringPts.length) {
@@ -271,20 +267,20 @@ class OffsetCurve {
     } while ((sectionStart != startIndex) && (sectionEnd != startIndex));
   }
 
-  int findSectionStart(Array<double> loc, int end) {
+  int findSectionStart(List<double> loc, int end) {
     int start = end;
     do {
       int nextV = next(start, loc.length);
-      if (loc[start] == _NOT_IN_CURVE) {
+      if (loc[start] == _kNotInCurve) {
         start = nextV;
         continue;
       }
       int prevV = prev(start, loc.length);
-      if (loc[prevV] == _NOT_IN_CURVE) {
+      if (loc[prevV] == _kNotInCurve) {
         return start;
       }
       if (_isJoined) {
-        double locDelta = Math.abs(loc[start] - loc[prevV]);
+        double locDelta = (loc[start] - loc[prevV]).abs();
         if (locDelta > 1) return start;
       }
       start = nextV;
@@ -292,15 +288,15 @@ class OffsetCurve {
     return start;
   }
 
-  int findSectionEnd(Array<double> loc, int start, int firstStartIndex) {
+  int findSectionEnd(List<double> loc, int start, int firstStartIndex) {
     int end = start;
     int nextV;
     do {
       nextV = next(end, loc.length);
-      if (loc[nextV] == _NOT_IN_CURVE) return nextV;
+      if (loc[nextV] == _kNotInCurve) return nextV;
 
       if (_isJoined) {
-        double locDelta = Math.abs(loc[nextV] - loc[end]);
+        double locDelta = (loc[nextV] - loc[end]).abs();
         if (locDelta > 1) return nextV;
       }
       end = nextV;
@@ -328,11 +324,11 @@ class MatchCurveSegmentAction extends MonotoneChainSelectAction {
 
   final int _rawCurveIndex;
 
-  final Array<Coordinate> _bufferRingPts;
+  final List<Coordinate> _bufferRingPts;
 
   double matchDistance;
 
-  final Array<double> _rawCurveLoc;
+  final List<double> _rawCurveLoc;
 
   double _minRawLocation = -1;
 
@@ -355,8 +351,7 @@ class MatchCurveSegmentAction extends MonotoneChainSelectAction {
 
   @override
   void select2(MonotoneChain mc, int segIndex) {
-    double frac = segmentMatchFrac(
-        _bufferRingPts[segIndex], _bufferRingPts[segIndex + 1], _raw0, _raw1, matchDistance);
+    double frac = segmentMatchFrac(_bufferRingPts[segIndex], _bufferRingPts[segIndex + 1], _raw0, _raw1, matchDistance);
     if (frac < 0) return;
 
     double location = _rawCurveIndex + frac;
@@ -367,25 +362,31 @@ class MatchCurveSegmentAction extends MonotoneChainSelectAction {
     }
   }
 
-  double segmentMatchFrac(
-      Coordinate buf0, Coordinate buf1, Coordinate raw0, Coordinate raw1, double matchDistance) {
+  double segmentMatchFrac(Coordinate buf0, Coordinate buf1, Coordinate raw0, Coordinate raw1, double matchDistance) {
     if (!isMatch(buf0, buf1, raw0, raw1, matchDistance)) return -1;
 
     LineSegment seg = LineSegment(raw0, raw1);
     return seg.segmentFraction(buf0);
   }
 
-  bool isMatch(
-      Coordinate buf0, Coordinate buf1, Coordinate raw0, Coordinate raw1, double matchDistance) {
+  bool isMatch(Coordinate buf0, Coordinate buf1, Coordinate raw0, Coordinate raw1, double matchDistance) {
     double bufSegLen = buf0.distance(buf1);
     if (_rawLen <= bufSegLen) {
-      if (matchDistance < Distance.pointToSegment(raw0, buf0, buf1)) return false;
+      if (matchDistance < Distance.pointToSegment(raw0, buf0, buf1)) {
+        return false;
+      }
 
-      if (matchDistance < Distance.pointToSegment(raw1, buf0, buf1)) return false;
+      if (matchDistance < Distance.pointToSegment(raw1, buf0, buf1)) {
+        return false;
+      }
     } else {
-      if (matchDistance < Distance.pointToSegment(buf0, raw0, raw1)) return false;
+      if (matchDistance < Distance.pointToSegment(buf0, raw0, raw1)) {
+        return false;
+      }
 
-      if (matchDistance < Distance.pointToSegment(buf1, raw0, raw1)) return false;
+      if (matchDistance < Distance.pointToSegment(buf1, raw0, raw1)) {
+        return false;
+      }
     }
     return true;
   }

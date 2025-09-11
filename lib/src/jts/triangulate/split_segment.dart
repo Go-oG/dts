@@ -2,19 +2,18 @@ import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 
 class SplitSegment {
-  static Coordinate pointAlongReverse(LineSegment seg, double segmentLengthFraction) {
-    Coordinate coord = Coordinate();
+  static Coordinate pointAlongReverse(
+      LineSegment seg, double segmentLengthFraction) {
+    final coord = Coordinate();
     coord.x = seg.p1.x - (segmentLengthFraction * (seg.p1.x - seg.p0.x));
     coord.y = seg.p1.y - (segmentLengthFraction * (seg.p1.y - seg.p0.y));
     return coord;
   }
 
   final LineSegment _seg;
-
-  late double _segLen;
+  double _segLen = 0;
 
   late Coordinate _splitPt;
-
   double _minimumLen = 0.0;
 
   SplitSegment(this._seg) {
@@ -54,7 +53,6 @@ class SplitSegment {
 
   double getConstrainedLength(double len) {
     if (len < _minimumLen) return _minimumLen;
-
     return len;
   }
 }

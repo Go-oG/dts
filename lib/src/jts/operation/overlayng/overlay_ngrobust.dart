@@ -68,21 +68,19 @@ class OverlayNGRobust {
     return null;
   }
 
-  static Geometry? overlaySnapping(
-      Geometry geom0, Geometry geom1, OverlayOpCode opCode, double snapTol) {
+  static Geometry? overlaySnapping(Geometry geom0, Geometry geom1, OverlayOpCode opCode, double snapTol) {
     try {
       return overlaySnapTol(geom0, geom1, opCode, snapTol);
-    } catch (ex) {}
+    } catch (_) {}
     return null;
   }
 
-  static Geometry? overlaySnapBoth(
-      Geometry geom0, Geometry geom1, OverlayOpCode opCode, double snapTol) {
+  static Geometry? overlaySnapBoth(Geometry geom0, Geometry geom1, OverlayOpCode opCode, double snapTol) {
     try {
       Geometry snap0 = snapSelf(geom0, snapTol);
       Geometry snap1 = snapSelf(geom1, snapTol);
       return overlaySnapTol(snap0, snap1, opCode, snapTol);
-    } catch (ex) {}
+    } catch (_) {}
     return null;
   }
 
@@ -94,8 +92,7 @@ class OverlayNGRobust {
     return ov.getResult();
   }
 
-  static Geometry overlaySnapTol(
-      Geometry geom0, Geometry geom1, OverlayOpCode opCode, double snapTol) {
+  static Geometry overlaySnapTol(Geometry geom0, Geometry geom1, OverlayOpCode opCode, double snapTol) {
     SnappingNoder snapNoder = SnappingNoder(snapTol);
     return OverlayNG.overlay2(geom0, geom1, opCode, snapNoder);
   }
@@ -127,7 +124,7 @@ class OverlayNGRobust {
       PrecisionModel pmSafe = PrecisionModel.fixed(scaleSafe);
       result = OverlayNG.overlay3(geom0, geom1, opCode, pmSafe);
       return result;
-    } catch (ex) {}
+    } catch (_) {}
     return null;
   }
 }

@@ -19,7 +19,8 @@ abstract class PreparedPolygonPredicate {
   }
 
   bool isAllTestComponentsInTarget(Geometry testGeom) {
-    List<Coordinate> coords = ComponentCoordinateExtracter.getCoordinates(testGeom);
+    List<Coordinate> coords =
+        ComponentCoordinateExtracter.getCoordinates(testGeom);
     for (var p in coords) {
       int loc = _targetPointLocator.locate(p);
       if (loc == Location.exterior) return false;
@@ -65,7 +66,8 @@ abstract class PreparedPolygonPredicate {
     return false;
   }
 
-  bool isAnyTargetComponentInAreaTest(Geometry testGeom, List<Coordinate> targetRepPts) {
+  bool isAnyTargetComponentInAreaTest(
+      Geometry testGeom, List<Coordinate> targetRepPts) {
     final piaLoc = SimplePointInAreaLocator(testGeom);
     for (var p in targetRepPts) {
       int loc = piaLoc.locate(p);
@@ -78,23 +80,26 @@ abstract class PreparedPolygonPredicate {
 
 class PreparedPolygonContainsProperly extends PreparedPolygonPredicate {
   static bool containsProperlyS(PreparedPolygon prep, Geometry geom) {
-    PreparedPolygonContainsProperly polyInt = PreparedPolygonContainsProperly(prep);
+    PreparedPolygonContainsProperly polyInt =
+        PreparedPolygonContainsProperly(prep);
     return polyInt.containsProperly(geom);
   }
 
   PreparedPolygonContainsProperly(super.prepPoly);
 
   bool containsProperly(Geometry geom) {
-    bool isAllInPrepGeomAreaInterior = isAllTestComponentsInTargetInterior(geom);
+    bool isAllInPrepGeomAreaInterior =
+        isAllTestComponentsInTargetInterior(geom);
     if (!isAllInPrepGeomAreaInterior) return false;
 
     final lineSegStr = SegmentStringUtil.extractSegmentStrings(geom);
-    bool segsIntersect = prepPoly.getIntersectionFinder().intersects(lineSegStr);
+    bool segsIntersect =
+        prepPoly.getIntersectionFinder().intersects(lineSegStr);
     if (segsIntersect) return false;
 
     if (geom is Polygonal) {
-      bool isTargetGeomInTestArea =
-          isAnyTargetComponentInAreaTest(geom, prepPoly.getRepresentativePoints());
+      bool isTargetGeomInTestArea = isAnyTargetComponentInAreaTest(
+          geom, prepPoly.getRepresentativePoints());
       if (isTargetGeomInTestArea) return false;
     }
     return true;
@@ -117,12 +122,13 @@ class PreparedPolygonIntersects extends PreparedPolygonPredicate {
 
     final lineSegStr = SegmentStringUtil.extractSegmentStrings(geom);
     if (lineSegStr.isNotEmpty) {
-      bool segsIntersect = prepPoly.getIntersectionFinder().intersects(lineSegStr);
+      bool segsIntersect =
+          prepPoly.getIntersectionFinder().intersects(lineSegStr);
       if (segsIntersect) return true;
     }
     if (geom.getDimension() == 2) {
-      bool isPrepGeomInArea =
-          isAnyTargetComponentInAreaTest(geom, prepPoly.getRepresentativePoints());
+      bool isPrepGeomInArea = isAnyTargetComponentInAreaTest(
+          geom, prepPoly.getRepresentativePoints());
       if (isPrepGeomInArea) return true;
     }
     return false;

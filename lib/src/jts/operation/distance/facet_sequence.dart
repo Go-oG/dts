@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/distance.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
@@ -19,7 +18,8 @@ class FacetSequence {
 
   FacetSequence(this._geom, this._pts, [this.start = 0, this.end = 0]);
 
-  FacetSequence.of(CoordinateSequence pts, int start) : this(null, pts, start, start + 1);
+  FacetSequence.of(CoordinateSequence pts, int start)
+      : this(null, pts, start, start + 1);
 
   Envelope getEnvelope() {
     Envelope env = Envelope();
@@ -61,31 +61,33 @@ class FacetSequence {
     return distance;
   }
 
-  Array<GeometryLocation> nearestLocations(FacetSequence facetSeq) {
+  List<GeometryLocation> nearestLocations(FacetSequence facetSeq) {
     bool isPointV = isPoint();
     bool isPointOther = facetSeq.isPoint();
-    Array<GeometryLocation> locs = Array(2);
+    List<GeometryLocation?> locs = List.filled(2, null);
     if (isPointV && isPointOther) {
       Coordinate pt = _pts.getCoordinate(start);
       Coordinate seqPt = facetSeq._pts.getCoordinate(facetSeq.start);
       locs[0] = GeometryLocation(_geom, start, Coordinate.of(pt));
-      locs[1] = GeometryLocation(facetSeq._geom, facetSeq.start, Coordinate.of(seqPt));
+      locs[1] = GeometryLocation(
+          facetSeq._geom, facetSeq.start, Coordinate.of(seqPt));
     } else if (isPointV) {
       Coordinate pt = _pts.getCoordinate(start);
       computeDistancePointLine(pt, facetSeq, locs);
     } else if (isPointOther) {
       Coordinate seqPt = facetSeq._pts.getCoordinate(facetSeq.start);
       computeDistancePointLine(seqPt, this, locs);
-      GeometryLocation tmp = locs[0];
+      GeometryLocation tmp = locs[0]!;
       locs[0] = locs[1];
       locs[1] = tmp;
     } else {
       computeDistanceLineLine(facetSeq, locs);
     }
-    return locs;
+    return locs.cast();
   }
 
-  double computeDistanceLineLine(FacetSequence facetSeq, Array<GeometryLocation>? locs) {
+  double computeDistanceLineLine(
+      FacetSequence facetSeq, List<GeometryLocation?>? locs) {
     double minDistance = double.maxFinite;
     for (int i = start; i < (end - 1); i++) {
       Coordinate p0 = _pts.getCoordinate(i);
@@ -97,7 +99,8 @@ class FacetSequence {
         if (dist < minDistance) {
           minDistance = dist;
           if (locs != null) {
-            updateNearestLocationsLineLine(i, p0, p1, facetSeq, j, q0, q1, locs);
+            updateNearestLocationsLineLine(
+                i, p0, p1, facetSeq, j, q0, q1, locs);
           }
 
           if (minDistance <= 0.0) {
@@ -117,17 +120,17 @@ class FacetSequence {
     int j,
     Coordinate q0,
     Coordinate q1,
-    Array<GeometryLocation> locs,
+    List<GeometryLocation?> locs,
   ) {
     LineSegment seg0 = LineSegment(p0, p1);
     LineSegment seg1 = LineSegment(q0, q1);
-    Array<Coordinate> closestPt = seg0.closestPoints(seg1);
+    final closestPt = seg0.closestPoints(seg1);
     locs[0] = GeometryLocation(_geom, i, Coordinate.of(closestPt[0]));
     locs[1] = GeometryLocation(facetSeq._geom, j, Coordinate.of(closestPt[1]));
   }
 
   double computeDistancePointLine(
-      Coordinate pt, FacetSequence facetSeq, Array<GeometryLocation>? locs) {
+      Coordinate pt, FacetSequence facetSeq, List<GeometryLocation?>? locs) {
     double minDistance = double.maxFinite;
     for (int i = facetSeq.start; i < (facetSeq.end - 1); i++) {
       Coordinate q0 = facetSeq._pts.getCoordinate(i);
@@ -153,11 +156,12 @@ class FacetSequence {
     int i,
     Coordinate q0,
     Coordinate q1,
-    Array<GeometryLocation> locs,
+    List<GeometryLocation?> locs,
   ) {
     locs[0] = GeometryLocation(_geom, start, Coordinate.of(pt));
     LineSegment seg = LineSegment(q0, q1);
     Coordinate segClosestPoint = seg.closestPoint(pt);
-    locs[1] = GeometryLocation(facetSeq._geom, i, Coordinate.of(segClosestPoint));
+    locs[1] =
+        GeometryLocation(facetSeq._geom, i, Coordinate.of(segClosestPoint));
   }
 }

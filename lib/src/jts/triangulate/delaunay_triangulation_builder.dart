@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
@@ -15,16 +14,13 @@ class DelaunayTriangulationBuilder {
     if (geom == null) {
       return CoordinateList();
     }
-
-    Array<Coordinate> coords = geom.getCoordinates();
-    return unique(coords);
+    return unique(geom.getCoordinates());
   }
 
-  static CoordinateList unique(Array<Coordinate> coords) {
-    Array<Coordinate> coordsCopy = CoordinateArrays.copyDeep(coords);
+  static CoordinateList unique(List<Coordinate> coords) {
+    List<Coordinate> coordsCopy = CoordinateArrays.copyDeep(coords);
     coordsCopy.sort();
-    CoordinateList coordList = CoordinateList(coordsCopy, false);
-    return coordList;
+    return CoordinateList(coordsCopy, false);
   }
 
   static List<Vertex> toVertices(List<Coordinate> coords) {
@@ -49,42 +45,30 @@ class DelaunayTriangulationBuilder {
 
   double tolerance = 0.0;
 
-  QuadEdgeSubdivision? subdiv;
+  void setSites2(Geometry geom) => siteCoords = extractUniqueCoordinates(geom);
 
-  void setSites2(Geometry geom) {
-    siteCoords = extractUniqueCoordinates(geom);
-  }
+  void setSites(List<Coordinate> coords) => siteCoords = unique(coords);
 
-  void setSites(List<Coordinate> coords) {
-    siteCoords = unique(CoordinateArrays.toCoordinateArray(coords));
-  }
+  void setTolerance(double tolerance) => this.tolerance = tolerance;
 
-  void setTolerance(double tolerance) {
-    this.tolerance = tolerance;
-  }
+  QuadEdgeSubdivision? _subDiv;
 
-  void create() {
-    if (subdiv != null) return;
-
+  QuadEdgeSubdivision get subDiv {
+    if (_subDiv != null) {
+      return _subDiv!;
+    }
     Envelope siteEnv = envelope(siteCoords.rawList);
     final vertices = toVertices(siteCoords.rawList);
-    subdiv = QuadEdgeSubdivision(siteEnv, tolerance);
-    final triangulator = IncrementalDelaunayTriangulator(subdiv!);
+    _subDiv = QuadEdgeSubdivision(siteEnv, tolerance);
+    final triangulator = IncrementalDelaunayTriangulator(_subDiv!);
     triangulator.insertSites(vertices);
+    return _subDiv!;
   }
 
-  QuadEdgeSubdivision getSubdivision() {
-    create();
-    return subdiv!;
-  }
+  QuadEdgeSubdivision getSubdivision() => subDiv;
 
-  Geometry getEdges(GeometryFactory geomFact) {
-    create();
-    return subdiv!.getEdges2(geomFact);
-  }
+  Geometry getEdges(GeometryFactory geomFact) => subDiv.getEdges2(geomFact);
 
-  Geometry getTriangles(GeometryFactory geomFact) {
-    create();
-    return subdiv!.getTriangles2(geomFact);
-  }
+  Geometry getTriangles(GeometryFactory geomFact) =>
+      subDiv.getTriangles2(geomFact);
 }

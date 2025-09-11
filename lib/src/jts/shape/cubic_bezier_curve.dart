@@ -51,7 +51,7 @@ class CubicBezierCurve {
 
   late Array<Coordinate> _bezierCurvePts;
 
-  late Array<Array<double>> _interpolationParam;
+  late List<List<double>> _interpolationParam;
 
   int _controlPointIndex = 0;
 
@@ -75,7 +75,8 @@ class CubicBezierCurve {
 
   Geometry getResult() {
     _bezierCurvePts = Array(_numVerticesPerSegment);
-    _interpolationParam = computeInterpolationParameters(_numVerticesPerSegment);
+    _interpolationParam =
+        computeInterpolationParameters(_numVerticesPerSegment);
 
     return GeometryMapper.flatMap(
       inputGeom,
@@ -94,18 +95,20 @@ class CubicBezierCurve {
 
   Geometry getControlPoints() {
     _bezierCurvePts = Array(_numVerticesPerSegment);
-    _interpolationParam = computeInterpolationParameters(_numVerticesPerSegment);
+    _interpolationParam =
+        computeInterpolationParameters(_numVerticesPerSegment);
     return GeometryMapper.flatMap(
       inputGeom,
       1,
       MapOpNormal((geom) {
         if (geom is LineString) {
-          Array<Coordinate> control = controlPoints4(geom.getCoordinates(), false);
+          final control = controlPoints4(geom.getCoordinates(), false);
           return geom.factory.createLineString2(control);
         }
         if (geom is Polygon) {
           Polygon poly = geom;
-          Array<Coordinate> control = controlPoints4(poly.getExteriorRing().getCoordinates(), true);
+          final control =
+              controlPoints4(poly.getExteriorRing().getCoordinates(), true);
           return geom.factory.createLineString2(control);
         }
         return geom.copy();
@@ -118,55 +121,57 @@ class CubicBezierCurve {
       return ls.copy();
     }
 
-    Array<Coordinate> coords = ls.getCoordinates();
+    final coords = ls.getCoordinates();
     CoordinateList curvePts = bezierCurve4(coords, false);
     curvePts.add3(coords[coords.length - 1].copy(), false);
-    return _geomFactory.createLineString2(curvePts.toCoordinateArray());
+    return _geomFactory.createLineString2(curvePts.toCoordinateList());
   }
 
   LinearRing bezierRing(LinearRing ring) {
-    Array<Coordinate> coords = ring.getCoordinates();
-    CoordinateList curvePts = bezierCurve4(coords, true);
+    final coords = ring.getCoordinates();
+    final curvePts = bezierCurve4(coords, true);
     curvePts.closeRing();
-    return _geomFactory.createLinearRings(curvePts.toCoordinateArray());
+    return _geomFactory.createLinearRings(curvePts.toCoordinateList());
   }
 
   Polygon bezierPolygon(Polygon poly) {
     LinearRing shell = bezierRing(poly.getExteriorRing());
-    Array<LinearRing>? holes;
+    List<LinearRing>? holes;
     if (poly.getNumInteriorRing() > 0) {
-      holes = Array(poly.getNumInteriorRing());
+      holes = [];
       for (int i = 0; i < poly.getNumInteriorRing(); i++) {
-        holes[i] = bezierRing(poly.getInteriorRingN(i));
+        holes.add(bezierRing(poly.getInteriorRingN(i)));
       }
     }
     return _geomFactory.createPolygon(shell, holes);
   }
 
-  CoordinateList bezierCurve4(Array<Coordinate> coords, bool isRing) {
+  CoordinateList bezierCurve4(List<Coordinate> coords, bool isRing) {
     CoordinateList curvePts = CoordinateList();
     if (coords.length <= 2) {
       return curvePts;
     }
 
-    Array<Coordinate> control = controlPoints4(coords, isRing);
+    final control = controlPoints4(coords, isRing);
     for (int i = 0; i < (coords.length - 1); i++) {
       int ctrlIndex = 2 * i;
-      addCurve(coords[i], coords[i + 1], control[ctrlIndex], control[ctrlIndex + 1], curvePts);
+      addCurve(coords[i], coords[i + 1], control[ctrlIndex],
+          control[ctrlIndex + 1], curvePts);
     }
     return curvePts;
   }
 
-  Array<Coordinate> controlPoints4(Array<Coordinate> coords, bool isRing) {
+  List<Coordinate> controlPoints4(List<Coordinate> coords, bool isRing) {
     if (_controlPoints != null) {
       if (_controlPointIndex >= _controlPoints!.getNumGeometries()) {
         throw IllegalArgumentException("Too few control point elements");
       }
       Geometry ctrlPtsGeom = _controlPoints!.getGeometryN(_controlPointIndex++);
-      Array<Coordinate> ctrlPts = ctrlPtsGeom.getCoordinates();
+      final ctrlPts = ctrlPtsGeom.getCoordinates();
       int expectedNum1 = (2 * coords.length) - 2;
       int expectedNum2 = (isRing) ? coords.length - 1 : coords.length;
-      if ((expectedNum1 != ctrlPts.length) && (expectedNum2 != ctrlPts.length)) {
+      if ((expectedNum1 != ctrlPts.length) &&
+          (expectedNum2 != ctrlPts.length)) {
         throw ((
           "Wrong number of control points for element %d - expected %d or %d, found %d",
           _controlPointIndex - 1,
@@ -180,8 +185,8 @@ class CubicBezierCurve {
     return controlPoints3(coords, isRing, alpha, _skew);
   }
 
-  void addCurve(
-      Coordinate p0, Coordinate p1, Coordinate ctrl0, Coordinate crtl1, CoordinateList curvePts) {
+  void addCurve(Coordinate p0, Coordinate p1, Coordinate ctrl0,
+      Coordinate crtl1, CoordinateList curvePts) {
     double len = p0.distance(p1);
     if (len < _minSegmentLength) {
       curvePts.add(Coordinate.of(p0));
@@ -193,10 +198,10 @@ class CubicBezierCurve {
     }
   }
 
-  static const double _CIRCLE_LEN_FACTOR = 3.0 / 8.0;
+  static const double _kCircleLenFactor = 3.0 / 8.0;
 
-  static Array<Coordinate> controlPoints3(
-      Array<Coordinate> coords, bool isRing, double alpha, double skew) {
+  static List<Coordinate> controlPoints3(
+      List<Coordinate> coords, bool isRing, double alpha, double skew) {
     int N = coords.length;
     int start = 1;
     int end = N - 1;
@@ -221,8 +226,9 @@ class CubicBezierCurve {
       double dist1 = v1.distance(v2);
       double lenBase = Math.min(dist0, dist1).toDouble();
       double intAngAbs = Math.abs(interiorAng);
-      double sharpnessFactor = (intAngAbs >= Angle.piOver2) ? 1 : intAngAbs / Angle.piOver2;
-      double len = ((alpha * _CIRCLE_LEN_FACTOR) * sharpnessFactor) * lenBase;
+      double sharpnessFactor =
+          (intAngAbs >= Angle.piOver2) ? 1 : intAngAbs / Angle.piOver2;
+      double len = ((alpha * _kCircleLenFactor) * sharpnessFactor) * lenBase;
       double stretch0 = 1;
       double stretch1 = 1;
       if (skew != 0) {
@@ -245,43 +251,52 @@ class CubicBezierCurve {
       ctrl[i0] = ctl0;
       ctrl[index + 1] = ctl1;
     }
+
+    final resultList = ctrl.toList();
     if (!isRing) {
-      setLineEndControlPoints(coords, ctrl);
+      setLineEndControlPoints(coords, resultList);
     }
-    return ctrl;
+    return resultList;
   }
 
-  static void setLineEndControlPoints(Array<Coordinate> coords, Array<Coordinate> ctrl) {
+  static void setLineEndControlPoints(
+      List<Coordinate> coords, List<Coordinate> ctrl) {
     int N = ctrl.length;
     ctrl[0] = mirrorControlPoint(ctrl[1], coords[1], coords[0]);
-    ctrl[N - 1] =
-        mirrorControlPoint(ctrl[N - 2], coords[coords.length - 1], coords[coords.length - 2]);
+    ctrl[N - 1] = mirrorControlPoint(
+        ctrl[N - 2], coords[coords.length - 1], coords[coords.length - 2]);
   }
 
-  static Coordinate aimedControlPoint(Coordinate c, Coordinate p1, Coordinate p0) {
+  static Coordinate aimedControlPoint(
+      Coordinate c, Coordinate p1, Coordinate p0) {
     double len = p1.distance(c);
     double ang = Angle.angle2(p0, p1);
     return Angle.project(p0, ang, len);
   }
 
-  static Coordinate mirrorControlPoint(Coordinate c, Coordinate p0, Coordinate p1) {
+  static Coordinate mirrorControlPoint(
+      Coordinate c, Coordinate p0, Coordinate p1) {
     double vlinex = p1.x - p0.x;
     double vliney = p1.y - p0.y;
     double vrotx = -vliney;
     double vroty = vlinex;
     double midx = (p0.x + p1.x) / 2;
     double midy = (p0.y + p1.y) / 2;
-    return reflectPointInLine(c, Coordinate(midx, midy), Coordinate(midx + vrotx, midy + vroty));
+    return reflectPointInLine(
+        c, Coordinate(midx, midy), Coordinate(midx + vrotx, midy + vroty));
   }
 
-  static Coordinate reflectPointInLine(Coordinate p, Coordinate p0, Coordinate p1) {
+  static Coordinate reflectPointInLine(
+      Coordinate p, Coordinate p0, Coordinate p1) {
     double vx = p1.x - p0.x;
     double vy = p1.y - p0.y;
     double x = p0.x - p.x;
     double y = p0.y - p.y;
     double r = 1 / ((vx * vx) + (vy * vy));
-    double rx = p.x + (2 * ((x - (((x * vx) * vx) * r)) - (((y * vx) * vy) * r)));
-    double ry = p.y + (2 * ((y - (((y * vy) * vy) * r)) - (((x * vx) * vy) * r)));
+    double rx =
+        p.x + (2 * ((x - (((x * vx) * vx) * r)) - (((y * vx) * vy) * r)));
+    double ry =
+        p.y + (2 * ((y - (((y * vy) * vy) * r)) - (((x * vx) * vy) * r)));
     return Coordinate(rx, ry);
   }
 
@@ -290,7 +305,7 @@ class CubicBezierCurve {
     final Coordinate p1,
     final Coordinate ctrl1,
     final Coordinate ctrl2,
-    Array<Array<double>> param,
+    List<List<double>> param,
     Array<Coordinate> curve,
   ) {
     int n = curve.length;
@@ -299,18 +314,20 @@ class CubicBezierCurve {
     for (int i = 1; i < (n - 1); i++) {
       Coordinate c = Coordinate();
       double sum = ((param[i][0] + param[i][1]) + param[i][2]) + param[i][3];
-      c.x = (((param[i][0] * p0.x) + (param[i][1] * ctrl1.x)) + (param[i][2] * ctrl2.x)) +
+      c.x = (((param[i][0] * p0.x) + (param[i][1] * ctrl1.x)) +
+              (param[i][2] * ctrl2.x)) +
           (param[i][3] * p1.x);
       c.x /= sum;
-      c.y = (((param[i][0] * p0.y) + (param[i][1] * ctrl1.y)) + (param[i][2] * ctrl2.y)) +
+      c.y = (((param[i][0] * p0.y) + (param[i][1] * ctrl1.y)) +
+              (param[i][2] * ctrl2.y)) +
           (param[i][3] * p1.y);
       c.y /= sum;
       curve[i] = c;
     }
   }
 
-  static Array<Array<double>> computeInterpolationParameters(int n) {
-    Array<Array<double>> param = Array.matrix2(n, 4);
+  static List<List<double>> computeInterpolationParameters(int n) {
+    List<List<double>> param = List.generate(n, (i) => List.filled(4, 0));
     for (int i = 0; i < n; i++) {
       double t = (i) / (n - 1);
       double tc = 1.0 - t;

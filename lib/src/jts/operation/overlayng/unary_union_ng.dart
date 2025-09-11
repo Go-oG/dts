@@ -21,7 +21,8 @@ class UnaryUnionNG {
     return op.union();
   }
 
-  static Geometry? union3(List<Geometry> geoms, GeometryFactory geomFact, PrecisionModel pm) {
+  static Geometry? union3(
+      List<Geometry> geoms, GeometryFactory geomFact, PrecisionModel pm) {
     UnaryUnionOp op = UnaryUnionOp(geoms, geomFact);
     op.setUnionFunction(createUnionStrategy(pm));
     return op.union();

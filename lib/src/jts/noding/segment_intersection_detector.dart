@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -44,7 +44,8 @@ class SegmentIntersectionDetector implements NSegmentIntersector {
   }
 
   @override
-  void processIntersections(SegmentString e0, int segIndex0, SegmentString e1, int segIndex1) {
+  void processIntersections(
+      SegmentString e0, int segIndex0, SegmentString e1, int segIndex1) {
     if ((e0 == e1) && (segIndex0 == segIndex1)) return;
 
     Coordinate p00 = e0.getCoordinate(segIndex0);

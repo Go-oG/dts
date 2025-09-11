@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_collection.dart';
@@ -48,7 +47,7 @@ class Centroid {
 
   Coordinate? getCentroid() {
     Coordinate cent = Coordinate();
-    if (Math.abs(_areaSum2) > 0.0) {
+    if (_areaSum2.abs() > 0.0) {
       cent.x = (_cg3.x / 3) / _areaSum2;
       cent.y = (_cg3.y / 3) / _areaSum2;
     } else if (_totalLength > 0.0) {
@@ -74,8 +73,8 @@ class Centroid {
     }
   }
 
-  void _addShell(Array<Coordinate> pts) {
-    if (pts.length > 0) {
+  void _addShell(List<Coordinate> pts) {
+    if (pts.isNotEmpty) {
       _setAreaBasePoint(pts[0]);
     }
 
@@ -86,7 +85,7 @@ class Centroid {
     _addLineSegments(pts);
   }
 
-  void _addHole(Array<Coordinate> pts) {
+  void _addHole(List<Coordinate> pts) {
     bool isPositiveArea = Orientation.isCCW(pts);
     for (int i = 0; i < (pts.length - 1); i++) {
       _addTriangle(_areaBasePt!, pts[i], pts[i + 1], isPositiveArea);
@@ -113,7 +112,7 @@ class Centroid {
     return ((p2.x - p1.x) * (p3.y - p1.y)) - ((p3.x - p1.x) * (p2.y - p1.y));
   }
 
-  void _addLineSegments(Array<Coordinate> pts) {
+  void _addLineSegments(List<Coordinate> pts) {
     double lineLen = 0.0;
     for (int i = 0; i < (pts.length - 1); i++) {
       double segmentLen = pts[i].distance(pts[i + 1]);
@@ -128,7 +127,7 @@ class Centroid {
       _lineCentSum.y += segmentLen * midy;
     }
     _totalLength += lineLen;
-    if ((lineLen == 0.0) && (pts.length > 0)) {
+    if (lineLen == 0.0 && pts.isNotEmpty) {
       _addPoint(pts[0]);
     }
   }

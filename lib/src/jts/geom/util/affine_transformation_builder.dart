@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/math/math.dart';
 
@@ -24,7 +24,8 @@ class AffineTransformationBuilder {
 
   late double m12;
 
-  AffineTransformationBuilder(this._src0, this._src1, this._src2, this._dest0, this._dest1, this._dest2);
+  AffineTransformationBuilder(this._src0, this._src1, this._src2, this._dest0,
+      this._dest1, this._dest2);
 
   AffineTransformation? getTransformation() {
     bool isSolvable = compute();

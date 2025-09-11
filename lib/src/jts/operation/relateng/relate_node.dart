@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/dimension.dart';
 import 'package:dts/src/jts/geom/location.dart';
@@ -15,9 +15,9 @@ class RelateNGNode {
 
   RelateNGNode(this.nodePt);
 
-  Coordinate getCoordinate()=>nodePt;
+  Coordinate getCoordinate() => nodePt;
 
-  List<RelateEdge> getEdges()=>_edges;
+  List<RelateEdge> getEdges() => _edges;
 
   void addEdges2(List<NodeSection> nss) {
     for (NodeSection ns in nss) {
@@ -108,8 +108,8 @@ class RelateNGNode {
   }
 
   void finish(bool isAreaInteriorA, bool isAreaInteriorB) {
-    finishNode(RelateGeometry.GEOM_A, isAreaInteriorA);
-    finishNode(RelateGeometry.GEOM_B, isAreaInteriorB);
+    finishNode(RelateGeometry.kGeomA, isAreaInteriorA);
+    finishNode(RelateGeometry.kGeomB, isAreaInteriorB);
   }
 
   void finishNode(bool isA, bool isAreaInterior) {

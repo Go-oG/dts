@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -33,7 +32,8 @@ class SimpleGeometryPrecisionReducer {
   Geometry? reduce(Geometry geom) {
     GeometryEditor geomEdit;
     if (changePrecisionModel) {
-      GeometryFactory newFactory = GeometryFactory(pm: _newPrecisionModel, srid: geom.factory.srid);
+      GeometryFactory newFactory =
+          GeometryFactory(pm: _newPrecisionModel, srid: geom.factory.srid);
       geomEdit = GeometryEditor(newFactory);
     } else {
       geomEdit = GeometryEditor.empty();
@@ -49,23 +49,23 @@ class _PrecisionReducerCoordinateOperation extends CoordinateOperation {
   _PrecisionReducerCoordinateOperation(this._parent);
 
   @override
-  Array<Coordinate>? edit2(Array<Coordinate> coordinates, Geometry geom) {
+  List<Coordinate>? edit2(List<Coordinate> coordinates, Geometry geom) {
     if (coordinates.isEmpty) return null;
 
-    Array<Coordinate> reducedCoords = Array(coordinates.length);
+    List<Coordinate> reducedCoords = [];
     for (int i = 0; i < coordinates.length; i++) {
       Coordinate coord = Coordinate.of(coordinates[i]);
       _parent._newPrecisionModel.makePrecise(coord);
-      reducedCoords[i] = coord;
+      reducedCoords.add(coord);
     }
     final noRepeatedCoordList = CoordinateList(reducedCoords, false);
-    Array<Coordinate> noRepeatedCoords = noRepeatedCoordList.toCoordinateArray();
+    final noRepeatedCoords = noRepeatedCoordList.toCoordinateList();
     int minLength = 0;
     if (geom is LineString) minLength = 2;
 
     if (geom is LinearRing) minLength = 4;
 
-    Array<Coordinate>? collapsedCoords = reducedCoords;
+    List<Coordinate>? collapsedCoords = reducedCoords;
     if (_parent.removeCollapsed) {
       collapsedCoords = null;
     }

@@ -58,7 +58,8 @@ class OverlayLabeller {
         Assert.isTrue(label.hasSides(geomIndex));
         int locRight = e.getLocation(geomIndex, Position.right);
         if (locRight != currLoc) {
-          throw TopologyException("side location conflict: arg $geomIndex", e.getCoordinate());
+          throw TopologyException(
+              "side location conflict: arg $geomIndex", e.getCoordinate());
         }
         int locLeft = e.getLocation(geomIndex, Position.left);
         if (locLeft == Location.none) {
@@ -70,7 +71,8 @@ class OverlayLabeller {
     } while (e != eStart);
   }
 
-  static OverlayEdge? findPropagationStartEdge(OverlayEdge nodeEdge, int geomIndex) {
+  static OverlayEdge? findPropagationStartEdge(
+      OverlayEdge nodeEdge, int geomIndex) {
     OverlayEdge? eStart = nodeEdge;
     do {
       OverlayLabel label = eStart!.getLabel();
@@ -111,7 +113,8 @@ class OverlayLabeller {
   }
 
   void propagateLinearLocations(int geomIndex) {
-    List<OverlayEdge> linearEdges = findLinearEdgesWithLocation(_edges, geomIndex);
+    List<OverlayEdge> linearEdges =
+        findLinearEdgesWithLocation(_edges, geomIndex);
     if (linearEdges.size <= 0) {
       return;
     }
@@ -120,7 +123,8 @@ class OverlayLabeller {
     bool isInputLine = _inputGeometry.isLine(geomIndex);
     while (edgeStack.isNotEmpty) {
       OverlayEdge lineEdge = edgeStack.removeAt(0);
-      propagateLinearLocationAtNode(lineEdge, geomIndex, isInputLine, edgeStack);
+      propagateLinearLocationAtNode(
+          lineEdge, geomIndex, isInputLine, edgeStack);
     }
   }
 
@@ -146,7 +150,8 @@ class OverlayLabeller {
     } while (e != eNode);
   }
 
-  static List<OverlayEdge> findLinearEdgesWithLocation(List<OverlayEdge> edges, int geomIndex) {
+  static List<OverlayEdge> findLinearEdgesWithLocation(
+      List<OverlayEdge> edges, int geomIndex) {
     List<OverlayEdge> linearEdges = [];
     for (OverlayEdge edge in edges) {
       OverlayLabel lbl = edge.getLabel();
@@ -180,14 +185,16 @@ class OverlayLabeller {
 
   int locateEdge(int geomIndex, OverlayEdge edge) {
     int loc = _inputGeometry.locatePointInArea(geomIndex, edge.orig());
-    int edgeLoc = (loc != Location.exterior) ? Location.interior : Location.exterior;
+    int edgeLoc =
+        (loc != Location.exterior) ? Location.interior : Location.exterior;
     return edgeLoc;
   }
 
   int locateEdgeBothEnds(int geomIndex, OverlayEdge edge) {
     int locOrig = _inputGeometry.locatePointInArea(geomIndex, edge.orig());
     int locDest = _inputGeometry.locatePointInArea(geomIndex, edge.dest());
-    bool isInt = (locOrig != Location.exterior) && (locDest != Location.exterior);
+    bool isInt =
+        (locOrig != Location.exterior) && (locDest != Location.exterior);
     int edgeLoc = (isInt) ? Location.interior : Location.exterior;
     return edgeLoc;
   }

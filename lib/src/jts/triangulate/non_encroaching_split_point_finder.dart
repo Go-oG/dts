@@ -1,5 +1,4 @@
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/line_segment.dart';
 
 import 'constraint_split_point_finder.dart';
 import 'segment.dart';
@@ -8,7 +7,7 @@ import 'split_segment.dart';
 class NonEncroachingSplitPointFinder implements ConstraintSplitPointFinder {
   @override
   Coordinate findSplitPoint(Segment seg, Coordinate encroachPt) {
-    LineSegment lineSeg = seg.getLineSegment();
+    final lineSeg = seg.getLineSegment();
     double segLen = lineSeg.getLength();
     double midPtLen = segLen / 2;
     final splitSeg = SplitSegment(lineSeg);
@@ -24,8 +23,7 @@ class NonEncroachingSplitPointFinder implements ConstraintSplitPointFinder {
   }
 
   static Coordinate projectedSplitPoint(Segment seg, Coordinate encroachPt) {
-    LineSegment lineSeg = seg.getLineSegment();
-    Coordinate projPt = lineSeg.project(encroachPt);
-    return projPt;
+    final lineSeg = seg.getLineSegment();
+    return lineSeg.project(encroachPt);
   }
 }

@@ -52,7 +52,8 @@ class LengthIndexedLine {
   }
 
   Array<double> indicesOf(Geometry subLine) {
-    Array<LinearLocation> locIndex = LocationIndexOfLine.indicesOf2(linearGeom, subLine);
+    Array<LinearLocation> locIndex =
+        LocationIndexOfLine.indicesOf2(linearGeom, subLine);
     return [
       LengthLocationMap.getLength2(linearGeom, locIndex[0]),
       LengthLocationMap.getLength2(linearGeom, locIndex[1]),

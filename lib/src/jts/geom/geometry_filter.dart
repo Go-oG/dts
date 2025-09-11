@@ -150,8 +150,7 @@ class GeomExtracter implements GeometryFilter {
   static bool isOfType(Geometry geom, GeometryType? geometryType) {
     if (geom.geometryType == geometryType) return true;
 
-    if ((geometryType == GeometryType.lineString) &&
-        (geom.geometryType == GeometryType.linearRing)) {
+    if ((geometryType == GeometryType.lineString) && (geom.geometryType == GeometryType.linearRing)) {
       return true;
     }
 
@@ -160,6 +159,8 @@ class GeomExtracter implements GeometryFilter {
 
   @override
   void filter(Geometry geom) {
-    if ((_geometryType == null) || isOfType(geom, _geometryType)) _comps.add(geom);
+    if (_geometryType == null || isOfType(geom, _geometryType)) {
+      _comps.add(geom);
+    }
   }
 }

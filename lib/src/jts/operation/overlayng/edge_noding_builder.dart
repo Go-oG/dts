@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
@@ -29,9 +28,9 @@ import 'overlay_util.dart';
 import 'ring_clipper.dart';
 
 class EdgeNodingBuilder {
-  static const int _MIN_LIMIT_PTS = 20;
+  static const int _kMinLimitPts = 20;
 
-  static final bool _IS_NODING_VALIDATED = true;
+  static final bool _kIsNodingValidated = true;
 
   static Noder createFixedPrecisionNoder(PrecisionModel pm) {
     Noder noder = SnapRoundingNoder(pm);
@@ -61,7 +60,7 @@ class EdgeNodingBuilder {
 
   LineLimiter? _limiter;
 
-  final Array<bool> _hasEdges = Array(2);
+  final List<bool> _hasEdges = List.filled(2, false);
 
   EdgeNodingBuilder(this.pm, this._customNoder);
 
@@ -71,7 +70,7 @@ class EdgeNodingBuilder {
     }
 
     if (OverlayUtil.isdoubleing(pm)) {
-      return createDoubleingPrecisionNoder(_IS_NODING_VALIDATED);
+      return createDoubleingPrecisionNoder(_kIsNodingValidated);
     }
 
     return createFixedPrecisionNoder(pm);
@@ -106,7 +105,7 @@ class EdgeNodingBuilder {
   List<OEdge> createEdges(List<SegmentString> segStrings) {
     List<OEdge> edges = [];
     for (SegmentString ss in segStrings) {
-      Array<Coordinate> pts = ss.getCoordinates();
+      final pts = ss.getCoordinates();
       if (OEdge.isCollapsed(pts)) {
         continue;
       }
@@ -119,19 +118,21 @@ class EdgeNodingBuilder {
   }
 
   void add(Geometry? g, int geomIndex) {
-    if ((g == null) || g.isEmpty()) return;
+    if (g == null || g.isEmpty()) return;
 
     if (isClippedCompletely(g.getEnvelopeInternal())) return;
 
     if (g is Polygon) {
       addPolygon(g, geomIndex);
-    } else if (g is LineString)
+    } else if (g is LineString) {
       addLine2(g, geomIndex);
-    else if (g is MultiLineString)
+    } else if (g is MultiLineString) {
       addCollection(g, geomIndex);
-    else if (g is MultiPolygon)
+    } else if (g is MultiPolygon) {
       addCollection(g, geomIndex);
-    else if (g is GeometryCollection) addGeometryCollection(g, geomIndex, g.getDimension());
+    } else if (g is GeometryCollection) {
+      addGeometryCollection(g, geomIndex, g.getDimension());
+    }
   }
 
   void addCollection(GeometryCollection gc, int geomIndex) {
@@ -145,7 +146,7 @@ class EdgeNodingBuilder {
     for (int i = 0; i < gc.getNumGeometries(); i++) {
       Geometry g = gc.getGeometryN(i);
       if (g.getDimension() != expectedDim) {
-        throw IllegalArgumentException("Overlay input is mixed-dimension");
+        throw ArgumentError("Overlay input is mixed-dimension");
       }
       add(g, geomIndex);
     }
@@ -165,7 +166,7 @@ class EdgeNodingBuilder {
 
     if (isClippedCompletely(ring.getEnvelopeInternal())) return;
 
-    Array<Coordinate> pts = clip(ring);
+    List<Coordinate> pts = clip(ring);
     if (pts.length < 2) {
       return;
     }
@@ -182,8 +183,8 @@ class EdgeNodingBuilder {
     return _clipEnv!.disjoint(env);
   }
 
-  Array<Coordinate> clip(LinearRing ring) {
-    Array<Coordinate> pts = ring.getCoordinates();
+  List<Coordinate> clip(LinearRing ring) {
+    List<Coordinate> pts = ring.getCoordinates();
     Envelope env = ring.getEnvelopeInternal();
     if ((_clipper == null) || _clipEnv!.covers(env)) {
       return removeRepeatedPoints(ring);
@@ -191,9 +192,8 @@ class EdgeNodingBuilder {
     return _clipper!.clip(pts);
   }
 
-  static Array<Coordinate> removeRepeatedPoints(LineString line) {
-    Array<Coordinate> pts = line.getCoordinates();
-    return CoordinateArrays.removeRepeatedPoints(pts);
+  static List<Coordinate> removeRepeatedPoints(LineString line) {
+    return CoordinateArrays.removeRepeatedPoints(line.getCoordinates());
   }
 
   static int computeDepthDelta(LinearRing ring, bool isHole) {
@@ -214,17 +214,17 @@ class EdgeNodingBuilder {
     if (isClippedCompletely(line.getEnvelopeInternal())) return;
 
     if (isToBeLimited(line)) {
-      List<Array<Coordinate>> sections = limit(line);
-      for (Array<Coordinate> pts in sections) {
+      List<List<Coordinate>> sections = limit(line);
+      for (List<Coordinate> pts in sections) {
         addLine(pts, geomIndex);
       }
     } else {
-      Array<Coordinate> ptsNoRepeat = removeRepeatedPoints(line);
+      List<Coordinate> ptsNoRepeat = removeRepeatedPoints(line);
       addLine(ptsNoRepeat, geomIndex);
     }
   }
 
-  void addLine(Array<Coordinate> pts, int geomIndex) {
+  void addLine(List<Coordinate> pts, int geomIndex) {
     if (pts.length < 2) {
       return;
     }
@@ -232,25 +232,22 @@ class EdgeNodingBuilder {
     addEdge(pts, info);
   }
 
-  void addEdge(Array<Coordinate> pts, EdgeSourceInfo info) {
+  void addEdge(List<Coordinate> pts, EdgeSourceInfo info) {
     NodedSegmentString ss = NodedSegmentString(pts, info);
     _inputEdges.add(ss);
   }
 
   bool isToBeLimited(LineString line) {
-    Array<Coordinate> pts = line.getCoordinates();
-    if ((_limiter == null) || (pts.length <= _MIN_LIMIT_PTS)) {
+    List<Coordinate> pts = line.getCoordinates();
+    if (_limiter == null || pts.length <= _kMinLimitPts) {
       return false;
     }
-    Envelope env = line.getEnvelopeInternal();
+    final env = line.getEnvelopeInternal();
     if (_clipEnv!.covers(env)) {
       return false;
     }
     return true;
   }
 
-  List<Array<Coordinate>> limit(LineString line) {
-    Array<Coordinate> pts = line.getCoordinates();
-    return _limiter!.limit(pts);
-  }
+  List<List<Coordinate>> limit(LineString line) => _limiter!.limit(line.getCoordinates());
 }

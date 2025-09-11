@@ -69,7 +69,7 @@ class Polygonizer {
     if (_extractOnlyPolygonal) {
       return _geomFactory!.buildGeometry(polyList!);
     }
-    return _geomFactory!.createGeomCollection(GeometryFactory.toGeometryArray(polyList!)!);
+    return _geomFactory!.createGeomCollection(polyList!);
   }
 
   List<LineString> getDangles() {
@@ -202,7 +202,8 @@ class Polygonizer {
     return false;
   }
 
-  static List<Polygon> extractPolygons(List<EdgeRingO> shellList, bool includeAll) {
+  static List<Polygon> extractPolygons(
+      List<EdgeRingO> shellList, bool includeAll) {
     List<Polygon> polyList = [];
     for (EdgeRingO er in shellList) {
       if (includeAll || er.isIncluded()) {

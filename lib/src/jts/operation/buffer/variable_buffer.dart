@@ -1,4 +1,5 @@
-import 'package:d_util/d_util.dart';
+import 'dart:math';
+
 import 'package:dts/src/jts/algorithm/angle.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -17,32 +18,35 @@ class VariableBuffer {
 
   static const double _kSnapTrigTol = 1.0E-6;
 
-  static Geometry buffer(LineString line, double startDistance, double endDistance) {
-    Array<double> distance = interpolate(line, startDistance, endDistance);
+  static Geometry buffer(
+      LineString line, double startDistance, double endDistance) {
+    List<double> distance = interpolate(line, startDistance, endDistance);
     VariableBuffer vb = VariableBuffer(line, distance);
     return vb.getResult();
   }
 
-  static Geometry buffer3(
-      LineString line, double startDistance, double midDistance, double endDistance) {
-    Array<double> distance = interpolate2(line, startDistance, midDistance, endDistance);
+  static Geometry buffer3(LineString line, double startDistance,
+      double midDistance, double endDistance) {
+    List<double> distance =
+        interpolate2(line, startDistance, midDistance, endDistance);
     VariableBuffer vb = VariableBuffer(line, distance);
     return vb.getResult();
   }
 
-  static Geometry buffer2(LineString line, Array<double> distance) {
+  static Geometry buffer2(LineString line, List<double> distance) {
     VariableBuffer vb = VariableBuffer(line, distance);
     return vb.getResult();
   }
 
-  static Array<double> interpolate(LineString line, double startValue, double endValue) {
-    startValue = Math.abs(startValue);
-    endValue = Math.abs(endValue);
-    Array<double> values = Array(line.getNumPoints());
+  static List<double> interpolate(
+      LineString line, double startValue, double endValue) {
+    startValue = startValue.abs();
+    endValue = endValue.abs();
+    List<double> values = List.filled(line.getNumPoints(), 0);
     values[0] = startValue;
     values[values.length - 1] = endValue;
     double totalLen = line.getLength();
-    Array<Coordinate> pts = line.getCoordinates();
+    List<Coordinate> pts = line.getCoordinates();
     double currLen = 0;
     for (int i = 1; i < (values.length - 1); i++) {
       double segLen = pts[i].distance(pts[i - 1]);
@@ -54,15 +58,15 @@ class VariableBuffer {
     return values;
   }
 
-  static Array<double> interpolate2(
+  static List<double> interpolate2(
       LineString line, double startValue, double midValue, double endValue) {
-    startValue = Math.abs(startValue);
-    midValue = Math.abs(midValue);
-    endValue = Math.abs(endValue);
-    Array<double> values = Array(line.getNumPoints());
+    startValue = startValue.abs();
+    midValue = midValue.abs();
+    endValue = endValue.abs();
+    List<double> values = List.filled(line.getNumPoints(), 0);
     values[0] = startValue;
     values[values.length - 1] = endValue;
-    Array<Coordinate> pts = line.getCoordinates();
+    List<Coordinate> pts = line.getCoordinates();
     double lineLen = line.getLength();
     int midIndex = indexAtLength(pts, lineLen / 2);
     double delMidStart = midValue - startValue;
@@ -88,7 +92,7 @@ class VariableBuffer {
     return values;
   }
 
-  static int indexAtLength(Array<Coordinate> pts, double targetLen) {
+  static int indexAtLength(List<Coordinate> pts, double targetLen) {
     double len = 0;
     for (int i = 1; i < pts.length; i++) {
       len += pts[i].distance(pts[i - 1]);
@@ -97,7 +101,7 @@ class VariableBuffer {
     return pts.length - 1;
   }
 
-  static double length(Array<Coordinate> pts, int i1, int i2) {
+  static double length(List<Coordinate> pts, int i1, int i2) {
     double len = 0;
     for (int i = i1 + 1; i <= i2; i++) {
       len += pts[i].distance(pts[i - 1]);
@@ -107,7 +111,7 @@ class VariableBuffer {
 
   final LineString _line;
 
-  final Array<double> _distance;
+  final List<double> _distance;
 
   late GeometryFactory geomFactory;
 
@@ -116,13 +120,14 @@ class VariableBuffer {
   VariableBuffer(this._line, this._distance) {
     geomFactory = _line.factory;
     if (_distance.length != _line.getNumPoints()) {
-      throw IllegalArgumentException("Number of distances is not equal to number of vertices");
+      throw ArgumentError(
+          "Number of distances is not equal to number of vertices");
     }
   }
 
   Geometry getResult() {
     List<Geometry> parts = [];
-    Array<Coordinate> pts = _line.getCoordinates();
+    List<Coordinate> pts = _line.getCoordinates();
     for (int i = 1; i < pts.length; i++) {
       double dist0 = _distance[i - 1];
       double dist1 = _distance[i];
@@ -131,8 +136,7 @@ class VariableBuffer {
         if (poly != null) parts.add(poly);
       }
     }
-    GeometryCollection partsGeom =
-        geomFactory.createGeomCollection(GeometryFactory.toGeometryArray(parts)!);
+    GeometryCollection partsGeom = geomFactory.createGeomCollection(parts);
     Geometry buffer = partsGeom.union()!;
     if (buffer.isEmpty()) {
       return geomFactory.createPolygon();
@@ -140,7 +144,8 @@ class VariableBuffer {
     return buffer;
   }
 
-  Polygon? segmentBuffer(Coordinate p0, Coordinate p1, double dist0, double dist1) {
+  Polygon? segmentBuffer(
+      Coordinate p0, Coordinate p1, double dist0, double dist1) {
     if ((dist0 <= 0) && (dist1 <= 0)) return null;
 
     if (dist0 > dist1) {
@@ -149,7 +154,8 @@ class VariableBuffer {
     return segmentBufferOriented(p0, p1, dist0, dist1);
   }
 
-  Polygon segmentBufferOriented(Coordinate p0, Coordinate p1, double dist0, double dist1) {
+  Polygon segmentBufferOriented(
+      Coordinate p0, Coordinate p1, double dist0, double dist1) {
     LineSegment? tangent = outerTangent(p0, dist0, p1, dist1);
     if (tangent == null) {
       Coordinate center = p0;
@@ -165,11 +171,11 @@ class VariableBuffer {
     addCap(p1, dist1, tangent.p1, tangentReflect.p1, coords);
     addCap(p0, dist0, tangentReflect.p0, tangent.p0, coords);
     coords.closeRing();
-    Array<Coordinate> pts = coords.toCoordinateArray();
-    return geomFactory.createPolygon3(pts);
+    return geomFactory.createPolygon3(coords.toCoordinateList());
   }
 
-  LineSegment reflect(LineSegment seg, Coordinate p0, Coordinate p1, double dist0) {
+  LineSegment reflect(
+      LineSegment seg, Coordinate p0, Coordinate p1, double dist0) {
     LineSegment line = LineSegment(p0, p1);
     Coordinate r0 = line.reflect(seg.p0);
     Coordinate r1 = line.reflect(seg.p1);
@@ -182,16 +188,17 @@ class VariableBuffer {
     if (radius <= 0) return null;
 
     int nPts = 4 * _quadrantSegs;
-    Array<Coordinate> pts = Array(nPts + 1);
-    double angInc = (Math.pi / 2) / _quadrantSegs;
+    List<Coordinate> pts = [];
+    double angInc = (pi / 2) / _quadrantSegs;
     for (int i = 0; i < nPts; i++) {
-      pts[i] = projectPolar(center, radius, i * angInc);
+      pts.add(projectPolar(center, radius, i * angInc));
     }
-    pts[pts.length - 1] = pts[0].copy();
-    return geomFactory.createPolygon3(pts);
+    pts.add(pts[0].copy());
+    return geomFactory.createPolygon3(pts.toList());
   }
 
-  void addCap(Coordinate p, double r, Coordinate t1, Coordinate t2, CoordinateList coords) {
+  void addCap(Coordinate p, double r, Coordinate t1, Coordinate t2,
+      CoordinateList coords) {
     if (r == 0) {
       coords.add3(p.copy(), false);
       return;
@@ -199,17 +206,18 @@ class VariableBuffer {
     coords.add3(t1, false);
     double angStart = Angle.angle2(p, t1);
     double angEnd = Angle.angle2(p, t2);
-    if (angStart < angEnd) angStart += 2 * Math.pi;
+    if (angStart < angEnd) angStart += 2 * pi;
 
     int indexStart = capAngleIndex(angStart);
     int indexEnd = capAngleIndex(angEnd);
-    double capSegLen = (r * 2) * Math.sin((Math.pi / 4) / _quadrantSegs);
+    double capSegLen = (r * 2) * sin((pi / 4) / _quadrantSegs);
     double minSegLen = capSegLen / _kMinCapSegLenFactor;
     for (int i = indexStart; i >= indexEnd; i--) {
       double ang = capAngle(i);
       Coordinate capPt = projectPolar(p, r, ang);
       bool isCapPointHighQuality = true;
-      if ((i == indexStart) && (Orientation.clockwise != Orientation.index(p, t1, capPt))) {
+      if ((i == indexStart) &&
+          (Orientation.clockwise != Orientation.index(p, t1, capPt))) {
         isCapPointHighQuality = false;
       } else if ((i == indexEnd) &&
           (Orientation.counterClockwise != Orientation.index(p, t2, capPt))) {
@@ -228,17 +236,18 @@ class VariableBuffer {
   }
 
   double capAngle(int index) {
-    double capSegAng = (Math.pi / 2) / _quadrantSegs;
+    double capSegAng = (pi / 2) / _quadrantSegs;
     return index * capSegAng;
   }
 
   int capAngleIndex(double ang) {
-    double capSegAng = (Math.pi / 2) / _quadrantSegs;
+    double capSegAng = (pi / 2) / _quadrantSegs;
     int index = ((ang / capSegAng).toInt());
     return index;
   }
 
-  static LineSegment? outerTangent(Coordinate c1, double r1, Coordinate c2, double r2) {
+  static LineSegment? outerTangent(
+      Coordinate c1, double r1, Coordinate c2, double r2) {
     if (r1 > r2) {
       LineSegment seg = outerTangent(c2, r2, c1, r1)!;
       return LineSegment(seg.p1, seg.p0);
@@ -247,24 +256,24 @@ class VariableBuffer {
     double y1 = c1.y;
     double x2 = c2.x;
     double y2 = c2.y;
-    double a3 = -Math.atan2(y2 - y1, x2 - x1);
+    double a3 = -atan2(y2 - y1, x2 - x1);
     double dr = r2 - r1;
-    double d = Math.sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)));
-    double a2 = Math.asin(dr / d);
-    if (Double.isNaN(a2)) return null;
+    double d = sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)));
+    double a2 = asin(dr / d);
+    if (a2.isNaN) return null;
 
     double a1 = a3 - a2;
-    double aa = (Math.pi / 2) - a1;
-    double x3 = x1 + (r1 * Math.cos(aa));
-    double y3 = y1 + (r1 * Math.sin(aa));
-    double x4 = x2 + (r2 * Math.cos(aa));
-    double y4 = y2 + (r2 * Math.sin(aa));
+    double aa = (pi / 2) - a1;
+    double x3 = x1 + (r1 * cos(aa));
+    double y3 = y1 + (r1 * sin(aa));
+    double x4 = x2 + (r2 * cos(aa));
+    double y4 = y2 + (r2 * sin(aa));
     return LineSegment.of2(x3, y3, x4, y4);
   }
 
   static Coordinate projectPolar(Coordinate p, double r, double ang) {
-    double x = p.x + (r * snapTrig(Math.cos(ang)));
-    double y = p.y + (r * snapTrig(Math.sin(ang)));
+    double x = p.x + (r * snapTrig(cos(ang)));
+    double y = p.y + (r * snapTrig(sin(ang)));
     return Coordinate(x, y);
   }
 
@@ -273,7 +282,7 @@ class VariableBuffer {
 
     if (x < ((-1) + _kSnapTrigTol)) return -1;
 
-    if (Math.abs(x) < _kSnapTrigTol) return 0;
+    if (x.abs() < _kSnapTrigTol) return 0;
 
     return x;
   }

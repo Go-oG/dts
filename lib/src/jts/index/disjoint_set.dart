@@ -10,7 +10,9 @@ class DisjointSet<T> {
   static Item<T>? find<T>(Item<T>? x) {
     if (x == null) return null;
 
-    if ((x.parent != null) && !(x.parent == x)) return x.parent = find(x.parent);
+    if (x.parent != null && x.parent != x) {
+      return x.parent = find(x.parent);
+    }
     return x.parent;
   }
 

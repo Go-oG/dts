@@ -53,14 +53,16 @@ class LineBuilder {
     Label label = de.getLabel()!;
     Edge e = de.getEdge();
     if (de.isLineEdge()) {
-      if (((!de.isVisited()) && OverlayOp.isResultOfOp(label, opCode)) && (!e.isCovered())) {
+      if (((!de.isVisited()) && OverlayOp.isResultOfOp(label, opCode)) &&
+          (!e.isCovered())) {
         edges.add(e);
         de.setVisitedEdge(true);
       }
     }
   }
 
-  void collectBoundaryTouchEdge(DirectedEdge de, OverlayOpCode opCode, List edges) {
+  void collectBoundaryTouchEdge(
+      DirectedEdge de, OverlayOpCode opCode, List edges) {
     Label label = de.getLabel()!;
     if (de.isLineEdge()) return;
 
@@ -70,8 +72,10 @@ class LineBuilder {
 
     if (de.getEdge().isInResult) return;
 
-    Assert.isTrue((!(de.isInResult() || de.getSym().isInResult())) || (!de.getEdge().isInResult));
-    if (OverlayOp.isResultOfOp(label, opCode) && (opCode == OverlayOpCode.intersection)) {
+    Assert.isTrue((!(de.isInResult() || de.getSym().isInResult())) ||
+        (!de.getEdge().isInResult));
+    if (OverlayOp.isResultOfOp(label, opCode) &&
+        (opCode == OverlayOpCode.intersection)) {
       edges.add(de.getEdge());
       de.setVisitedEdge(true);
     }
@@ -79,7 +83,7 @@ class LineBuilder {
 
   void buildLines(OverlayOpCode opCode) {
     for (var e in _lineEdgesList) {
-      LineString line = geometryFactory.createLineString2(e.getCoordinates());
+      final line = geometryFactory.createLineString2(e.getCoordinates());
       _resultLineList.add(line);
       e.isInResult = true;
     }
@@ -99,7 +103,8 @@ class LineBuilder {
   }
 
   void labelIsolatedLine(Edge e, int targetIndex) {
-    int loc = _ptLocator.locate(e.getCoordinate()!, _op.getArgGeometry(targetIndex)!);
+    int loc =
+        _ptLocator.locate(e.getCoordinate()!, _op.getArgGeometry(targetIndex)!);
     e.getLabel()!.setLocation(targetIndex, loc);
   }
 }

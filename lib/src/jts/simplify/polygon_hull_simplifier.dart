@@ -18,7 +18,8 @@ class PolygonHullSimplifier {
     return hull.getResult();
   }
 
-  static Geometry hullByAreaDelta(Geometry geom, bool isOuter, double areaDeltaRatio) {
+  static Geometry hullByAreaDelta(
+      Geometry geom, bool isOuter, double areaDeltaRatio) {
     PolygonHullSimplifier hull = PolygonHullSimplifier(geom, isOuter);
     hull.setAreaDeltaRatio(Math.abs(areaDeltaRatio));
     return hull.getResult();
@@ -83,7 +84,7 @@ class PolygonHullSimplifier {
       Polygon hull = polygonHull(poly, polyHulls[i], hullIndex);
       polys.add(hull);
     }
-    return geomFactory.createMultiPolygon(GeometryFactory.toPolygonArray(polys));
+    return geomFactory.createMultiPolygon(polys);
   }
 
   Geometry computeMultiPolygonEach(MultiPolygon multiPoly) {
@@ -93,7 +94,7 @@ class PolygonHullSimplifier {
       Polygon hull = computePolygon(poly);
       polys.add(hull);
     }
-    return geomFactory.createMultiPolygon(GeometryFactory.toPolygonArray(polys));
+    return geomFactory.createMultiPolygon(polys);
   }
 
   Polygon computePolygon(Polygon poly) {
@@ -117,9 +118,11 @@ class PolygonHullSimplifier {
     if (_areaDeltaRatio >= 0) {
       areaTotal = ringArea(poly);
     }
-    hulls.add(createRingHull(poly.getExteriorRing(), _isOuter, areaTotal, hullIndex));
+    hulls.add(
+        createRingHull(poly.getExteriorRing(), _isOuter, areaTotal, hullIndex));
     for (int i = 0; i < poly.getNumInteriorRing(); i++) {
-      hulls.add(createRingHull(poly.getInteriorRingN(i), !_isOuter, areaTotal, hullIndex));
+      hulls.add(createRingHull(
+          poly.getInteriorRingN(i), !_isOuter, areaTotal, hullIndex));
     }
     return hulls;
   }
@@ -132,11 +135,12 @@ class PolygonHullSimplifier {
     return area;
   }
 
-  RingHull createRingHull(
-      LinearRing ring, bool isOuter, double areaTotal, RingHullIndex? hullIndex) {
+  RingHull createRingHull(LinearRing ring, bool isOuter, double areaTotal,
+      RingHullIndex? hullIndex) {
     RingHull ringHull = RingHull(ring, isOuter);
     if (_vertexNumFraction >= 0) {
-      int targetVertexCount = Math.ceil(_vertexNumFraction * (ring.getNumPoints() - 1));
+      int targetVertexCount =
+          Math.ceil(_vertexNumFraction * (ring.getNumPoints() - 1));
       ringHull.setMinVertexNum(targetVertexCount);
     } else if (_areaDeltaRatio >= 0) {
       double ringArea = Area.ofRing2(ring.getCoordinateSequence());
@@ -151,11 +155,11 @@ class PolygonHullSimplifier {
     return ringHull;
   }
 
-  Polygon polygonHull(Polygon poly, List<RingHull> ringHulls, RingHullIndex? hullIndex) {
+  Polygon polygonHull(
+      Polygon poly, List<RingHull> ringHulls, RingHullIndex? hullIndex) {
     if (poly.isEmpty()) {
       return geomFactory.createPolygon();
     }
-
     int ringIndex = 0;
     LinearRing shellHull = ringHulls.get(ringIndex++).getHull(hullIndex);
     List<LinearRing> holeHulls = [];
@@ -163,7 +167,6 @@ class PolygonHullSimplifier {
       LinearRing hull = ringHulls.get(ringIndex++).getHull(hullIndex);
       holeHulls.add(hull);
     }
-    Array<LinearRing> resultHoles = GeometryFactory.toLinearRingArray(holeHulls);
-    return geomFactory.createPolygon(shellHull, resultHoles);
+    return geomFactory.createPolygon(shellHull, holeHulls);
   }
 }

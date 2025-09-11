@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
@@ -29,12 +28,13 @@ class MortonCurveBuilder extends GeometricShapeBuilder {
       int maxOrdinate = MortonCode.maxOrdinate(levelV);
       scale = width / maxOrdinate;
     }
-    Array<Coordinate> pts = Array(nPts);
+    List<Coordinate> pts = [];
     for (int i = 0; i < nPts; i++) {
       Coordinate pt = MortonCode.decode(i);
       double x = transform(pt.x, scale, baseX);
       double y = transform(pt.y, scale, baseY);
-      pts[i] = Coordinate(x, y);
+
+      pts.add(Coordinate(x, y));
     }
     return geomFactory.createLineString2(pts);
   }

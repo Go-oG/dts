@@ -23,16 +23,20 @@ import 'topology_computer.dart';
 import 'topology_predicate.dart';
 
 class RelateNG {
-  static bool relate4(Geometry a, Geometry b, TopologyPredicate pred, [BoundaryNodeRule? bnRule]) {
+  static bool relate4(Geometry a, Geometry b, TopologyPredicate pred,
+      [BoundaryNodeRule? bnRule]) {
     return RelateNG(a, false, bnRule).evaluate3(b, pred);
   }
 
-  static bool relate3(Geometry a, Geometry b, String imPattern) => RelateNG(a, false).evaluate2(b, imPattern);
+  static bool relate3(Geometry a, Geometry b, String imPattern) =>
+      RelateNG(a, false).evaluate2(b, imPattern);
 
-  static IntersectionMatrix relate(Geometry a, Geometry b, [BoundaryNodeRule? bnRule]) =>
+  static IntersectionMatrix relate(Geometry a, Geometry b,
+          [BoundaryNodeRule? bnRule]) =>
       RelateNG(a, false, bnRule).evaluate(b);
 
-  static RelateNG prepare(Geometry a, [BoundaryNodeRule? bnRule]) => RelateNG(a, true, bnRule);
+  static RelateNG prepare(Geometry a, [BoundaryNodeRule? bnRule]) =>
+      RelateNG(a, true, bnRule);
 
   late BoundaryNodeRule boundaryNodeRule;
 
@@ -78,11 +82,11 @@ class RelateNG {
       topoComputer.finish();
       return topoComputer.getResult();
     }
-    computeAtPoints(geomB, RelateGeometry.GEOM_B, _geomA, topoComputer);
+    computeAtPoints(geomB, RelateGeometry.kGeomB, _geomA, topoComputer);
     if (topoComputer.isResultKnown()) {
       return topoComputer.getResult();
     }
-    computeAtPoints(_geomA, RelateGeometry.GEOM_A, geomB, topoComputer);
+    computeAtPoints(_geomA, RelateGeometry.kGeomA, geomB, topoComputer);
     if (topoComputer.isResultKnown()) {
       return topoComputer.getResult();
     }
@@ -96,18 +100,19 @@ class RelateNG {
   bool hasRequiredEnvelopeInteraction(Geometry b, TopologyPredicate predicate) {
     Envelope envB = b.getEnvelopeInternal();
     bool isInteracts = false;
-    if (predicate.requireCovers(RelateGeometry.GEOM_A)) {
+    if (predicate.requireCovers(RelateGeometry.kGeomA)) {
       if (!_geomA.getEnvelope().covers(envB)) {
         return false;
       }
       isInteracts = true;
-    } else if (predicate.requireCovers(RelateGeometry.GEOM_B)) {
+    } else if (predicate.requireCovers(RelateGeometry.kGeomB)) {
       if (!envB.covers(_geomA.getEnvelope())) {
         return false;
       }
       isInteracts = true;
     }
-    if (((!isInteracts) && predicate.requireInteraction()) && (!_geomA.getEnvelope().intersects(envB))) {
+    if (((!isInteracts) && predicate.requireInteraction()) &&
+        (!_geomA.getEnvelope().intersects(envB))) {
       return false;
     }
     return true;
@@ -127,25 +132,27 @@ class RelateNG {
         numBinA++;
         topoComputer.addPointOnPointInterior(ptB);
       } else {
-        topoComputer.addPointOnPointExterior(RelateGeometry.GEOM_B, ptB);
+        topoComputer.addPointOnPointExterior(RelateGeometry.kGeomB, ptB);
       }
       if (topoComputer.isResultKnown()) {
         return;
       }
     }
     if (numBinA < ptsA.length) {
-      topoComputer.addPointOnPointExterior(RelateGeometry.GEOM_A, null);
+      topoComputer.addPointOnPointExterior(RelateGeometry.kGeomA, null);
     }
   }
 
-  void computeAtPoints(RelateGeometry geom, bool isA, RelateGeometry geomTarget, TopologyComputer topoComputer) {
+  void computeAtPoints(RelateGeometry geom, bool isA, RelateGeometry geomTarget,
+      TopologyComputer topoComputer) {
     bool isResultKnown = false;
     isResultKnown = computePoints(geom, isA, geomTarget, topoComputer);
     if (isResultKnown) {
       return;
     }
 
-    bool checkDisjointPoints = geomTarget.hasDimension(Dimension.A) || topoComputer.isExteriorCheckRequired(isA);
+    bool checkDisjointPoints = geomTarget.hasDimension(Dimension.A) ||
+        topoComputer.isExteriorCheckRequired(isA);
     if (!checkDisjointPoints) {
       return;
     }
@@ -158,7 +165,8 @@ class RelateNG {
     computeAreaVertex(geom, isA, geomTarget, topoComputer);
   }
 
-  bool computePoints(RelateGeometry geom, bool isA, RelateGeometry geomTarget, TopologyComputer topoComputer) {
+  bool computePoints(RelateGeometry geom, bool isA, RelateGeometry geomTarget,
+      TopologyComputer topoComputer) {
     if (!geom.hasDimension(Dimension.P)) {
       return false;
     }
@@ -177,14 +185,17 @@ class RelateNG {
     return false;
   }
 
-  void computePoint(bool isA, Coordinate pt, RelateGeometry geomTarget, TopologyComputer topoComputer) {
+  void computePoint(bool isA, Coordinate pt, RelateGeometry geomTarget,
+      TopologyComputer topoComputer) {
     int locDimTarget = geomTarget.locateWithDim(pt);
     int locTarget = DimensionLocation.location(locDimTarget);
-    int dimTarget = DimensionLocation.dimension2(locDimTarget, topoComputer.getDimension(!isA));
+    int dimTarget = DimensionLocation.dimension2(
+        locDimTarget, topoComputer.getDimension(!isA));
     topoComputer.addPointOnGeometry(isA, locTarget, dimTarget, pt);
   }
 
-  bool computeLineEnds(RelateGeometry geom, bool isA, RelateGeometry geomTarget, TopologyComputer topoComputer) {
+  bool computeLineEnds(RelateGeometry geom, bool isA, RelateGeometry geomTarget,
+      TopologyComputer topoComputer) {
     if (!geom.hasDimension(Dimension.L)) {
       return false;
     }
@@ -197,19 +208,22 @@ class RelateNG {
       }
 
       if (elem is LineString) {
-        if (hasExteriorIntersection && elem.getEnvelopeInternal().disjoint(geomTarget.getEnvelope())) {
+        if (hasExteriorIntersection &&
+            elem.getEnvelopeInternal().disjoint(geomTarget.getEnvelope())) {
           continue;
         }
 
         LineString line = elem;
         Coordinate e0 = line.getCoordinateN(0);
-        hasExteriorIntersection |= computeLineEnd(geom, isA, e0, geomTarget, topoComputer);
+        hasExteriorIntersection |=
+            computeLineEnd(geom, isA, e0, geomTarget, topoComputer);
         if (topoComputer.isResultKnown()) {
           return true;
         }
         if (!line.isClosed()) {
           Coordinate e1 = line.getCoordinateN(line.getNumPoints() - 1);
-          hasExteriorIntersection |= computeLineEnd(geom, isA, e1, geomTarget, topoComputer);
+          hasExteriorIntersection |=
+              computeLineEnd(geom, isA, e1, geomTarget, topoComputer);
           if (topoComputer.isResultKnown()) {
             return true;
           }
@@ -227,7 +241,8 @@ class RelateNG {
     TopologyComputer topoComputer,
   ) {
     int locDimLineEnd = geom.locateLineEndWithDim(pt);
-    int dimLineEnd = DimensionLocation.dimension2(locDimLineEnd, topoComputer.getDimension(isA));
+    int dimLineEnd = DimensionLocation.dimension2(
+        locDimLineEnd, topoComputer.getDimension(isA));
     if (dimLineEnd != Dimension.L) {
       return false;
     }
@@ -235,12 +250,15 @@ class RelateNG {
     int locLineEnd = DimensionLocation.location(locDimLineEnd);
     int locDimTarget = geomTarget.locateWithDim(pt);
     int locTarget = DimensionLocation.location(locDimTarget);
-    int dimTarget = DimensionLocation.dimension2(locDimTarget, topoComputer.getDimension(!isA));
-    topoComputer.addLineEndOnGeometry(isA, locLineEnd, locTarget, dimTarget, pt);
+    int dimTarget = DimensionLocation.dimension2(
+        locDimTarget, topoComputer.getDimension(!isA));
+    topoComputer.addLineEndOnGeometry(
+        isA, locLineEnd, locTarget, dimTarget, pt);
     return locTarget == Location.exterior;
   }
 
-  bool computeAreaVertex(RelateGeometry geom, bool isA, RelateGeometry geomTarget, TopologyComputer topoComputer) {
+  bool computeAreaVertex(RelateGeometry geom, bool isA,
+      RelateGeometry geomTarget, TopologyComputer topoComputer) {
     if (!geom.hasDimension(Dimension.A)) {
       return false;
     }
@@ -257,17 +275,20 @@ class RelateNG {
       }
 
       if (elem is Polygon) {
-        if (hasExteriorIntersection && elem.getEnvelopeInternal().disjoint(geomTarget.getEnvelope())) {
+        if (hasExteriorIntersection &&
+            elem.getEnvelopeInternal().disjoint(geomTarget.getEnvelope())) {
           continue;
         }
 
         Polygon poly = elem;
-        hasExteriorIntersection |= computeAreaVertex2(geom, isA, poly.getExteriorRing(), geomTarget, topoComputer);
+        hasExteriorIntersection |= computeAreaVertex2(
+            geom, isA, poly.getExteriorRing(), geomTarget, topoComputer);
         if (topoComputer.isResultKnown()) {
           return true;
         }
         for (int j = 0; j < poly.getNumInteriorRing(); j++) {
-          hasExteriorIntersection |= computeAreaVertex2(geom, isA, poly.getInteriorRingN(j), geomTarget, topoComputer);
+          hasExteriorIntersection |= computeAreaVertex2(
+              geom, isA, poly.getInteriorRingN(j), geomTarget, topoComputer);
           if (topoComputer.isResultKnown()) {
             return true;
           }
@@ -288,7 +309,8 @@ class RelateNG {
     int locArea = geom.locateAreaVertex(pt);
     int locDimTarget = geomTarget.locateWithDim(pt);
     int locTarget = DimensionLocation.location(locDimTarget);
-    int dimTarget = DimensionLocation.dimension2(locDimTarget, topoComputer.getDimension(!isA));
+    int dimTarget = DimensionLocation.dimension2(
+        locDimTarget, topoComputer.getDimension(!isA));
     topoComputer.addAreaVertex(isA, locArea, locTarget, dimTarget, pt);
     return locTarget == Location.exterior;
   }
@@ -299,7 +321,8 @@ class RelateNG {
       return;
     }
 
-    List<RelateSegmentString> edgesB = geomB.extractSegmentStrings(RelateGeometry.GEOM_B, envInt);
+    List<RelateSegmentString> edgesB =
+        geomB.extractSegmentStrings(RelateGeometry.kGeomB, envInt);
     final intersector = EdgeSegmentIntersector(topoComputer);
     if (topoComputer.isSelfNodingRequired()) {
       computeEdgesAll(edgesB, envInt, intersector);
@@ -312,16 +335,20 @@ class RelateNG {
     topoComputer.evaluateNodes();
   }
 
-  void computeEdgesAll(List<RelateSegmentString> edgesB, Envelope envInt, EdgeSegmentIntersector intersector) {
-    List<RelateSegmentString> edgesA = _geomA.extractSegmentStrings(RelateGeometry.GEOM_A, envInt);
+  void computeEdgesAll(List<RelateSegmentString> edgesB, Envelope envInt,
+      EdgeSegmentIntersector intersector) {
+    List<RelateSegmentString> edgesA =
+        _geomA.extractSegmentStrings(RelateGeometry.kGeomA, envInt);
     final edgeInt = OpEdgeSetIntersector(edgesA, edgesB, envInt);
     edgeInt.process(intersector);
   }
 
-  void computeEdgesMutual(List<RelateSegmentString> edgesB, Envelope envInt, EdgeSegmentIntersector intersector) {
+  void computeEdgesMutual(List<RelateSegmentString> edgesB, Envelope envInt,
+      EdgeSegmentIntersector intersector) {
     if (_edgeMutualInt == null) {
       Envelope? envExtract = (_geomA.isPrepared()) ? null : envInt;
-      final edgesA = _geomA.extractSegmentStrings(RelateGeometry.GEOM_A, envExtract);
+      final edgesA =
+          _geomA.extractSegmentStrings(RelateGeometry.kGeomA, envExtract);
       _edgeMutualInt = MCIndexSegmentSetMutualIntersector(edgesA, envExtract);
     }
     _edgeMutualInt!.process(edgesB, intersector);

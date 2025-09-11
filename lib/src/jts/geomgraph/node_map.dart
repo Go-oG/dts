@@ -1,6 +1,6 @@
 import 'dart:collection';
 
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/location.dart';
 
@@ -55,7 +55,9 @@ class NodeMap {
   List<Node> getBoundaryNodes(int geomIndex) {
     List<Node> bdyNodes = [];
     for (var node in nodeMap.values) {
-      if (node.getLabel()!.getLocation(geomIndex) == Location.boundary) bdyNodes.add(node);
+      if (node.getLabel()!.getLocation(geomIndex) == Location.boundary) {
+        bdyNodes.add(node);
+      }
     }
     return bdyNodes;
   }

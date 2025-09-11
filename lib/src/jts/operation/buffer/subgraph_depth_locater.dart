@@ -1,4 +1,6 @@
-import 'package:d_util/d_util.dart';
+import 'dart:math';
+
+import 'package:collection/collection.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -17,26 +19,26 @@ class SubgraphDepthLocater {
   int getDepth(Coordinate p) {
     List<DepthSegment> stabbedSegments = findStabbedSegments(p);
     if (stabbedSegments.isEmpty) return 0;
-
-    DepthSegment ds = stabbedSegments.min;
-    return ds._leftDepth;
+    return stabbedSegments.min._leftDepth;
   }
 
   List<DepthSegment> findStabbedSegments(Coordinate stabbingRayLeftPt) {
     List<DepthSegment> stabbedSegments = [];
     for (var bsg in _subGraphs) {
       Envelope env = bsg.getEnvelope();
-      if ((stabbingRayLeftPt.y < env.minY) || (stabbingRayLeftPt.y > env.maxY)) {
+      if ((stabbingRayLeftPt.y < env.minY) ||
+          (stabbingRayLeftPt.y > env.maxY)) {
         continue;
       }
 
-      findStabbedSegments3(stabbingRayLeftPt, bsg.getDirectedEdges(), stabbedSegments);
+      findStabbedSegments3(
+          stabbingRayLeftPt, bsg.getDirectedEdges(), stabbedSegments);
     }
     return stabbedSegments;
   }
 
-  void findStabbedSegments3(
-      Coordinate stabbingRayLeftPt, List<DirectedEdge> dirEdges, List stabbedSegments) {
+  void findStabbedSegments3(Coordinate stabbingRayLeftPt,
+      List<DirectedEdge> dirEdges, List stabbedSegments) {
     for (var de in dirEdges) {
       if (!de.isForward) continue;
 
@@ -44,22 +46,28 @@ class SubgraphDepthLocater {
     }
   }
 
-  void findStabbedSegments2(
-      Coordinate stabbingRayLeftPt, DirectedEdge dirEdge, List stabbedSegments) {
-    Array<Coordinate> pts = dirEdge.getEdge().getCoordinates();
+  void findStabbedSegments2(Coordinate stabbingRayLeftPt, DirectedEdge dirEdge,
+      List stabbedSegments) {
+    List<Coordinate> pts = dirEdge.getEdge().getCoordinates();
     for (int i = 0; i < (pts.length - 1); i++) {
       _seg.p0 = pts[i];
       _seg.p1 = pts[i + 1];
       if (_seg.p0.y > _seg.p1.y) _seg.reverse();
 
-      double maxx = Math.maxD(_seg.p0.x, _seg.p1.x);
+      double maxx = max(_seg.p0.x, _seg.p1.x);
       if (maxx < stabbingRayLeftPt.x) continue;
 
       if (_seg.isHorizontal()) continue;
 
-      if ((stabbingRayLeftPt.y < _seg.p0.y) || (stabbingRayLeftPt.y > _seg.p1.y)) continue;
+      if ((stabbingRayLeftPt.y < _seg.p0.y) ||
+          (stabbingRayLeftPt.y > _seg.p1.y)) {
+        continue;
+      }
 
-      if (Orientation.index(_seg.p0, _seg.p1, stabbingRayLeftPt) == Orientation.right) continue;
+      if (Orientation.index(_seg.p0, _seg.p1, stabbingRayLeftPt) ==
+          Orientation.right) {
+        continue;
+      }
 
       int depth = dirEdge.getDepth(Position.left);
       if (_seg.p0 != pts[i]) depth = dirEdge.getDepth(Position.right);

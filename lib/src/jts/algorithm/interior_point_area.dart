@@ -90,7 +90,8 @@ class _InteriorPointPolygon {
   }
 
   void _scanRing(LinearRing ring, List<double> crossings) {
-    if (!_intersectsHorizontalLine(ring.getEnvelopeInternal(), _interiorPointY)) {
+    if (!_intersectsHorizontalLine(
+        ring.getEnvelopeInternal(), _interiorPointY)) {
       return;
     }
 
@@ -102,7 +103,8 @@ class _InteriorPointPolygon {
     }
   }
 
-  void _addEdgeCrossing(Coordinate p0, Coordinate p1, double scanY, List<double> crossings) {
+  void _addEdgeCrossing(
+      Coordinate p0, Coordinate p1, double scanY, List<double> crossings) {
     if (!_intersectsHorizontalLine2(p0, p1, scanY)) {
       return;
     }
@@ -137,7 +139,8 @@ class _InteriorPointPolygon {
     }
   }
 
-  static bool _isEdgeCrossingCounted(Coordinate p0, Coordinate p1, double scanY) {
+  static bool _isEdgeCrossingCounted(
+      Coordinate p0, Coordinate p1, double scanY) {
     double y0 = p0.y;
     double y1 = p1.y;
     if (y0 == y1) {
@@ -181,7 +184,8 @@ class _InteriorPointPolygon {
     return true;
   }
 
-  static bool _intersectsHorizontalLine2(Coordinate p0, Coordinate p1, double y) {
+  static bool _intersectsHorizontalLine2(
+      Coordinate p0, Coordinate p1, double y) {
     if ((p0.y > y) && (p1.y > y)) {
       return false;
     }

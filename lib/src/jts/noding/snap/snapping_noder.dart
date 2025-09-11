@@ -1,4 +1,3 @@
- import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/math/math.dart';
@@ -11,7 +10,7 @@ import 'snapping_intersection_adder.dart';
 import 'snapping_point_index.dart';
 
 class SnappingNoder implements Noder {
-  late SnappingPointIndex _snapIndex;
+  late final SnappingPointIndex _snapIndex;
 
   double snapTolerance;
 
@@ -44,7 +43,7 @@ class SnappingNoder implements Noder {
   void seedSnapIndex(List<SegmentString> segStrings) {
     final int seedSizeFactor = 100;
     for (SegmentString ss in segStrings) {
-      Array<Coordinate> pts = ss.getCoordinates();
+      final pts = ss.getCoordinates();
       int numPtsToLoad = pts.length ~/ seedSizeFactor;
       double rand = 0.0;
       for (int i = 0; i < numPtsToLoad; i++) {
@@ -55,18 +54,16 @@ class SnappingNoder implements Noder {
     }
   }
 
-  NodedSegmentString snapVertices(SegmentString ss) {
-    Array<Coordinate> snapCoords = snap(ss.getCoordinates());
-    return NodedSegmentString(snapCoords, ss.getData());
-  }
+  NodedSegmentString snapVertices(SegmentString ss) =>
+      NodedSegmentString(snap(ss.getCoordinates()), ss.getData());
 
-  Array<Coordinate> snap(Array<Coordinate> coords) {
+  List<Coordinate> snap(List<Coordinate> coords) {
     CoordinateList snapCoords = CoordinateList();
     for (int i = 0; i < coords.length; i++) {
       Coordinate pt = _snapIndex.snap(coords[i]);
       snapCoords.add3(pt, false);
     }
-    return snapCoords.toCoordinateArray();
+    return snapCoords.toCoordinateList();
   }
 
   List<NodedSegmentString> snapIntersections(List<NodedSegmentString> inputSS) {

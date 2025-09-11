@@ -55,13 +55,15 @@ class Angle {
     return dotprod < 0;
   }
 
-  static double angleBetween(Coordinate tip1, Coordinate tail, Coordinate tip2) {
+  static double angleBetween(
+      Coordinate tip1, Coordinate tail, Coordinate tip2) {
     double a1 = angle2(tail, tip1);
     double a2 = angle2(tail, tip2);
     return diff(a1, a2);
   }
 
-  static double angleBetweenOriented(Coordinate tip1, Coordinate tail, Coordinate tip2) {
+  static double angleBetweenOriented(
+      Coordinate tip1, Coordinate tail, Coordinate tip2) {
     double a1 = angle2(tail, tip1);
     double a2 = angle2(tail, tip2);
     double angDel = a2 - a1;

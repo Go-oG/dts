@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/location.dart';
 import 'package:dts/src/jts/geom/position.dart';
 
@@ -119,18 +119,23 @@ class TopologyLocation {
       location = newLoc;
     }
     for (int i = 0; i < location.length; i++) {
-      if ((location[i] == Location.none) && (i < gl.location.length)) location[i] = gl.location[i];
+      if ((location[i] == Location.none) && (i < gl.location.length)) {
+        location[i] = gl.location[i];
+      }
     }
   }
 
   @override
   String toString() {
     StringBuffer buf = StringBuffer();
-    if (location.length > 1) buf.write(Location.toLocationSymbol(location[Position.left]));
+    if (location.length > 1) {
+      buf.write(Location.toLocationSymbol(location[Position.left]));
+    }
 
     buf.write(Location.toLocationSymbol(location[Position.on]));
-    if (location.length > 1) buf.write(Location.toLocationSymbol(location[Position.right]));
-
+    if (location.length > 1) {
+      buf.write(Location.toLocationSymbol(location[Position.right]));
+    }
     return buf.toString();
   }
 }

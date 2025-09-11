@@ -1,14 +1,11 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_collection.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 
 final class InteriorPointLine {
-  static Coordinate? getInteriorPointS(Geometry geom) {
-    InteriorPointLine intPt = InteriorPointLine(geom);
-    return intPt.interiorPoint;
-  }
+  static Coordinate? getInteriorPointS(Geometry geom) =>
+      InteriorPointLine(geom).interiorPoint;
 
   late final Coordinate _centroid;
 
@@ -19,7 +16,6 @@ final class InteriorPointLine {
   InteriorPointLine(Geometry g) {
     _centroid = g.getCentroid().getCoordinate()!;
     _addInterior(g);
-
     if (interiorPoint == null) {
       _addEndpoints(g);
     }
@@ -40,7 +36,7 @@ final class InteriorPointLine {
     }
   }
 
-  void _addInterior2(Array<Coordinate> pts) {
+  void _addInterior2(List<Coordinate> pts) {
     for (int i = 1; i < (pts.length - 1); i++) {
       _add(pts[i]);
     }
@@ -61,7 +57,7 @@ final class InteriorPointLine {
     }
   }
 
-  void _addEndpoints2(Array<Coordinate> pts) {
+  void _addEndpoints2(List<Coordinate> pts) {
     _add(pts[0]);
     _add(pts[pts.length - 1]);
   }

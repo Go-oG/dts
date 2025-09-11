@@ -1,10 +1,9 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 
 class VertexRingCounter implements CoordinateSequenceFilter {
-  static Map<Coordinate, int> count(Array<Geometry> geoms) {
+  static Map<Coordinate, int> count(List<Geometry> geoms) {
     Map<Coordinate, int> vertexRingCount = {};
     VertexRingCounter counter = VertexRingCounter(vertexRingCount);
     for (Geometry geom in geoms) {
@@ -24,9 +23,9 @@ class VertexRingCounter implements CoordinateSequenceFilter {
     }
 
     Coordinate v = seq.getCoordinate(i);
-    int count = _vertexRingCount.containsKey(v) ? _vertexRingCount.get(v)! : 0;
+    int count = _vertexRingCount[v] ?? 0;
     count++;
-    _vertexRingCount.put(v, count);
+    _vertexRingCount[v] = count;
   }
 
   @override

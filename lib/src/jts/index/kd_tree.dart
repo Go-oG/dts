@@ -1,10 +1,10 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 
 class KdTree {
-  static Array<Coordinate> toCoordinates(List<KdNode> nodes, [bool includeRepeated = false]) {
+  static List<Coordinate> toCoordinates(List<KdNode> nodes,
+      [bool includeRepeated = false]) {
     CoordinateList coord = CoordinateList();
     for (var node in nodes) {
       int count = (includeRepeated) ? node.getCount() : 1;
@@ -12,7 +12,7 @@ class KdTree {
         coord.add3(node.getCoordinate(), true);
       }
     }
-    return coord.toCoordinateArray();
+    return coord.toCoordinateList();
   }
 
   KdNode? _root;
@@ -227,7 +227,8 @@ class BestMatchVisitor implements KdNodeVisitor {
     bool update = false;
     if (((_matchNode == null) || (dist < _matchDist)) ||
         (((_matchNode != null) && (dist == _matchDist)) &&
-            (node.getCoordinate().compareTo(_matchNode!.getCoordinate()) < 1))) {
+            (node.getCoordinate().compareTo(_matchNode!.getCoordinate()) <
+                1))) {
       update = true;
     }
 

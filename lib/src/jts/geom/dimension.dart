@@ -1,5 +1,3 @@
-import 'package:d_util/d_util.dart';
-
 class Dimension {
   static const int P = 0;
 
@@ -7,11 +5,11 @@ class Dimension {
 
   static const int A = 2;
 
-  static const int False = -1;
+  static const int kFalse = -1;
 
-  static const int True = -2;
+  static const int kTrue = -2;
 
-  static const int Dontcare = -3;
+  static const int kDontCare = -3;
 
   static const String symFalse = 'F';
 
@@ -27,11 +25,11 @@ class Dimension {
 
   static String toDimensionSymbol(int dimensionValue) {
     switch (dimensionValue) {
-      case False:
+      case kFalse:
         return symFalse;
-      case True:
+      case kTrue:
         return symTrue;
-      case Dontcare:
+      case kDontCare:
         return sumDontCare;
       case P:
         return symP;
@@ -40,17 +38,17 @@ class Dimension {
       case A:
         return sumA;
     }
-    throw IllegalArgumentException("Unknown dimension value: $dimensionValue");
+    throw ArgumentError("Unknown dimension value: $dimensionValue");
   }
 
   static int toDimensionValue(String dimensionSymbol) {
     switch (dimensionSymbol.toUpperCase()) {
       case symFalse:
-        return False;
+        return kFalse;
       case symTrue:
-        return True;
+        return kTrue;
       case sumDontCare:
-        return Dontcare;
+        return kDontCare;
       case symP:
         return P;
       case sumL:
@@ -58,6 +56,6 @@ class Dimension {
       case sumA:
         return A;
     }
-    throw IllegalArgumentException("Unknown dimension symbol: $dimensionSymbol");
+    throw ArgumentError("Unknown dimension symbol: $dimensionSymbol");
   }
 }

@@ -12,10 +12,9 @@ class TopologyException {
 
   TopologyException(String msg, [Coordinate? pt]) {
     message = (msgWithCoord(msg, pt));
-    if(pt!=null){
+    if (pt != null) {
       _pt = Coordinate.of(pt);
     }
-
   }
 
   Coordinate? getCoordinate() {

@@ -23,7 +23,7 @@ class ConformingDelaunayTriangulationBuilder {
 
   double _tolerance = 0.0;
 
-  QuadEdgeSubdivision? _subdiv;
+  QuadEdgeSubdivision? _subDiv;
 
   final Map<Coordinate, Vertex> _constraintVertexMap = SplayTreeMap();
 
@@ -40,9 +40,10 @@ class ConformingDelaunayTriangulationBuilder {
   }
 
   void create() {
-    if (_subdiv != null) return;
+    if (_subDiv != null) return;
 
-    Envelope siteEnv = DelaunayTriangulationBuilder.envelope(_siteCoords.rawList);
+    Envelope siteEnv =
+        DelaunayTriangulationBuilder.envelope(_siteCoords.rawList);
     List<Segment> segments = [];
     if (_constraintLines != null) {
       siteEnv.expandToInclude(_constraintLines!.getEnvelopeInternal());
@@ -54,7 +55,7 @@ class ConformingDelaunayTriangulationBuilder {
     cdt.setConstraints(segments, _constraintVertexMap.values.toList());
     cdt.formInitialDelaunay();
     cdt.enforceConstraints();
-    _subdiv = cdt.getSubdivision();
+    _subDiv = cdt.getSubdivision();
   }
 
   List<Vertex> createSiteVertices(CoordinateList coords) {
@@ -68,7 +69,7 @@ class ConformingDelaunayTriangulationBuilder {
   }
 
   void createVertices(Geometry geom) {
-    Array<Coordinate> coords = geom.getCoordinates();
+    final coords = geom.getCoordinates();
     for (int i = 0; i < coords.length; i++) {
       Vertex v = ConstraintVertex(coords[i]);
       _constraintVertexMap.put(coords[i], v);
@@ -84,8 +85,9 @@ class ConformingDelaunayTriangulationBuilder {
     return constraintSegs;
   }
 
-  static void createConstraintSegments2(LineString line, List<Segment> constraintSegs) {
-    Array<Coordinate> coords = line.getCoordinates();
+  static void createConstraintSegments2(
+      LineString line, List<Segment> constraintSegs) {
+    final coords = line.getCoordinates();
     for (int i = 1; i < coords.length; i++) {
       constraintSegs.add(Segment(coords[i - 1], coords[i]));
     }
@@ -93,16 +95,16 @@ class ConformingDelaunayTriangulationBuilder {
 
   QuadEdgeSubdivision getSubdivision() {
     create();
-    return _subdiv!;
+    return _subDiv!;
   }
 
   Geometry getEdges(GeometryFactory geomFact) {
     create();
-    return _subdiv!.getEdges2(geomFact);
+    return _subDiv!.getEdges2(geomFact);
   }
 
   Geometry getTriangles(GeometryFactory geomFact) {
     create();
-    return _subdiv!.getTriangles2(geomFact);
+    return _subDiv!.getTriangles2(geomFact);
   }
 }

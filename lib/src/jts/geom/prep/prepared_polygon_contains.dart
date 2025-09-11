@@ -24,10 +24,11 @@ abstract class AbstractPreparedPolygonContains extends PreparedPolygonPredicate 
     bool isAllInTargetArea = isAllTestComponentsInTarget(geom);
     if (!isAllInTargetArea) return false;
 
-    bool properIntersectionImpliesNotContained =
-        isProperIntersectionImpliesNotContainedSituation(geom);
+    bool properIntersectionImpliesNotContained = isProperIntersectionImpliesNotContainedSituation(geom);
     findAndClassifyIntersections(geom);
-    if (properIntersectionImpliesNotContained && _hasProperIntersection) return false;
+    if (properIntersectionImpliesNotContained && _hasProperIntersection) {
+      return false;
+    }
 
     if (_hasSegmentIntersection && (!_hasNonProperIntersection)) return false;
 
@@ -35,8 +36,7 @@ abstract class AbstractPreparedPolygonContains extends PreparedPolygonPredicate 
       return fullTopologicalPredicate(geom);
     }
     if (geom is Polygonal) {
-      bool isTargetInTestArea =
-          isAnyTargetComponentInAreaTest(geom, prepPoly.getRepresentativePoints());
+      bool isTargetInTestArea = isAnyTargetComponentInAreaTest(geom, prepPoly.getRepresentativePoints());
       if (isTargetInTestArea) return false;
     }
     return true;

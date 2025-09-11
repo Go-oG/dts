@@ -4,7 +4,8 @@ import 'package:dts/src/jts/geom/line_string.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 
 class LinearComponentExtracter implements GeometryComponentFilter {
-  static List<LineString> getLines2(List<Geometry> geoms, List<LineString> lines) {
+  static List<LineString> getLines2(
+      List<Geometry> geoms, List<LineString> lines) {
     for (var g in geoms) {
       getLines5(g, lines);
     }
@@ -28,7 +29,8 @@ class LinearComponentExtracter implements GeometryComponentFilter {
     return lines;
   }
 
-  static List<LineString> getLines6(Geometry geom, List<LineString> lines, bool forceToLineString) {
+  static List<LineString> getLines6(
+      Geometry geom, List<LineString> lines, bool forceToLineString) {
     geom.apply4(LinearComponentExtracter.of(lines, forceToLineString));
     return lines;
   }
@@ -66,7 +68,8 @@ class LinearComponentExtracter implements GeometryComponentFilter {
   @override
   void filter(Geometry geom) {
     if (_isForcedToLineString && (geom is LinearRing)) {
-      LineString line = geom.factory.createLineString(geom.getCoordinateSequence());
+      LineString line =
+          geom.factory.createLineString(geom.getCoordinateSequence());
       _lines.add(line);
       return;
     }

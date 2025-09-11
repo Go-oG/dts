@@ -1,12 +1,11 @@
- import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 
 class LinkedRing {
-  static const int NO_COORD_INDEX = -1;
+  static const int kNoCoordIndex = -1;
 
-  static Array<int> createNextLinks(int size) {
-    Array<int> next = Array(size);
+  static List<int> createNextLinks(int size) {
+    List<int> next = List.filled(size, 0);
     for (int i = 0; i < size; i++) {
       next[i] = i + 1;
     }
@@ -14,8 +13,8 @@ class LinkedRing {
     return next;
   }
 
-  static Array<int> createPrevLinks(int size) {
-    Array<int> prev = Array(size);
+  static List<int> createPrevLinks(int size) {
+    List<int> prev = List.filled(size, 0);
     for (int i = 0; i < size; i++) {
       prev[i] = i - 1;
     }
@@ -23,11 +22,11 @@ class LinkedRing {
     return prev;
   }
 
-  final Array<Coordinate> coord;
+  final List<Coordinate> coord;
 
-  late Array<int> next;
+  late List<int> next;
 
-  late Array<int> prev;
+  late List<int> prev;
 
   late int size;
 
@@ -58,7 +57,8 @@ class LinkedRing {
   }
 
   bool hasCoordinate(int index) {
-    return ((index >= 0) && (index < prev.length)) && (prev[index] != NO_COORD_INDEX);
+    return ((index >= 0) && (index < prev.length)) &&
+        (prev[index] != kNoCoordIndex);
   }
 
   void remove(int index) {
@@ -66,19 +66,19 @@ class LinkedRing {
     int inext = next[index];
     next[iprev] = inext;
     prev[inext] = iprev;
-    prev[index] = NO_COORD_INDEX;
-    next[index] = NO_COORD_INDEX;
+    prev[index] = kNoCoordIndex;
+    next[index] = kNoCoordIndex;
     size--;
   }
 
-  Array<Coordinate> getCoordinates() {
+  List<Coordinate> getCoordinates() {
     CoordinateList coords = CoordinateList();
     for (int i = 0; i < (coord.length - 1); i++) {
-      if (prev[i] != NO_COORD_INDEX) {
+      if (prev[i] != kNoCoordIndex) {
         coords.add3(coord[i].copy(), false);
       }
     }
     coords.closeRing();
-    return coords.toCoordinateArray();
+    return coords.toCoordinateList();
   }
 }

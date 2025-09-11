@@ -22,7 +22,8 @@ class CoveragePolygon {
   }
 
   bool _intersectsEnv(Coordinate p) {
-    return !((((p.x > _polyEnv.maxX) || (p.x < _polyEnv.minX)) || (p.y > _polyEnv.maxY)) ||
+    return !((((p.x > _polyEnv.maxX) || (p.x < _polyEnv.minX)) ||
+            (p.y > _polyEnv.maxY)) ||
         (p.y < _polyEnv.minY));
   }
 

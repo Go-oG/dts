@@ -4,29 +4,29 @@ import 'package:dts/src/jts/geom/location.dart';
 import 'topology_predicate.dart';
 
 abstract class BasicPredicate extends TopologyPredicate {
-  static const int _UNKNOWN = -1;
+  static const int _kUnknown = -1;
 
-  static const int _FALSE = 0;
+  static const int _kFalse = 0;
 
-  static const int _TRUE = 1;
+  static const int _kTrue = 1;
 
   static bool isKnown2(int value) {
-    return value > _UNKNOWN;
+    return value > _kUnknown;
   }
 
   static bool toBoolean(int value) {
-    return value == _TRUE;
+    return value == _kTrue;
   }
 
   static int toValue(bool val) {
-    return val ? _TRUE : _FALSE;
+    return val ? _kTrue : _kFalse;
   }
 
   static bool isIntersection(int locA, int locB) {
     return (locA != Location.exterior) && (locB != Location.exterior);
   }
 
-  int _value = _UNKNOWN;
+  int _value = _kUnknown;
 
   @override
   bool isKnown() {

@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/operation/boundary_op.dart';
 
 import 'dimension.dart';
@@ -10,7 +9,7 @@ import 'lineal.dart';
 import 'precision_model.dart';
 
 class MultiLineString extends GeometryCollection<LineString> implements Lineal {
-  MultiLineString.of(Array<LineString> lineStrings, PrecisionModel precisionModel, int srid)
+  MultiLineString.of(List<LineString> lineStrings, PrecisionModel precisionModel, int srid)
       : super(lineStrings, GeometryFactory(pm: precisionModel, srid: srid));
 
   MultiLineString(super.lineStrings, super.factory);
@@ -28,7 +27,7 @@ class MultiLineString extends GeometryCollection<LineString> implements Lineal {
   @override
   int getBoundaryDimension() {
     if (isClosed()) {
-      return Dimension.False;
+      return Dimension.kFalse;
     }
     return Dimension.P;
   }
@@ -61,22 +60,10 @@ class MultiLineString extends GeometryCollection<LineString> implements Lineal {
   }
 
   @override
-  MultiLineString reverseInternal() {
-    Array<LineString> lineStrings = Array(geometries.length);
-    for (int i = 0; i < lineStrings.length; i++) {
-      lineStrings[i] = ((geometries[i].reverse()));
-    }
-    return MultiLineString(lineStrings, factory);
-  }
+  MultiLineString reverseInternal() => MultiLineString(geometries.map((e) => e.reverse()).toList(), factory);
 
   @override
-  MultiLineString copyInternal() {
-    Array<LineString> lineStrings = Array(geometries.length);
-    for (int i = 0; i < lineStrings.length; i++) {
-      lineStrings[i] = (geometries[i].copy());
-    }
-    return MultiLineString(lineStrings, factory);
-  }
+  MultiLineString copyInternal() => MultiLineString(geometries.map((e) => e.copy()).toList(), factory);
 
   @override
   bool equalsExact2(Geometry other, double tolerance) {

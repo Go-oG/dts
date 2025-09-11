@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/boundary_node_rule.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
@@ -149,7 +148,7 @@ class IsSimpleOp {
     List<SegmentString> segStrings = [];
     for (int i = 0; i < geom.getNumGeometries(); i++) {
       LineString line = geom.getGeometryN(i) as LineString;
-      Array<Coordinate>? trimPts = trimRepeatedPoints(line.getCoordinates());
+      List<Coordinate>? trimPts = trimRepeatedPoints(line.getCoordinates());
       if (trimPts != null) {
         SegmentString ss = BasicSegmentString(trimPts, null);
         segStrings.add(ss);
@@ -158,7 +157,7 @@ class IsSimpleOp {
     return segStrings;
   }
 
-  static Array<Coordinate>? trimRepeatedPoints(Array<Coordinate> pts) {
+  static List<Coordinate>? trimRepeatedPoints(List<Coordinate> pts) {
     if (pts.length <= 2) return pts;
 
     int len = pts.length;
@@ -179,8 +178,7 @@ class IsSimpleOp {
     if ((endIndex - startIndex) < 1) {
       return null;
     }
-    Array<Coordinate> trimPts = CoordinateArrays.extract(pts, startIndex, endIndex);
-    return trimPts;
+    return CoordinateArrays.extract(pts, startIndex, endIndex);
   }
 }
 
@@ -196,12 +194,11 @@ class _NonSimpleIntersectionFinder implements NSegmentIntersector {
   _NonSimpleIntersectionFinder(
       this.isClosedEndpointsInInterior, this._isFindAll, this._intersectionPts);
 
-  bool hasIntersection() {
-    return _intersectionPts.size > 0;
-  }
+  bool hasIntersection() => _intersectionPts.isNotEmpty;
 
   @override
-  void processIntersections(SegmentString ss0, int segIndex0, SegmentString ss1, int segIndex1) {
+  void processIntersections(
+      SegmentString ss0, int segIndex0, SegmentString ss1, int segIndex1) {
     bool isSameSegString = ss0 == ss1;
     bool isSameSegment = isSameSegString && (segIndex0 == segIndex1);
     if (isSameSegment) return;
@@ -212,7 +209,8 @@ class _NonSimpleIntersectionFinder implements NSegmentIntersector {
     }
   }
 
-  bool findIntersection(SegmentString ss0, int segIndex0, SegmentString ss1, int segIndex1) {
+  bool findIntersection(
+      SegmentString ss0, int segIndex0, SegmentString ss1, int segIndex1) {
     Coordinate p00 = ss0.getCoordinate(segIndex0);
     Coordinate p01 = ss0.getCoordinate(segIndex0 + 1);
     Coordinate p10 = ss1.getCoordinate(segIndex1);
@@ -227,7 +225,8 @@ class _NonSimpleIntersectionFinder implements NSegmentIntersector {
     if (hasEqualSegments) return true;
 
     bool isSameSegString = ss0 == ss1;
-    bool isAdjacentSegment = isSameSegString && (Math.abs(segIndex1 - segIndex0) <= 1);
+    bool isAdjacentSegment =
+        isSameSegString && ((segIndex1 - segIndex0).abs() <= 1);
     if (isAdjacentSegment) return false;
 
     bool isIntersectionEndpt0 = isIntersectionEndpoint(ss0, segIndex0, li, 0);
@@ -261,6 +260,6 @@ class _NonSimpleIntersectionFinder implements NSegmentIntersector {
   @override
   bool isDone() {
     if (_isFindAll) return false;
-    return _intersectionPts.size > 0;
+    return _intersectionPts.isNotEmpty;
   }
 }

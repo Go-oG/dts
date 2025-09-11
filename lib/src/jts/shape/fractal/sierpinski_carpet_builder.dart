@@ -1,7 +1,6 @@
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
@@ -21,18 +20,21 @@ class SierpinskiCarpetBuilder extends GeometricShapeBuilder {
     int level = recursionLevelForSize(numPts);
     LineSegment baseLine = getSquareBaseLine();
     Coordinate origin = baseLine.getCoordinate(0);
-    Array<LinearRing> holes = getHoles(level, origin.x, origin.y, getDiameter());
-    LinearRing shell = (geomFactory.toGeometry(getSquareExtent()) as Polygon).getExteriorRing();
+    final holes = getHoles(level, origin.x, origin.y, getDiameter());
+    LinearRing shell = (geomFactory.toGeometry(getSquareExtent()) as Polygon)
+        .getExteriorRing();
     return geomFactory.createPolygon(shell, holes);
   }
 
-  Array<LinearRing> getHoles(int n, double originX, double originY, double width) {
+  List<LinearRing> getHoles(
+      int n, double originX, double originY, double width) {
     List<LinearRing> holeList = [];
     addHoles(n, originX, originY, width, holeList);
-    return GeometryFactory.toLinearRingArray(holeList);
+    return holeList;
   }
 
-  void addHoles(int n, double originX, double originY, double width, List holeList) {
+  void addHoles(
+      int n, double originX, double originY, double width, List holeList) {
     if (n < 0) {
       return;
     }
@@ -43,11 +45,15 @@ class SierpinskiCarpetBuilder extends GeometricShapeBuilder {
     addHoles(n2, originX + widthThird, originY, widthThird, holeList);
     addHoles(n2, originX + (2 * widthThird), originY, widthThird, holeList);
     addHoles(n2, originX, originY + widthThird, widthThird, holeList);
-    addHoles(n2, originX + (2 * widthThird), originY + widthThird, widthThird, holeList);
+    addHoles(n2, originX + (2 * widthThird), originY + widthThird, widthThird,
+        holeList);
     addHoles(n2, originX, originY + (2 * widthThird), widthThird, holeList);
-    addHoles(n2, originX + widthThird, originY + (2 * widthThird), widthThird, holeList);
-    addHoles(n2, originX + (2 * widthThird), originY + (2 * widthThird), widthThird, holeList);
-    holeList.add(createSquareHole(originX + widthThird, originY + widthThird, widthThird));
+    addHoles(n2, originX + widthThird, originY + (2 * widthThird), widthThird,
+        holeList);
+    addHoles(n2, originX + (2 * widthThird), originY + (2 * widthThird),
+        widthThird, holeList);
+    holeList.add(createSquareHole(
+        originX + widthThird, originY + widthThird, widthThird));
   }
 
   LinearRing createSquareHole(double x, double y, double width) {
@@ -57,7 +63,7 @@ class SierpinskiCarpetBuilder extends GeometricShapeBuilder {
       Coordinate(x + width, y + width),
       Coordinate(x, y + width),
       Coordinate(x, y),
-    ].toArray();
+    ];
     return geomFactory.createLinearRings(pts);
   }
 }

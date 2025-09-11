@@ -1,15 +1,13 @@
 import 'dart:core';
 
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/point_location.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
 
 class OuterShellsExtracter {
-  static Array<LinearRing> extractShells(Geometry polygons) {
+  static List<LinearRing> extractShells(Geometry polygons) {
     return OuterShellsExtracter(polygons)._extractShells();
   }
 
@@ -17,17 +15,17 @@ class OuterShellsExtracter {
 
   OuterShellsExtracter(this._polygons);
 
-  Array<LinearRing> _extractShells() {
-    Array<LinearRing> shells = _extractShellRings(_polygons);
+  List<LinearRing> _extractShells() {
+    List<LinearRing> shells = _extractShellRings(_polygons);
     shells.sort(_EnvelopeAreaComparator().compare);
     List<LinearRing> outerShells = [];
 
     for (var shell in shells.reversed) {
-      if ((outerShells.size == 0) || _isOuter(shell, outerShells)) {
+      if (outerShells.isEmpty || _isOuter(shell, outerShells)) {
         outerShells.add(shell);
       }
     }
-    return GeometryFactory.toLinearRingArray(outerShells);
+    return outerShells;
   }
 
   bool _isOuter(LinearRing shell, List<LinearRing> outerShells) {
@@ -56,11 +54,12 @@ class OuterShellsExtracter {
     return PointLocation.isInRing(pt, shellRing.getCoordinates());
   }
 
-  static Array<LinearRing> _extractShellRings(Geometry polygons) {
-    Array<LinearRing> rings = Array<LinearRing>(polygons.getNumGeometries());
-    for (int i = 0; i < polygons.getNumGeometries(); i++) {
+  static List<LinearRing> _extractShellRings(Geometry polygons) {
+    List<LinearRing> rings = [];
+    final c = polygons.getNumGeometries();
+    for (int i = 0; i < c; i++) {
       Polygon consPoly = ((polygons.getGeometryN(i) as Polygon));
-      rings[i] = ((consPoly.getExteriorRing().copy() as LinearRing));
+      rings.add(consPoly.getExteriorRing().copy() as LinearRing);
     }
     return rings;
   }
@@ -70,6 +69,6 @@ class _EnvelopeAreaComparator {
   int compare(Geometry o1, Geometry o2) {
     double a1 = o1.getEnvelopeInternal().area;
     double a2 = o2.getEnvelopeInternal().area;
-    return Double.compare(a1, a2);
+    return a1.compareTo(a2);
   }
 }

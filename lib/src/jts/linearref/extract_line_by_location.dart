@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -34,7 +33,7 @@ class ExtractLineByLocation {
   }
 
   LineString computeLine(LinearLocation start, LinearLocation end) {
-    Array<Coordinate> coordinates = _line.getCoordinates();
+    final coordinates = _line.getCoordinates();
     CoordinateList newCoordinates = CoordinateList();
     int startSegmentIndex = start.getSegmentIndex();
     if (start.getSegmentFraction() > 0.0) startSegmentIndex += 1;
@@ -42,7 +41,9 @@ class ExtractLineByLocation {
     int lastSegmentIndex = end.getSegmentIndex();
     if (end.getSegmentFraction() == 1.0) lastSegmentIndex += 1;
 
-    if (lastSegmentIndex >= coordinates.length) lastSegmentIndex = coordinates.length - 1;
+    if (lastSegmentIndex >= coordinates.length) {
+      lastSegmentIndex = coordinates.length - 1;
+    }
 
     if (!start.isVertex()) newCoordinates.add(start.getCoordinate(_line));
 
@@ -53,9 +54,9 @@ class ExtractLineByLocation {
 
     if (newCoordinates.size <= 0) newCoordinates.add(start.getCoordinate(_line));
 
-    Array<Coordinate> newCoordinateArray = newCoordinates.toCoordinateArray();
+    var newCoordinateArray = newCoordinates.toCoordinateList();
     if (newCoordinateArray.length <= 1) {
-      newCoordinateArray = [newCoordinateArray[0], newCoordinateArray[0]].toArray();
+      newCoordinateArray = [newCoordinateArray[0], newCoordinateArray[0]];
     }
     return _line.factory.createLineString2(newCoordinateArray);
   }

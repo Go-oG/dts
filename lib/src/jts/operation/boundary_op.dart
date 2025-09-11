@@ -1,9 +1,7 @@
 import 'dart:collection';
 
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/boundary_node_rule.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/dimension.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
@@ -67,14 +65,14 @@ class BoundaryOp {
     if (geom.isEmpty()) {
       return getEmptyMultiPoint();
     }
-    Array<Coordinate> bdyPts = computeBoundaryCoordinates(mLine);
+    List<Coordinate> bdyPts = computeBoundaryCoordinates(mLine);
     if (bdyPts.length == 1) {
       return geomFact.createPoint2(bdyPts[0]);
     }
     return geomFact.createMultiPoint4(bdyPts);
   }
 
-  Array<Coordinate> computeBoundaryCoordinates(MultiLineString mLine) {
+  List<Coordinate> computeBoundaryCoordinates(MultiLineString mLine) {
     List<Coordinate> bdyPts = [];
     _endpointMap = SplayTreeMap();
     for (int i = 0; i < mLine.getNumGeometries(); i++) {
@@ -93,14 +91,14 @@ class BoundaryOp {
         bdyPts.add(entry.key);
       }
     }
-    return CoordinateArrays.toCoordinateArray(bdyPts);
+    return bdyPts;
   }
 
   void addEndpoint(Coordinate pt) {
-    Counter? counter = _endpointMap.get(pt);
+    Counter? counter = _endpointMap[pt];
     if (counter == null) {
       counter = Counter();
-      _endpointMap.put(pt, counter);
+      _endpointMap[pt] = counter;
     }
     counter.count++;
   }
@@ -116,6 +114,7 @@ class BoundaryOp {
         return geomFact.createMultiPoint();
       }
     }
-    return geomFact.createMultiPoint([line.getStartPoint()!, line.getEndPoint()!].toArray());
+    return geomFact
+        .createMultiPoint([line.getStartPoint()!, line.getEndPoint()!]);
   }
 }

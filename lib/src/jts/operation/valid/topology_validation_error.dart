@@ -1,29 +1,29 @@
 import 'package:dts/src/jts/geom/coordinate.dart';
 
 class TopologyValidationError {
-  static const int ERROR = 0;
+  static const int kError = 0;
 
-  static const int REPEATED_POINT = 1;
+  static const int kRepeatedPoint = 1;
 
-  static const int HOLE_OUTSIDE_SHELL = 2;
+  static const int kHoleOutSideShell = 2;
 
-  static const int NESTED_HOLES = 3;
+  static const int kNestedHoles = 3;
 
-  static const int DISCONNECTED_INTERIOR = 4;
+  static const int kDisconnectedInterior = 4;
 
-  static const int SELF_INTERSECTION = 5;
+  static const int kSelfIntersection = 5;
 
-  static const int RING_SELF_INTERSECTION = 6;
+  static const int kRingSelfIntersection = 6;
 
-  static const int NESTED_SHELLS = 7;
+  static const int kNestedShells = 7;
 
-  static const int DUPLICATE_RINGS = 8;
+  static const int kDuplicateRings = 8;
 
-  static const int TOO_FEW_POINTS = 9;
+  static const int kTooFewPoints = 9;
 
-  static const int INVALID_COORDINATE = 10;
+  static const int kInvalidCoordinate = 10;
 
-  static const int RING_NOT_CLOSED = 11;
+  static const int kRingNotClosed = 11;
 
   static final List<String> errMsg = [
     "Topology Validation Error",
@@ -65,7 +65,7 @@ class TopologyValidationError {
   @override
   String toString() {
     String locStr = "";
-    if (_pt != null) locStr = " at or near point $_pt" ;
+    if (_pt != null) locStr = " at or near point $_pt";
 
     return getMessage() + locStr;
   }

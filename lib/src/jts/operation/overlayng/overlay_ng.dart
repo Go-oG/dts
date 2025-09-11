@@ -47,21 +47,18 @@ class OverlayNG {
       case OverlayOpCode.difference:
         return (loc0 == Location.interior) && (loc1 != Location.interior);
       case OverlayOpCode.symDifference:
-        return ((loc0 == Location.interior) && (loc1 != Location.interior)) ||
-            ((loc0 != Location.interior) && (loc1 == Location.interior));
+        return (loc0 == Location.interior && loc1 != Location.interior) ||
+            (loc0 != Location.interior && loc1 == Location.interior);
     }
-    return false;
   }
 
-  static Geometry overlay3(
-      Geometry geom0, Geometry geom1, OverlayOpCode opCode, PrecisionModel pm) {
+  static Geometry overlay3(Geometry geom0, Geometry geom1, OverlayOpCode opCode, PrecisionModel pm) {
     OverlayNG ov = OverlayNG(geom0, geom1, pm, opCode);
     Geometry geomOv = ov.getResult();
     return geomOv;
   }
 
-  static Geometry overlay4(
-      Geometry geom0, Geometry geom1, OverlayOpCode opCode, PrecisionModel pm, Noder noder) {
+  static Geometry overlay4(Geometry geom0, Geometry geom1, OverlayOpCode opCode, PrecisionModel pm, Noder noder) {
     OverlayNG ov = OverlayNG(geom0, geom1, pm, opCode);
     ov.setNoder(noder);
     Geometry geomOv = ov.getResult();
@@ -156,19 +153,15 @@ class OverlayNG {
   }
 
   Geometry getResult() {
-    if (OverlayUtil.isEmptyResult(
-        opCode, _inputGeom.getGeometry(0), _inputGeom.getGeometry(1), pm)) {
+    if (OverlayUtil.isEmptyResult(opCode, _inputGeom.getGeometry(0), _inputGeom.getGeometry(1), pm)) {
       return createEmptyResult();
     }
-    ElevationModel elevModel =
-        ElevationModel.create(_inputGeom.getGeometry(0)!, _inputGeom.getGeometry(1));
+    ElevationModel elevModel = ElevationModel.create(_inputGeom.getGeometry(0)!, _inputGeom.getGeometry(1));
     Geometry? result;
     if (_inputGeom.isAllPoints()) {
-      result =
-          OverlayPoints.overlay(opCode, _inputGeom.getGeometry(0)!, _inputGeom.getGeometry(1)!, pm);
+      result = OverlayPoints.overlay(opCode, _inputGeom.getGeometry(0)!, _inputGeom.getGeometry(1)!, pm);
     } else if ((!_inputGeom.isSingle()) && _inputGeom.hasPoints()) {
-      result = OverlayMixedPoints.overlay(
-          opCode, _inputGeom.getGeometry(0)!, _inputGeom.getGeometry(1)!, pm);
+      result = OverlayMixedPoints.overlay(opCode, _inputGeom.getGeometry(0)!, _inputGeom.getGeometry(1)!, pm);
     } else {
       result = computeEdgeOverlay();
     }
@@ -209,8 +202,7 @@ class OverlayNG {
         nodingBuilder.setClipEnvelope(clipEnv);
       }
     }
-    List<OEdge> mergedEdges =
-        nodingBuilder.build(_inputGeom.getGeometry(0)!, _inputGeom.getGeometry(1)!);
+    List<OEdge> mergedEdges = nodingBuilder.build(_inputGeom.getGeometry(0)!, _inputGeom.getGeometry(1)!);
     _inputGeom.setCollapsed(0, !nodingBuilder.hasEdgesFor(0));
     _inputGeom.setCollapsed(1, !nodingBuilder.hasEdgesFor(1));
     return mergedEdges;
@@ -240,12 +232,11 @@ class OverlayNG {
     List<LineString>? resultLineList;
     List<Point>? resultPointList;
     if (!_isAreaResultOnly) {
-      bool allowResultLines = (((!hasResultAreaComponents) || isAllowMixedIntResult) ||
-              (opCode == OverlayOpCode.symDifference)) ||
-          (opCode == OverlayOpCode.union);
+      bool allowResultLines =
+          (((!hasResultAreaComponents) || isAllowMixedIntResult) || (opCode == OverlayOpCode.symDifference)) ||
+              (opCode == OverlayOpCode.union);
       if (allowResultLines) {
-        final lineBuilder =
-            NgLineBuilder(_inputGeom, graph, hasResultAreaComponents, opCode, geomFact);
+        final lineBuilder = NgLineBuilder(_inputGeom, graph, hasResultAreaComponents, opCode, geomFact);
         lineBuilder.setStrictMode(_isStrictMode);
         resultLineList = lineBuilder.getLines();
       }
@@ -261,8 +252,7 @@ class OverlayNG {
       return createEmptyResult();
     }
 
-    return OverlayUtil.createResultGeometry(
-        resultPolyList, resultLineList!, resultPointList!, geomFact);
+    return OverlayUtil.createResultGeometry(resultPolyList, resultLineList!, resultPointList!, geomFact);
   }
 
   static bool isEmpty(List? list) {

@@ -26,29 +26,29 @@ class PGNode extends GraphComponentPG {
     return pt;
   }
 
-    void addOutEdge(DirectedEdgePG de) {
-        deStar.add(de);
-    }
+  void addOutEdge(DirectedEdgePG de) {
+    deStar.add(de);
+  }
 
-    DirectedEdgeStarPG getOutEdges() {
-        return deStar;
-    }
+  DirectedEdgeStarPG getOutEdges() {
+    return deStar;
+  }
 
-    int getDegree() {
-        return deStar.getDegree();
-    }
+  int getDegree() {
+    return deStar.getDegree();
+  }
 
-    int getIndex(PGEdge edge) {
-        return deStar.getIndex2(edge);
-    }
+  int getIndex(PGEdge edge) {
+    return deStar.getIndex2(edge);
+  }
 
-    void remove2(DirectedEdgePG de) {
-        deStar.remove(de);
-    }
+  void remove2(DirectedEdgePG de) {
+    deStar.remove(de);
+  }
 
-    void remove() {
-        pt = null;
-    }
+  void remove() {
+    pt = null;
+  }
 
   @override
   bool isRemoved() {

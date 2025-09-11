@@ -15,11 +15,14 @@ final class Coordinates {
   static Coordinate createWithMeasure(int dimension, int measures) {
     if (dimension == 2) {
       return CoordinateXY();
-    } else if ((dimension == 3) && (measures == 0)) {
+    }
+    if (dimension == 3 && measures == 0) {
       return Coordinate();
-    } else if ((dimension == 3) && (measures == 1)) {
+    }
+    if (dimension == 3 && measures == 1) {
       return CoordinateXYM();
-    } else if ((dimension == 4) && (measures == 1)) {
+    }
+    if (dimension == 4 && measures == 1) {
       return CoordinateXYZM();
     }
     return Coordinate();
@@ -129,7 +132,8 @@ class Coordinate implements Comparable<Coordinate> {
         z = value;
         break;
       default:
-        throw IllegalArgumentException("Invalid ordinate index: $ordinateIndex");
+        throw IllegalArgumentException(
+            "Invalid ordinate index: $ordinateIndex");
     }
   }
 
@@ -264,9 +268,7 @@ class CoordinateXY extends Coordinate {
   Coordinate create() => CoordinateXY();
 
   @override
-  set z(double v) {
-    throw UnsupportedError("not allow set z");
-  }
+  set z(double v) => throw UnsupportedError("not allow set z");
 
   @override
   double get z => _nullOrdinate;
@@ -299,7 +301,8 @@ class CoordinateXY extends Coordinate {
         y = value;
         break;
       default:
-        throw IllegalArgumentException("Invalid ordinate index: $ordinateIndex");
+        throw IllegalArgumentException(
+            "Invalid ordinate index: $ordinateIndex");
     }
   }
 }
@@ -345,8 +348,8 @@ class CoordinateXYM extends Coordinate {
   double get z => _nullOrdinate;
 
   @override
-  set z(double z) =>
-      throw IllegalArgumentException("CoordinateXY dimension 2 does not support z-ordinate");
+  set z(double z) => throw IllegalArgumentException(
+      "CoordinateXY dimension 2 does not support z-ordinate");
 
   @override
   void setCoordinate(Coordinate other) {
@@ -382,7 +385,8 @@ class CoordinateXYM extends Coordinate {
         m = value;
         break;
       default:
-        throw IllegalArgumentException("Invalid ordinate index: $ordinateIndex");
+        throw IllegalArgumentException(
+            "Invalid ordinate index: $ordinateIndex");
     }
   }
 }
@@ -459,7 +463,8 @@ class CoordinateXYZM extends Coordinate {
         _m = value;
         break;
       default:
-        throw IllegalArgumentException("Invalid ordinate index: $ordinateIndex");
+        throw IllegalArgumentException(
+            "Invalid ordinate index: $ordinateIndex");
     }
   }
 }
@@ -521,10 +526,10 @@ abstract interface class CoordinateFilter {
   void filter(Coordinate coord);
 }
 
-class CoordinateFilter2 implements CoordinateFilter {
+final class CoordinateFilterWrap implements CoordinateFilter {
   final void Function(Coordinate coord) apply;
 
-  CoordinateFilter2(this.apply);
+  const CoordinateFilterWrap(this.apply);
 
   @override
   void filter(Coordinate coord) {

@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/distance.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
@@ -21,7 +20,7 @@ class SimpleMinimumClearance {
 
   double minClearance = 0;
 
-  Array<Coordinate>? minClearancePts;
+  List<Coordinate?>? minClearancePts;
 
   SimpleMinimumClearance(this.inputGeom);
 
@@ -32,7 +31,8 @@ class SimpleMinimumClearance {
 
   LineString getLine() {
     compute();
-    return inputGeom.factory.createLineString2(minClearancePts);
+    return inputGeom.factory
+        .createLineString2(minClearancePts?.nonNulls.toList());
   }
 
   void compute() {
@@ -40,7 +40,7 @@ class SimpleMinimumClearance {
       return;
     }
 
-    minClearancePts = Array(2);
+    minClearancePts = List.filled(2, null);
     minClearance = double.maxFinite;
     inputGeom.apply(VertexCoordinateFilter(this));
   }
@@ -53,7 +53,8 @@ class SimpleMinimumClearance {
     }
   }
 
-  void updateClearance2(double candidateValue, Coordinate p, Coordinate seg0, Coordinate seg1) {
+  void updateClearance2(
+      double candidateValue, Coordinate p, Coordinate seg0, Coordinate seg1) {
     if (candidateValue < minClearance) {
       minClearance = candidateValue;
       minClearancePts![0] = Coordinate.of(p);

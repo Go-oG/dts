@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/boundary_node_rule.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/point_locator.dart';
@@ -25,7 +24,7 @@ class RelateComputer {
 
   final ptLocator = PointLocator.empty();
 
-  final Array<GeometryGraph> _arg;
+  final List<GeometryGraph> _arg;
 
   final _nodes = NodeMap(RelateNodeFactory());
 
@@ -36,10 +35,7 @@ class RelateComputer {
   IntersectionMatrix computeIM() {
     IntersectionMatrix im = IntersectionMatrix();
     im.set2(Location.exterior, Location.exterior, 2);
-    if (!_arg[0]
-        .getGeometry()!
-        .getEnvelopeInternal()
-        .intersects(_arg[1].getGeometry()!.getEnvelopeInternal())) {
+    if (!_arg[0].getGeometry()!.getEnvelopeInternal().intersects(_arg[1].getGeometry()!.getEnvelopeInternal())) {
       computeDisjointIM(im, _arg[0].getBoundaryNodeRule()!);
       return im;
     }
@@ -147,7 +143,7 @@ class RelateComputer {
 
       return geom.getBoundaryDimension();
     }
-    return Dimension.False;
+    return Dimension.kFalse;
   }
 
   void labelNodeEdges() {

@@ -1,5 +1,3 @@
- import 'package:d_util/d_util.dart';
-
 import '../../algorithm/line_intersector.dart';
 import '../../algorithm/robust_line_intersector.dart';
 import '../../geom/coordinate.dart';
@@ -9,13 +7,13 @@ import '../../noding/segment_intersector.dart';
 import '../../noding/segment_string.dart';
 
 class PolygonNoder {
-  late Array<bool> _isHoleTouching;
+  late List<bool> _isHoleTouching;
 
   late List<NodedSegmentString> _nodedRings;
 
-  PolygonNoder(Array<Coordinate> shellRing, Array<Array<Coordinate>> holeRings) {
+  PolygonNoder(List<Coordinate> shellRing, List<List<Coordinate>> holeRings) {
     _nodedRings = createNodedSegmentStrings(shellRing, holeRings);
-    _isHoleTouching = Array(holeRings.length);
+    _isHoleTouching = List.filled(holeRings.length, false);
   }
 
   void node() {
@@ -24,29 +22,20 @@ class PolygonNoder {
     noder.computeNodes(_nodedRings);
   }
 
-  bool isShellNoded() {
-    return _nodedRings.get(0).hasNodes();
-  }
+  bool isShellNoded() => _nodedRings[0].hasNodes();
 
-  bool isHoleNoded(int i) {
-    return _nodedRings.get(i + 1).hasNodes();
-  }
+  bool isHoleNoded(int i) => _nodedRings[i + 1].hasNodes();
 
-  Array<Coordinate> getNodedShell() {
-    return _nodedRings.get(0).getNodedCoordinates();
-  }
+  List<Coordinate> getNodedShell() => _nodedRings[0].getNodedCoordinates();
 
-  Array<Coordinate> getNodedHole(int i) {
-    return _nodedRings.get(i + 1).getNodedCoordinates();
-  }
+  List<Coordinate> getNodedHole(int i) =>
+      _nodedRings[i + 1].getNodedCoordinates();
 
-  Array<bool> getHolesTouching() {
-    return _isHoleTouching;
-  }
+  List<bool> getHolesTouching() => _isHoleTouching;
 
   static List<NodedSegmentString> createNodedSegmentStrings(
-    Array<Coordinate> shellRing,
-    Array<Array<Coordinate>> holeRings,
+    List<Coordinate> shellRing,
+    List<List<Coordinate>> holeRings,
   ) {
     List<NodedSegmentString> segStr = [];
     segStr.add(createNodedSegString(shellRing, -1));
@@ -56,7 +45,8 @@ class PolygonNoder {
     return segStr;
   }
 
-  static NodedSegmentString createNodedSegString(Array<Coordinate> ringPts, int i) {
+  static NodedSegmentString createNodedSegString(
+      List<Coordinate> ringPts, int i) {
     return NodedSegmentString(ringPts, i);
   }
 }
@@ -64,14 +54,14 @@ class PolygonNoder {
 class NodeAdder extends NSegmentIntersector {
   LineIntersector li = RobustLineIntersector();
 
-  Array<bool> isHoleTouching;
+  List<bool> isHoleTouching;
 
   NodeAdder(this.isHoleTouching);
 
   @override
-  void processIntersections(SegmentString ss0, int segIndex0, SegmentString ss1, int segIndex1) {
+  void processIntersections(
+      SegmentString ss0, int segIndex0, SegmentString ss1, int segIndex1) {
     if (ss0 == ss1) return;
-
     Coordinate p00 = ss0.getCoordinate(segIndex0);
     Coordinate p01 = ss0.getCoordinate(segIndex0 + 1);
     Coordinate p10 = ss1.getCoordinate(segIndex1);

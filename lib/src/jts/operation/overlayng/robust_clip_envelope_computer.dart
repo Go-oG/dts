@@ -27,11 +27,13 @@ class RobustClipEnvelopeComputer {
   }
 
   void add(Geometry? g) {
-    if ((g == null) || g.isEmpty()) return;
+    if (g == null || g.isEmpty()) return;
 
     if (g is Polygon) {
       addPolygon(g);
-    } else if (g is GeometryCollection) addCollection(g);
+    } else if (g is GeometryCollection) {
+      addCollection(g);
+    }
   }
 
   void addCollection(GeometryCollection gc) {

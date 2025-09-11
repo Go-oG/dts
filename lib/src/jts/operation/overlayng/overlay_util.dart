@@ -1,4 +1,5 @@
-import 'package:d_util/d_util.dart';
+import 'dart:math';
+
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -83,7 +84,8 @@ final class OverlayUtil {
     return envExpandDist;
   }
 
-  static bool isEmptyResult(OverlayOpCode opCode, Geometry? a, Geometry? b, PrecisionModel? pm) {
+  static bool isEmptyResult(
+      OverlayOpCode opCode, Geometry? a, Geometry? b, PrecisionModel? pm) {
     switch (opCode) {
       case OverlayOpCode.intersection:
         if (isEnvDisjoint(a, b, pm)) {
@@ -156,7 +158,8 @@ final class OverlayUtil {
         result = geomFact.createGeomCollection();
         break;
       default:
-        Assert.shouldNeverReachHere("Unable to determine overlay result geometry dimension");
+        Assert.shouldNeverReachHere(
+            "Unable to determine overlay result geometry dimension");
     }
     return result!;
   }
@@ -165,16 +168,16 @@ final class OverlayUtil {
     int resultDimension = -1;
     switch (opCode) {
       case OverlayOpCode.intersection:
-        resultDimension = Math.min(dim0, dim1).toInt();
+        resultDimension = min(dim0, dim1).toInt();
         break;
       case OverlayOpCode.union:
-        resultDimension = Math.max(dim0, dim1).toInt();
+        resultDimension = max(dim0, dim1).toInt();
         break;
       case OverlayOpCode.difference:
         resultDimension = dim0;
         break;
       case OverlayOpCode.symDifference:
-        resultDimension = Math.max(dim0, dim1).toInt();
+        resultDimension = max(dim0, dim1).toInt();
         break;
     }
     return resultDimension;
@@ -202,7 +205,8 @@ final class OverlayUtil {
     return geometryFactory.buildGeometry(geomList);
   }
 
-  static Geometry toLines(OverlayGraph graph, bool isOutputEdges, GeometryFactory geomFact) {
+  static Geometry toLines(
+      OverlayGraph graph, bool isOutputEdges, GeometryFactory geomFact) {
     List<LineString> lines = [];
     for (OverlayEdge edge in graph.getEdges()) {
       bool includeEdge = isOutputEdges || edge.isInResultArea();
@@ -210,7 +214,7 @@ final class OverlayUtil {
         continue;
       }
 
-      Array<Coordinate> pts = edge.getCoordinatesOriented();
+      List<Coordinate> pts = edge.getCoordinatesOriented();
       LineString line = geomFact.createLineString2(pts);
       line.userData = labelForResult(edge);
       lines.add(line);
@@ -219,7 +223,8 @@ final class OverlayUtil {
   }
 
   static String labelForResult(OverlayEdge edge) {
-    return edge.getLabel().toString2(edge.isForward()) + (edge.isInResultArea() ? " Res" : "");
+    return edge.getLabel().toString2(edge.isForward()) +
+        (edge.isInResultArea() ? " Res" : "");
   }
 
   static Coordinate? round2(Point pt, PrecisionModel? pm) {
@@ -259,11 +264,12 @@ final class OverlayUtil {
             isLess(areaResult, areaB, _kAreaHeuristicTolerance);
         break;
       case OverlayOpCode.difference:
-        isConsistent =
-            isDifferenceAreaConsistent(areaA, areaB, areaResult, _kAreaHeuristicTolerance);
+        isConsistent = isDifferenceAreaConsistent(
+            areaA, areaB, areaResult, _kAreaHeuristicTolerance);
         break;
       case OverlayOpCode.symDifference:
-        isConsistent = isLess(areaResult, areaA + areaB, _kAreaHeuristicTolerance);
+        isConsistent =
+            isLess(areaResult, areaA + areaB, _kAreaHeuristicTolerance);
         break;
       case OverlayOpCode.union:
         isConsistent = (isLess(areaA, areaResult, _kAreaHeuristicTolerance) &&

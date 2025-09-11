@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
@@ -18,19 +17,19 @@ class PrecisionReducerTransformer extends GeometryTransformer {
     return trans.transform(geom);
   }
 
-  PrecisionModel targetPM;
+  final PrecisionModel targetPM;
 
   final bool _isRemoveCollapsed;
 
   PrecisionReducerTransformer(this.targetPM, this._isRemoveCollapsed);
 
   @override
-  CoordinateSequence? transformCoordinates(CoordinateSequence coordinates, Geometry? parent) {
-    if (coordinates.size() == 0) {
+  CoordinateSequence? transformCoordinates(CoordinateSequence coords, Geometry? parent) {
+    if (coords.size() == 0) {
       return null;
     }
 
-    Array<Coordinate> coordsReduce = reduceCompress(coordinates);
+    List<Coordinate> coordsReduce = reduceCompress(coords);
     int minSize = 0;
     if (parent is LineString) {
       minSize = 2;
@@ -49,28 +48,27 @@ class PrecisionReducerTransformer extends GeometryTransformer {
     return factory.csFactory.create(coordsReduce);
   }
 
-  Array<Coordinate> extend(Array<Coordinate> coords, int minLength) {
+  List<Coordinate> extend(List<Coordinate> coords, int minLength) {
     if (coords.length >= minLength) {
       return coords;
     }
 
-    Array<Coordinate> exCoords = Array(minLength);
+    List<Coordinate> exCoords = [];
     for (int i = 0; i < exCoords.length; i++) {
       int iSrc = (i < coords.length) ? i : coords.length - 1;
-      exCoords[i] = coords[iSrc].copy();
+      exCoords.add(coords[iSrc].copy());
     }
-    return exCoords;
+    return exCoords.toList();
   }
 
-  Array<Coordinate> reduceCompress(CoordinateSequence coordinates) {
+  List<Coordinate> reduceCompress(CoordinateSequence coordinates) {
     CoordinateList noRepeatCoordList = CoordinateList();
     for (int i = 0; i < coordinates.size(); i++) {
       Coordinate coord = coordinates.getCoordinate(i).copy();
       targetPM.makePrecise(coord);
       noRepeatCoordList.add3(coord, false);
     }
-    Array<Coordinate> noRepeatCoords = noRepeatCoordList.toCoordinateArray();
-    return noRepeatCoords;
+    return noRepeatCoordList.toCoordinateList();
   }
 
   @override

@@ -9,7 +9,7 @@ import 'tagged_line_segment.dart';
 class TaggedLineString {
   final LineString _parentLine;
 
-  late Array<TaggedLineSegment> _segs;
+  late List<TaggedLineSegment> _segs;
 
   final List<LineSegment> _resultSegs = [];
 
@@ -33,21 +33,13 @@ class TaggedLineString {
     return _parentLine;
   }
 
-  Array<Coordinate> getParentCoordinates() {
-    return _parentLine.getCoordinates();
-  }
+  List<Coordinate> getParentCoordinates() => _parentLine.getCoordinates();
 
-  Array<Coordinate> getResultCoordinates() {
-    return extractCoordinates(_resultSegs);
-  }
+  List<Coordinate> getResultCoordinates() => extractCoordinates(_resultSegs);
 
-  Coordinate getCoordinate(int i) {
-    return _parentLine.getCoordinateN(i);
-  }
+  Coordinate getCoordinate(int i) => _parentLine.getCoordinateN(i);
 
-  int size() {
-    return _parentLine.getNumPoints();
-  }
+  int size() => _parentLine.getNumPoints();
 
   Coordinate getComponentPoint() {
     if (_resultSegs.size > 0) {
@@ -62,9 +54,7 @@ class TaggedLineString {
     return resultSegsSize == 0 ? 0 : resultSegsSize + 1;
   }
 
-  TaggedLineSegment getSegment(int i) {
-    return _segs[i];
-  }
+  TaggedLineSegment getSegment(int i) => _segs[i];
 
   LineSegment getResultSegment(int i) {
     int index = i;
@@ -75,7 +65,7 @@ class TaggedLineString {
   }
 
   void init() {
-    Array<Coordinate> pts = _parentLine.getCoordinates();
+    final pts = _parentLine.getCoordinates();
     _segs = Array()[pts.length - 1];
     for (int i = 0; i < (pts.length - 1); i++) {
       final seg = TaggedLineSegment(pts[i], pts[i + 1], _parentLine, i);
@@ -83,30 +73,28 @@ class TaggedLineString {
     }
   }
 
-  Array<TaggedLineSegment> getSegments() {
-    return _segs;
-  }
+  List<TaggedLineSegment> getSegments() => _segs;
 
-  void addToResult(LineSegment seg) {
-    _resultSegs.add(seg);
-  }
+  void addToResult(LineSegment seg) => _resultSegs.add(seg);
 
   LineString asLineString() {
-    return _parentLine.factory.createLineString2(extractCoordinates(_resultSegs));
+    return _parentLine.factory
+        .createLineString2(extractCoordinates(_resultSegs));
   }
 
   LinearRing asLinearRing() {
-    return _parentLine.factory.createLinearRings(extractCoordinates(_resultSegs));
+    return _parentLine.factory
+        .createLinearRings(extractCoordinates(_resultSegs));
   }
 
-  static Array<Coordinate> extractCoordinates(List<LineSegment> segs) {
-    Array<Coordinate> pts = Array(segs.size + 1);
+  static List<Coordinate> extractCoordinates(List<LineSegment> segs) {
+    List<Coordinate> pts = [];
     late LineSegment seg;
     for (int i = 0; i < segs.size; i++) {
       seg = segs.get(i);
-      pts[i] = seg.p0;
+      pts.add(seg.p0);
     }
-    pts[pts.length - 1] = seg.p1;
+    pts.add(seg.p1);
     return pts;
   }
 

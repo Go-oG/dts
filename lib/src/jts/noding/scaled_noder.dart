@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 
@@ -17,7 +16,8 @@ class ScaledNoder implements Noder {
 
   bool _isScaled = false;
 
-  ScaledNoder(this._noder, this.scaleFactor, [double offsetX = 0, double offsetY = 0]) {
+  ScaledNoder(this._noder, this.scaleFactor,
+      [double offsetX = 0, double offsetY = 0]) {
     _isScaled = !isIntegerPrecision();
     _offsetX = offsetX;
     _offsetY = offsetY;
@@ -48,22 +48,22 @@ class ScaledNoder implements Noder {
   List<SegmentString> scale(List<SegmentString> segStrings) {
     List<SegmentString> nodedSegmentStrings = [];
     for (var ss in segStrings) {
-      nodedSegmentStrings.add(NodedSegmentString(scaleArray(ss.getCoordinates()), ss.getData()));
+      nodedSegmentStrings.add(
+          NodedSegmentString(scaleArray(ss.getCoordinates()), ss.getData()));
     }
     return nodedSegmentStrings;
   }
 
-  Array<Coordinate> scaleArray(Array<Coordinate> pts) {
-    Array<Coordinate> roundPts = Array(pts.length);
+  List<Coordinate> scaleArray(List<Coordinate> pts) {
+    List<Coordinate> roundPts = [];
     for (int i = 0; i < pts.length; i++) {
-      roundPts[i] = Coordinate(
-        Math.round((pts[i].x - _offsetX) * scaleFactor).toDouble(),
-        Math.round((pts[i].y - _offsetY) * scaleFactor).toDouble(),
+      roundPts.add(Coordinate(
+        ((pts[i].x - _offsetX) * scaleFactor).roundToDouble(),
+        ((pts[i].y - _offsetY) * scaleFactor).roundToDouble(),
         pts[i].z,
-      );
+      ));
     }
-    Array<Coordinate> roundPtsNoDup = CoordinateArrays.removeRepeatedPoints(roundPts);
-    return roundPtsNoDup;
+    return CoordinateArrays.removeRepeatedPoints(roundPts);
   }
 
   void rescale(List<SegmentString> segStrings) {
@@ -72,7 +72,7 @@ class ScaledNoder implements Noder {
     }
   }
 
-  void rescaleArray(Array<Coordinate> pts) {
+  void rescaleArray(List<Coordinate> pts) {
     for (int i = 0; i < pts.length; i++) {
       pts[i].x = (pts[i].x / scaleFactor) + _offsetX;
       pts[i].y = (pts[i].y / scaleFactor) + _offsetY;

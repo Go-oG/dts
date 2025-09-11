@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 
 class CommonBits {
   static int signExpBits(int num) {
@@ -50,8 +50,10 @@ class CommonBits {
       _commonBits = 0;
       return;
     }
-    _commonMantissaBitsCount = numCommonMostSigMantissaBits(_commonBits, numBits);
-    _commonBits = zeroLowerBits(_commonBits, 64 - (12 + _commonMantissaBitsCount));
+    _commonMantissaBitsCount =
+        numCommonMostSigMantissaBits(_commonBits, numBits);
+    _commonBits =
+        zeroLowerBits(_commonBits, 64 - (12 + _commonMantissaBitsCount));
   }
 
   double getCommon() {

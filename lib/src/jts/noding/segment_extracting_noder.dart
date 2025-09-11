@@ -1,4 +1,3 @@
- import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/noding/segment_string.dart';
 
@@ -25,7 +24,7 @@ class SegmentExtractingNoder implements Noder {
     for (int i = 0; i < (ss.size() - 1); i++) {
       Coordinate p0 = ss.getCoordinate(i);
       Coordinate p1 = ss.getCoordinate(i + 1);
-      SegmentString seg = BasicSegmentString([p0, p1].toArray(), ss.getData());
+      SegmentString seg = BasicSegmentString([p0, p1], ss.getData());
       segList.add(seg);
     }
   }

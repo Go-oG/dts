@@ -40,12 +40,12 @@ class TopologyComputer {
       updateDim(Location.exterior, Location.interior, Dimension.A);
     } else if ((dimRealA == Dimension.A) && (dimRealB == Dimension.L)) {
       updateDim(Location.interior, Location.exterior, Dimension.A);
-    } else if ((dimRealA == Dimension.False) || (dimRealB == Dimension.False)) {
-      if (dimRealA != Dimension.False) {
-        initExteriorEmpty(RelateGeometry.GEOM_A);
+    } else if ((dimRealA == Dimension.kFalse) || (dimRealB == Dimension.kFalse)) {
+      if (dimRealA != Dimension.kFalse) {
+        initExteriorEmpty(RelateGeometry.kGeomA);
       }
-      if (dimRealB != Dimension.False) {
-        initExteriorEmpty(RelateGeometry.GEOM_B);
+      if (dimRealB != Dimension.kFalse) {
+        initExteriorEmpty(RelateGeometry.kGeomB);
       }
     }
   }
@@ -78,7 +78,7 @@ class TopologyComputer {
   }
 
   bool isAreaArea() {
-    return (getDimension(RelateGeometry.GEOM_A) == Dimension.A) && (getDimension(RelateGeometry.GEOM_B) == Dimension.A);
+    return (getDimension(RelateGeometry.kGeomA) == Dimension.A) && (getDimension(RelateGeometry.kGeomB) == Dimension.A);
   }
 
   bool isSelfNodingRequired() {
@@ -300,8 +300,8 @@ class TopologyComputer {
   void evaluateNode(NodeSections nodeSections) {
     Coordinate p = nodeSections.getCoordinate();
     RelateNGNode node = nodeSections.createNode();
-    bool isAreaInteriorA = geomA.isNodeInArea(p, nodeSections.getPolygonal(RelateGeometry.GEOM_A));
-    bool isAreaInteriorB = _geomB.isNodeInArea(p, nodeSections.getPolygonal(RelateGeometry.GEOM_B));
+    bool isAreaInteriorA = geomA.isNodeInArea(p, nodeSections.getPolygonal(RelateGeometry.kGeomA));
+    bool isAreaInteriorB = _geomB.isNodeInArea(p, nodeSections.getPolygonal(RelateGeometry.kGeomB));
     node.finish(isAreaInteriorA, isAreaInteriorB);
     evaluateNodeEdges(node);
   }
@@ -310,19 +310,19 @@ class TopologyComputer {
     for (RelateEdge e in node.getEdges()) {
       if (isAreaArea()) {
         updateDim(
-          e.location(RelateGeometry.GEOM_A, Position.left),
-          e.location(RelateGeometry.GEOM_B, Position.left),
+          e.location(RelateGeometry.kGeomA, Position.left),
+          e.location(RelateGeometry.kGeomB, Position.left),
           Dimension.A,
         );
         updateDim(
-          e.location(RelateGeometry.GEOM_A, Position.right),
-          e.location(RelateGeometry.GEOM_B, Position.right),
+          e.location(RelateGeometry.kGeomA, Position.right),
+          e.location(RelateGeometry.kGeomB, Position.right),
           Dimension.A,
         );
       }
       updateDim(
-        e.location(RelateGeometry.GEOM_A, Position.on),
-        e.location(RelateGeometry.GEOM_B, Position.on),
+        e.location(RelateGeometry.kGeomA, Position.on),
+        e.location(RelateGeometry.kGeomB, Position.on),
         Dimension.L,
       );
     }

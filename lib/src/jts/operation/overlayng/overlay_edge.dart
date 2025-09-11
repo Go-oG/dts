@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart' show CComparator, CComparator2;
 import 'package:dts/src/jts/edgegraph/edge_graph.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
@@ -9,7 +9,8 @@ import 'overlay_edge_ring.dart';
 import 'overlay_label.dart';
 
 class OverlayEdge extends HalfEdge {
-  static OverlayEdge createEdge(Array<Coordinate> pts, OverlayLabel lbl, bool direction) {
+  static OverlayEdge createEdge(
+      List<Coordinate> pts, OverlayLabel lbl, bool direction) {
     Coordinate origin;
     Coordinate dirPt;
     if (direction) {
@@ -23,7 +24,7 @@ class OverlayEdge extends HalfEdge {
     return OverlayEdge(origin, dirPt, direction, lbl, pts);
   }
 
-  static OverlayEdge createEdgePair(Array<Coordinate> pts, OverlayLabel lbl) {
+  static OverlayEdge createEdgePair(List<Coordinate> pts, OverlayLabel lbl) {
     OverlayEdge e0 = OverlayEdge.createEdge(pts, lbl, true);
     OverlayEdge e1 = OverlayEdge.createEdge(pts, lbl, false);
     e0.link(e1);
@@ -36,7 +37,7 @@ class OverlayEdge extends HalfEdge {
     });
   }
 
-  Array<Coordinate> pts;
+  List<Coordinate> pts;
 
   final bool _direction;
 
@@ -81,15 +82,15 @@ class OverlayEdge extends HalfEdge {
     return orig();
   }
 
-  Array<Coordinate> getCoordinates() {
+  List<Coordinate> getCoordinates() {
     return pts;
   }
 
-  Array<Coordinate> getCoordinatesOriented() {
+  List<Coordinate> getCoordinatesOriented() {
     if (_direction) {
       return pts;
     }
-    Array<Coordinate> copy = pts.copy();
+    List<Coordinate> copy = pts.toList();
     CoordinateArrays.reverse(copy);
     return copy;
   }

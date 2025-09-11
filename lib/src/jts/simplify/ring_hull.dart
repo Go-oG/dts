@@ -1,4 +1,4 @@
-import 'package:d_util/d_util.dart';
+import 'package:collection/collection.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
@@ -50,14 +50,13 @@ class RingHull {
 
   LinearRing getHull(RingHullIndex? hullIndex) {
     compute(hullIndex);
-    Array<Coordinate> hullPts = _vertexRing.getCoordinates();
-    return _inputRing.factory.createLinearRings(hullPts);
+    return _inputRing.factory.createLinearRings(_vertexRing.getCoordinates());
   }
 
-  void init(Array<Coordinate> ring, bool isOuter) {
+  void init(List<Coordinate> ring, bool isOuter) {
     bool orientCW = isOuter;
     if (orientCW == Orientation.isCCW(ring)) {
-      ring = ring.copy();
+      ring = ring.toList();
       CoordinateArrays.reverse(ring);
     }
     _vertexRing = LinkedRing(ring);
@@ -74,8 +73,8 @@ class RingHull {
       return;
     }
 
-    RingHullCorner corner =
-        RingHullCorner(i, _vertexRing.getPrev(i), _vertexRing.getNext(i), area(_vertexRing, i));
+    RingHullCorner corner = RingHullCorner(i, _vertexRing.getPrev(i),
+        _vertexRing.getNext(i), area(_vertexRing, i));
     cornerQueue.add(corner);
   }
 
@@ -116,7 +115,8 @@ class RingHull {
     return true;
   }
 
-  void removeCorner(RingHullCorner corner, PriorityQueue<RingHullCorner> cornerQueue) {
+  void removeCorner(
+      RingHullCorner corner, PriorityQueue<RingHullCorner> cornerQueue) {
     int index = corner.getIndex();
     int prev = _vertexRing.getPrev(index);
     int next = _vertexRing.getNext(index);
@@ -141,8 +141,9 @@ class RingHull {
     return true;
   }
 
-  bool hasIntersectingVertex(RingHullCorner corner, Envelope cornerEnv, RingHull hull) {
-    Array<int> result = hull.query(cornerEnv);
+  bool hasIntersectingVertex(
+      RingHullCorner corner, Envelope cornerEnv, RingHull hull) {
+    List<int> result = hull.query(cornerEnv);
     for (int i = 0; i < result.length; i++) {
       int index = result[i];
       if ((hull == this) && corner.isVertex(index)) continue;
@@ -157,12 +158,12 @@ class RingHull {
     return _vertexRing.getCoordinate(index);
   }
 
-  Array<int> query(Envelope cornerEnv) {
+  List<int> query(Envelope cornerEnv) {
     return vertexIndex.query(cornerEnv);
   }
 
   void queryHull(Envelope queryEnv, List<Coordinate> pts) {
-    Array<int> result = vertexIndex.query(queryEnv);
+    List<int> result = vertexIndex.query(queryEnv);
     for (int i = 0; i < result.length; i++) {
       int index = result[i];
       if (!_vertexRing.hasCoordinate(index)) continue;
@@ -174,7 +175,7 @@ class RingHull {
 
   Polygon toGeometry() {
     GeometryFactory fact = GeometryFactory();
-    Array<Coordinate> coords = _vertexRing.getCoordinates();
+    final coords = _vertexRing.getCoordinates();
     return fact.createPolygon(fact.createLinearRings(coords));
   }
 }
@@ -194,18 +195,12 @@ class RingHullCorner implements Comparable<RingHullCorner> {
     return ((index == this.index) || (index == prev)) || (index == next);
   }
 
-  int getIndex() {
-    return index;
-  }
+  int getIndex() => index;
 
-  double getArea() {
-    return area;
-  }
+  double getArea() => area;
 
   @override
-  int compareTo(RingHullCorner o) {
-    return Double.compare(area, o.area);
-  }
+  int compareTo(RingHullCorner o) => area.compareTo(o.area);
 
   Envelope envelope(LinkedRing ring) {
     Coordinate pp = ring.getCoordinate(prev);
@@ -232,7 +227,7 @@ class RingHullCorner implements Comparable<RingHullCorner> {
     Coordinate p = ring.getCoordinate(index);
     Coordinate pn = ring.getCoordinate(next);
     return GeometryFactory()
-        .createLineString2([safeCoord(pp), safeCoord(p), safeCoord(pn)].toArray());
+        .createLineString2([safeCoord(pp), safeCoord(p), safeCoord(pn)]);
   }
 
   static Coordinate safeCoord(Coordinate? p) {

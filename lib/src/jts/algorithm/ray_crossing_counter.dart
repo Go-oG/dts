@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/location.dart';
@@ -6,7 +5,7 @@ import 'package:dts/src/jts/geom/location.dart';
 import 'orientation.dart';
 
 final class RayCrossingCounter {
-  static int locatePointInRing(Coordinate p, Array<Coordinate> ring) {
+  static int locatePointInRing(Coordinate p, List<Coordinate> ring) {
     RayCrossingCounter counter = RayCrossingCounter(p);
     for (int i = 1; i < ring.length; i++) {
       Coordinate p1 = ring[i];
@@ -65,7 +64,8 @@ final class RayCrossingCounter {
       }
       return;
     }
-    if (((p1.y > _p.y) && (p2.y <= _p.y)) || ((p2.y > _p.y) && (p1.y <= _p.y))) {
+    if (((p1.y > _p.y) && (p2.y <= _p.y)) ||
+        ((p2.y > _p.y) && (p1.y <= _p.y))) {
       int orient = Orientation.index(p1, p2, _p);
       if (orient == Orientation.collinear) {
         _isPointOnSegment = true;

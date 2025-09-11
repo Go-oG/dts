@@ -21,15 +21,13 @@ class VertexTaggedGeometryDataMapper {
     }
   }
 
-  void loadVertices(Array<Coordinate> pts, Object? data) {
+  void loadVertices(List<Coordinate> pts, Object? data) {
     for (int i = 0; i < pts.length; i++) {
       _coordDataMap.put(pts[i], data);
     }
   }
 
-  List<Coordinate> getCoordinates() {
-    return _coordDataMap.keys.toList();
-  }
+  List<Coordinate> getCoordinates() => _coordDataMap.keys.toList();
 
   void transferData(Geometry targetGeom) {
     for (int i = 0; i < targetGeom.getNumGeometries(); i++) {

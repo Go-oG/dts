@@ -46,8 +46,10 @@ class LinearIterator {
   bool hasNext() {
     if (_componentIndex >= _numLines) return false;
 
-    if ((_componentIndex == (_numLines - 1)) && (_vertexIndex >= _currentLine!.getNumPoints()))
+    if ((_componentIndex == (_numLines - 1)) &&
+        (_vertexIndex >= _currentLine!.getNumPoints())) {
       return false;
+    }
 
     return true;
   }
@@ -88,8 +90,9 @@ class LinearIterator {
   }
 
   Coordinate? getSegmentEnd() {
-    if (_vertexIndex < (getLine()!.getNumPoints() - 1))
+    if (_vertexIndex < (getLine()!.getNumPoints() - 1)) {
       return _currentLine!.getCoordinateN(_vertexIndex + 1);
+    }
 
     return null;
   }

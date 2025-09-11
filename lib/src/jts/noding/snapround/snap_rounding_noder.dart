@@ -1,4 +1,3 @@
- import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/precision_model.dart';
@@ -13,7 +12,7 @@ import 'hot_pixel_index.dart';
 import 'snap_rounding_intersection_adder.dart';
 
 class SnapRoundingNoder implements Noder {
-  static const int _NEARNESS_FACTOR = 100;
+  static const int _kNearnessFactor = 100;
 
   final PrecisionModel pm;
 
@@ -44,7 +43,7 @@ class SnapRoundingNoder implements Noder {
 
   void addIntersectionPixels(List<NodedSegmentString> segStrings) {
     double snapGridSize = 1.0 / pm.getScale();
-    double nearnessTol = snapGridSize / _NEARNESS_FACTOR;
+    double nearnessTol = snapGridSize / _kNearnessFactor;
     final intAdder = SnapRoundingIntersectionAdder(nearnessTol);
     final noder = MCIndexNoder.of2(intAdder, nearnessTol);
     noder.computeNodes(segStrings);
@@ -54,8 +53,7 @@ class SnapRoundingNoder implements Noder {
 
   void addVertexPixels(List<NodedSegmentString> segStrings) {
     for (SegmentString nss in segStrings) {
-      Array<Coordinate> pts = nss.getCoordinates();
-      _pixelIndex.add2(pts);
+      _pixelIndex.add2(nss.getCoordinates());
     }
   }
 
@@ -65,12 +63,12 @@ class SnapRoundingNoder implements Noder {
     return p2;
   }
 
-  Array<Coordinate> round2(Array<Coordinate> pts) {
+  List<Coordinate> round2(List<Coordinate> pts) {
     CoordinateList roundPts = CoordinateList();
     for (int i = 0; i < pts.length; i++) {
       roundPts.add3(round(pts[i]), false);
     }
-    return roundPts.toCoordinateArray();
+    return roundPts.toCoordinateList();
   }
 
   List<NodedSegmentString> computeSnaps(List<NodedSegmentString> segStrings) {
@@ -86,8 +84,8 @@ class SnapRoundingNoder implements Noder {
   }
 
   NodedSegmentString? computeSegmentSnaps(NodedSegmentString ss) {
-    Array<Coordinate> pts = ss.getNodedCoordinates();
-    Array<Coordinate> ptsRound = round2(pts);
+    final pts = ss.getNodedCoordinates();
+    final ptsRound = round2(pts);
     if (ptsRound.length <= 1) return null;
 
     NodedSegmentString snapSS = NodedSegmentString(ptsRound, ss.getData());
@@ -105,7 +103,8 @@ class SnapRoundingNoder implements Noder {
     return snapSS;
   }
 
-  void snapSegment(Coordinate p0, Coordinate p1, NodedSegmentString ss, int segIndex) {
+  void snapSegment(
+      Coordinate p0, Coordinate p1, NodedSegmentString ss, int segIndex) {
     _pixelIndex.query(
       p0,
       p1,
@@ -125,10 +124,9 @@ class SnapRoundingNoder implements Noder {
   }
 
   void addVertexNodeSnaps(NodedSegmentString ss) {
-    Array<Coordinate> pts = ss.getCoordinates();
+    final pts = ss.getCoordinates();
     for (int i = 1; i < (pts.length - 1); i++) {
-      Coordinate p0 = pts[i];
-      snapVertexNode(p0, ss, i);
+      snapVertexNode(pts[i], ss, i);
     }
   }
 

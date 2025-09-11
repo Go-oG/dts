@@ -1,5 +1,3 @@
-import 'package:d_util/d_util.dart';
-
 import 'coordinate.dart';
 import 'coordinate_sequence.dart';
 import 'dimension.dart';
@@ -11,10 +9,10 @@ import 'precision_model.dart';
 class LinearRing extends LineString {
   static const int kMinValidSize = 3;
 
-  LinearRing(Array<Coordinate>? points, PrecisionModel precisionModel, int SRID)
-      : this.of(points, GeometryFactory(pm: precisionModel, srid: SRID));
+  LinearRing(List<Coordinate>? points, PrecisionModel precisionModel, int srid)
+      : this.of(points, GeometryFactory(pm: precisionModel, srid: srid));
 
-  LinearRing.of(Array<Coordinate>? points, GeometryFactory factory)
+  LinearRing.of(List<Coordinate>? points, GeometryFactory factory)
       : this.of2(factory.csFactory.create(points), factory);
 
   LinearRing.of2(super.points, super.factory) : super.of() {
@@ -22,20 +20,18 @@ class LinearRing extends LineString {
   }
 
   void validateConstruction() {
-    if ((!isEmpty()) && (!super.isClosed())) {
-      throw IllegalArgumentException("Points of LinearRing do not form a closed linestring");
+    if (!isEmpty() && !super.isClosed()) {
+      throw ArgumentError("Points of LinearRing do not form a closed linestring");
     }
     if ((getCoordinateSequence().size() >= 1) && (getCoordinateSequence().size() < kMinValidSize)) {
-      throw IllegalArgumentException(
+      throw ArgumentError(
         "${("Invalid number of points in LinearRing (found ${getCoordinateSequence().size()} - must be 0 or >= $kMinValidSize")})",
       );
     }
   }
 
   @override
-  int getBoundaryDimension() {
-    return Dimension.False;
-  }
+  int getBoundaryDimension() => Dimension.kFalse;
 
   @override
   bool isClosed() {
@@ -46,19 +42,13 @@ class LinearRing extends LineString {
   }
 
   @override
-  GeometryType get geometryType {
-    return GeometryType.linearRing;
-  }
+  GeometryType get geometryType => GeometryType.linearRing;
 
   @override
-  LinearRing copyInternal() {
-    return LinearRing.of2(points.copy(), factory);
-  }
+  LinearRing copyInternal() => LinearRing.of2(points.copy(), factory);
 
   @override
-  LinearRing reverse() {
-    return (super.reverse() as LinearRing);
-  }
+  LinearRing reverse() => (super.reverse() as LinearRing);
 
   @override
   LinearRing reverseInternal() {

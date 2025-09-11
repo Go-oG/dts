@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -39,7 +38,8 @@ class VWSimplifier {
     if (inputGeom.isEmpty()) {
       return inputGeom.copy();
     }
-    return VWTransformer(isEnsureValidTopology, distanceTolerance).transform(inputGeom);
+    return VWTransformer(isEnsureValidTopology, distanceTolerance)
+        .transform(inputGeom);
   }
 }
 
@@ -51,11 +51,12 @@ class VWTransformer extends GeometryTransformer {
   VWTransformer(this.isEnsureValidTopology, this.distanceTolerance);
 
   @override
-  CoordinateSequence transformCoordinates(CoordinateSequence coords, Geometry? parent) {
-    Array<Coordinate> inputPts = coords.toCoordinateArray();
-    Array<Coordinate> newPts;
+  CoordinateSequence transformCoordinates(
+      CoordinateSequence coords, Geometry? parent) {
+    final inputPts = coords.toCoordinateArray();
+    List<Coordinate> newPts;
     if (inputPts.isEmpty) {
-      newPts = Array(0);
+      newPts = [];
     } else {
       newPts = VWLineSimplifier.simplify2(inputPts, distanceTolerance);
     }

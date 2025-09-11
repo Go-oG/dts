@@ -46,7 +46,8 @@ class UnionInteracting {
     bool interactsWithAny = false;
     for (int i = 0; i < g1.getNumGeometries(); i++) {
       Geometry elem1 = g1.getGeometryN(i);
-      bool interacts = elem1.getEnvelopeInternal().intersects(elem0.getEnvelopeInternal());
+      bool interacts =
+          elem1.getEnvelopeInternal().intersects(elem0.getEnvelopeInternal());
       if (interacts) _interacts1[i] = true;
 
       if (interacts) interactsWithAny = true;
@@ -54,7 +55,8 @@ class UnionInteracting {
     return interactsWithAny;
   }
 
-  Geometry extractElements(Geometry geom, Array<bool> interacts, bool isInteracting) {
+  Geometry extractElements(
+      Geometry geom, Array<bool> interacts, bool isInteracting) {
     List<Geometry> extractedGeoms = [];
     for (int i = 0; i < geom.getNumGeometries(); i++) {
       Geometry elem = geom.getGeometryN(i);

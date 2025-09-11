@@ -1,4 +1,6 @@
-import 'package:d_util/d_util.dart';
+import 'dart:math';
+
+import 'package:d_util/d_util.dart' show Math;
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
@@ -24,7 +26,7 @@ class RandomPointsInGridBuilder extends GeometricShapeBuilder {
 
   @override
   Geometry getGeometry() {
-    int nCells = (Math.sqrt(numPts).toInt());
+    int nCells = (sqrt(numPts).toInt());
     if ((nCells * nCells) < numPts) {
       nCells += 1;
     }
@@ -37,39 +39,42 @@ class RandomPointsInGridBuilder extends GeometricShapeBuilder {
     double cellFrac = 1.0 - gutterFrac;
     double cellDX = cellFrac * gridDX;
     double cellDY = cellFrac * gridDY;
-    Array<Coordinate> pts = Array(nCells * nCells);
-    int index = 0;
+    List<Coordinate> pts = [];
+
     for (int i = 0; i < nCells; i++) {
       for (int j = 0; j < nCells; j++) {
         double orgX = (getExtent()!.minX + (i * gridDX)) + gutterOffsetX;
         double orgY = (getExtent()!.minY + (j * gridDY)) + gutterOffsetY;
-        pts[index++] = randomPointInCell(orgX, orgY, cellDX, cellDY);
+        pts.add(randomPointInCell(orgX, orgY, cellDX, cellDY));
       }
     }
     return geomFactory.createMultiPoint4(pts);
   }
 
-  Coordinate randomPointInCell(double orgX, double orgY, double xLen, double yLen) {
+  Coordinate randomPointInCell(
+      double orgX, double orgY, double xLen, double yLen) {
     if (_isConstrainedToCircle) {
       return randomPointInCircle(orgX, orgY, xLen, yLen);
     }
     return randomPointInGridCell(orgX, orgY, xLen, yLen);
   }
 
-  Coordinate randomPointInGridCell(double orgX, double orgY, double xLen, double yLen) {
+  Coordinate randomPointInGridCell(
+      double orgX, double orgY, double xLen, double yLen) {
     double x = orgX + (xLen * Math.random());
     double y = orgY + (yLen * Math.random());
     return createCoord(x, y);
   }
 
-  static Coordinate randomPointInCircle(double orgX, double orgY, double width, double height) {
+  static Coordinate randomPointInCircle(
+      double orgX, double orgY, double width, double height) {
     double centreX = orgX + (width / 2);
     double centreY = orgY + (height / 2);
-    double rndAng = (2 * Math.pi) * Math.random();
+    double rndAng = (2 * pi) * Math.random();
     double rndRadius = Math.random();
-    double rndRadius2 = Math.sqrt(rndRadius);
-    double rndX = ((width / 2) * rndRadius2) * Math.cos(rndAng);
-    double rndY = ((height / 2) * rndRadius2) * Math.sin(rndAng);
+    double rndRadius2 = sqrt(rndRadius);
+    double rndX = ((width / 2) * rndRadius2) * cos(rndAng);
+    double rndY = ((height / 2) * rndRadius2) * sin(rndAng);
     double x0 = centreX + rndX;
     double y0 = centreY + rndY;
     return Coordinate(x0, y0);

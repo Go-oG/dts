@@ -1,4 +1,3 @@
- import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
@@ -15,7 +14,8 @@ class LineMergeGraph extends PlanarGraph {
     if (lineString.isEmpty()) {
       return;
     }
-    Array<Coordinate> coordinates = CoordinateArrays.removeRepeatedPoints(lineString.getCoordinates());
+    final coordinates =
+        CoordinateArrays.removeRepeatedPoints(lineString.getCoordinates());
     if (coordinates.length <= 1) {
       return;
     }
@@ -24,7 +24,8 @@ class LineMergeGraph extends PlanarGraph {
     Coordinate endCoordinate = coordinates[coordinates.length - 1];
     PGNode startNode = getNode(startCoordinate);
     PGNode endNode = getNode(endCoordinate);
-    DirectedEdgePG directedEdge0 = LineMergeDirectedEdge(startNode, endNode, coordinates[1], true);
+    DirectedEdgePG directedEdge0 =
+        LineMergeDirectedEdge(startNode, endNode, coordinates[1], true);
     DirectedEdgePG directedEdge1 = LineMergeDirectedEdge(
       endNode,
       startNode,

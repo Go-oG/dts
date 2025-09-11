@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -6,38 +5,44 @@ import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
 
 class OffsetCurveSection implements Comparable<OffsetCurveSection> {
-  static Geometry toGeometry(List<OffsetCurveSection> sections, GeometryFactory geomFactory) {
+  static Geometry toGeometry(
+      List<OffsetCurveSection> sections, GeometryFactory geomFactory) {
     if (sections.isEmpty) return geomFactory.createLineString();
 
-    if (sections.length == 1)
-      return geomFactory.createLineString2(sections.get(0).getCoordinates());
+    if (sections.length == 1) {
+      return geomFactory.createLineString2(sections[0].getCoordinates());
+    }
     sections.sort();
 
-    Array<LineString> lines = Array(sections.length);
-    for (int i = 0; i < sections.size; i++) {
-      lines[i] = geomFactory.createLineString2(sections.get(i).getCoordinates());
+    List<LineString> lines = [];
+    for (int i = 0; i < sections.length; i++) {
+      lines.add(geomFactory.createLineString2(sections[i].getCoordinates()));
     }
     return geomFactory.createMultiLineString(lines);
   }
 
-  static Geometry toLine(List<OffsetCurveSection> sections, GeometryFactory geomFactory) {
-    if (sections.size == 0) return geomFactory.createLineString();
+  static Geometry toLine(
+      List<OffsetCurveSection> sections, GeometryFactory geomFactory) {
+    if (sections.isEmpty) return geomFactory.createLineString();
 
-    if (sections.size == 1) return geomFactory.createLineString2(sections.get(0).getCoordinates());
+    if (sections.length == 1) {
+      return geomFactory.createLineString2(sections.first.getCoordinates());
+    }
 
     sections.sort();
     CoordinateList pts = CoordinateList();
     bool removeStartPt = false;
-    for (int i = 0; i < sections.size; i++) {
-      OffsetCurveSection section = sections.get(i);
+    for (int i = 0; i < sections.length; i++) {
+      OffsetCurveSection section = sections[i];
       bool removeEndPt = false;
-      if (i < (sections.size - 1)) {
-        double nextStartLoc = sections.get(i + 1)._location;
+      if (i < (sections.length - 1)) {
+        double nextStartLoc = sections[i + 1].location;
         removeEndPt = section.isEndInSameSegment(nextStartLoc);
       }
-      Array<Coordinate> sectionPts = section.getCoordinates();
+      List<Coordinate> sectionPts = section.getCoordinates();
       for (int j = 0; j < sectionPts.length; j++) {
-        if ((removeStartPt && (j == 0)) || (removeEndPt && (j == (sectionPts.length - 1)))) {
+        if ((removeStartPt && (j == 0)) ||
+            (removeEndPt && (j == (sectionPts.length - 1)))) {
           continue;
         }
 
@@ -45,35 +50,33 @@ class OffsetCurveSection implements Comparable<OffsetCurveSection> {
       }
       removeStartPt = removeEndPt;
     }
-    return geomFactory.createLineString2(pts.toCoordinateArray());
+    return geomFactory.createLineString2(pts.toCoordinateList());
   }
 
   static OffsetCurveSection create(
-      Array<Coordinate> srcPts, int start, int end, double loc, double locLast) {
+      List<Coordinate> srcPts, int start, int end, double loc, double locLast) {
     int len = (end - start) + 1;
     if (end <= start) {
       len = (srcPts.length - start) + end;
     }
 
-    Array<Coordinate> sectionPts = Array(len);
+    List<Coordinate> sectionPts = [];
     for (int i = 0; i < len; i++) {
       int index = (start + i) % (srcPts.length - 1);
-      sectionPts[i] = srcPts[index].copy();
+      sectionPts.add(srcPts[index].copy());
     }
     return OffsetCurveSection(sectionPts, loc, locLast);
   }
 
-  final Array<Coordinate> _sectionPts;
+  final List<Coordinate> _sectionPts;
 
-  final double _location;
+  final double location;
 
   final double _locLast;
 
-  OffsetCurveSection(this._sectionPts, this._location, this._locLast);
+  OffsetCurveSection(this._sectionPts, this.location, this._locLast);
 
-  Array<Coordinate> getCoordinates() {
-    return _sectionPts;
-  }
+  List<Coordinate> getCoordinates() => _sectionPts;
 
   bool isEndInSameSegment(double nextLoc) {
     int segIndex = _locLast.toInt();
@@ -83,6 +86,6 @@ class OffsetCurveSection implements Comparable<OffsetCurveSection> {
 
   @override
   int compareTo(OffsetCurveSection section) {
-    return Double.compare(_location, section._location);
+    return location.compareTo(section.location);
   }
 }

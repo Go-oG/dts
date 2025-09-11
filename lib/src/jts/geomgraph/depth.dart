@@ -1,11 +1,10 @@
- import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/location.dart';
 import 'package:dts/src/jts/geom/position.dart';
 
 import 'label.dart';
 
 class Depth {
-  static const int _NULL_VALUE = -1;
+  static const int _kNullValue = -1;
 
   static int depthAtLocation(int location) {
     if (location == Location.exterior) {
@@ -16,15 +15,15 @@ class Depth {
       return 1;
     }
 
-    return _NULL_VALUE;
+    return _kNullValue;
   }
 
-  final Array<Array<int>> _depth = Array.matrix2(2, 3);
+  final List<List<int>> _depth = List.generate(2, (i) => List.filled(3, 0));
 
   Depth() {
     for (int i = 0; i < 2; i++) {
       for (int j = 0; j < 3; j++) {
-        _depth[i][j] = _NULL_VALUE;
+        _depth[i][j] = _kNullValue;
       }
     }
   }
@@ -54,7 +53,7 @@ class Depth {
   bool isNull() {
     for (int i = 0; i < 2; i++) {
       for (int j = 0; j < 3; j++) {
-        if (_depth[i][j] != _NULL_VALUE) {
+        if (_depth[i][j] != _kNullValue) {
           return false;
         }
       }
@@ -63,11 +62,11 @@ class Depth {
   }
 
   bool isNull2(int geomIndex) {
-    return _depth[geomIndex][1] == _NULL_VALUE;
+    return _depth[geomIndex][1] == _kNullValue;
   }
 
   bool isNull3(int geomIndex, int posIndex) {
-    return _depth[geomIndex][posIndex] == _NULL_VALUE;
+    return _depth[geomIndex][posIndex] == _kNullValue;
   }
 
   void addLabel(Label lbl) {

@@ -1,10 +1,8 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/geom/linear_ring.dart';
 import 'package:dts/src/jts/geom/multi_polygon.dart';
@@ -15,12 +13,12 @@ import 'coverage_edge.dart';
 import 'vertex_ring_counter.dart';
 
 class CoverageRingEdges {
-  static CoverageRingEdges create(Array<Geometry> coverage) {
+  static CoverageRingEdges create(List<Geometry> coverage) {
     CoverageRingEdges edges = CoverageRingEdges(coverage);
     return edges;
   }
 
-  Array<Geometry> coverage;
+  List<Geometry> coverage;
 
   final Map<LinearRing, List<CoverageEdge>> _ringEdgesMap = {};
 
@@ -36,7 +34,8 @@ class CoverageRingEdges {
 
   void _build() {
     Set<Coordinate> nodes = _findMultiRingNodes(coverage);
-    Set<LineSegment> boundarySegs = CoverageBoundarySegmentFinder.findBoundarySegments(coverage);
+    Set<LineSegment> boundarySegs =
+        CoverageBoundarySegmentFinder.findBoundarySegments(coverage);
     nodes.addAll(_findBoundaryNodes(boundarySegs));
     Map<LineSegment, CoverageEdge> uniqueEdgeMap = {};
     for (int i = 0; i < coverage.length; i++) {
@@ -90,18 +89,20 @@ class CoverageRingEdges {
     Map<LineSegment, CoverageEdge> uniqueEdgeMap,
   ) {
     _addBoundaryInnerNodes(ring, boundarySegs, nodes);
-    List<CoverageEdge> ringEdges = _extractRingEdges(index, ring, isPrimary, uniqueEdgeMap, nodes)!;
-    _ringEdgesMap.put(ring, ringEdges);
+    List<CoverageEdge> ringEdges =
+        _extractRingEdges(index, ring, isPrimary, uniqueEdgeMap, nodes)!;
+    _ringEdgesMap[ring] = ringEdges;
   }
 
   void _addBoundaryInnerNodes(
       LinearRing ring, Set<LineSegment> boundarySegs, Set<Coordinate> nodes) {
     CoordinateSequence seq = ring.getCoordinateSequence();
-    bool isBdyLast =
-        CoverageBoundarySegmentFinder.isBoundarySegment(boundarySegs, seq, seq.size() - 2);
+    bool isBdyLast = CoverageBoundarySegmentFinder.isBoundarySegment(
+        boundarySegs, seq, seq.size() - 2);
     bool isBdyPrev = isBdyLast;
     for (int i = 0; i < (seq.size() - 1); i++) {
-      bool isBdy = CoverageBoundarySegmentFinder.isBoundarySegment(boundarySegs, seq, i);
+      bool isBdy =
+          CoverageBoundarySegmentFinder.isBoundarySegment(boundarySegs, seq, i);
       if (isBdy != isBdyPrev) {
         Coordinate nodePt = seq.getCoordinate(i);
         nodes.add(nodePt);
@@ -118,7 +119,7 @@ class CoverageRingEdges {
     Set<Coordinate> nodes,
   ) {
     List<CoverageEdge> ringEdges = [];
-    Array<Coordinate> pts = ring.getCoordinates();
+    List<Coordinate> pts = ring.getCoordinates();
     pts = CoordinateArrays.removeRepeatedPoints(pts);
     if (pts.length < 3) {
       return null;
@@ -126,7 +127,8 @@ class CoverageRingEdges {
 
     int first = _findNextNodeIndex(pts, -1, nodes);
     if (first < 0) {
-      CoverageEdge edge = _createEdge(pts, -1, -1, index, isPrimary, uniqueEdgeMap);
+      CoverageEdge edge =
+          _createEdge(pts, -1, -1, index, isPrimary, uniqueEdgeMap);
       ringEdges.add(edge);
     } else {
       int start = first;
@@ -137,7 +139,8 @@ class CoverageRingEdges {
         if (end == start) {
           isEdgePrimary = isPrimary;
         }
-        CoverageEdge edge = _createEdge(pts, start, end, index, isEdgePrimary, uniqueEdgeMap);
+        CoverageEdge edge =
+            _createEdge(pts, start, end, index, isEdgePrimary, uniqueEdgeMap);
         ringEdges.add(edge);
         start = end;
       } while (end != first);
@@ -146,7 +149,7 @@ class CoverageRingEdges {
   }
 
   CoverageEdge _createEdge(
-    Array<Coordinate> ring,
+    List<Coordinate> ring,
     int start,
     int end,
     int index,
@@ -154,10 +157,11 @@ class CoverageRingEdges {
     Map<LineSegment, CoverageEdge> uniqueEdgeMap,
   ) {
     CoverageEdge edge;
-    LineSegment edgeKey =
-        (end == start) ? CoverageEdge.key(ring) : CoverageEdge.key2(ring, start, end);
+    LineSegment edgeKey = (end == start)
+        ? CoverageEdge.key(ring)
+        : CoverageEdge.key2(ring, start, end);
     if (uniqueEdgeMap.containsKey(edgeKey)) {
-      edge = uniqueEdgeMap.get(edgeKey)!;
+      edge = uniqueEdgeMap[edgeKey]!;
       edge.setPrimary(isPrimary);
     } else {
       if (start < 0) {
@@ -165,7 +169,7 @@ class CoverageRingEdges {
       } else {
         edge = CoverageEdge.createEdge2(ring, start, end, isPrimary);
       }
-      uniqueEdgeMap.put(edgeKey, edge);
+      uniqueEdgeMap[edgeKey] = edge;
       _edges.add(edge);
     }
     edge.addIndex(index);
@@ -173,7 +177,8 @@ class CoverageRingEdges {
     return edge;
   }
 
-  int _findNextNodeIndex(Array<Coordinate> ring, int start, Set<Coordinate> nodes) {
+  int _findNextNodeIndex(
+      List<Coordinate> ring, int start, Set<Coordinate> nodes) {
     int index = start;
     bool isScanned0 = false;
     do {
@@ -193,7 +198,7 @@ class CoverageRingEdges {
     return -1;
   }
 
-  static int _next(int index, Array<Coordinate> ring) {
+  static int _next(int index, List<Coordinate> ring) {
     index = index + 1;
     if (index >= (ring.length - 1)) {
       index = 0;
@@ -202,11 +207,11 @@ class CoverageRingEdges {
     return index;
   }
 
-  Set<Coordinate> _findMultiRingNodes(Array<Geometry> coverage) {
+  Set<Coordinate> _findMultiRingNodes(List<Geometry> coverage) {
     Map<Coordinate, int> vertexRingCount = VertexRingCounter.count(coverage);
     Set<Coordinate> nodes = <Coordinate>{};
     for (Coordinate v in vertexRingCount.keys) {
-      if (vertexRingCount.get(v)! >= 3) {
+      if (vertexRingCount[v]! >= 3) {
         nodes.add(v);
       }
     }
@@ -216,16 +221,16 @@ class CoverageRingEdges {
   Set<Coordinate> _findBoundaryNodes(Set<LineSegment> boundarySegments) {
     Map<Coordinate, int> counter = {};
     for (LineSegment seg in boundarySegments) {
-      counter.put(seg.p0, counter.getOrDefault(seg.p0, 0) + 1);
-      counter.put(seg.p1, counter.getOrDefault(seg.p1, 0) + 1);
+      counter[seg.p0] = (counter[seg.p0] ?? 0) + 1;
+      counter[seg.p1] = (counter[seg.p1] ?? 0) + 1;
     }
-    return counter.keys.where((e) => counter.get(e)! > 2).toSet();
+    return counter.keys.where((e) => counter[e]! > 2).toSet();
   }
 
-  Array<Geometry> buildCoverage() {
-    Array<Geometry> result = Array<Geometry>(coverage.length);
+  List<Geometry> buildCoverage() {
+    List<Geometry> result = [];
     for (int i = 0; i < coverage.length; i++) {
-      result[i] = _buildPolygonal(coverage[i]);
+      result.add(_buildPolygonal(coverage[i]));
     }
     return result;
   }
@@ -244,11 +249,10 @@ class CoverageRingEdges {
       Polygon poly = _buildPolygon(geom.getGeometryN(i));
       polyList.add(poly);
     }
-    if (polyList.size == 1) {
-      return polyList.get(0);
+    if (polyList.length == 1) {
+      return polyList.first;
     }
-    Array<Polygon> polys = GeometryFactory.toPolygonArray(polyList);
-    return geom.factory.createMultiPolygon(polys);
+    return geom.factory.createMultiPolygon(polyList);
   }
 
   Polygon _buildPolygon(Polygon polygon) {
@@ -262,30 +266,30 @@ class CoverageRingEdges {
       LinearRing newHole = _buildRing(hole)!;
       holeList.add(newHole);
     }
-    Array<LinearRing> holes = GeometryFactory.toLinearRingArray(holeList);
-    return polygon.factory.createPolygon(shell, holes);
+    return polygon.factory.createPolygon(shell, holeList);
   }
 
   LinearRing? _buildRing(LinearRing ring) {
-    List<CoverageEdge> ringEdges = _ringEdgesMap.get(ring)!;
+    List<CoverageEdge> ringEdges = _ringEdgesMap[ring]!;
 
-    bool isRemoved = (ringEdges.size == 1) && (ringEdges.get(0).getCoordinates().isEmpty);
+    bool isRemoved =
+        (ringEdges.length == 1) && (ringEdges.first.getCoordinates().isEmpty);
     if (isRemoved) {
       return null;
     }
-
     CoordinateList ptsList = CoordinateList();
-    for (int i = 0; i < ringEdges.size; i++) {
-      Coordinate? lastPt = (ptsList.size > 0) ? ptsList.getCoordinate(ptsList.size - 1) : null;
+    for (int i = 0; i < ringEdges.length; i++) {
+      Coordinate? lastPt =
+          (ptsList.size > 0) ? ptsList.getCoordinate(ptsList.size - 1) : null;
       bool dir = _isEdgeDirForward(ringEdges, i, lastPt!);
-      ptsList.add4(ringEdges.get(i).getCoordinates(), false, dir);
+      ptsList.add4(ringEdges[i].getCoordinates(), false, dir);
     }
-    Array<Coordinate> pts = ptsList.toCoordinateArray();
-    return ring.factory.createLinearRings(pts);
+    return ring.factory.createLinearRings(ptsList.toCoordinateList());
   }
 
-  bool _isEdgeDirForward(List<CoverageEdge> ringEdges, int index, Coordinate prevPt) {
-    int size = ringEdges.size;
+  bool _isEdgeDirForward(
+      List<CoverageEdge> ringEdges, int index, Coordinate prevPt) {
+    int size = ringEdges.length;
     if (size <= 1) {
       return true;
     }
@@ -295,10 +299,10 @@ class CoverageRingEdges {
         return true;
       }
 
-      Coordinate endPt0 = ringEdges.get(0).getEndCoordinate();
-      return endPt0.equals2D(ringEdges.get(1).getStartCoordinate()) ||
-          endPt0.equals2D(ringEdges.get(1).getEndCoordinate());
+      Coordinate endPt0 = ringEdges.first.getEndCoordinate();
+      return endPt0.equals2D(ringEdges[1].getStartCoordinate()) ||
+          endPt0.equals2D(ringEdges[1].getEndCoordinate());
     }
-    return prevPt.equals2D(ringEdges.get(index).getStartCoordinate());
+    return prevPt.equals2D(ringEdges[index].getStartCoordinate());
   }
 }

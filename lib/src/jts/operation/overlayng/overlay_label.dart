@@ -2,45 +2,45 @@ import 'package:dts/src/jts/geom/location.dart';
 import 'package:dts/src/jts/geom/position.dart';
 
 class OverlayLabel {
-  static final String _SYM_UNKNOWN = '#';
+  static final String _kSymUnknown = '#';
 
-  static final String _SYM_BOUNDARY = 'B';
+  static final String _kSymBoundary = 'B';
 
-  static final String _SYM_COLLAPSE = 'C';
+  static final String _kSymCollapse = 'C';
 
-  static final String _SYM_LINE = 'L';
+  static final String _kSymLine = 'L';
 
-  static const int DIM_UNKNOWN = -1;
+  static const int kDimUnknown = -1;
 
-  static const int DIM_NOT_PART = DIM_UNKNOWN;
+  static const int kDimNotPart = kDimUnknown;
 
-  static const int DIM_LINE = 1;
+  static const int kDimLine = 1;
 
-  static const int DIM_BOUNDARY = 2;
+  static const int kDimBoundary = 2;
 
-  static const int DIM_COLLAPSE = 3;
+  static const int kDimCollapse = 3;
 
-  static int LOC_UNKNOWN = Location.none;
+  static int kLocUnknown = Location.none;
 
-  int _aDim = DIM_NOT_PART;
+  int _aDim = kDimNotPart;
 
   bool aIsHole = false;
 
-  int _aLocLeft = LOC_UNKNOWN;
+  int _aLocLeft = kLocUnknown;
 
-  int _aLocRight = LOC_UNKNOWN;
+  int _aLocRight = kLocUnknown;
 
-  int _aLocLine = LOC_UNKNOWN;
+  int _aLocLine = kLocUnknown;
 
-  int _bDim = DIM_NOT_PART;
+  int _bDim = kDimNotPart;
 
   bool bIsHole = false;
 
-  int _bLocLeft = LOC_UNKNOWN;
+  int _bLocLeft = kLocUnknown;
 
-  int _bLocRight = LOC_UNKNOWN;
+  int _bLocRight = kLocUnknown;
 
-  int _bLocLine = LOC_UNKNOWN;
+  int _bLocLine = kLocUnknown;
 
   OverlayLabel.empty();
 
@@ -73,13 +73,13 @@ class OverlayLabel {
 
   void initBoundary(int index, int locLeft, int locRight, bool isHole) {
     if (index == 0) {
-      _aDim = DIM_BOUNDARY;
+      _aDim = kDimBoundary;
       aIsHole = isHole;
       _aLocLeft = locLeft;
       _aLocRight = locRight;
       _aLocLine = Location.interior;
     } else {
-      _bDim = DIM_BOUNDARY;
+      _bDim = kDimBoundary;
       bIsHole = isHole;
       _bLocLeft = locLeft;
       _bLocRight = locRight;
@@ -89,29 +89,29 @@ class OverlayLabel {
 
   void initCollapse(int index, bool isHole) {
     if (index == 0) {
-      _aDim = DIM_COLLAPSE;
+      _aDim = kDimCollapse;
       aIsHole = isHole;
     } else {
-      _bDim = DIM_COLLAPSE;
+      _bDim = kDimCollapse;
       bIsHole = isHole;
     }
   }
 
   void initLine(int index) {
     if (index == 0) {
-      _aDim = DIM_LINE;
-      _aLocLine = LOC_UNKNOWN;
+      _aDim = kDimLine;
+      _aLocLine = kLocUnknown;
     } else {
-      _bDim = DIM_LINE;
-      _bLocLine = LOC_UNKNOWN;
+      _bDim = kDimLine;
+      _bLocLine = kLocUnknown;
     }
   }
 
   void initNotPart(int index) {
     if (index == 0) {
-      _aDim = DIM_NOT_PART;
+      _aDim = kDimNotPart;
     } else {
-      _bDim = DIM_NOT_PART;
+      _bDim = kDimNotPart;
     }
   }
 
@@ -145,43 +145,43 @@ class OverlayLabel {
   }
 
   bool isLine() {
-    return (_aDim == DIM_LINE) || (_bDim == DIM_LINE);
+    return (_aDim == kDimLine) || (_bDim == kDimLine);
   }
 
   bool isLine2(int index) {
     if (index == 0) {
-      return _aDim == DIM_LINE;
+      return _aDim == kDimLine;
     }
-    return _bDim == DIM_LINE;
+    return _bDim == kDimLine;
   }
 
   bool isLinear(int index) {
     if (index == 0) {
-      return (_aDim == DIM_LINE) || (_aDim == DIM_COLLAPSE);
+      return (_aDim == kDimLine) || (_aDim == kDimCollapse);
     }
-    return (_bDim == DIM_LINE) || (_bDim == DIM_COLLAPSE);
+    return (_bDim == kDimLine) || (_bDim == kDimCollapse);
   }
 
   bool isKnown(int index) {
     if (index == 0) {
-      return _aDim != DIM_UNKNOWN;
+      return _aDim != kDimUnknown;
     }
-    return _bDim != DIM_UNKNOWN;
+    return _bDim != kDimUnknown;
   }
 
   bool isNotPart(int index) {
     if (index == 0) {
-      return _aDim == DIM_NOT_PART;
+      return _aDim == kDimNotPart;
     }
-    return _bDim == DIM_NOT_PART;
+    return _bDim == kDimNotPart;
   }
 
   bool isBoundaryEither() {
-    return (_aDim == DIM_BOUNDARY) || (_bDim == DIM_BOUNDARY);
+    return (_aDim == kDimBoundary) || (_bDim == kDimBoundary);
   }
 
   bool isBoundaryBoth() {
-    return (_aDim == DIM_BOUNDARY) && (_bDim == DIM_BOUNDARY);
+    return (_aDim == kDimBoundary) && (_bDim == kDimBoundary);
   }
 
   bool isBoundaryCollapse() {
@@ -196,24 +196,24 @@ class OverlayLabel {
 
   bool isBoundary(int index) {
     if (index == 0) {
-      return _aDim == DIM_BOUNDARY;
+      return _aDim == kDimBoundary;
     }
-    return _bDim == DIM_BOUNDARY;
+    return _bDim == kDimBoundary;
   }
 
   bool isBoundarySingleton() {
-    if ((_aDim == DIM_BOUNDARY) && (_bDim == DIM_NOT_PART)) return true;
+    if ((_aDim == kDimBoundary) && (_bDim == kDimNotPart)) return true;
 
-    if ((_bDim == DIM_BOUNDARY) && (_aDim == DIM_NOT_PART)) return true;
+    if ((_bDim == kDimBoundary) && (_aDim == kDimNotPart)) return true;
 
     return false;
   }
 
   bool isLineLocationUnknown(int index) {
     if (index == 0) {
-      return _aLocLine == LOC_UNKNOWN;
+      return _aLocLine == kLocUnknown;
     } else {
-      return _bLocLine == LOC_UNKNOWN;
+      return _bLocLine == kLocUnknown;
     }
   }
 
@@ -233,21 +233,29 @@ class OverlayLabel {
   }
 
   bool isCollapse(int index) {
-    return dimension(index) == DIM_COLLAPSE;
+    return dimension(index) == kDimCollapse;
   }
 
   bool isInteriorCollapse() {
-    if ((_aDim == DIM_COLLAPSE) && (_aLocLine == Location.interior)) return true;
+    if ((_aDim == kDimCollapse) && (_aLocLine == Location.interior)) {
+      return true;
+    }
 
-    if ((_bDim == DIM_COLLAPSE) && (_bLocLine == Location.interior)) return true;
+    if ((_bDim == kDimCollapse) && (_bLocLine == Location.interior)) {
+      return true;
+    }
 
     return false;
   }
 
   bool isCollapseAndNotPartInterior() {
-    if (((_aDim == DIM_COLLAPSE) && (_bDim == DIM_NOT_PART)) && (_bLocLine == Location.interior)) return true;
+    if (((_aDim == kDimCollapse) && (_bDim == kDimNotPart)) && (_bLocLine == Location.interior)) {
+      return true;
+    }
 
-    if (((_bDim == DIM_COLLAPSE) && (_aDim == DIM_NOT_PART)) && (_aLocLine == Location.interior)) return true;
+    if (((_bDim == kDimCollapse) && (_aDim == kDimNotPart)) && (_aLocLine == Location.interior)) {
+      return true;
+    }
 
     return false;
   }
@@ -286,7 +294,7 @@ class OverlayLabel {
       case Position.on:
         return _bLocLine;
     }
-    return LOC_UNKNOWN;
+    return kLocUnknown;
   }
 
   int getLocationBoundaryOrLine(int index, int position, bool isForward) {
@@ -305,9 +313,9 @@ class OverlayLabel {
 
   bool hasSides(int index) {
     if (index == 0) {
-      return (_aLocLeft != LOC_UNKNOWN) || (_aLocRight != LOC_UNKNOWN);
+      return (_aLocLeft != kLocUnknown) || (_aLocRight != kLocUnknown);
     }
-    return (_bLocLeft != LOC_UNKNOWN) || (_bLocRight != LOC_UNKNOWN);
+    return (_bLocLeft != kLocUnknown) || (_bLocRight != kLocUnknown);
   }
 
   OverlayLabel copy() {
@@ -320,14 +328,14 @@ class OverlayLabel {
 
   static String dimensionSymbol(int dim) {
     switch (dim) {
-      case DIM_LINE:
-        return _SYM_LINE;
-      case DIM_COLLAPSE:
-        return _SYM_COLLAPSE;
-      case DIM_BOUNDARY:
-        return _SYM_BOUNDARY;
+      case kDimLine:
+        return _kSymLine;
+      case kDimCollapse:
+        return _kSymCollapse;
+      case kDimBoundary:
+        return _kSymBoundary;
     }
-    return _SYM_UNKNOWN;
+    return _kSymUnknown;
   }
 
   String toString2(bool isForward) {

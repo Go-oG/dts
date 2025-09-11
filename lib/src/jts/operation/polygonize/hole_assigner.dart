@@ -5,7 +5,8 @@ import 'package:dts/src/jts/index/strtree/strtree.dart';
 import 'edge_ring.dart';
 
 class HoleAssigner {
-  static void assignHolesToShells2(List<EdgeRingO> holes, List<EdgeRingO> shells) {
+  static void assignHolesToShells2(
+      List<EdgeRingO> holes, List<EdgeRingO> shells) {
     HoleAssigner assigner = HoleAssigner(shells);
     assigner.assignHolesToShells(holes);
   }

@@ -1,4 +1,4 @@
- import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/index/strtree/boundable.dart';
 
 import '../../util/assert.dart';

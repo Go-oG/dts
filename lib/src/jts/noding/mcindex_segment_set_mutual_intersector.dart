@@ -7,7 +7,8 @@ import 'segment_intersector.dart';
 import 'segment_set_mutual_intersector.dart';
 import 'segment_string.dart';
 
-class MCIndexSegmentSetMutualIntersector implements SegmentSetMutualIntersector {
+class MCIndexSegmentSetMutualIntersector
+    implements SegmentSetMutualIntersector {
   final STRtree _index = STRtree();
   final Envelope? _envelope;
 
@@ -34,7 +35,8 @@ class MCIndexSegmentSetMutualIntersector implements SegmentSetMutualIntersector 
   }
 
   void addToIndex(SegmentString segStr) {
-    List<MonotoneChain> segChains = MonotoneChainBuilder.getChains(segStr.getCoordinates(), segStr);
+    List<MonotoneChain> segChains =
+        MonotoneChainBuilder.getChains(segStr.getCoordinates(), segStr);
     for (var mc in segChains) {
       if ((_envelope == null) || _envelope!.intersects(mc.getEnvelope())) {
         _index.insert(mc.getEnvelope(_overlapTolerance), mc);
@@ -56,7 +58,8 @@ class MCIndexSegmentSetMutualIntersector implements SegmentSetMutualIntersector 
       return;
     }
 
-    final segChains = MonotoneChainBuilder.getChains(segStr.getCoordinates(), segStr);
+    final segChains =
+        MonotoneChainBuilder.getChains(segStr.getCoordinates(), segStr);
     for (var mc in segChains) {
       if ((_envelope == null) || _envelope!.intersects(mc.getEnvelope())) {
         monoChains.add(mc);
@@ -64,13 +67,15 @@ class MCIndexSegmentSetMutualIntersector implements SegmentSetMutualIntersector 
     }
   }
 
-  void intersectChains(List<MonotoneChain> monoChains, NSegmentIntersector segInt) {
+  void intersectChains(
+      List<MonotoneChain> monoChains, NSegmentIntersector segInt) {
     final overlapAction = _SegmentOverlapAction(segInt);
     for (var queryChain in monoChains) {
       Envelope queryEnv = queryChain.getEnvelope(_overlapTolerance);
       final overlapChains = _index.query(queryEnv);
       for (var testChain in overlapChains) {
-        queryChain.computeOverlaps3(testChain, _overlapTolerance, overlapAction);
+        queryChain.computeOverlaps3(
+            testChain, _overlapTolerance, overlapAction);
         if (segInt.isDone()) {
           return;
         }

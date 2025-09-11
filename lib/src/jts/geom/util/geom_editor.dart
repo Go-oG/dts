@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -76,13 +75,11 @@ class GeometryEditor {
       }
       holes.add(hole);
     }
-    return _factory!.createPolygon(shell, holes.toArray());
+    return _factory!.createPolygon(shell, holes);
   }
 
-  GeometryCollection editGeometryCollection(
-      GeometryCollection collection, GeometryEditorOperation operation) {
-    GeometryCollection collectionForType =
-        (operation.edit(collection, _factory!) as GeometryCollection);
+  GeometryCollection editGeometryCollection(GeometryCollection collection, GeometryEditorOperation operation) {
+    GeometryCollection collectionForType = (operation.edit(collection, _factory!) as GeometryCollection);
     List<Geometry> geometries = [];
     for (int i = 0; i < collectionForType.getNumGeometries(); i++) {
       Geometry? geometry = edit(collectionForType.getGeometryN(i), operation);
@@ -92,15 +89,15 @@ class GeometryEditor {
       geometries.add(geometry);
     }
     if (collectionForType.runtimeType == MultiPoint) {
-      return _factory!.createMultiPoint(geometries.cast<Point>().toArray());
+      return _factory!.createMultiPoint(geometries.cast<Point>());
     }
     if (collectionForType.runtimeType == MultiLineString) {
-      return _factory!.createMultiLineString(geometries.cast<LineString>().toArray());
+      return _factory!.createMultiLineString(geometries.cast<LineString>());
     }
     if (collectionForType.runtimeType == MultiPolygon) {
-      return _factory!.createMultiPolygon(geometries.cast<Polygon>().toArray());
+      return _factory!.createMultiPolygon(geometries.cast<Polygon>());
     }
-    return _factory!.createGeomCollection(geometries.cast<Geometry>().toArray());
+    return _factory!.createGeomCollection(geometries.cast<Geometry>());
   }
 }
 
@@ -144,11 +141,10 @@ abstract class CoordinateOperation implements GeometryEditorOperation {
     }
     if (geometry is Point) {
       final newCoordinates = edit2(geometry.getCoordinates(), geometry);
-      return factory.createPoint2(
-          newCoordinates != null && newCoordinates.length > 0 ? newCoordinates[0] : null);
+      return factory.createPoint2(newCoordinates?.firstOrNull);
     }
     return geometry;
   }
 
-  Array<Coordinate>? edit2(Array<Coordinate> coordinates, Geometry geometry);
+  List<Coordinate>? edit2(List<Coordinate> coordinates, Geometry geometry);
 }

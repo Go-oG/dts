@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_collection.dart';
@@ -25,14 +24,8 @@ final class IsValidOp {
   }
 
   static bool isValid2(Coordinate coord) {
-    if (Double.isNaN(coord.x)) return false;
-
-    if (Double.isInfinite(coord.x)) return false;
-
-    if (Double.isNaN(coord.y)) return false;
-
-    if (Double.isInfinite(coord.y)) return false;
-
+    if (coord.x.isNaN || coord.x.isInfinite) return false;
+    if (coord.y.isNaN || coord.y.isInfinite) return false;
     return true;
   }
 
@@ -191,10 +184,10 @@ final class IsValidOp {
     return true;
   }
 
-  void checkCoordinatesValid2(Array<Coordinate> coords) {
+  void checkCoordinatesValid2(List<Coordinate> coords) {
     for (var i in coords) {
       if (!isValid2(i)) {
-        logInvalid(TopologyValidationError.INVALID_COORDINATE, i);
+        logInvalid(TopologyValidationError.kInvalidCoordinate, i);
         return;
       }
     }
@@ -214,7 +207,7 @@ final class IsValidOp {
     if (ring.isEmpty()) return;
     if (!ring.isClosed()) {
       Coordinate? pt = (ring.getNumPoints() >= 1) ? ring.getCoordinateN(0) : null;
-      logInvalid(TopologyValidationError.RING_NOT_CLOSED, pt);
+      logInvalid(TopologyValidationError.kRingNotClosed, pt);
       return;
     }
   }
@@ -248,7 +241,7 @@ final class IsValidOp {
   void checkPointSize(LineString line, int minSize) {
     if (!isNonRepeatedSizeAtLeast(line, minSize)) {
       Coordinate? pt = (line.getNumPoints() >= 1) ? line.getCoordinateN(0) : null;
-      logInvalid(TopologyValidationError.TOO_FEW_POINTS, pt);
+      logInvalid(TopologyValidationError.kTooFewPoints, pt);
     }
   }
 
@@ -275,7 +268,7 @@ final class IsValidOp {
   void checkRingSimple(LinearRing ring) {
     Coordinate? intPt = PolygonTopologyAnalyzer.findSelfIntersection(ring);
     if (intPt != null) {
-      logInvalid(TopologyValidationError.RING_SELF_INTERSECTION, intPt);
+      logInvalid(TopologyValidationError.kRingSelfIntersection, intPt);
     }
   }
 
@@ -295,7 +288,7 @@ final class IsValidOp {
         invalidPt = findHoleOutsideShellPoint(hole, shell);
       }
       if (invalidPt != null) {
-        logInvalid(TopologyValidationError.HOLE_OUTSIDE_SHELL, invalidPt);
+        logInvalid(TopologyValidationError.kHoleOutSideShell, invalidPt);
         return;
       }
     }
@@ -303,7 +296,9 @@ final class IsValidOp {
 
   Coordinate? findHoleOutsideShellPoint(LinearRing hole, LinearRing shell) {
     Coordinate holePt0 = hole.getCoordinateN(0);
-    if (!shell.getEnvelopeInternal().covers(hole.getEnvelopeInternal())) return holePt0;
+    if (!shell.getEnvelopeInternal().covers(hole.getEnvelopeInternal())) {
+      return holePt0;
+    }
 
     if (PolygonTopologyAnalyzer.isRingNested(hole, shell)) return null;
 
@@ -315,7 +310,7 @@ final class IsValidOp {
 
     final nestedTester = IndexedNestedHoleTester(poly);
     if (nestedTester.isNested()) {
-      logInvalid(TopologyValidationError.NESTED_HOLES, nestedTester.getNestedPoint());
+      logInvalid(TopologyValidationError.kNestedHoles, nestedTester.getNestedPoint());
     }
   }
 
@@ -324,14 +319,13 @@ final class IsValidOp {
 
     final nestedTester = IndexedNestedPolygonTester(mp);
     if (nestedTester.isNested()) {
-      logInvalid(TopologyValidationError.NESTED_SHELLS, nestedTester.getNestedPoint());
+      logInvalid(TopologyValidationError.kNestedShells, nestedTester.getNestedPoint());
     }
   }
 
   void checkInteriorConnected(PolygonTopologyAnalyzer analyzer) {
     if (analyzer.isInteriorDisconnected()) {
-      logInvalid(
-          TopologyValidationError.DISCONNECTED_INTERIOR, analyzer.getDisconnectionLocation());
+      logInvalid(TopologyValidationError.kDisconnectedInterior, analyzer.getDisconnectionLocation());
     }
   }
 }

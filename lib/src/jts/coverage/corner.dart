@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
@@ -48,7 +47,7 @@ class Corner implements Comparable<Corner> {
 
   @override
   int compareTo(Corner o) {
-    int comp = Double.compare(_area, o._area);
+    int comp = _area.compareTo(o._area);
     if (comp != 0) {
       return comp;
     }
@@ -111,7 +110,7 @@ class Corner implements Comparable<Corner> {
     Coordinate p = _edge.getCoordinate(_index);
     Coordinate pn = _edge.getCoordinate(_next);
     return GeometryFactory()
-        .createLineString2([_safeCoord(pp), _safeCoord(p), _safeCoord(pn)].toArray());
+        .createLineString2([_safeCoord(pp), _safeCoord(p), _safeCoord(pn)]);
   }
 
   @override

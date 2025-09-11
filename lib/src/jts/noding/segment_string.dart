@@ -1,5 +1,3 @@
- import 'package:d_util/d_util.dart';
-
 import '../geom/coordinate.dart';
 
 abstract class SegmentString {
@@ -11,7 +9,7 @@ abstract class SegmentString {
 
   Coordinate getCoordinate(int i);
 
-  Array<Coordinate> getCoordinates();
+  List<Coordinate> getCoordinates();
 
   bool isClosed();
 

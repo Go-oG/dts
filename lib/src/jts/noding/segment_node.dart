@@ -13,7 +13,8 @@ class SegmentNode implements Comparable<SegmentNode> {
 
   late final bool _isInterior;
 
-  SegmentNode(this._segString, Coordinate coord, this.segmentIndex, this._segmentOctant) {
+  SegmentNode(this._segString, Coordinate coord, this.segmentIndex,
+      this._segmentOctant) {
     this.coord = coord.copy();
     _isInterior = !coord.equals2D(_segString.getCoordinate(segmentIndex));
   }

@@ -5,8 +5,6 @@ import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/noding/noded_segment_string.dart';
 import 'package:dts/src/jts/noding/segment_intersector.dart';
 
-
-
 class SnapRoundingIntersectionAdder implements NSegmentIntersector {
   final LineIntersector _li = RobustLineIntersector();
 
@@ -36,7 +34,9 @@ class SnapRoundingIntersectionAdder implements NSegmentIntersector {
     _li.computeIntersection2(p00, p01, p10, p11);
     if (_li.hasIntersection()) {
       if (_li.isInteriorIntersection()) {
-        for (int intIndex = 0; intIndex < _li.getIntersectionNum(); intIndex++) {
+        for (int intIndex = 0;
+            intIndex < _li.getIntersectionNum();
+            intIndex++) {
           _intersections.add(_li.getIntersection(intIndex));
         }
         e0.addIntersections(_li, segIndex0, 0);
@@ -50,7 +50,8 @@ class SnapRoundingIntersectionAdder implements NSegmentIntersector {
     processNearVertex(p11, e0, segIndex0, p00, p01);
   }
 
-  void processNearVertex(Coordinate p, NodedSegmentString edge, int segIndex, Coordinate p0, Coordinate p1) {
+  void processNearVertex(Coordinate p, NodedSegmentString edge, int segIndex,
+      Coordinate p0, Coordinate p1) {
     if (p.distance(p0) < _nearnessTol) return;
 
     if (p.distance(p1) < _nearnessTol) return;

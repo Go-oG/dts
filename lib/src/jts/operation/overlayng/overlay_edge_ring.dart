@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -19,7 +18,7 @@ class OverlayEdgeRing {
 
   bool isHole = false;
 
-  late Array<Coordinate> _ringPts;
+  late List<Coordinate> _ringPts;
 
   IndexedPointInAreaLocator? _locator;
 
@@ -63,7 +62,7 @@ class OverlayEdgeRing {
     _holes.add(ring);
   }
 
-  Array<Coordinate> computeRingPts(OverlayEdge start) {
+  List<Coordinate> computeRingPts(OverlayEdge start) {
     OverlayEdge? edge = start;
     CoordinateList pts = CoordinateList();
     do {
@@ -83,10 +82,10 @@ class OverlayEdgeRing {
       edge = edge.nextResult();
     } while (edge != start);
     pts.closeRing();
-    return pts.toCoordinateArray();
+    return pts.toCoordinateList();
   }
 
-  void computeRing(Array<Coordinate> ringPts, GeometryFactory geometryFactory) {
+  void computeRing(List<Coordinate> ringPts, GeometryFactory geometryFactory) {
     if (ring != null) {
       return;
     }
@@ -94,7 +93,7 @@ class OverlayEdgeRing {
     isHole = Orientation.isCCW(ring!.getCoordinates());
   }
 
-  Array<Coordinate> getCoordinates() {
+  List<Coordinate> getCoordinates() {
     return _ringPts;
   }
 
@@ -146,10 +145,9 @@ class OverlayEdgeRing {
   }
 
   Polygon toPolygon(GeometryFactory factory) {
-    Array<LinearRing>? holeLR;
-    holeLR = Array(_holes.length);
+    List<LinearRing>? holeLR = [];
     for (int i = 0; i < _holes.length; i++) {
-      holeLR[i] = (_holes[i].getRing() as LinearRing);
+      holeLR.add(_holes[i].getRing() as LinearRing);
     }
     return factory.createPolygon(ring, holeLR);
   }
