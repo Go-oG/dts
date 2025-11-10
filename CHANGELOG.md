@@ -1,2 +1,2 @@
-## 0.0.1
-* first commit
+## 0.1.1
+* publish

@@ -110,7 +110,7 @@ class CoordinateSequenceComparator implements CComparator<CoordinateSequence> {
 
   int dimensionLimit;
 
-  CoordinateSequenceComparator([this.dimensionLimit = Integer.maxValue]);
+  CoordinateSequenceComparator([this.dimensionLimit = Integer.safeMaxValue]);
 
   @override
   int compare(CoordinateSequence s1, CoordinateSequence s2) {

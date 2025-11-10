@@ -17,7 +17,7 @@ Add this to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  dts: ^0.0.1
+  dts: ^0.1.1
 ```
 
 License
