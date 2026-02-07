@@ -253,6 +253,8 @@ abstract class Geometry implements Comparable<Geometry> {
     return equalsExact(other);
   }
 
+  bool equalsExact(Geometry other) => identical(this, other) || equalsExact2(other, 0);
+
   Geometry buffer(double distance) {
     return BufferOp.bufferOp(this, distance);
   }
@@ -298,10 +300,6 @@ abstract class Geometry implements Comparable<Geometry> {
 
   Geometry? union() {
     return GeometryOverlay.union(this);
-  }
-
-  bool equalsExact(Geometry other) {
-    return (this == other) || equalsExact2(other, 0);
   }
 
   bool equalsExact2(Geometry other, double tolerance);

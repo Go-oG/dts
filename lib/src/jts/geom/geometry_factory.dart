@@ -178,9 +178,11 @@ final class GeometryFactory {
     for (var geom in geomList) {
       var partClass = geom.runtimeType;
       geomClass ??= partClass;
+
       if (partClass != geomClass) {
         isHeterogeneous = true;
       }
+
       if (geom is GeometryCollection) {
         hasGeometryCollection = true;
       }
