@@ -52,10 +52,8 @@ class OverlayNG {
     }
   }
 
-  static Geometry overlay3(Geometry geom0, Geometry geom1, OverlayOpCode opCode, PrecisionModel pm) {
-    OverlayNG ov = OverlayNG(geom0, geom1, pm, opCode);
-    Geometry geomOv = ov.getResult();
-    return geomOv;
+  static Geometry overlay3(Geometry geom0, Geometry? geom1, OverlayOpCode opCode, PrecisionModel pm) {
+    return OverlayNG(geom0, geom1, pm, opCode).getResult();
   }
 
   static Geometry overlay4(Geometry geom0, Geometry geom1, OverlayOpCode opCode, PrecisionModel pm, Noder noder) {
@@ -65,16 +63,14 @@ class OverlayNG {
     return geomOv;
   }
 
-  static Geometry overlay2(Geometry geom0, Geometry geom1, OverlayOpCode opCode, Noder noder) {
+  static Geometry overlay2(Geometry geom0, Geometry? geom1, OverlayOpCode opCode, Noder noder) {
     OverlayNG ov = OverlayNG(geom0, geom1, null, opCode);
     ov.setNoder(noder);
-    Geometry geomOv = ov.getResult();
-    return geomOv;
+    return ov.getResult();
   }
 
-  static Geometry overlay(Geometry geom0, Geometry geom1, OverlayOpCode opCode) {
-    OverlayNG ov = OverlayNG.of2(geom0, geom1, opCode);
-    return ov.getResult();
+  static Geometry overlay(Geometry geom0, Geometry? geom1, OverlayOpCode opCode) {
+    return OverlayNG.of2(geom0, geom1, opCode).getResult();
   }
 
   static Geometry union(Geometry geom, PrecisionModel? pm) {
@@ -118,7 +114,7 @@ class OverlayNG {
     _inputGeom = InputGeometry(geom0, geom1);
   }
 
-  OverlayNG.of2(Geometry geom0, Geometry geom1, OverlayOpCode opCode)
+  OverlayNG.of2(Geometry geom0, Geometry? geom1, OverlayOpCode opCode)
       : this(geom0, geom1, geom0.factory.getPrecisionModel(), opCode);
 
   OverlayNG.of(Geometry geom, PrecisionModel? pm) : this(geom, null, pm, OverlayOpCode.union);
@@ -160,7 +156,7 @@ class OverlayNG {
     Geometry? result;
     if (_inputGeom.isAllPoints()) {
       result = OverlayPoints.overlay(opCode, _inputGeom.getGeometry(0)!, _inputGeom.getGeometry(1)!, pm);
-    } else if ((!_inputGeom.isSingle()) && _inputGeom.hasPoints()) {
+    } else if (!_inputGeom.isSingle() && _inputGeom.hasPoints()) {
       result = OverlayMixedPoints.overlay(opCode, _inputGeom.getGeometry(0)!, _inputGeom.getGeometry(1)!, pm);
     } else {
       result = computeEdgeOverlay();
@@ -232,37 +228,33 @@ class OverlayNG {
     List<LineString>? resultLineList;
     List<Point>? resultPointList;
     if (!_isAreaResultOnly) {
-      bool allowResultLines =
-          (((!hasResultAreaComponents) || isAllowMixedIntResult) || (opCode == OverlayOpCode.symDifference)) ||
-              (opCode == OverlayOpCode.union);
+      final allowResultLines = !hasResultAreaComponents ||
+          isAllowMixedIntResult ||
+          opCode == OverlayOpCode.symDifference ||
+          opCode == OverlayOpCode.union;
       if (allowResultLines) {
         final lineBuilder = NgLineBuilder(_inputGeom, graph, hasResultAreaComponents, opCode, geomFact);
         lineBuilder.setStrictMode(_isStrictMode);
         resultLineList = lineBuilder.getLines();
       }
-      bool hasResultComponents = hasResultAreaComponents || (resultLineList!.isNotEmpty);
-      bool allowResultPoints = (!hasResultComponents) || isAllowMixedIntResult;
-      if ((opCode == OverlayOpCode.intersection) && allowResultPoints) {
+      bool hasResultComponents = hasResultAreaComponents || resultLineList!.isNotEmpty;
+      bool allowResultPoints = !hasResultComponents || isAllowMixedIntResult;
+      if (opCode == OverlayOpCode.intersection && allowResultPoints) {
         final pointBuilder = IntersectionPointBuilder(graph, geomFact);
         pointBuilder.setStrictMode(_isStrictMode);
         resultPointList = pointBuilder.getPoints();
       }
     }
-    if ((isEmpty(resultPolyList) && isEmpty(resultLineList)) && isEmpty(resultPointList)) {
+    if (isEmpty(resultPolyList) && isEmpty(resultLineList) && isEmpty(resultPointList)) {
       return createEmptyResult();
     }
-
-    return OverlayUtil.createResultGeometry(resultPolyList, resultLineList!, resultPointList!, geomFact);
+    return OverlayUtil.createResultGeometry(resultPolyList, resultLineList, resultPointList, geomFact);
   }
 
-  static bool isEmpty(List? list) {
-    return (list == null) || (list.isEmpty);
-  }
+  static bool isEmpty(List? list) => list == null || list.isEmpty;
 
   Geometry createEmptyResult() {
     return OverlayUtil.createEmptyResult(
-      OverlayUtil.resultDimension(opCode, _inputGeom.getDimension(0), _inputGeom.getDimension(1)),
-      geomFact,
-    );
+        OverlayUtil.resultDimension(opCode, _inputGeom.getDimension(0), _inputGeom.getDimension(1)), geomFact);
   }
 }

@@ -35,9 +35,9 @@ class OverlayNGRobust {
 
   static final _overlayUnion = _UnionStrategy();
 
-  static Geometry overlay(Geometry geom0, Geometry geom1, OverlayOpCode opCode) {
+  static Geometry overlay(Geometry geom0, Geometry? geom1, OverlayOpCode opCode) {
     Geometry? result;
-    dynamic exOriginal;
+    Object? exOriginal;
     try {
       result = OverlayNG.overlay(geom0, geom1, opCode);
       return result;
@@ -46,14 +46,12 @@ class OverlayNGRobust {
     }
     result = overlaySnapTries(geom0, geom1, opCode);
     if (result != null) return result;
-
     result = overlaySR(geom0, geom1, opCode);
     if (result != null) return result;
-
     throw exOriginal;
   }
 
-  static Geometry? overlaySnapTries(Geometry geom0, Geometry geom1, OverlayOpCode opCode) {
+  static Geometry? overlaySnapTries(Geometry geom0, Geometry? geom1, OverlayOpCode opCode) {
     Geometry? result;
     double snapTol = snapTolerance2(geom0, geom1);
     for (int i = 0; i < _numSnapTries; i++) {
@@ -68,17 +66,17 @@ class OverlayNGRobust {
     return null;
   }
 
-  static Geometry? overlaySnapping(Geometry geom0, Geometry geom1, OverlayOpCode opCode, double snapTol) {
+  static Geometry? overlaySnapping(Geometry geom0, Geometry? geom1, OverlayOpCode opCode, double snapTol) {
     try {
       return overlaySnapTol(geom0, geom1, opCode, snapTol);
     } catch (_) {}
     return null;
   }
 
-  static Geometry? overlaySnapBoth(Geometry geom0, Geometry geom1, OverlayOpCode opCode, double snapTol) {
+  static Geometry? overlaySnapBoth(Geometry geom0, Geometry? geom1, OverlayOpCode opCode, double snapTol) {
     try {
       Geometry snap0 = snapSelf(geom0, snapTol);
-      Geometry snap1 = snapSelf(geom1, snapTol);
+      Geometry snap1 = snapSelf(geom1!, snapTol);
       return overlaySnapTol(snap0, snap1, opCode, snapTol);
     } catch (_) {}
     return null;
@@ -92,24 +90,22 @@ class OverlayNGRobust {
     return ov.getResult();
   }
 
-  static Geometry overlaySnapTol(Geometry geom0, Geometry geom1, OverlayOpCode opCode, double snapTol) {
-    SnappingNoder snapNoder = SnappingNoder(snapTol);
-    return OverlayNG.overlay2(geom0, geom1, opCode, snapNoder);
+  static Geometry overlaySnapTol(Geometry geom0, Geometry? geom1, OverlayOpCode opCode, double snapTol) {
+    return OverlayNG.overlay2(geom0, geom1, opCode, SnappingNoder(snapTol));
   }
 
-  static double snapTolerance2(Geometry geom0, Geometry geom1) {
+  static double snapTolerance2(Geometry geom0, Geometry? geom1) {
     double tol0 = snapTolerance(geom0);
     double tol1 = snapTolerance(geom1);
     return Math.maxD(tol0, tol1);
   }
 
-  static double snapTolerance(Geometry geom) {
-    double magnitude = ordinateMagnitude(geom);
-    return magnitude / _snapTolFactor;
+  static double snapTolerance(Geometry? geom) {
+    return ordinateMagnitude(geom) / _snapTolFactor;
   }
 
   static double ordinateMagnitude(Geometry? geom) {
-    if ((geom == null) || geom.isEmpty()) return 0;
+    if (geom == null || geom.isEmpty()) return 0;
 
     Envelope env = geom.getEnvelopeInternal();
     double magMax = Math.maxD(Math.abs(env.maxX), Math.abs(env.maxY));
@@ -117,7 +113,7 @@ class OverlayNGRobust {
     return Math.maxD(magMax, magMin);
   }
 
-  static Geometry? overlaySR(Geometry geom0, Geometry geom1, OverlayOpCode opCode) {
+  static Geometry? overlaySR(Geometry geom0, Geometry? geom1, OverlayOpCode opCode) {
     Geometry result;
     try {
       double scaleSafe = PrecisionUtil.safeScale3(geom0, geom1);
