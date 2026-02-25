@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -14,7 +13,7 @@ import 'polygon_topology_analyzer.dart';
 final class IndexedNestedPolygonTester {
   final MultiPolygon multiPoly;
   late final SpatialIndex<int> index;
-  Array<IndexedPointInAreaLocator>? locators;
+  List<IndexedPointInAreaLocator?>? locators;
   Coordinate? nestedPt;
 
   IndexedNestedPolygonTester(this.multiPoly) {
@@ -27,8 +26,8 @@ final class IndexedNestedPolygonTester {
   }
 
   IndexedPointInAreaLocator getLocator(int polyIndex) {
-    locators ??= Array(multiPoly.getNumGeometries());
-    IndexedPointInAreaLocator? locator = locators!.get(polyIndex);
+    locators ??= List.filled(multiPoly.getNumGeometries(), null);
+    IndexedPointInAreaLocator? locator = locators![polyIndex];
     if (locator == null) {
       locator = IndexedPointInAreaLocator(multiPoly.getGeometryN(polyIndex));
       locators![polyIndex] = locator;
@@ -49,22 +48,18 @@ final class IndexedNestedPolygonTester {
         Polygon possibleOuterPoly = multiPoly.getGeometryN(polyIndex);
         if (poly == possibleOuterPoly) continue;
 
-        if (!possibleOuterPoly
-            .getEnvelopeInternal()
-            .covers(poly.getEnvelopeInternal())) {
+        if (!possibleOuterPoly.getEnvelopeInternal().covers(poly.getEnvelopeInternal())) {
           continue;
         }
 
-        nestedPt =
-            findNestedPoint(shell, possibleOuterPoly, getLocator(polyIndex));
+        nestedPt = findNestedPoint(shell, possibleOuterPoly, getLocator(polyIndex));
         if (nestedPt != null) return true;
       }
     }
     return false;
   }
 
-  Coordinate? findNestedPoint(LinearRing shell, Polygon possibleOuterPoly,
-      IndexedPointInAreaLocator locator) {
+  Coordinate? findNestedPoint(LinearRing shell, Polygon possibleOuterPoly, IndexedPointInAreaLocator locator) {
     Coordinate shellPt0 = shell.getCoordinateN(0);
     int loc0 = locator.locate(shellPt0);
     if (loc0 == Location.exterior) return null;
@@ -82,8 +77,7 @@ final class IndexedNestedPolygonTester {
     return findIncidentSegmentNestedPoint(shell, possibleOuterPoly);
   }
 
-  static Coordinate? findIncidentSegmentNestedPoint(
-      LinearRing shell, Polygon poly) {
+  static Coordinate? findIncidentSegmentNestedPoint(LinearRing shell, Polygon poly) {
     LinearRing polyShell = poly.getExteriorRing();
     if (polyShell.isEmpty()) return null;
 

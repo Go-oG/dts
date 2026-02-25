@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/util/geom_combiner.dart';
@@ -15,14 +14,14 @@ class UnionInteracting {
 
   Geometry g1;
 
-  late Array<bool> _interacts0;
+  late List<bool> _interacts0;
 
-  late Array<bool> _interacts1;
+  late List<bool> _interacts1;
 
   UnionInteracting(this.g0, this.g1) {
     geomFactory = g0.factory;
-    _interacts0 = Array(g0.getNumGeometries());
-    _interacts1 = Array(g1.getNumGeometries());
+    _interacts0 = List.filled(g0.getNumGeometries(), false);
+    _interacts1 = List.filled(g1.getNumGeometries(), false);
   }
 
   Geometry? union() {
@@ -46,8 +45,7 @@ class UnionInteracting {
     bool interactsWithAny = false;
     for (int i = 0; i < g1.getNumGeometries(); i++) {
       Geometry elem1 = g1.getGeometryN(i);
-      bool interacts =
-          elem1.getEnvelopeInternal().intersects(elem0.getEnvelopeInternal());
+      bool interacts = elem1.getEnvelopeInternal().intersects(elem0.getEnvelopeInternal());
       if (interacts) _interacts1[i] = true;
 
       if (interacts) interactsWithAny = true;
@@ -55,8 +53,7 @@ class UnionInteracting {
     return interactsWithAny;
   }
 
-  Geometry extractElements(
-      Geometry geom, Array<bool> interacts, bool isInteracting) {
+  Geometry extractElements(Geometry geom, List<bool> interacts, bool isInteracting) {
     List<Geometry> extractedGeoms = [];
     for (int i = 0; i < geom.getNumGeometries(); i++) {
       Geometry elem = geom.getGeometryN(i);

@@ -20,7 +20,7 @@ class SimpleMinimumClearance {
 
   double minClearance = 0;
 
-  List<Coordinate?>? minClearancePts;
+  List<Coordinate>? minClearancePts;
 
   SimpleMinimumClearance(this.inputGeom);
 
@@ -31,8 +31,7 @@ class SimpleMinimumClearance {
 
   LineString getLine() {
     compute();
-    return inputGeom.factory
-        .createLineString2(minClearancePts?.nonNulls.toList());
+    return inputGeom.factory.createLineString2(minClearancePts);
   }
 
   void compute() {
@@ -40,7 +39,7 @@ class SimpleMinimumClearance {
       return;
     }
 
-    minClearancePts = List.filled(2, null);
+    minClearancePts = List.filled(2, Coordinate(), growable: false);
     minClearance = double.maxFinite;
     inputGeom.apply(VertexCoordinateFilter(this));
   }
@@ -53,8 +52,7 @@ class SimpleMinimumClearance {
     }
   }
 
-  void updateClearance2(
-      double candidateValue, Coordinate p, Coordinate seg0, Coordinate seg1) {
+  void updateClearance2(double candidateValue, Coordinate p, Coordinate seg0, Coordinate seg1) {
     if (candidateValue < minClearance) {
       minClearance = candidateValue;
       minClearancePts![0] = Coordinate.of(p);

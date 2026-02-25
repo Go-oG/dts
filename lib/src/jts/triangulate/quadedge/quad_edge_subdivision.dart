@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_list.dart';
@@ -37,7 +39,7 @@ class QuadEdgeSubdivision {
 
   double _edgeCoincidenceTolerance = 0;
 
-  final Array<Vertex> _frameVertex = Array(3);
+  final List<Vertex?> _frameVertex = List.filled(3, null);
 
   late Envelope _frameEnv;
 
@@ -53,20 +55,19 @@ class QuadEdgeSubdivision {
   void createFrame(Envelope env) {
     double deltaX = env.width;
     double deltaY = env.height;
-    double frameSize = Math.max(deltaX, deltaY) * _kFrameSizeFactor;
+    double frameSize = max(deltaX, deltaY) * _kFrameSizeFactor;
     _frameVertex[0] = Vertex((env.maxX + env.minX) / 2.0, env.maxY + frameSize);
     _frameVertex[1] = Vertex(env.minX - frameSize, env.minY - frameSize);
     _frameVertex[2] = Vertex(env.maxX + frameSize, env.minY - frameSize);
-    _frameEnv = Envelope.of(
-        _frameVertex[0].getCoordinate(), _frameVertex[1].getCoordinate());
-    _frameEnv.expandToIncludeCoordinate(_frameVertex[2].getCoordinate());
+    _frameEnv = Envelope.of(_frameVertex[0]!.getCoordinate(), _frameVertex[1]!.getCoordinate());
+    _frameEnv.expandToIncludeCoordinate(_frameVertex[2]!.getCoordinate());
   }
 
   QuadEdge initSubdiv() {
-    QuadEdge ea = makeEdge(_frameVertex[0], _frameVertex[1]);
-    QuadEdge eb = makeEdge(_frameVertex[1], _frameVertex[2]);
+    QuadEdge ea = makeEdge(_frameVertex[0]!, _frameVertex[1]!);
+    QuadEdge eb = makeEdge(_frameVertex[1]!, _frameVertex[2]!);
     QuadEdge.splice(ea.sym(), eb);
-    QuadEdge ec = makeEdge(_frameVertex[2], _frameVertex[0]);
+    QuadEdge ec = makeEdge(_frameVertex[2]!, _frameVertex[0]!);
     QuadEdge.splice(eb.sym(), ec);
     QuadEdge.splice(ec.sym(), ea);
     return ea;
@@ -118,7 +119,7 @@ class QuadEdgeSubdivision {
 
   QuadEdge locateFromEdge(Vertex v, QuadEdge startEdge) {
     int iter = 0;
-    int maxIter = _quadEdges.size;
+    int maxIter = _quadEdges.length;
     QuadEdge e = startEdge;
     while (true) {
       iter++;
@@ -274,7 +275,7 @@ class QuadEdgeSubdivision {
 
   List<QuadEdge> getPrimaryEdges(bool includeFrame) {
     List<QuadEdge> edges = [];
-    Stack edgeStack = Stack();
+    Stack<QuadEdge> edgeStack = Stack();
     edgeStack.push(_startingEdge);
     Set<QuadEdge> visitedEdges = <QuadEdge>{};
     while (edgeStack.isNotEmpty) {
@@ -312,8 +313,7 @@ class QuadEdgeSubdivision {
     while (edgeStack.isNotEmpty) {
       QuadEdge edge = edgeStack.pop();
       if (!visitedEdges.contains(edge)) {
-        final triEdges =
-            fetchTriangleToVisit(edge, edgeStack, includeFrame, visitedEdges);
+        final triEdges = fetchTriangleToVisit(edge, edgeStack, includeFrame, visitedEdges);
         if (triEdges != null) {
           triVisitor.visit(triEdges);
         }
@@ -323,8 +323,7 @@ class QuadEdgeSubdivision {
 
   final List<QuadEdge?> _triEdges = List.filled(3, null);
 
-  List<QuadEdge>? fetchTriangleToVisit(
-      QuadEdge edge, Stack edgeStack, bool includeFrame, Set visitedEdges) {
+  List<QuadEdge>? fetchTriangleToVisit(QuadEdge edge, Stack edgeStack, bool includeFrame, Set visitedEdges) {
     QuadEdge curr = edge;
     int edgeCount = 0;
     bool isFrame = false;
@@ -363,25 +362,20 @@ class QuadEdgeSubdivision {
   Geometry getEdges2(GeometryFactory geomFact) {
     final quadEdges = getPrimaryEdges(false);
     List<LineString> edges = quadEdges
-        .map((qe) => geomFact.createLineString2(
-            [qe.orig().getCoordinate(), qe.dest().getCoordinate()]))
+        .map((qe) => geomFact.createLineString2([qe.orig().getCoordinate(), qe.dest().getCoordinate()]))
         .toList();
     return geomFact.createMultiLineString(edges);
   }
 
   Geometry getTriangles2(GeometryFactory geomFact) {
     final triPtsList = getTriangleCoordinates(false);
-    List<Polygon> tris = triPtsList
-        .map((e) => geomFact.createPolygon(geomFact.createLinearRings(e)))
-        .toList();
+    List<Polygon> tris = triPtsList.map((e) => geomFact.createPolygon(geomFact.createLinearRings(e))).toList();
     return geomFact.createGeomCollection(tris);
   }
 
   Geometry getTriangles(bool includeFrame, GeometryFactory geomFact) {
     final triPtsList = getTriangleCoordinates(includeFrame);
-    List<Polygon> tris = triPtsList
-        .map((e) => geomFact.createPolygon(geomFact.createLinearRings(e)))
-        .toList();
+    List<Polygon> tris = triPtsList.map((e) => geomFact.createPolygon(geomFact.createLinearRings(e))).toList();
     return geomFact.createGeomCollection(tris);
   }
 

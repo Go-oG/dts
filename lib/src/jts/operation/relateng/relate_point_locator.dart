@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/boundary_node_rule.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/algorithm/point_location.dart';
@@ -28,7 +27,7 @@ class RelatePointLocator {
 
   List<Geometry>? _polygons;
 
-  Array<PointOnGeometryLocator>? _polyLocator;
+  List<PointOnGeometryLocator?>? _polyLocator;
 
   LinearBoundary? _lineBoundary;
 
@@ -46,9 +45,7 @@ class RelatePointLocator {
       _lineBoundary = LinearBoundary(_lines!, _boundaryRule);
     }
     if (_polygons != null) {
-      _polyLocator = (isPrepared)
-          ? Array<IndexedPointInAreaLocator>(_polygons!.size)
-          : Array<SimplePointInAreaLocator>(_polygons!.size);
+      _polyLocator = List.filled(_polygons!.length, null);
     }
   }
 
@@ -189,7 +186,7 @@ class RelatePointLocator {
 
   int locateOnPolygons(Coordinate p, bool isNode, Geometry? parentPolygonal) {
     int numBdy = 0;
-    for (int i = 0; i < _polygons!.size; i++) {
+    for (int i = 0; i < _polygons!.length; i++) {
       int loc = locateOnPolygonal(p, isNode, parentPolygonal, i);
       if (loc == Location.interior) {
         return Location.interior;
@@ -208,7 +205,7 @@ class RelatePointLocator {
   }
 
   int locateOnPolygonal(Coordinate p, bool isNode, Geometry? parentPolygonal, int index) {
-    Geometry polygonal = _polygons!.get(index);
+    Geometry polygonal = _polygons![index];
     if (isNode && (parentPolygonal == polygonal)) {
       return Location.boundary;
     }
@@ -217,9 +214,9 @@ class RelatePointLocator {
   }
 
   PointOnGeometryLocator getLocator(int index) {
-    PointOnGeometryLocator? locator = _polyLocator?.get(index);
+    PointOnGeometryLocator? locator = _polyLocator?[index];
     if (locator == null) {
-      Geometry polygonal = _polygons!.get(index);
+      Geometry polygonal = _polygons![index];
       locator = isPrepared ? IndexedPointInAreaLocator(polygonal) : SimplePointInAreaLocator(polygonal);
       _polyLocator![index] = locator;
     }

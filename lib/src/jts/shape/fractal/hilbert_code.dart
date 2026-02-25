@@ -1,4 +1,5 @@
-import 'package:d_util/d_util.dart';
+import 'dart:math';
+
 import 'package:dts/src/jts/geom/coordinate.dart';
 
 class HilbertCode {
@@ -6,16 +7,16 @@ class HilbertCode {
 
   static int size(int level) {
     checkLevel(level);
-    return Math.pow(2, 2 * level).toInt();
+    return pow(2, 2 * level).toInt();
   }
 
   static int maxOrdinate(int level) {
     checkLevel(level);
-    return Math.pow(2, level).toInt() - 1;
+    return pow(2, level).toInt() - 1;
   }
 
   static int level(int numPoints) {
-    int pow2 = (Math.log(numPoints) / Math.log(2)).toInt();
+    int pow2 = (log(numPoints) / log(2)).toInt();
     int level = pow2 ~/ 2;
     int sizeV = size(level);
     if (sizeV < numPoints) {
@@ -27,7 +28,7 @@ class HilbertCode {
 
   static void checkLevel(int level) {
     if (level > kMaxLevel) {
-      throw IllegalArgumentException("Level must be in range 0 to $kMaxLevel");
+      throw ArgumentError("Level must be in range 0 to $kMaxLevel");
     }
   }
 

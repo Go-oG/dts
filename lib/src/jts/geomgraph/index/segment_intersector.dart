@@ -29,14 +29,12 @@ class SegmentIntersector {
 
   int numTests = 0;
 
-  late Array<List<Node>> _bdyNodes;
+  late List<List<Node>> _bdyNodes;
 
   SegmentIntersector(this._li, this._includeProper, this._recordIsolated);
 
   void setBoundaryNodes(List<Node> bdyNodes0, List<Node> bdyNodes1) {
-    _bdyNodes = Array(2);
-    _bdyNodes[0] = bdyNodes0;
-    _bdyNodes[1] = bdyNodes1;
+    _bdyNodes = [bdyNodes0, bdyNodes1];
   }
 
   bool isDone() {
@@ -58,8 +56,7 @@ class SegmentIntersector {
 
         if (e0.isClosed()) {
           int maxSegIndex = e0.getNumPoints() - 1;
-          if (((segIndex0 == 0) && (segIndex1 == maxSegIndex)) ||
-              ((segIndex1 == 0) && (segIndex0 == maxSegIndex))) {
+          if (((segIndex0 == 0) && (segIndex1 == maxSegIndex)) || ((segIndex1 == 0) && (segIndex0 == maxSegIndex))) {
             return true;
           }
         }
@@ -100,7 +97,7 @@ class SegmentIntersector {
     }
   }
 
-  bool isBoundaryPoint(LineIntersector li, Array<List<Node>>? bdyNodes) {
+  bool isBoundaryPoint(LineIntersector li, List<List<Node>>? bdyNodes) {
     if (bdyNodes == null) return false;
 
     if (isBoundaryPointInternal(li, bdyNodes[0])) return true;

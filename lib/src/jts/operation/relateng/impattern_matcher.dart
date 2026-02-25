@@ -10,7 +10,7 @@ class IMPatternMatcher extends IMPredicate {
   late final IntersectionMatrix _patternMatrix;
 
   IMPatternMatcher(this._imPattern) {
-    _patternMatrix = IntersectionMatrix.of(_imPattern);
+    _patternMatrix = IntersectionMatrix(_imPattern);
   }
 
   @override

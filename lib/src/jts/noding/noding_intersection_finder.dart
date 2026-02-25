@@ -6,36 +6,31 @@ import 'segment_intersector.dart';
 import 'segment_string.dart';
 
 class NodingIntersectionFinder implements NSegmentIntersector {
-  static NodingIntersectionFinder createAnyIntersectionFinder(
-      LineIntersector li) {
+  static NodingIntersectionFinder createAnyIntersectionFinder(LineIntersector li) {
     return NodingIntersectionFinder(li);
   }
 
-  static NodingIntersectionFinder createAllIntersectionsFinder(
-      LineIntersector li) {
+  static NodingIntersectionFinder createAllIntersectionsFinder(LineIntersector li) {
     NodingIntersectionFinder finder = NodingIntersectionFinder(li);
     finder.setFindAllIntersections(true);
     return finder;
   }
 
-  static NodingIntersectionFinder createInteriorIntersectionsFinder(
-      LineIntersector li) {
+  static NodingIntersectionFinder createInteriorIntersectionsFinder(LineIntersector li) {
     NodingIntersectionFinder finder = NodingIntersectionFinder(li);
     finder.setFindAllIntersections(true);
     finder.setInteriorIntersectionsOnly(true);
     return finder;
   }
 
-  static NodingIntersectionFinder createIntersectionCounter(
-      LineIntersector li) {
+  static NodingIntersectionFinder createIntersectionCounter(LineIntersector li) {
     NodingIntersectionFinder finder = NodingIntersectionFinder(li);
     finder.setFindAllIntersections(true);
     finder.setKeepIntersections(false);
     return finder;
   }
 
-  static NodingIntersectionFinder createInteriorIntersectionCounter(
-      LineIntersector li) {
+  static NodingIntersectionFinder createInteriorIntersectionCounter(LineIntersector li) {
     NodingIntersectionFinder finder = NodingIntersectionFinder(li);
     finder.setInteriorIntersectionsOnly(true);
     finder.setFindAllIntersections(true);
@@ -55,7 +50,7 @@ class NodingIntersectionFinder implements NSegmentIntersector {
 
   Coordinate? _interiorIntersection;
 
-  Array<Coordinate>? _intSegments;
+  List<Coordinate>? _intSegments;
 
   final List<Coordinate> _intersections = [];
 
@@ -97,13 +92,10 @@ class NodingIntersectionFinder implements NSegmentIntersector {
     return _interiorIntersection;
   }
 
-  Array<Coordinate>? getIntersectionSegments() {
-    return _intSegments;
-  }
+  List<Coordinate>? getIntersectionSegments() => _intSegments;
 
   @override
-  void processIntersections(
-      SegmentString e0, int segIndex0, SegmentString e1, int segIndex1) {
+  void processIntersections(SegmentString e0, int segIndex0, SegmentString e1, int segIndex1) {
     if ((!findAllIntersections) && hasIntersection()) return;
 
     bool isSameSegString = e0 == e1;
@@ -111,8 +103,7 @@ class NodingIntersectionFinder implements NSegmentIntersector {
     if (isSameSegment) return;
 
     if (_isCheckEndSegmentsOnly) {
-      bool isEndSegPresent =
-          isEndSegment(e0, segIndex0) || isEndSegment(e1, segIndex1);
+      bool isEndSegPresent = isEndSegment(e0, segIndex0) || isEndSegment(e1, segIndex1);
       if (!isEndSegPresent) return;
     }
     Coordinate p00 = e0.getCoordinate(segIndex0);
@@ -127,21 +118,14 @@ class NodingIntersectionFinder implements NSegmentIntersector {
     bool isInteriorInt = li.hasIntersection() && li.isInteriorIntersection();
     bool isInteriorVertexInt = false;
     if (!_isInteriorIntersectionsOnly) {
-      bool isAdjacentSegment =
-          isSameSegString && (Math.abs(segIndex1 - segIndex0) <= 1);
-      isInteriorVertexInt = (!isAdjacentSegment) &&
-          _isInteriorVertexIntersection(
-              p00, p01, p10, p11, isEnd00, isEnd01, isEnd10, isEnd11);
+      bool isAdjacentSegment = isSameSegString && (Math.abs(segIndex1 - segIndex0) <= 1);
+      isInteriorVertexInt =
+          (!isAdjacentSegment) && _isInteriorVertexIntersection(p00, p01, p10, p11, isEnd00, isEnd01, isEnd10, isEnd11);
     }
     if (isInteriorInt || isInteriorVertexInt) {
-      _intSegments = Array(4);
-      _intSegments![0] = p00;
-      _intSegments![1] = p01;
-      _intSegments![2] = p10;
-      _intSegments![3] = p11;
+      _intSegments = [p00, p01, p10, p11];
       _interiorIntersection = li.getIntersection(0);
       if (_keepIntersections) _intersections.add(_interiorIntersection!);
-
       _intersectionCount++;
     }
   }
@@ -167,8 +151,7 @@ class NodingIntersectionFinder implements NSegmentIntersector {
     return false;
   }
 
-  static bool _isInteriorVertexIntersection2(
-      Coordinate p0, Coordinate p1, bool isEnd0, bool isEnd1) {
+  static bool _isInteriorVertexIntersection2(Coordinate p0, Coordinate p1, bool isEnd0, bool isEnd1) {
     if (isEnd0 && isEnd1) return false;
 
     if (p0.equals2D(p1)) {

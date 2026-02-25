@@ -60,9 +60,9 @@ class PolygonHoleJoiner {
   void extractOrientedRings(Polygon polygon) {
     _shellRing = extractOrientedRing(polygon.getExteriorRing(), true);
     List<LinearRing> holes = sortHoles(polygon);
-    _holeRings = List.filled(holes.size, []);
-    for (int i = 0; i < holes.size; i++) {
-      _holeRings[i] = extractOrientedRing(holes.get(i), false);
+    _holeRings = List.filled(holes.length, []);
+    for (int i = 0; i < holes.length; i++) {
+      _holeRings[i] = extractOrientedRing(holes[i], false);
     }
   }
 
@@ -73,7 +73,7 @@ class PolygonHoleJoiner {
       return pts;
     }
 
-    List<Coordinate> ptsRev = pts.copy();
+    List<Coordinate> ptsRev = pts.toList();
     CoordinateArrays.reverse(ptsRev);
     return ptsRev;
   }
@@ -157,8 +157,8 @@ class PolygonHoleJoiner {
   }
 
   int findJoinIndex(Coordinate joinCoord, Coordinate holeJoinCoord) {
-    for (int i = 0; i < (_joinedRing.size - 1); i++) {
-      if (joinCoord.equals2D(_joinedRing.get(i))) {
+    for (int i = 0; i < (_joinedRing.length - 1); i++) {
+      if (joinCoord.equals2D(_joinedRing[i])) {
         if (isLineInterior(_joinedRing, i, holeJoinCoord)) {
           return i;
         }
@@ -168,11 +168,10 @@ class PolygonHoleJoiner {
   }
 
   bool isLineInterior(List<Coordinate> ring, int ringIndex, Coordinate linePt) {
-    Coordinate nodePt = ring.get(ringIndex);
-    Coordinate shell0 = ring.get(prev(ringIndex, ring.size));
-    Coordinate shell1 = ring.get(next(ringIndex, ring.size));
-    return PolygonNodeTopology.isInteriorSegment(
-        nodePt, shell0, shell1, linePt);
+    Coordinate nodePt = ring[ringIndex];
+    Coordinate shell0 = ring[prev(ringIndex, ring.length)];
+    Coordinate shell1 = ring[next(ringIndex, ring.length)];
+    return PolygonNodeTopology.isInteriorSegment(nodePt, shell0, shell1, linePt);
   }
 
   static int prev(int i, int size) {
@@ -193,21 +192,18 @@ class PolygonHoleJoiner {
     return next;
   }
 
-  void addJoinedHole(
-      int joinIndex, List<Coordinate> holeCoords, int holeJoinIndex) {
-    Coordinate joinPt = _joinedRing.get(joinIndex);
+  void addJoinedHole(int joinIndex, List<Coordinate> holeCoords, int holeJoinIndex) {
+    Coordinate joinPt = _joinedRing[joinIndex];
     Coordinate holeJoinPt = holeCoords[holeJoinIndex];
     bool isVertexTouch = joinPt.equals2D(holeJoinPt);
     Coordinate? addJoinPt = isVertexTouch ? null : joinPt;
-    List<Coordinate> newSection =
-        createHoleSection(holeCoords, holeJoinIndex, addJoinPt);
+    List<Coordinate> newSection = createHoleSection(holeCoords, holeJoinIndex, addJoinPt);
     int addIndex = joinIndex + 1;
     _joinedRing.insertAll(addIndex, newSection);
     _joinedPts.addAll(newSection);
   }
 
-  List<Coordinate> createHoleSection(
-      List<Coordinate> holeCoords, int holeJoinIndex, Coordinate? joinPt) {
+  List<Coordinate> createHoleSection(List<Coordinate> holeCoords, int holeJoinIndex, Coordinate? joinPt) {
     List<Coordinate> section = <Coordinate>[];
     bool isNonTouchingHole = joinPt != null;
     if (isNonTouchingHole) {
@@ -239,8 +235,7 @@ class PolygonHoleJoiner {
     Coordinate? lowestLeftCoord;
     int lowestLeftIndex = -1;
     for (int i = 0; i < (coords.length - 1); i++) {
-      if ((lowestLeftCoord == null) ||
-          (coords[i].compareTo(lowestLeftCoord) < 0)) {
+      if ((lowestLeftCoord == null) || (coords[i].compareTo(lowestLeftCoord) < 0)) {
         lowestLeftCoord = coords[i];
         lowestLeftIndex = i;
       }
@@ -263,9 +258,9 @@ class PolygonHoleJoiner {
   ) {
     List<SegmentString> polySegStrings = [];
     polySegStrings.add(BasicSegmentString(shellRing, null));
-    holeRings.each((hole, index) {
+    for (var hole in holeRings) {
       polySegStrings.add(BasicSegmentString(hole, null));
-    });
+    }
     return MCIndexSegmentSetMutualIntersector(polySegStrings);
   }
 }
@@ -285,8 +280,7 @@ class InteriorIntersectionDetector implements NSegmentIntersector {
   bool hasIntersection = false;
 
   @override
-  void processIntersections(
-      SegmentString ss0, int segIndex0, SegmentString ss1, int segIndex1) {
+  void processIntersections(SegmentString ss0, int segIndex0, SegmentString ss1, int segIndex1) {
     Coordinate p00 = ss0.getCoordinate(segIndex0);
     Coordinate p01 = ss0.getCoordinate(segIndex0 + 1);
     Coordinate p10 = ss1.getCoordinate(segIndex1);

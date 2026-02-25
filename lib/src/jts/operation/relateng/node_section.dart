@@ -97,20 +97,19 @@ class NodeSection implements Comparable<NodeSection> {
       if (_isA) {
         return -1;
       }
-
       return 1;
     }
-    int compDim = Integer.compare(_dim, o._dim);
+    int compDim = _dim.compareTo(o._dim);
     if (compDim != 0) {
       return compDim;
     }
 
-    int compId = Integer.compare(id, o.id);
+    int compId = id.compareTo(o.id);
     if (compId != 0) {
       return compId;
     }
 
-    int compRingId = Integer.compare(_ringId, o._ringId);
+    int compRingId = _ringId.compareTo(o._ringId);
     if (compRingId != 0) {
       return compRingId;
     }
@@ -141,7 +140,6 @@ class NodeSection implements Comparable<NodeSection> {
 class NodeSectionEdgeAngleComparator implements CComparator<NodeSection> {
   @override
   int compare(NodeSection ns1, NodeSection ns2) {
-    return PolygonNodeTopology.compareAngle(
-        ns1._nodePt, ns1.getVertex(0)!, ns2.getVertex(0)!);
+    return PolygonNodeTopology.compareAngle(ns1._nodePt, ns1.getVertex(0)!, ns2.getVertex(0)!);
   }
 }

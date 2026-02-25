@@ -1,4 +1,5 @@
-import 'package:d_util/d_util.dart';
+import 'dart:math';
+
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/location.dart';
@@ -14,7 +15,7 @@ class OverlayResultValidator {
   }
 
   static double computeBoundaryDistanceTolerance(Geometry g0, Geometry g1) {
-    return Math.minD(
+    return min(
       GeometrySnapper.computeSizeBasedSnapTolerance(g0),
       GeometrySnapper.computeSizeBasedSnapTolerance(g1),
     );
@@ -22,11 +23,11 @@ class OverlayResultValidator {
 
   static const double _kTolerance = 1.0E-6;
 
-  late Array<Geometry> geom;
+  late List<Geometry> geom;
 
-  late Array<FuzzyPointLocator> _locFinder;
+  late List<FuzzyPointLocator> _locFinder;
 
-  final Array<int> _location = Array(3);
+  final List<int> _location = List.filled(3, 0);
 
   Coordinate? _invalidLocation;
 
@@ -36,12 +37,12 @@ class OverlayResultValidator {
 
   OverlayResultValidator(Geometry a, Geometry b, Geometry result) {
     _boundaryDistanceTolerance = computeBoundaryDistanceTolerance(a, b);
-    geom = [a, b, result].toArray();
+    geom = [a, b, result];
     _locFinder = [
       FuzzyPointLocator(geom[0], _boundaryDistanceTolerance),
       FuzzyPointLocator(geom[1], _boundaryDistanceTolerance),
       FuzzyPointLocator(geom[2], _boundaryDistanceTolerance),
-    ].toArray();
+    ];
   }
 
   bool isValid(OverlayOpCode overlayOp) {
@@ -61,8 +62,8 @@ class OverlayResultValidator {
   }
 
   bool checkValid(OverlayOpCode overlayOp) {
-    for (int i = 0; i < _testCoords.size; i++) {
-      Coordinate pt = _testCoords.get(i);
+    for (int i = 0; i < _testCoords.length; i++) {
+      Coordinate pt = _testCoords[i];
       if (!checkValid2(overlayOp, pt)) {
         _invalidLocation = pt;
         return false;
@@ -80,14 +81,14 @@ class OverlayResultValidator {
     return isValidResult(overlayOp, _location);
   }
 
-  static bool hasLocation(Array<int> location, int loc) {
+  static bool hasLocation(List<int> location, int loc) {
     for (int i = 0; i < 3; i++) {
       if (location[i] == loc) return true;
     }
     return false;
   }
 
-  bool isValidResult(OverlayOpCode overlayOp, Array<int> location) {
+  bool isValidResult(OverlayOpCode overlayOp, List<int> location) {
     bool expectedInterior = OverlayOp.isResultOfOp2(location[0], location[1], overlayOp);
     bool resultInInterior = location[2] == Location.interior;
     return !(expectedInterior ^ resultInInterior);

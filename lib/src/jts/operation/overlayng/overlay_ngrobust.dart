@@ -1,4 +1,5 @@
-import 'package:d_util/d_util.dart';
+import 'dart:math';
+
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
@@ -97,7 +98,7 @@ class OverlayNGRobust {
   static double snapTolerance2(Geometry geom0, Geometry? geom1) {
     double tol0 = snapTolerance(geom0);
     double tol1 = snapTolerance(geom1);
-    return Math.maxD(tol0, tol1);
+    return max(tol0, tol1).toDouble();
   }
 
   static double snapTolerance(Geometry? geom) {
@@ -106,11 +107,10 @@ class OverlayNGRobust {
 
   static double ordinateMagnitude(Geometry? geom) {
     if (geom == null || geom.isEmpty()) return 0;
-
     Envelope env = geom.getEnvelopeInternal();
-    double magMax = Math.maxD(Math.abs(env.maxX), Math.abs(env.maxY));
-    double magMin = Math.maxD(Math.abs(env.minX), Math.abs(env.minY));
-    return Math.maxD(magMax, magMin);
+    double magMax = max(env.maxX.abs(), env.maxY.abs());
+    double magMin = max(env.minX.abs(), env.minY.abs());
+    return max(magMax, magMin);
   }
 
   static Geometry? overlaySR(Geometry geom0, Geometry? geom1, OverlayOpCode opCode) {

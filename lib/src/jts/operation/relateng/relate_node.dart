@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/dimension.dart';
 import 'package:dts/src/jts/geom/location.dart';
@@ -46,7 +45,7 @@ class RelateNGNode {
   void updateEdgesInArea(bool isA, int indexFrom, int indexTo) {
     int index = nextIndex(_edges, indexFrom);
     while (index != indexTo) {
-      RelateEdge edge = _edges.get(index);
+      RelateEdge edge = _edges[index];
       edge.setAreaInterior(isA);
       index = nextIndex(_edges, index);
     }
@@ -54,18 +53,18 @@ class RelateNGNode {
 
   void updateIfAreaPrev(bool isA, int index) {
     int indexPrev = prevIndex(_edges, index);
-    RelateEdge edgePrev = _edges.get(indexPrev);
+    RelateEdge edgePrev = _edges[indexPrev];
     if (edgePrev.isInterior(isA, Position.left)) {
-      RelateEdge edge = _edges.get(index);
+      RelateEdge edge = _edges[index];
       edge.setAreaInterior(isA);
     }
   }
 
   void updateIfAreaNext(bool isA, int index) {
     int indexNext = nextIndex(_edges, index);
-    RelateEdge edgeNext = _edges.get(indexNext);
+    RelateEdge edgeNext = _edges[indexNext];
     if (edgeNext.isInterior(isA, Position.right)) {
-      RelateEdge edge = _edges.get(index);
+      RelateEdge edge = _edges[index];
       edge.setAreaInterior(isA);
     }
   }
@@ -86,8 +85,8 @@ class RelateNGNode {
     }
 
     int insertIndex = -1;
-    for (int i = 0; i < _edges.size; i++) {
-      RelateEdge e = _edges.get(i);
+    for (int i = 0; i < _edges.length; i++) {
+      RelateEdge e = _edges[i];
       int comp = e.compareToEdge(dirPt);
       if (comp == 0) {
         e.merge(isA, dirPt, dim, isForward);
@@ -122,10 +121,10 @@ class RelateNGNode {
   }
 
   void propagateSideLocations(bool isA, int startIndex) {
-    int currLoc = _edges.get(startIndex).location(isA, Position.left);
+    int currLoc = _edges[startIndex].location(isA, Position.left);
     int index = nextIndex(_edges, startIndex);
     while (index != startIndex) {
-      RelateEdge e = _edges.get(index);
+      RelateEdge e = _edges[index];
       e.setUnknownLocations(isA, currLoc);
       currLoc = e.location(isA, Position.left);
       index = nextIndex(_edges, index);
@@ -134,12 +133,11 @@ class RelateNGNode {
 
   static int prevIndex(List<RelateEdge> list, int index) {
     if (index > 0) return index - 1;
-
-    return list.size - 1;
+    return list.length - 1;
   }
 
   static int nextIndex(List<RelateEdge> list, int i) {
-    if (i >= (list.size - 1)) {
+    if (i >= list.length - 1) {
       return 0;
     }
     return i + 1;

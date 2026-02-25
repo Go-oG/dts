@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/boundary_node_rule.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -364,7 +363,7 @@ class RelateGeometry {
   static List<Coordinate> orient(List<Coordinate> pts, bool orientCW) {
     bool isFlipped = orientCW == Orientation.isCCW(pts);
     if (isFlipped) {
-      pts = pts.copy();
+      pts = pts.toList();
       CoordinateArrays.reverse(pts);
     }
     return pts;

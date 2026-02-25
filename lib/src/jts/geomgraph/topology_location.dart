@@ -1,9 +1,8 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/location.dart';
 import 'package:dts/src/jts/geom/position.dart';
 
 class TopologyLocation {
-  late Array<int> location;
+  late List<int> location;
 
   TopologyLocation(TopologyLocation gl) {
     init(gl.location.length);
@@ -17,7 +16,7 @@ class TopologyLocation {
     location[Position.on] = on;
   }
 
-  TopologyLocation.of2(Array<int> location) {
+  TopologyLocation.of2(List<int> location) {
     init(location.length);
   }
 
@@ -29,7 +28,7 @@ class TopologyLocation {
   }
 
   void init(int size) {
-    location = Array(size);
+    location = List.filled(size, 0);
     setAllLocations(Location.none);
   }
 
@@ -93,9 +92,7 @@ class TopologyLocation {
     setLocation2(Position.on, locValue);
   }
 
-  Array<int> getLocations() {
-    return location;
-  }
+  List<int> getLocations() => location;
 
   void setLocations(int on, int left, int right) {
     location[Position.on] = on;
@@ -112,7 +109,7 @@ class TopologyLocation {
 
   void merge(TopologyLocation gl) {
     if (gl.location.length > location.length) {
-      Array<int> newLoc = Array(3);
+      List<int> newLoc = List.filled(3, 0);
       newLoc[Position.on] = location[Position.on];
       newLoc[Position.left] = Location.none;
       newLoc[Position.right] = Location.none;

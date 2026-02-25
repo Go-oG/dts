@@ -166,7 +166,7 @@ class ConcaveHull {
         HullTri? adj0 = tri.getAdjacent(0) as HullTri?;
         HullTri? adj1 = tri.getAdjacent(1) as HullTri?;
         HullTri? adj2 = tri.getAdjacent(2) as HullTri?;
-        tri.remove(triList);
+        tri.removeWithList(triList);
         _addBorderTri(adj0, queue);
         _addBorderTri(adj1, queue);
         _addBorderTri(adj2, queue);
@@ -247,7 +247,7 @@ class ConcaveHull {
         HullTri? adj0 = tri.getAdjacent(0) as HullTri?;
         HullTri? adj1 = tri.getAdjacent(1) as HullTri?;
         HullTri? adj2 = tri.getAdjacent(2) as HullTri?;
-        tri.remove(triList);
+        tri.removeWithList(triList);
         _addBorderTri(adj0, queue);
         _addBorderTri(adj1, queue);
         _addBorderTri(adj2, queue);

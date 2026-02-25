@@ -14,12 +14,12 @@ class HPRtree<T> implements SpatialIndex<T> {
 
   final _totalExtent = Envelope();
   final int _nodeCapacity;
-  late Array<double> _nodeBounds;
-  late Array<double> _itemBounds;
-  late Array<T> _itemValues;
+  late List<double> _nodeBounds;
+  late List<double> _itemBounds;
+  late List<T> _itemValues;
 
   int _numItems = 0;
-  Array<int>? _layerStartIndex;
+  List<int>? _layerStartIndex;
   bool _isBuilt = false;
 
   HPRtree([this._nodeCapacity = _defaultNodeCapacity]);
@@ -72,8 +72,7 @@ class HPRtree<T> implements SpatialIndex<T> {
     }
   }
 
-  void queryNode(int layerIndex, int nodeOffset, Envelope searchEnv,
-      ItemVisitor<T> visitor) {
+  void queryNode(int layerIndex, int nodeOffset, Envelope searchEnv, ItemVisitor<T> visitor) {
     int layerStart = _layerStartIndex![layerIndex];
     int nodeIndex = layerStart + nodeOffset;
     if (!intersects(_nodeBounds, nodeIndex, searchEnv)) {
@@ -89,16 +88,14 @@ class HPRtree<T> implements SpatialIndex<T> {
     }
   }
 
-  static bool intersects(Array<double> bounds, int nodeIndex, Envelope env) {
-    bool isBeyond = (((env.maxX < bounds[nodeIndex]) ||
-                (env.maxY < bounds[nodeIndex + 1])) ||
+  static bool intersects(List<double> bounds, int nodeIndex, Envelope env) {
+    bool isBeyond = (((env.maxX < bounds[nodeIndex]) || (env.maxY < bounds[nodeIndex + 1])) ||
             (env.minX > bounds[nodeIndex + 2])) ||
         (env.minY > bounds[nodeIndex + 3]);
     return !isBeyond;
   }
 
-  void queryNodeChildren(int layerIndex, int blockOffset, Envelope searchEnv,
-      ItemVisitor<T> visitor) {
+  void queryNodeChildren(int layerIndex, int blockOffset, Envelope searchEnv, ItemVisitor<T> visitor) {
     int layerStart = _layerStartIndex![layerIndex];
     int layerEnd = _layerStartIndex![layerIndex + 1];
     for (int i = 0; i < _nodeCapacity; i++) {
@@ -158,23 +155,24 @@ class HPRtree<T> implements SpatialIndex<T> {
 
   void prepareItems() {
     int boundsIndex = 0;
-    int valueIndex = 0;
-    _itemBounds = Array(_itemsToLoad.size * 4);
-    _itemValues = Array(_itemsToLoad.size);
-
+    _itemBounds = List.filled(_itemsToLoad.size * 4, 0);
     for (_Item item in _itemsToLoad) {
       Envelope envelope = item.getEnvelope();
       _itemBounds[boundsIndex++] = envelope.minX;
       _itemBounds[boundsIndex++] = envelope.minY;
       _itemBounds[boundsIndex++] = envelope.maxX;
       _itemBounds[boundsIndex++] = envelope.maxY;
-      _itemValues[valueIndex++] = item.getItem();
     }
+
+    _itemValues = List.generate(_itemsToLoad.size, (i) {
+      return _itemsToLoad[i].getItem();
+    });
+
     _itemsToLoad = [];
   }
 
-  static Array<double> createBoundsArray(int size) {
-    Array<double> a = Array(4 * size);
+  static List<double> createBoundsArray(int size) {
+    List<double> a = List.filled(4 * size, 0);
     for (int i = 0; i < size; i++) {
       int index = 4 * i;
       a[index] = double.maxFinite;
@@ -232,8 +230,7 @@ class HPRtree<T> implements SpatialIndex<T> {
     }
   }
 
-  void updateNodeBounds(
-      int nodeIndex, double minX, double minY, double maxX, double maxY) {
+  void updateNodeBounds(int nodeIndex, double minX, double minY, double maxX, double maxY) {
     final nodeBounds = _nodeBounds;
     if (minX < nodeBounds[nodeIndex]) {
       nodeBounds[nodeIndex] = minX;
@@ -252,7 +249,7 @@ class HPRtree<T> implements SpatialIndex<T> {
     }
   }
 
-  static Array<int> computeLayerIndices(int itemSize, int nodeCapacity) {
+  static List<int> computeLayerIndices(int itemSize, int nodeCapacity) {
     List<int> layerIndexList = [];
     int layerSize = itemSize;
     int index = 0;
@@ -261,7 +258,7 @@ class HPRtree<T> implements SpatialIndex<T> {
       layerSize = numNodesToCover(layerSize, nodeCapacity);
       index += _envSize * layerSize;
     } while (layerSize > 1);
-    return layerIndexList.toArray();
+    return layerIndexList;
   }
 
   static int numNodesToCover(int nChild, int nodeCapacity) {
@@ -274,10 +271,11 @@ class HPRtree<T> implements SpatialIndex<T> {
     return mult + 1;
   }
 
-  Array<Envelope> getBounds() {
+  List<Envelope> getBounds() {
     final nodeBounds = _nodeBounds;
     int numNodes = nodeBounds.size ~/ 4;
-    Array<Envelope> bounds = Array(numNodes);
+    List<Envelope> bounds = List.filled(numNodes, Envelope());
+
     for (int i = numNodes - 1; i >= 0; i--) {
       int boundIndex = 4 * i;
       bounds[i] = Envelope.fromLTRB(
@@ -292,15 +290,11 @@ class HPRtree<T> implements SpatialIndex<T> {
 
   void sortItems() {
     final encoder = _Encoder(_hilbertLevel, _totalExtent);
-    Array<int> hilbertValues = Array(_itemsToLoad.size);
-    int pos = 0;
-    for (_Item item in _itemsToLoad) {
-      hilbertValues[pos++] = encoder.encode(item.getEnvelope());
-    }
+    List<int> hilbertValues = List.generate(_itemsToLoad.size, (i) => encoder.encode(_itemsToLoad[i].getEnvelope()));
     quickSortItemsIntoNodes(hilbertValues, 0, _itemsToLoad.size - 1);
   }
 
-  void quickSortItemsIntoNodes(Array<int> values, int lo, int hi) {
+  void quickSortItemsIntoNodes(List<int> values, int lo, int hi) {
     if ((lo / _nodeCapacity) < (hi / _nodeCapacity)) {
       int pivot = hoarePartition(values, lo, hi);
       quickSortItemsIntoNodes(values, lo, pivot);
@@ -308,7 +302,7 @@ class HPRtree<T> implements SpatialIndex<T> {
     }
   }
 
-  int hoarePartition(Array<int> values, int lo, int hi) {
+  int hoarePartition(List<int> values, int lo, int hi) {
     int pivot = values[(lo + hi) >> 1];
     int i = lo - 1;
     int j = hi + 1;
@@ -327,7 +321,7 @@ class HPRtree<T> implements SpatialIndex<T> {
     }
   }
 
-  void swapItems(Array<int> values, int i, int j) {
+  void swapItems(List<int> values, int i, int j) {
     _Item tmpItemp = _itemsToLoad.get(i);
     _itemsToLoad.set(i, _itemsToLoad.get(j));
     _itemsToLoad.set(j, tmpItemp);

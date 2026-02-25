@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/geom/precision_model.dart';
@@ -36,7 +35,7 @@ class IteratedNoder implements Noder {
 
   @override
   void computeNodes(List<SegmentString> segStrings) {
-    Array<int> numInteriorIntersections = Array(1);
+    List<int> numInteriorIntersections = [0];
     nodedSegStrings = segStrings;
 
     int nodingIterationCount = 0;
@@ -53,7 +52,7 @@ class IteratedNoder implements Noder {
     } while (lastNodesCreated > 0);
   }
 
-  void node(List<SegmentString> segStrings, Array<int> numInteriorIntersections) {
+  void node(List<SegmentString> segStrings, List<int> numInteriorIntersections) {
     final si = IntersectionAdder(li);
     final noder = MCIndexNoder();
     noder.setSegmentIntersector(si);

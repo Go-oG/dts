@@ -1,11 +1,9 @@
-import 'package:d_util/d_util.dart';
-
 import 'directed_edge.dart';
 import 'graph_component.dart';
 import 'node.dart';
 
 class PGEdge extends GraphComponentPG {
-  Array<DirectedEdgePG>? dirEdge;
+  List<DirectedEdgePG>? dirEdge;
 
   PGEdge();
 
@@ -14,7 +12,7 @@ class PGEdge extends GraphComponentPG {
   }
 
   void setDirectedEdges(DirectedEdgePG de0, DirectedEdgePG de1) {
-    dirEdge = [de0, de1].toArray();
+    dirEdge = [de0, de1];
     de0.setEdge(this);
     de1.setEdge(this);
     de0.setSym(de1);

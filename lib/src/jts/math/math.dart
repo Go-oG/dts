@@ -940,12 +940,9 @@ class MathUtil {
     return next - Math.floor(next);
   }
 
-  static Array<int> shuffle(int n) {
+  static List<int> shuffle(int n) {
     final Random rnd = Random(13);
-    Array<int> ints = Array(n);
-    for (int i = 0; i < n; i++) {
-      ints[i] = i;
-    }
+    List<int> ints = List.generate(n, (i) => i);
     for (int i = n - 1; i >= 1; i--) {
       int j = rnd.nextInt(i + 1);
       int last = ints[i];
@@ -957,7 +954,7 @@ class MathUtil {
 }
 
 class Matrix {
-  static void swapRows2(Array<Array<double>> m, int i, int j) {
+  static void swapRows2(List<List<double>> m, int i, int j) {
     if (i == j) {
       return;
     }
@@ -969,7 +966,7 @@ class Matrix {
     }
   }
 
-  static void swapRows(Array<double> m, int i, int j) {
+  static void swapRows(List<double> m, int i, int j) {
     if (i == j) {
       return;
     }
@@ -979,7 +976,7 @@ class Matrix {
     m[j] = temp;
   }
 
-  static Array<double>? solve(Array<Array<double>> a, Array<double> b) {
+  static List<double>? solve(List<List<double>> a, List<double> b) {
     int n = b.length;
     if ((a.length != n) || (a[0].length != n)) {
       throw ("Matrix A is incorrectly sized");
@@ -1008,7 +1005,7 @@ class Matrix {
         b[j] -= b[i] * rowFactor;
       }
     }
-    Array<double> solution = Array(n);
+    List<double> solution = List.filled(n, 0);
     for (int j = n - 1; j >= 0; j--) {
       double t = 0.0;
       for (int k = j + 1; k < n; k++) {

@@ -1,16 +1,15 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 
 final class CoordinateArrayFilter implements CoordinateFilter {
-  late final Array<Coordinate> pts;
+  late final List<Coordinate?> pts;
 
   int _n = 0;
 
   CoordinateArrayFilter(int size) {
-    pts = Array(size);
+    pts = List.filled(size, null);
   }
 
-  Array<Coordinate> getCoordinates() => pts;
+  List<Coordinate?> getCoordinates() => pts;
 
   @override
   void filter(Coordinate coord) {

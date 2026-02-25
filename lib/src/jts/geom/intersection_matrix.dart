@@ -4,21 +4,18 @@ import 'dimension.dart';
 import 'location.dart';
 
 class IntersectionMatrix {
-  late Array<Array<int>> _matrix;
+  late List<List<int>> _matrix;
 
-  IntersectionMatrix() {
-    _matrix = Array.matrix(3);
+  IntersectionMatrix([String? elements]) {
+    _matrix = List.generate(3, (i) => List.filled(3, 0));
     setAll(Dimension.kFalse);
+    if (elements != null) {
+      set(elements);
+    }
   }
 
-  IntersectionMatrix.of(String elements) {
-    _matrix = Array.matrix(3);
-    setAll(Dimension.kFalse);
-    set(elements);
-  }
-
-  IntersectionMatrix.of2(IntersectionMatrix other) {
-    _matrix = Array.matrix(3);
+  IntersectionMatrix.of(IntersectionMatrix other) {
+    _matrix = List.generate(3, (i) => List.filled(3, 0));
     setAll(Dimension.kFalse);
     _matrix[Location.interior][Location.interior] = other._matrix[Location.interior][Location.interior];
     _matrix[Location.interior][Location.boundary] = other._matrix[Location.interior][Location.boundary];
@@ -70,7 +67,7 @@ class IntersectionMatrix {
   }
 
   static bool matches3(String actualDimensionSymbols, String requiredDimensionSymbols) {
-    IntersectionMatrix m = IntersectionMatrix.of(actualDimensionSymbols);
+    final m = IntersectionMatrix(actualDimensionSymbols);
     return m.matches2(requiredDimensionSymbols);
   }
 

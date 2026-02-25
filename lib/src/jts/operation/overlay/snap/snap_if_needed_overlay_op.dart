@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/operation/overlay/overlay_op.dart';
 
@@ -25,11 +24,10 @@ class SnapIfNeededOverlayOp {
     return overlayOp(g0, g1, OverlayOpCode.symDifference);
   }
 
-  final Array<Geometry> _geom = Array(2);
+  late final List<Geometry> _geom;
 
   SnapIfNeededOverlayOp(Geometry g1, Geometry g2) {
-    _geom[0] = g1;
-    _geom[1] = g2;
+    _geom = [g1, g2];
   }
 
   Geometry? getResultGeometry(OverlayOpCode opCode) {

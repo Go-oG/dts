@@ -15,13 +15,11 @@ import 'polygonize_directed_edge.dart';
 import 'polygonize_edge.dart';
 
 class EdgeRingO {
-  static EdgeRingO? findEdgeRingContaining(
-      EdgeRingO testEr, List<EdgeRingO> erList) {
+  static EdgeRingO? findEdgeRingContaining(EdgeRingO testEr, List<EdgeRingO> erList) {
     EdgeRingO? minContainingRing;
     for (EdgeRingO edgeRing in erList) {
       if (edgeRing.contains(testEr)) {
-        if ((minContainingRing == null) ||
-            minContainingRing.getEnvelope().contains(edgeRing.getEnvelope())) {
+        if ((minContainingRing == null) || minContainingRing.getEnvelope().contains(edgeRing.getEnvelope())) {
           minContainingRing = edgeRing;
         }
       }
@@ -29,16 +27,14 @@ class EdgeRingO {
     return minContainingRing;
   }
 
-  static List<PolygonizeDirectedEdge> findDirEdgesInRing(
-      PolygonizeDirectedEdge startDE) {
+  static List<PolygonizeDirectedEdge> findDirEdgesInRing(PolygonizeDirectedEdge startDE) {
     PolygonizeDirectedEdge? de = startDE;
     List<PolygonizeDirectedEdge> edges = [];
     do {
       edges.add(de!);
       de = de.next;
       Assert.isTrue(de != null, "found null DE in ring");
-      Assert.isTrue(
-          de == startDE || !de!.isInRing(), "found DE already in ring");
+      Assert.isTrue(de == startDE || !de!.isInRing(), "found DE already in ring");
     } while (de != startDE);
     return edges;
   }
@@ -76,8 +72,7 @@ class EdgeRingO {
       de.setRing(this);
       de = de.next;
       Assert.isTrue(de != null, "found null DE in ring");
-      Assert.isTrue(
-          (de == startDE) || (!de!.isInRing()), "found DE already in ring");
+      Assert.isTrue((de == startDE) || (!de!.isInRing()), "found DE already in ring");
     } while (de != startDE);
   }
 
@@ -178,8 +173,7 @@ class EdgeRingO {
       CoordinateList coordList = CoordinateList();
       for (PolygonizeDirectedEdge de in _deList) {
         PolygonizeEdge edge = de.getEdge() as PolygonizeEdge;
-        addEdge(
-            edge.getLine().getCoordinates(), de.getEdgeDirection(), coordList);
+        addEdge(edge.getLine().getCoordinates(), de.getEdgeDirection(), coordList);
       }
       _ringPts = coordList.toCoordinateList();
     }
@@ -207,8 +201,7 @@ class EdgeRingO {
     return getRing().getEnvelopeInternal();
   }
 
-  static void addEdge(
-      List<Coordinate> coords, bool isForward, CoordinateList coordList) {
+  static void addEdge(List<Coordinate> coords, bool isForward, CoordinateList coordList) {
     if (isForward) {
       for (int i = 0; i < coords.length; i++) {
         coordList.add3(coords[i], false);
@@ -248,8 +241,8 @@ class EdgeRingO {
   EdgeRingO? getOuterHole() {
     if (isHole) return null;
 
-    for (int i = 0; i < _deList.size; i++) {
-      PolygonizeDirectedEdge de = _deList.get(i);
+    for (int i = 0; i < _deList.length; i++) {
+      PolygonizeDirectedEdge de = _deList[i];
       EdgeRingO adjRing = (de.getSym() as PolygonizeDirectedEdge).getRing()!;
       if (adjRing.isOuterHole()) {
         return adjRing;
@@ -261,10 +254,8 @@ class EdgeRingO {
   void updateIncluded() {
     if (isHole) return;
 
-    for (int i = 0; i < _deList.size; i++) {
-      PolygonizeDirectedEdge de = _deList.get(i);
-      EdgeRingO? adjShell =
-          ((de.getSym() as PolygonizeDirectedEdge)).getRing()?.getShell();
+    for (var de in _deList) {
+      final adjShell = ((de.getSym() as PolygonizeDirectedEdge)).getRing()?.getShell();
       if ((adjShell != null) && adjShell.isIncludedSet()) {
         setIncluded(!adjShell.isIncluded());
         return;
@@ -291,7 +282,6 @@ class EdgeRingEnvelopeComparator implements CComparator<EdgeRingO> {
 class EdgeRingEnvelopeAreaComparator implements CComparator<EdgeRingO> {
   @override
   int compare(EdgeRingO r0, EdgeRingO r1) {
-    return Double.compare(r0.getRing().getEnvelope().getArea(),
-        r1.getRing().getEnvelope().getArea());
+    return r0.getRing().getEnvelope().getArea().compareTo(r1.getRing().getEnvelope().getArea());
   }
 }

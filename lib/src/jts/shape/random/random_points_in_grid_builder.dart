@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:d_util/d_util.dart' show Math;
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
@@ -51,27 +50,26 @@ class RandomPointsInGridBuilder extends GeometricShapeBuilder {
     return geomFactory.createMultiPoint4(pts);
   }
 
-  Coordinate randomPointInCell(
-      double orgX, double orgY, double xLen, double yLen) {
+  Coordinate randomPointInCell(double orgX, double orgY, double xLen, double yLen) {
     if (_isConstrainedToCircle) {
       return randomPointInCircle(orgX, orgY, xLen, yLen);
     }
     return randomPointInGridCell(orgX, orgY, xLen, yLen);
   }
 
-  Coordinate randomPointInGridCell(
-      double orgX, double orgY, double xLen, double yLen) {
-    double x = orgX + (xLen * Math.random());
-    double y = orgY + (yLen * Math.random());
+  Coordinate randomPointInGridCell(double orgX, double orgY, double xLen, double yLen) {
+    final random = Random();
+    double x = orgX + (xLen * random.nextDouble());
+    double y = orgY + (yLen * random.nextDouble());
     return createCoord(x, y);
   }
 
-  static Coordinate randomPointInCircle(
-      double orgX, double orgY, double width, double height) {
+  static Coordinate randomPointInCircle(double orgX, double orgY, double width, double height) {
+    final random = Random();
     double centreX = orgX + (width / 2);
     double centreY = orgY + (height / 2);
-    double rndAng = (2 * pi) * Math.random();
-    double rndRadius = Math.random();
+    double rndAng = (2 * pi) * random.nextDouble();
+    double rndRadius = random.nextDouble();
     double rndRadius2 = sqrt(rndRadius);
     double rndX = ((width / 2) * rndRadius2) * cos(rndAng);
     double rndY = ((height / 2) * rndRadius2) * sin(rndAng);

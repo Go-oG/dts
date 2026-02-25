@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/dimension.dart';
 
@@ -17,20 +16,18 @@ class PolygonNodeConverter {
     List<NodeSection> convertedSections = [];
     int nextShellIndex = shellIndex;
     do {
-      nextShellIndex =
-          convertShellAndHoles(sections, nextShellIndex, convertedSections);
+      nextShellIndex = convertShellAndHoles(sections, nextShellIndex, convertedSections);
     } while (nextShellIndex != shellIndex);
     return convertedSections;
   }
 
-  static int convertShellAndHoles(List<NodeSection> sections, int shellIndex,
-      List<NodeSection> convertedSections) {
-    NodeSection shellSection = sections.get(shellIndex);
+  static int convertShellAndHoles(List<NodeSection> sections, int shellIndex, List<NodeSection> convertedSections) {
+    NodeSection shellSection = sections[shellIndex];
     Coordinate? inVertex = shellSection.getVertex(0);
     int i = next(sections, shellIndex);
     NodeSection? holeSection;
-    while (!sections.get(i).isShell()) {
-      holeSection = sections.get(i);
+    while (!sections[i].isShell()) {
+      holeSection = sections[i];
       final outVertex = holeSection.getVertex(1);
       NodeSection ns = createSection(shellSection, inVertex, outVertex);
       convertedSections.add(ns);
@@ -45,26 +42,24 @@ class PolygonNodeConverter {
 
   static List<NodeSection> convertHoles(List<NodeSection> sections) {
     List<NodeSection> convertedSections = [];
-    NodeSection copySection = sections.get(0);
-    for (int i = 0; i < sections.size; i++) {
+    NodeSection copySection = sections.first;
+    for (int i = 0; i < sections.length; i++) {
       int inext = next(sections, i);
-      Coordinate? inVertex = sections.get(i).getVertex(0);
-      Coordinate? outVertex = sections.get(inext).getVertex(1);
+      Coordinate? inVertex = sections[i].getVertex(0);
+      Coordinate? outVertex = sections[inext].getVertex(1);
       NodeSection ns = createSection(copySection, inVertex, outVertex);
       convertedSections.add(ns);
     }
     return convertedSections;
   }
 
-  static NodeSection createSection(
-      NodeSection ns, Coordinate? v0, Coordinate? v1) {
-    return NodeSection(ns.isA(), Dimension.A, ns.id, 0, ns.getPolygonal(),
-        ns.isNodeAtVertex(), v0, ns.nodePt(), v1);
+  static NodeSection createSection(NodeSection ns, Coordinate? v0, Coordinate? v1) {
+    return NodeSection(ns.isA(), Dimension.A, ns.id, 0, ns.getPolygonal(), ns.isNodeAtVertex(), v0, ns.nodePt(), v1);
   }
 
   static List<NodeSection> extractUnique(List<NodeSection> sections) {
     List<NodeSection> uniqueSections = [];
-    NodeSection lastUnique = sections.get(0);
+    NodeSection lastUnique = sections.first;
     uniqueSections.add(lastUnique);
     for (NodeSection ns in sections) {
       if (0 != lastUnique.compareTo(ns)) {
@@ -77,7 +72,7 @@ class PolygonNodeConverter {
 
   static int next(List<NodeSection> ns, int i) {
     int next = i + 1;
-    if (next >= ns.size) {
+    if (next >= ns.length) {
       next = 0;
     }
 
@@ -85,8 +80,8 @@ class PolygonNodeConverter {
   }
 
   static int findShell(List<NodeSection> polySections) {
-    for (int i = 0; i < polySections.size; i++) {
-      if (polySections.get(i).isShell()) {
+    for (int i = 0; i < polySections.length; i++) {
+      if (polySections[i].isShell()) {
         return i;
       }
     }

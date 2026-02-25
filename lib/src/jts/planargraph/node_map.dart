@@ -1,6 +1,5 @@
 import 'dart:collection';
 
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 
 import 'node.dart';
@@ -9,7 +8,7 @@ class PGNodeMap {
   final Map<Coordinate, PGNode> nodeMap = SplayTreeMap();
 
   PGNode add(PGNode n) {
-    nodeMap.put(n.getCoordinate()!, n);
+    nodeMap[n.getCoordinate()!] = n;
     return n;
   }
 
@@ -18,7 +17,7 @@ class PGNodeMap {
   }
 
   PGNode? find(Coordinate coord) {
-    return nodeMap.get(coord);
+    return nodeMap[coord];
   }
 
   Iterable<PGNode> iterator() {

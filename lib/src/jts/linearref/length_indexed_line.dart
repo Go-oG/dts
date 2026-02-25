@@ -1,5 +1,3 @@
-import 'package:d_util/d_util.dart';
-
 import '../geom/coordinate.dart';
 import '../geom/geometry.dart';
 import 'extract_line_by_location.dart';
@@ -21,9 +19,7 @@ class LengthIndexedLine {
   Coordinate extractPoint2(double index, double offsetDistance) {
     final loc = LengthLocationMap.getLocation3(linearGeom, index);
     final locLow = loc.toLowest(linearGeom);
-    return locLow
-        .getSegment(linearGeom)
-        .pointAlongOffset(locLow.getSegmentFraction(), offsetDistance);
+    return locLow.getSegment(linearGeom).pointAlongOffset(locLow.getSegmentFraction(), offsetDistance);
   }
 
   Geometry extractLine(double startIndex, double endIndex) {
@@ -51,13 +47,12 @@ class LengthIndexedLine {
     return LengthIndexOfPoint.indexOfAfter2(linearGeom, pt, minIndex);
   }
 
-  Array<double> indicesOf(Geometry subLine) {
-    Array<LinearLocation> locIndex =
-        LocationIndexOfLine.indicesOf2(linearGeom, subLine);
+  List<double> indicesOf(Geometry subLine) {
+    List<LinearLocation> locIndex = LocationIndexOfLine.indicesOf2(linearGeom, subLine);
     return [
       LengthLocationMap.getLength2(linearGeom, locIndex[0]),
       LengthLocationMap.getLength2(linearGeom, locIndex[1]),
-    ].toArray();
+    ];
   }
 
   double project(Coordinate pt) {

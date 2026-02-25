@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -21,7 +20,7 @@ class SegmentIntersectionDetector implements NSegmentIntersector {
 
   Coordinate? _intPt;
 
-  Array<Coordinate>? intSegments;
+  List<Coordinate>? intSegments;
 
   SegmentIntersectionDetector([LineIntersector? li]) {
     this.li = li ?? RobustLineIntersector();
@@ -39,13 +38,12 @@ class SegmentIntersectionDetector implements NSegmentIntersector {
     return _intPt;
   }
 
-  Array<Coordinate>? getIntersectionSegments() {
+  List<Coordinate>? getIntersectionSegments() {
     return intSegments;
   }
 
   @override
-  void processIntersections(
-      SegmentString e0, int segIndex0, SegmentString e1, int segIndex1) {
+  void processIntersections(SegmentString e0, int segIndex0, SegmentString e1, int segIndex1) {
     if ((e0 == e1) && (segIndex0 == segIndex1)) return;
 
     Coordinate p00 = e0.getCoordinate(segIndex0);
@@ -65,11 +63,7 @@ class SegmentIntersectionDetector implements NSegmentIntersector {
 
       if ((_intPt == null) || saveLocation) {
         _intPt = li.getIntersection(0);
-        intSegments = Array(4);
-        intSegments![0] = p00;
-        intSegments![1] = p01;
-        intSegments![2] = p10;
-        intSegments![3] = p11;
+        intSegments = [p00, p01, p10, p11];
       }
     }
   }

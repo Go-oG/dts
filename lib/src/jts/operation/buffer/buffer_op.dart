@@ -1,4 +1,4 @@
-import 'package:d_util/d_util.dart' show Math;
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/polygon.dart';
@@ -22,8 +22,7 @@ class BufferOp {
 
   static final int _kMaxPrecisionDigits = 12;
 
-  static double precisionScaleFactor(
-      Geometry g, double distance, int maxPrecisionDigits) {
+  static double precisionScaleFactor(Geometry g, double distance, int maxPrecisionDigits) {
     Envelope env = g.getEnvelopeInternal();
     double envMax = MathUtil.max2(
       Math.abs(env.maxX),
@@ -33,8 +32,7 @@ class BufferOp {
     );
     double expandByDistance = (distance > 0.0) ? distance : 0.0;
     double bufEnvMax = envMax + (2 * expandByDistance);
-    int bufEnvPrecisionDigits =
-        ((Math.log(bufEnvMax) / Math.log(10)) + 1.0).toInt();
+    int bufEnvPrecisionDigits = ((Math.log(bufEnvMax) / Math.log(10)) + 1.0).toInt();
     int minUnitLog10 = maxPrecisionDigits - bufEnvPrecisionDigits;
     double scaleFactor = Math.pow(10.0, minUnitLog10);
     return scaleFactor;
@@ -46,8 +44,7 @@ class BufferOp {
     return geomBuf;
   }
 
-  static Geometry bufferOp3(
-      Geometry g, double distance, BufferParameters? params) {
+  static Geometry bufferOp3(Geometry g, double distance, BufferParameters? params) {
     BufferOp bufOp = BufferOp(g, params);
     Geometry geomBuf = bufOp.getResultGeometry(distance);
     return geomBuf;
@@ -60,8 +57,7 @@ class BufferOp {
     return geomBuf;
   }
 
-  static Geometry bufferOp4(
-      Geometry g, double distance, int quadrantSegments, int endCapStyle) {
+  static Geometry bufferOp4(Geometry g, double distance, int quadrantSegments, int endCapStyle) {
     BufferOp bufOp = BufferOp(g);
     bufOp.setQuadrantSegments(quadrantSegments);
     bufOp.setEndCapStyle(endCapStyle);
@@ -166,8 +162,7 @@ class BufferOp {
   }
 
   void bufferReducedPrecision2(int precisionDigits) {
-    double sizeBasedScaleFactor =
-        precisionScaleFactor(_argGeom, distance, precisionDigits);
+    double sizeBasedScaleFactor = precisionScaleFactor(_argGeom, distance, precisionDigits);
     PrecisionModel fixedPM = PrecisionModel.fixed(sizeBasedScaleFactor);
     bufferFixedPrecision(fixedPM);
   }
