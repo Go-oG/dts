@@ -1,4 +1,5 @@
-import 'package:d_util/d_util.dart';
+import 'dart:math';
+
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/quadrant.dart';
@@ -7,8 +8,7 @@ import 'edge.dart';
 import 'graph_component.dart';
 import 'node.dart';
 
-class DirectedEdgePG extends GraphComponentPG
-    implements Comparable<DirectedEdgePG> {
+class DirectedEdgePG extends GraphComponentPG implements Comparable<DirectedEdgePG> {
   static List<PGEdge?> toEdges(List<DirectedEdgePG> dirEdges) {
     List<PGEdge?> edges = [];
     for (var i in dirEdges) {
@@ -40,7 +40,7 @@ class DirectedEdgePG extends GraphComponentPG
     double dx = p1.x - p0.x;
     double dy = p1.y - p0.y;
     quadrant = Quadrant.quadrant(dx, dy);
-    angle = Math.atan2(dy, dx);
+    angle = atan2(dy, dx);
   }
 
   PGEdge? getEdge() {

@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
@@ -12,8 +11,7 @@ class Tri {
   static final String _kInvalidTriIndex = "Invalid Tri index";
 
   static Geometry toGeometry(List<Tri> tris, GeometryFactory geomFact) {
-    return geomFact
-        .createGeomCollection(tris.map((e) => e.toPolygon(geomFact)).toList());
+    return geomFact.createGeomCollection(tris.map((e) => e.toPolygon(geomFact)).toList());
   }
 
   static double area<T extends Tri>(List<T> triList) {
@@ -75,7 +73,7 @@ class Tri {
         tri2 = tri;
         return;
     }
-    throw IllegalArgumentException(_kInvalidTriIndex);
+    throw ArgumentError(_kInvalidTriIndex);
   }
 
   void setCoordinates(Coordinate p0, Coordinate p1, Coordinate p2) {
@@ -104,11 +102,10 @@ class Tri {
     flip2(tri, index, index1, adj0, adj1, opp0, opp1);
   }
 
-  void flip2(Tri tri, int index0, int index1, Coordinate adj0, Coordinate adj1,
-      Coordinate opp0, Coordinate opp1) {
+  void flip2(Tri tri, int index0, int index1, Coordinate adj0, Coordinate adj1, Coordinate opp0, Coordinate opp1) {
     setCoordinates(opp1, opp0, adj0);
     tri.setCoordinates(opp0, opp1, adj1);
-    Array<Tri?> adjacent = getAdjacentTris(tri, index0, index1);
+    List<Tri?> adjacent = getAdjacentTris(tri, index0, index1);
     setAdjacent(tri, adjacent[0], adjacent[2]);
     if (adjacent[2] != null) {
       adjacent[2]!.replace(tri, this);
@@ -140,37 +137,36 @@ class Tri {
     return degree;
   }
 
-  void remove(List<Tri> triList) {
-    remove2();
+  void remove() {
+    removeAt(0);
+    removeAt(1);
+    removeAt(2);
+  }
+
+  void removeWithList(List<Tri> triList) {
+    remove();
     triList.remove(this);
   }
 
-  void remove2() {
-    remove3(0);
-    remove3(1);
-    remove3(2);
-  }
-
-  void remove3(int index) {
+  void removeAt(int index) {
     Tri? adj = getAdjacent(index);
     if (adj == null) return;
-
     adj.setTri(adj.getIndex2(this), null);
     setTri(index, null);
   }
 
-  Array<Tri?> getAdjacentTris(Tri triAdj, int index, int indexAdj) {
-    Array<Tri?> adj = Array(4);
-    adj[0] = getAdjacent(prev(index));
-    adj[1] = getAdjacent(next(index));
-    adj[2] = triAdj.getAdjacent(next(indexAdj));
-    adj[3] = triAdj.getAdjacent(prev(indexAdj));
-    return adj;
+  List<Tri?> getAdjacentTris(Tri triAdj, int index, int indexAdj) {
+    return [
+      getAdjacent(prev(index)),
+      getAdjacent(next(index)),
+      triAdj.getAdjacent(next(indexAdj)),
+      triAdj.getAdjacent(prev(indexAdj))
+    ];
   }
 
   void validate() {
     if (Orientation.clockwise != Orientation.index(p0, p1, p2)) {
-      throw IllegalArgumentException("Tri is not oriented correctly");
+      throw ArgumentError("Tri is not oriented correctly");
     }
     validateAdjacent(0);
     validateAdjacent(1);
@@ -209,7 +205,7 @@ class Tri {
       case 2:
         return p2;
     }
-    throw IllegalArgumentException(_kInvalidTriIndex);
+    throw ArgumentError(_kInvalidTriIndex);
   }
 
   int getIndex(Coordinate p) {

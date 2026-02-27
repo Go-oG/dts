@@ -151,24 +151,21 @@ class HotPixel {
     return false;
   }
 
-  static const int _kUpperRight = 0;
-
-  static const int _kUpperLeft = 1;
-
-  static const int _kLowerLeft = 2;
-
-  static const int _kLowerRight = 3;
-
   bool intersectsPixelClosure(Coordinate p0, Coordinate p1) {
     double minx = _hpx - _kTolerance;
     double maxx = _hpx + _kTolerance;
     double miny = _hpy - _kTolerance;
     double maxy = _hpy + _kTolerance;
-    Array<Coordinate> corner = Array(4);
-    corner[_kUpperRight] = Coordinate(maxx, maxy);
-    corner[_kUpperLeft] = Coordinate(minx, maxy);
-    corner[_kLowerLeft] = Coordinate(minx, miny);
-    corner[_kLowerRight] = Coordinate(maxx, miny);
+    List<Coordinate> corner = [
+      //upperRight
+      Coordinate(maxx, maxy),
+      //upperLeft
+      Coordinate(minx, maxy),
+      //lowerLeft
+      Coordinate(minx, miny),
+      //lowerRight
+      Coordinate(maxx, miny)
+    ];
     LineIntersector li = RobustLineIntersector();
     li.computeIntersection2(p0, p1, corner[0], corner[1]);
     if (li.hasIntersection()) return true;

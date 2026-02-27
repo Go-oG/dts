@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/area.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
@@ -14,14 +13,13 @@ import 'ring_hull_index.dart';
 class PolygonHullSimplifier {
   static Geometry hull(Geometry geom, bool isOuter, double vertexNumFraction) {
     PolygonHullSimplifier hull = PolygonHullSimplifier(geom, isOuter);
-    hull.setVertexNumFraction(Math.abs(vertexNumFraction));
+    hull.setVertexNumFraction(vertexNumFraction.abs());
     return hull.getResult();
   }
 
-  static Geometry hullByAreaDelta(
-      Geometry geom, bool isOuter, double areaDeltaRatio) {
+  static Geometry hullByAreaDelta(Geometry geom, bool isOuter, double areaDeltaRatio) {
     PolygonHullSimplifier hull = PolygonHullSimplifier(geom, isOuter);
-    hull.setAreaDeltaRatio(Math.abs(areaDeltaRatio));
+    hull.setAreaDeltaRatio(areaDeltaRatio.abs());
     return hull.getResult();
   }
 
@@ -36,7 +34,7 @@ class PolygonHullSimplifier {
   PolygonHullSimplifier(this.inputGeom, this._isOuter) {
     geomFactory = inputGeom.factory;
     if (inputGeom is! Polygonal) {
-      throw IllegalArgumentException("Input geometry must be  polygonal");
+      throw ArgumentError("Input geometry must be  polygonal");
     }
   }
 
@@ -65,14 +63,13 @@ class PolygonHullSimplifier {
     } else if (inputGeom is Polygon) {
       return computePolygon(inputGeom);
     }
-    throw IllegalArgumentException("Input geometry must be polygonal");
+    throw ArgumentError("Input geometry must be polygonal");
   }
 
   Geometry computeMultiPolygonAll(MultiPolygon multiPoly) {
     RingHullIndex hullIndex = RingHullIndex();
     int nPoly = multiPoly.getNumGeometries();
-    Array<List<RingHull>> polyHulls = Array(nPoly);
-
+    List<List<RingHull>> polyHulls = List.generate(nPoly, (i) => []);
     for (int i = 0; i < multiPoly.getNumGeometries(); i++) {
       Polygon poly = multiPoly.getGeometryN(i);
       List<RingHull> ringHulls = initPolygon(poly, hullIndex);
@@ -118,11 +115,9 @@ class PolygonHullSimplifier {
     if (_areaDeltaRatio >= 0) {
       areaTotal = ringArea(poly);
     }
-    hulls.add(
-        createRingHull(poly.getExteriorRing(), _isOuter, areaTotal, hullIndex));
+    hulls.add(createRingHull(poly.getExteriorRing(), _isOuter, areaTotal, hullIndex));
     for (int i = 0; i < poly.getNumInteriorRing(); i++) {
-      hulls.add(createRingHull(
-          poly.getInteriorRingN(i), !_isOuter, areaTotal, hullIndex));
+      hulls.add(createRingHull(poly.getInteriorRingN(i), !_isOuter, areaTotal, hullIndex));
     }
     return hulls;
   }
@@ -135,12 +130,10 @@ class PolygonHullSimplifier {
     return area;
   }
 
-  RingHull createRingHull(LinearRing ring, bool isOuter, double areaTotal,
-      RingHullIndex? hullIndex) {
+  RingHull createRingHull(LinearRing ring, bool isOuter, double areaTotal, RingHullIndex? hullIndex) {
     RingHull ringHull = RingHull(ring, isOuter);
     if (_vertexNumFraction >= 0) {
-      int targetVertexCount =
-          Math.ceil(_vertexNumFraction * (ring.getNumPoints() - 1));
+      int targetVertexCount = (_vertexNumFraction * (ring.getNumPoints() - 1)).ceil();
       ringHull.setMinVertexNum(targetVertexCount);
     } else if (_areaDeltaRatio >= 0) {
       double ringArea = Area.ofRing2(ring.getCoordinateSequence());
@@ -155,16 +148,15 @@ class PolygonHullSimplifier {
     return ringHull;
   }
 
-  Polygon polygonHull(
-      Polygon poly, List<RingHull> ringHulls, RingHullIndex? hullIndex) {
+  Polygon polygonHull(Polygon poly, List<RingHull> ringHulls, RingHullIndex? hullIndex) {
     if (poly.isEmpty()) {
       return geomFactory.createPolygon();
     }
     int ringIndex = 0;
-    LinearRing shellHull = ringHulls.get(ringIndex++).getHull(hullIndex);
+    LinearRing shellHull = ringHulls[ringIndex++].getHull(hullIndex);
     List<LinearRing> holeHulls = [];
     for (int i = 0; i < poly.getNumInteriorRing(); i++) {
-      LinearRing hull = ringHulls.get(ringIndex++).getHull(hullIndex);
+      LinearRing hull = ringHulls[ringIndex++].getHull(hullIndex);
       holeHulls.add(hull);
     }
     return geomFactory.createPolygon(shellHull, holeHulls);

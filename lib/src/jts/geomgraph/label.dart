@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/location.dart';
 import 'package:dts/src/jts/geom/position.dart';
 
@@ -13,7 +12,7 @@ class Label {
     return lineLabel;
   }
 
-  Array<TopologyLocation?> elt = Array(2);
+  List<TopologyLocation?> elt = List.filled(2, null);
 
   Label(Label lbl) {
     elt[0] = TopologyLocation(lbl.elt[0]!);
@@ -120,8 +119,7 @@ class Label {
   }
 
   bool isEqualOnSide(Label lbl, int side) {
-    return elt[0]!.isEqualOnSide(lbl.elt[0]!, side) &&
-        elt[1]!.isEqualOnSide(lbl.elt[1]!, side);
+    return elt[0]!.isEqualOnSide(lbl.elt[0]!, side) && elt[1]!.isEqualOnSide(lbl.elt[1]!, side);
   }
 
   bool allPositionsEqual(int geomIndex, int loc) {

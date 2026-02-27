@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -30,16 +29,16 @@ class RandomPointsBuilder extends GeometricShapeBuilder {
 
   @override
   Geometry getGeometry() {
-    Array<Coordinate> pts = Array(numPts);
+    List<Coordinate> pts = List.filled(numPts, Coordinate());
     int i = 0;
     while (i < numPts) {
-      Coordinate p = createRandomCoord(getExtent()!);
+      final p = createRandomCoord(getExtent()!);
       if ((_extentLocator != null) && (!isInExtent(p))) {
         continue;
       }
       pts[i++] = p;
     }
-    return geomFactory.createMultiPoint4(pts.toList());
+    return geomFactory.createMultiPoint4(pts);
   }
 
   bool isInExtent(Coordinate p) {

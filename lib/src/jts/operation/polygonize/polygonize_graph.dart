@@ -1,4 +1,4 @@
-import 'package:d_util/d_util.dart' show Stack;
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
@@ -59,8 +59,7 @@ class PolygonizeGraph extends PlanarGraph {
     if (line.isEmpty()) {
       return;
     }
-    final linePts =
-        CoordinateArrays.removeRepeatedPoints(line.getCoordinates());
+    final linePts = CoordinateArrays.removeRepeatedPoints(line.getCoordinates());
     if (linePts.length < 2) {
       return;
     }
@@ -69,8 +68,7 @@ class PolygonizeGraph extends PlanarGraph {
     PGNode nStart = getNode(startPt);
     PGNode nEnd = getNode(endPt);
     DirectedEdgePG de0 = PolygonizeDirectedEdge(nStart, nEnd, linePts[1], true);
-    DirectedEdgePG de1 = PolygonizeDirectedEdge(
-        nEnd, nStart, linePts[linePts.length - 2], false);
+    DirectedEdgePG de1 = PolygonizeDirectedEdge(nEnd, nStart, linePts[linePts.length - 2], false);
     PGEdge edge = PolygonizeEdge(line);
     edge.setDirectedEdges(de0, de1);
     add(edge);
@@ -91,8 +89,7 @@ class PolygonizeGraph extends PlanarGraph {
     }
   }
 
-  void convertMaximalToMinimalEdgeRings(
-      List<PolygonizeDirectedEdge> ringEdges) {
+  void convertMaximalToMinimalEdgeRings(List<PolygonizeDirectedEdge> ringEdges) {
     for (PolygonizeDirectedEdge de in ringEdges) {
       int label = de.label;
       List<PGNode>? intNodes = findIntersectionNodes(de, label);
@@ -106,8 +103,7 @@ class PolygonizeGraph extends PlanarGraph {
     }
   }
 
-  static List<PGNode>? findIntersectionNodes(
-      PolygonizeDirectedEdge startDE, int label) {
+  static List<PGNode>? findIntersectionNodes(PolygonizeDirectedEdge startDE, int label) {
     PolygonizeDirectedEdge? de = startDE;
     List<PGNode>? intNodes;
     do {
@@ -118,8 +114,7 @@ class PolygonizeGraph extends PlanarGraph {
       }
       de = de.next;
       Assert.isTrue(de != null, "found null DE in ring");
-      Assert.isTrue(
-          de == startDE || !de!.isInRing(), "found DE already in ring");
+      Assert.isTrue(de == startDE || !de!.isInRing(), "found DE already in ring");
     } while (de != startDE);
     return intNodes;
   }
@@ -144,8 +139,7 @@ class PolygonizeGraph extends PlanarGraph {
     return edgeRingList;
   }
 
-  static List<PolygonizeDirectedEdge> findLabeledEdgeRings(
-      Iterable<DirectedEdgePG> dirEdges) {
+  static List<PolygonizeDirectedEdge> findLabeledEdgeRings(Iterable<DirectedEdgePG> dirEdges) {
     List<PolygonizeDirectedEdge> edgeRingStarts = [];
     int currLabel = 1;
     for (var i = dirEdges.iterator; i.moveNext();) {

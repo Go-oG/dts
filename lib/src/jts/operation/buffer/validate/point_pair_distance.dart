@@ -1,8 +1,7 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 
 class OpPointPairDistance {
-  final Array<Coordinate> _pt = [Coordinate(), Coordinate()].toArray();
+  final List<Coordinate> _pt = [Coordinate(), Coordinate()];
 
   double distance = double.nan;
 
@@ -30,9 +29,7 @@ class OpPointPairDistance {
     return distance;
   }
 
-  Array<Coordinate> getCoordinates() {
-    return _pt;
-  }
+  List<Coordinate> getCoordinates() => _pt;
 
   Coordinate getCoordinate(int i) {
     return _pt[i];

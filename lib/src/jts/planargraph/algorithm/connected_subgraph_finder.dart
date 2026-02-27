@@ -37,7 +37,7 @@ class ConnectedSubgraphFinder {
     }
   }
 
-  void addEdges(PGNode node, Stack nodeStack, Subgraph subgraph) {
+  void addEdges(PGNode node, Stack<PGNode> nodeStack, Subgraph subgraph) {
     node.isVisited = true;
     for (var de in node.getOutEdges().iterator()) {
       subgraph.add(de.getEdge()!);

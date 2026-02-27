@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 
 import 'tri.dart';
@@ -19,7 +18,7 @@ class TriangulationBuilder {
 
   Tri? find(Coordinate p0, Coordinate p1) {
     TriEdge e = TriEdge(p0, p1);
-    return _triMap.get(e);
+    return _triMap[e];
   }
 
   void add(Tri tri) {
@@ -37,7 +36,7 @@ class TriangulationBuilder {
 
   void addAdjacent(Tri tri, Tri? adj, Coordinate p0, Coordinate p1) {
     if (adj == null) {
-      _triMap.put(TriEdge(p0, p1), tri);
+      _triMap[TriEdge(p0, p1)] = tri;
       return;
     }
     adj.setAdjacent2(p1, tri);

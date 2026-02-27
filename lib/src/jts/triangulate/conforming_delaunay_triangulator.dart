@@ -1,4 +1,5 @@
-import 'package:d_util/d_util.dart';
+import 'dart:math';
+
 import 'package:dts/src/jts/algorithm/convex_hull.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -103,7 +104,7 @@ class ConformingDelaunayTriangulator {
     allPointsEnv.expandToInclude(segEnv);
     double deltaX = allPointsEnv.width * 0.2;
     double deltaY = allPointsEnv.height * 0.2;
-    double delta = Math.maxD(deltaX, deltaY);
+    double delta = max(deltaX, deltaY);
     _computeAreaEnv = Envelope.from(allPointsEnv);
     _computeAreaEnv.expandBy(delta);
   }
@@ -231,8 +232,7 @@ class ConformingDelaunayTriangulator {
       segsToRemove.add(seg);
       splits = splits + 1;
     }
-
-    segsToInsert.removeAll(segsToRemove);
+    segsToInsert.removeWhere((e) => segsToRemove.contains(e));
     segsToInsert.addAll(newSegments);
     return splits;
   }

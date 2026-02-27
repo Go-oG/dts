@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/boundary_node_rule.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
@@ -33,7 +32,7 @@ class LinearBoundary {
       return false;
     }
 
-    int degree = _vertexDegree.get(pt)!;
+    int degree = _vertexDegree[pt]!;
     return _boundaryNodeRule.isInBoundary(degree);
   }
 
@@ -55,6 +54,6 @@ class LinearBoundary {
       dim = degree[p]!;
     }
     dim++;
-    degree.put(p, dim);
+    degree[p] = dim;
   }
 }

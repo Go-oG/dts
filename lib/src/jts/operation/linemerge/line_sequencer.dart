@@ -1,21 +1,7 @@
 import 'dart:collection';
 
-import 'package:d_util/d_util.dart' show ListIterator, Integer, Array, ListExt;
-import 'package:dts/src/jts/geom/coordinate.dart';
-import 'package:dts/src/jts/geom/geometry.dart';
-import 'package:dts/src/jts/geom/geometry_component_filter.dart';
-import 'package:dts/src/jts/geom/geometry_factory.dart';
-import 'package:dts/src/jts/geom/line_string.dart';
-import 'package:dts/src/jts/geom/multi_line_string.dart';
-import 'package:dts/src/jts/planargraph/algorithm/connected_subgraph_finder.dart';
-import 'package:dts/src/jts/planargraph/directed_edge.dart';
-import 'package:dts/src/jts/planargraph/graph_component.dart';
-import 'package:dts/src/jts/planargraph/node.dart';
-import 'package:dts/src/jts/planargraph/subgraph.dart';
-import 'package:dts/src/jts/util/assert.dart';
-
-import 'line_merge_edge.dart';
-import 'line_merge_graph.dart';
+import 'package:d_util/d_util.dart';
+import 'package:dts/dts.dart';
 
 class LineSequencer {
   static Geometry sequence(Geometry geom) {
@@ -113,11 +99,9 @@ class LineSequencer {
     _sequencedGeometry = buildSequencedGeometry(sequences);
     _isSequenceable = true;
     int finalLineCount = _sequencedGeometry!.getNumGeometries();
+    Assert.isTrue(_lineCount == finalLineCount, "Lines were missing from result");
     Assert.isTrue(
-        _lineCount == finalLineCount, "Lines were missing from result");
-    Assert.isTrue(
-      (_sequencedGeometry is LineString) ||
-          (_sequencedGeometry is MultiLineString),
+      (_sequencedGeometry is LineString) || (_sequencedGeometry is MultiLineString),
       "Result is not lineal",
     );
   }
@@ -153,12 +137,11 @@ class LineSequencer {
     DirectedEdgePG startDE = startNode.getOutEdges().iterator().first;
     DirectedEdgePG startDESym = startDE.getSym()!;
     List<DirectedEdgePG> seq = [];
-    ListIterator<DirectedEdgePG> lit = seq.listIterator();
+    ListIterator<DirectedEdgePG> lit = ListIterator(seq);
     addReverseSubPath(startDESym, lit, false);
     while (lit.hasPrevious()) {
       DirectedEdgePG prev = lit.previous();
-      DirectedEdgePG? unvisitedOutDE =
-          findUnvisitedBestOrientedDE(prev.getFromNode());
+      DirectedEdgePG? unvisitedOutDE = findUnvisitedBestOrientedDE(prev.getFromNode());
       if (unvisitedOutDE != null) {
         addReverseSubPath(unvisitedOutDE.getSym()!, lit, true);
       }
@@ -183,8 +166,7 @@ class LineSequencer {
     return unvisitedDE;
   }
 
-  void addReverseSubPath(DirectedEdgePG de, ListIterator<DirectedEdgePG> lit,
-      bool expectedClosed) {
+  void addReverseSubPath(DirectedEdgePG de, ListIterator<DirectedEdgePG> lit, bool expectedClosed) {
     PGNode endNode = de.getToNode();
     PGNode? fromNode;
     while (true) {
@@ -220,17 +202,14 @@ class LineSequencer {
     PGNode startNode = startEdge.getFromNode();
     PGNode endNode = endEdge.getToNode();
     bool flipSeq = false;
-    bool hasDegree1Node =
-        (startNode.getDegree() == 1) || (endNode.getDegree() == 1);
+    bool hasDegree1Node = (startNode.getDegree() == 1) || (endNode.getDegree() == 1);
     if (hasDegree1Node) {
       bool hasObviousStartNode = false;
-      if ((endEdge.getToNode().getDegree() == 1) &&
-          (!endEdge.getEdgeDirection())) {
+      if ((endEdge.getToNode().getDegree() == 1) && (!endEdge.getEdgeDirection())) {
         hasObviousStartNode = true;
         flipSeq = true;
       }
-      if ((startEdge.getFromNode().getDegree() == 1) &&
-          startEdge.getEdgeDirection()) {
+      if ((startEdge.getFromNode().getDegree() == 1) && startEdge.getEdgeDirection()) {
         hasObviousStartNode = true;
         flipSeq = false;
       }
@@ -272,7 +251,7 @@ class LineSequencer {
         lines.add(lineToAdd);
       }
     }
-    if (lines.size == 0) {
+    if (lines.isEmpty) {
       return _factory!.createMultiLineString([]);
     }
 
@@ -281,11 +260,7 @@ class LineSequencer {
 
   static LineString _reverse2(LineString line) {
     List<Coordinate> pts = line.getCoordinates();
-    Array<Coordinate> revPts = Array(pts.length);
-    int len = pts.length;
-    for (int i = 0; i < len; i++) {
-      revPts[(len - 1) - i] = Coordinate.of(pts[i]);
-    }
-    return line.factory.createLineString2(revPts.toList());
+    List<Coordinate> revPts = pts.reversed.map((e) => Coordinate.of(e)).toList();
+    return line.factory.createLineString2(revPts);
   }
 }

@@ -145,8 +145,7 @@ class CoordinateSequenceComparator implements CComparator<CoordinateSequence> {
     return 0;
   }
 
-  int compareCoordinate(
-      CoordinateSequence s1, CoordinateSequence s2, int i, int dimension) {
+  int compareCoordinate(CoordinateSequence s1, CoordinateSequence s2, int i, int dimension) {
     for (int d = 0; d < dimension; d++) {
       double ord1 = s1.getOrdinate(i, d);
       double ord2 = s2.getOrdinate(i, d);
@@ -178,15 +177,13 @@ class CoordinateSequences {
     }
   }
 
-  static void copy(CoordinateSequence src, int srcPos, CoordinateSequence dest,
-      int destPos, int length) {
+  static void copy(CoordinateSequence src, int srcPos, CoordinateSequence dest, int destPos, int length) {
     for (int i = 0; i < length; i++) {
       copyCoord(src, srcPos + i, dest, destPos + i);
     }
   }
 
-  static void copyCoord(CoordinateSequence src, int srcPos,
-      CoordinateSequence dest, int destPos) {
+  static void copyCoord(CoordinateSequence src, int srcPos, CoordinateSequence dest, int destPos) {
     int minDim = Math.min(src.getDimension(), dest.getDimension()).toInt();
     for (int dim = 0; dim < minDim; dim++) {
       dest.setOrdinate(destPos, dim, src.getOrdinate(srcPos, dim));
@@ -199,30 +196,24 @@ class CoordinateSequences {
 
     if (n <= 3) return false;
 
-    return (seq.getOrdinate(0, CoordinateSequence.kX) ==
-            seq.getOrdinate(n - 1, CoordinateSequence.kX)) &&
-        (seq.getOrdinate(0, CoordinateSequence.kY) ==
-            seq.getOrdinate(n - 1, CoordinateSequence.kY));
+    return (seq.getOrdinate(0, CoordinateSequence.kX) == seq.getOrdinate(n - 1, CoordinateSequence.kX)) &&
+        (seq.getOrdinate(0, CoordinateSequence.kY) == seq.getOrdinate(n - 1, CoordinateSequence.kY));
   }
 
-  static CoordinateSequence ensureValidRing(
-      CoordinateSequenceFactory fact, CoordinateSequence seq) {
+  static CoordinateSequence ensureValidRing(CoordinateSequenceFactory fact, CoordinateSequence seq) {
     int n = seq.size();
     if (n == 0) return seq;
 
     if (n <= 3) return createClosedRing(fact, seq, 4);
 
-    bool isClosed = (seq.getOrdinate(0, CoordinateSequence.kX) ==
-            seq.getOrdinate(n - 1, CoordinateSequence.kX)) &&
-        (seq.getOrdinate(0, CoordinateSequence.kY) ==
-            seq.getOrdinate(n - 1, CoordinateSequence.kY));
+    bool isClosed = (seq.getOrdinate(0, CoordinateSequence.kX) == seq.getOrdinate(n - 1, CoordinateSequence.kX)) &&
+        (seq.getOrdinate(0, CoordinateSequence.kY) == seq.getOrdinate(n - 1, CoordinateSequence.kY));
     if (isClosed) return seq;
 
     return createClosedRing(fact, seq, n + 1);
   }
 
-  static CoordinateSequence createClosedRing(
-      CoordinateSequenceFactory fact, CoordinateSequence seq, int size) {
+  static CoordinateSequence createClosedRing(CoordinateSequenceFactory fact, CoordinateSequence seq, int size) {
     CoordinateSequence newseq = fact.create3(size, seq.getDimension());
     int n = seq.size();
     copy(seq, 0, newseq, 0, n);
@@ -233,8 +224,7 @@ class CoordinateSequences {
     return newseq;
   }
 
-  static CoordinateSequence extend(
-      CoordinateSequenceFactory fact, CoordinateSequence seq, int size) {
+  static CoordinateSequence extend(CoordinateSequenceFactory fact, CoordinateSequence seq, int size) {
     CoordinateSequence newseq = fact.create3(size, seq.getDimension());
     int n = seq.size();
     copy(seq, 0, newseq, 0, n);
@@ -306,8 +296,7 @@ class CoordinateSequences {
     scroll3(seq, indexOfFirstCoordinate, CoordinateSequences.isRing(seq));
   }
 
-  static void scroll3(
-      CoordinateSequence seq, int indexOfFirstCoordinate, bool ensureRing) {
+  static void scroll3(CoordinateSequence seq, int indexOfFirstCoordinate, bool ensureRing) {
     int i = indexOfFirstCoordinate;
     if (i <= 0) return;
 
@@ -315,8 +304,7 @@ class CoordinateSequences {
     int last = (ensureRing) ? seq.size() - 1 : seq.size();
     for (int j = 0; j < last; j++) {
       for (int k = 0; k < seq.getDimension(); k++) {
-        seq.setOrdinate(
-            j, k, copy.getOrdinate((indexOfFirstCoordinate + j) % last, k));
+        seq.setOrdinate(j, k, copy.getOrdinate((indexOfFirstCoordinate + j) % last, k));
       }
     }
     if (ensureRing) {
@@ -346,15 +334,12 @@ class CoordinateArraySequence extends CoordinateSequence {
   late List<Coordinate> _coordinates;
 
   CoordinateArraySequence(List<Coordinate>? coordinates)
-      : this.of2(coordinates, CoordinateArrays.dimension(coordinates),
-            CoordinateArrays.measures(coordinates));
+      : this.of2(coordinates, CoordinateArrays.dimension(coordinates), CoordinateArrays.measures(coordinates));
 
   CoordinateArraySequence.of(List<Coordinate>? coordinates, int dimension)
-      : this.of2(
-            coordinates, dimension, CoordinateArrays.measures(coordinates));
+      : this.of2(coordinates, dimension, CoordinateArrays.measures(coordinates));
 
-  CoordinateArraySequence.of2(
-      List<Coordinate>? coordinates, this._dimension, this._measures) {
+  CoordinateArraySequence.of2(List<Coordinate>? coordinates, this._dimension, this._measures) {
     if (coordinates == null) {
       _coordinates = [];
     } else {
@@ -384,8 +369,7 @@ class CoordinateArraySequence extends CoordinateSequence {
     }
     _dimension = coordSeq.getDimension();
     _measures = coordSeq.getMeasures();
-    _coordinates =
-        List.generate(coordSeq.size(), (i) => coordSeq.getCoordinateCopy(i));
+    _coordinates = List.generate(coordSeq.size(), (i) => coordSeq.getCoordinateCopy(i));
   }
 
   @override
@@ -405,8 +389,7 @@ class CoordinateArraySequence extends CoordinateSequence {
   }
 
   @override
-  void getCoordinate2(int index, Coordinate coord) =>
-      coord.setCoordinate(_coordinates[index]);
+  void getCoordinate2(int index, Coordinate coord) => coord.setCoordinate(_coordinates[index]);
 
   @override
   double getX(int index) => _coordinates[index].x;
@@ -487,10 +470,8 @@ class CoordinateArraySequence extends CoordinateSequence {
   }
 }
 
-final class CoordinateArraySequenceFactory
-    implements CoordinateSequenceFactory {
-  static final CoordinateArraySequenceFactory _instanceObject =
-      CoordinateArraySequenceFactory();
+final class CoordinateArraySequenceFactory implements CoordinateSequenceFactory {
+  static final CoordinateArraySequenceFactory _instanceObject = CoordinateArraySequenceFactory();
 
   Object readResolve() {
     return CoordinateArraySequenceFactory.instance();
@@ -501,12 +482,10 @@ final class CoordinateArraySequenceFactory
   }
 
   @override
-  CoordinateSequence create(List<Coordinate>? coordinates) =>
-      CoordinateArraySequence(coordinates);
+  CoordinateSequence create(List<Coordinate>? coordinates) => CoordinateArraySequence(coordinates);
 
   @override
-  CoordinateSequence create2(CoordinateSequence coordSeq) =>
-      CoordinateArraySequence.of6(coordSeq);
+  CoordinateSequence create2(CoordinateSequence coordSeq) => CoordinateArraySequence.of6(coordSeq);
 
   @override
   CoordinateSequence create3(int size, int dimension) {
@@ -631,8 +610,7 @@ abstract class PackedCoordinateSequence extends CoordinateSequence {
 class PDouble extends PackedCoordinateSequence {
   late List<double> coords;
 
-  PDouble(this.coords, int dimension, int measures)
-      : super(dimension, measures) {
+  PDouble(this.coords, int dimension, int measures) : super(dimension, measures) {
     if ((coords.length % dimension) != 0) {
       throw IllegalArgumentException(
         "Packed array does not contain "
@@ -641,16 +619,14 @@ class PDouble extends PackedCoordinateSequence {
     }
   }
 
-  PDouble.of(List<double> coords, int dimension, int measures)
-      : super(dimension, measures) {
+  PDouble.of(List<double> coords, int dimension, int measures) : super(dimension, measures) {
     this.coords = coords.copy();
   }
 
   PDouble.of2(List<Coordinate>? coordinates, int dimension)
       : this.of3(coordinates, dimension, Math.max(0, dimension - 3).toInt());
 
-  PDouble.of3(List<Coordinate>? coordinates, int dimension, int measures)
-      : super(dimension, measures) {
+  PDouble.of3(List<Coordinate>? coordinates, int dimension, int measures) : super(dimension, measures) {
     coordinates ??= [];
     coords = List.filled(coordinates.length * this.dimension, 0);
     for (int i = 0; i < coordinates.length; i++) {
@@ -664,8 +640,7 @@ class PDouble extends PackedCoordinateSequence {
 
   PDouble.of4(List<Coordinate>? coordinates) : this.of3(coordinates, 3, 0);
 
-  PDouble.of5(int size, int dimension, int measures)
-      : super(dimension, measures) {
+  PDouble.of5(int size, int dimension, int measures) : super(dimension, measures) {
     coords = List.filled(size * this.dimension, 0);
   }
 
@@ -749,9 +724,7 @@ class PackedCoordinateSequenceFactory implements CoordinateSequenceFactory {
   CoordinateSequence create(List<Coordinate?>? coordinates) {
     int dimension = _defaultDimension;
     int measures = _defaultMeasures;
-    if (coordinates != null &&
-        coordinates.isNotEmpty &&
-        coordinates[0] != null) {
+    if (coordinates != null && coordinates.isNotEmpty && coordinates[0] != null) {
       Coordinate first = coordinates[0]!;
       dimension = Coordinates.dimension(first);
       measures = Coordinates.measures(first);
@@ -768,8 +741,7 @@ class PackedCoordinateSequenceFactory implements CoordinateSequenceFactory {
 
   @override
   CoordinateSequence create3(int size, int dimension) {
-    return PDouble.of5(
-        size, dimension, Math.max(_defaultMeasures, dimension - 3).toInt());
+    return PDouble.of5(size, dimension, Math.max(_defaultMeasures, dimension - 3).toInt());
   }
 
   @override
@@ -777,8 +749,7 @@ class PackedCoordinateSequenceFactory implements CoordinateSequenceFactory {
     return PDouble.of5(size, dimension, measures);
   }
 
-  CoordinateSequence create5(List<double> packedCoordinates, int dimension,
-      [int measures = _defaultMeasures]) {
+  CoordinateSequence create5(List<double> packedCoordinates, int dimension, [int measures = _defaultMeasures]) {
     return PDouble.of(packedCoordinates, dimension, measures);
   }
 }

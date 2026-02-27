@@ -9,12 +9,10 @@ import 'abstract_strtree.dart';
 import 'boundable.dart';
 import 'item_distance.dart';
 
-class STRtree<T> extends AbstractSTRtree<T, Envelope>
-    implements SpatialIndex<T> {
+class STRtree<T> extends AbstractSTRtree<T, Envelope> implements SpatialIndex<T> {
   static final _xComparator = CComparator2<Boundable<Envelope>>((o1, o2) {
     final v1 = o1.getBounds();
     final v2 = o2.getBounds();
-
     return AbstractSTRtree.compareDoubles(centreX(v1), centreX(v2));
   });
 
@@ -41,27 +39,23 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope>
   });
 
   @override
-  List<AbstractNode<Envelope>> createParentBoundables(
-      List<Boundable<Envelope>> childBoundables, int newLevel) {
+  List<AbstractNode<Envelope>> createParentBoundables(List<Boundable<Envelope>> childBoundables, int newLevel) {
     Assert.isTrue(childBoundables.isNotEmpty);
     int minLeafCount = Math.ceil(childBoundables.size / getNodeCapacity());
-    List<Boundable<Envelope>> sortedChildBoundables =
-        List.from(childBoundables);
+    List<Boundable<Envelope>> sortedChildBoundables = List.from(childBoundables);
     sortedChildBoundables.sort(_xComparator.compare);
-    Array<List<Boundable<Envelope>>> vv = verticalSlices(
-        sortedChildBoundables, Math.ceil(Math.sqrt(minLeafCount)));
+    List<List<Boundable<Envelope>>> vv = verticalSlices(sortedChildBoundables, Math.ceil(Math.sqrt(minLeafCount)));
     return createParentBoundablesFromVerticalSlices(vv, newLevel);
   }
 
   List<AbstractNode<Envelope>> createParentBoundablesFromVerticalSlices(
-    Array<List<Boundable<Envelope>>> verticalSlices,
+    List<List<Boundable<Envelope>>> verticalSlices,
     int newLevel,
   ) {
     Assert.isTrue(verticalSlices.isNotEmpty);
     List<AbstractNode<Envelope>> parentBoundables = [];
     for (var i in verticalSlices) {
-      parentBoundables
-          .addAll(createParentBoundablesFromVerticalSlice(i, newLevel));
+      parentBoundables.addAll(createParentBoundablesFromVerticalSlice(i, newLevel));
     }
 
     return parentBoundables;
@@ -74,15 +68,14 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope>
     return super.createParentBoundables(childBoundables, newLevel);
   }
 
-  Array<List<Boundable<Envelope>>> verticalSlices(
-      List<Boundable<Envelope>> childBoundables, int sliceCount) {
+  List<List<Boundable<Envelope>>> verticalSlices(List<Boundable<Envelope>> childBoundables, int sliceCount) {
     int sliceCapacity = Math.ceil(childBoundables.size / sliceCount);
-    Array<List<Boundable<Envelope>>> slices = Array(sliceCount);
+    List<List<Boundable<Envelope>>> slices = List.generate(sliceCount, (i) => []);
     final i = childBoundables.iterator;
     for (int j = 0; j < sliceCount; j++) {
       slices[j] = [];
       int boundablesAddedToSlice = 0;
-      while (i.moveNext() && (boundablesAddedToSlice < sliceCapacity)) {
+      while (boundablesAddedToSlice < sliceCapacity && i.moveNext()) {
         slices[j].add(i.current);
         boundablesAddedToSlice++;
       }
@@ -94,9 +87,7 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope>
 
   STRtree.of([super.nodeCapacity = 10, STRtreeNode? super.root]) : super.of();
 
-  STRtree.of2(
-      super.nodeCapacity, List<Boundable<Envelope>> super.itemBoundables)
-      : super.of2();
+  STRtree.of2(super.nodeCapacity, List<Boundable<Envelope>> super.itemBoundables) : super.of2();
 
   @override
   AbstractNode<Envelope> createNode(int level) {
@@ -126,7 +117,7 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope>
     return _yComparator;
   }
 
-  Array<T>? nearestNeighbour(ItemDistance itemDist) {
+  List<T>? nearestNeighbour(ItemDistance itemDist) {
     if (isEmpty()) return null;
     final bp = BoundablePair(getRoot(), getRoot(), itemDist);
     return nearestNeighbour5(bp);
@@ -140,14 +131,14 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope>
     return nearestNeighbour5(bp)![0];
   }
 
-  Array<T>? nearestNeighbour2(STRtree<T> tree, ItemDistance itemDist) {
+  List<T>? nearestNeighbour2(STRtree<T> tree, ItemDistance itemDist) {
     if (isEmpty() || tree.isEmpty()) return null;
 
     final bp = BoundablePair<Envelope>(getRoot(), tree.getRoot(), itemDist);
     return nearestNeighbour5(bp);
   }
 
-  Array<T>? nearestNeighbour5(BoundablePair<Envelope> initBndPair) {
+  List<T>? nearestNeighbour5(BoundablePair<Envelope> initBndPair) {
     double distanceLowerBound = double.infinity;
     BoundablePair? minPair;
     final priQ = PriorityQueue<BoundablePair>();
@@ -173,17 +164,15 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope>
     return [
       (minPair.getBoundable(0) as ItemBoundable<T, Envelope>).item,
       (minPair.getBoundable(1) as ItemBoundable<T, Envelope>).item,
-    ].toArray();
+    ];
   }
 
-  bool isWithinDistance(
-      STRtree tree, ItemDistance itemDist, double maxDistance) {
+  bool isWithinDistance(STRtree tree, ItemDistance itemDist, double maxDistance) {
     final bp = BoundablePair(getRoot(), tree.getRoot(), itemDist);
     return isWithinDistance2(bp, maxDistance);
   }
 
-  bool isWithinDistance2(
-      BoundablePair<Envelope> initBndPair, double maxDistance) {
+  bool isWithinDistance2(BoundablePair<Envelope> initBndPair, double maxDistance) {
     double distanceUpperBound = double.infinity;
     final priQ = PriorityQueue<BoundablePair>();
     priQ.add(initBndPair);
@@ -210,21 +199,19 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope>
     return false;
   }
 
-  Array<Object> nearestNeighbour3(
-      Envelope env, T item, ItemDistance itemDist, int k) {
-    if (isEmpty()) return Array(0);
+  List<Object> nearestNeighbour3(Envelope env, T item, ItemDistance itemDist, int k) {
+    if (isEmpty()) return const [];
 
     final bnd = ItemBoundable(env, item);
     final bp = BoundablePair<Envelope>(getRoot(), bnd, itemDist);
     return nearestNeighbourK2(bp, k);
   }
 
-  Array<Object> nearestNeighbourK2(BoundablePair<Envelope> initBndPair, int k) {
+  List<Object> nearestNeighbourK2(BoundablePair<Envelope> initBndPair, int k) {
     return nearestNeighbourK(initBndPair, double.infinity, k);
   }
 
-  Array<Object> nearestNeighbourK(
-      BoundablePair<Envelope> initBndPair, double maxDistance, int k) {
+  List<Object> nearestNeighbourK(BoundablePair<Envelope> initBndPair, double maxDistance, int k) {
     double distanceLowerBound = maxDistance;
     final priQ = PriorityQueue<BoundablePair<Envelope>>();
     priQ.add(initBndPair);
@@ -254,14 +241,11 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope>
     return getItems(kNearestNeighbors);
   }
 
-  static Array<Object> getItems(
-      PriorityQueue<BoundablePair<Envelope>> kNearestNeighbors) {
-    Array<Object> items = Array(kNearestNeighbors.length);
-    int count = 0;
+  static List<Object> getItems(PriorityQueue<BoundablePair<Envelope>> kNearestNeighbors) {
+    List<Object> items = [];
     while (kNearestNeighbors.isNotEmpty) {
       BoundablePair bp = kNearestNeighbors.removeFirst();
-      items[count] = (bp.getBoundable(0) as ItemBoundable).item;
-      count++;
+      items.add((bp.getBoundable(0) as ItemBoundable).item);
     }
     return items;
   }

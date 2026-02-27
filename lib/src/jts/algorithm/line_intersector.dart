@@ -3,6 +3,7 @@ import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/precision_model.dart';
 import 'package:dts/src/jts/math/math.dart';
 import 'package:dts/src/jts/util/assert.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class LineIntersector {
   static const int kDontIntersect = 0;
@@ -13,8 +14,7 @@ abstract class LineIntersector {
   static const int kPointIntersection = 1;
   static const int kCollinearIntersection = 2;
 
-  static double computeEdgeDistance(
-      Coordinate p, Coordinate p0, Coordinate p1) {
+  static double computeEdgeDistance(Coordinate p, Coordinate p0, Coordinate p1) {
     double dx = Math.abs(p1.x - p0.x);
     double dy = Math.abs(p1.y - p0.y);
     double dist = -1.0;
@@ -43,8 +43,7 @@ abstract class LineIntersector {
     return dist;
   }
 
-  static double nonRobustComputeEdgeDistance(
-      Coordinate p, Coordinate p1, Coordinate p2) {
+  static double nonRobustComputeEdgeDistance(Coordinate p, Coordinate p1, Coordinate p2) {
     double dx = p.x - p1.x;
     double dy = p.y - p1.y;
     double dist = MathUtil.hypot(dx, dy);
@@ -54,23 +53,25 @@ abstract class LineIntersector {
 
   int result = 0;
 
-  Array<Array<Coordinate>> inputLines = Array.matrix(2);
+  /// [2][2] 矩阵
+  /// TODO 这里实际上应该为可空
+  @protected
+  List<List<Coordinate>> inputLines = List.generate(2, (i) => List.filled(2, Coordinate()));
 
-  Array<Coordinate> intPt = Array<Coordinate>(2);
+  /// size always 2
+  late final List<Coordinate> intPt;
 
-  Array<Array<int>>? intLineIndex;
+  List<List<int>>? intLineIndex;
 
   bool isProper = false;
 
   late Coordinate pa;
-
   late Coordinate pb;
 
   PrecisionModel? precisionModel;
 
   LineIntersector() {
-    intPt[0] = Coordinate();
-    intPt[1] = Coordinate();
+    intPt = [Coordinate(), Coordinate()];
     pa = intPt[0];
     pb = intPt[1];
     result = 0;
@@ -84,9 +85,7 @@ abstract class LineIntersector {
     this.precisionModel = precisionModel;
   }
 
-  Coordinate getEndpoint(int segmentIndex, int ptIndex) {
-    return inputLines[segmentIndex][ptIndex];
-  }
+  Coordinate getEndpoint(int segmentIndex, int ptIndex) => inputLines[segmentIndex][ptIndex];
 
   void computeIntersection(Coordinate p, Coordinate p1, Coordinate p2);
 
@@ -94,8 +93,7 @@ abstract class LineIntersector {
     return result == kCollinearIntersection;
   }
 
-  void computeIntersection2(
-      Coordinate p1, Coordinate p2, Coordinate p3, Coordinate p4) {
+  void computeIntersection2(Coordinate p1, Coordinate p2, Coordinate p3, Coordinate p4) {
     inputLines[0][0] = p1;
     inputLines[0][1] = p2;
     inputLines[1][0] = p3;
@@ -103,8 +101,7 @@ abstract class LineIntersector {
     result = computeIntersect(p1, p2, p3, p4);
   }
 
-  int computeIntersect(
-      Coordinate p1, Coordinate p2, Coordinate q1, Coordinate q2);
+  int computeIntersect(Coordinate p1, Coordinate p2, Coordinate q1, Coordinate q2);
 
   bool isEndPoint() {
     return hasIntersection() && (!isProper);
@@ -124,7 +121,7 @@ abstract class LineIntersector {
 
   void computeIntLineIndex() {
     if (intLineIndex == null) {
-      intLineIndex = Array.matrix(2);
+      intLineIndex = List.generate(2, (i) => List.filled(2, 0));
       computeIntLineIndex2(0);
       computeIntLineIndex2(1);
     }
@@ -153,8 +150,7 @@ abstract class LineIntersector {
 
   bool isInteriorIntersection2(int inputLineIndex) {
     for (int i = 0; i < result; i++) {
-      if (!(intPt[i].equals2D(inputLines[inputLineIndex][0]) ||
-          intPt[i].equals2D(inputLines[inputLineIndex][1]))) {
+      if (!(intPt[i].equals2D(inputLines[inputLineIndex][0]) || intPt[i].equals2D(inputLines[inputLineIndex][1]))) {
         return true;
       }
     }
@@ -188,8 +184,6 @@ abstract class LineIntersector {
   }
 
   double getEdgeDistance(int segmentIndex, int intIndex) {
-    double dist = computeEdgeDistance(intPt[intIndex],
-        inputLines[segmentIndex][0], inputLines[segmentIndex][1]);
-    return dist;
+    return computeEdgeDistance(intPt[intIndex], inputLines[segmentIndex][0], inputLines[segmentIndex][1]);
   }
 }

@@ -1,6 +1,5 @@
 import 'dart:collection';
 
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 
@@ -23,7 +22,7 @@ class VertexTaggedGeometryDataMapper {
 
   void loadVertices(List<Coordinate> pts, Object? data) {
     for (int i = 0; i < pts.length; i++) {
-      _coordDataMap.put(pts[i], data);
+      _coordDataMap[pts[i]] = data;
     }
   }
 
@@ -34,7 +33,7 @@ class VertexTaggedGeometryDataMapper {
       Geometry geom = targetGeom.getGeometryN(i);
       final Coordinate? vertexKey = geom.userData;
       if (vertexKey == null) continue;
-      geom.userData = _coordDataMap.get(vertexKey);
+      geom.userData = _coordDataMap[vertexKey];
     }
   }
 }

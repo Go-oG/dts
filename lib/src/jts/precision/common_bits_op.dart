@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 
 import 'common_bits_remover.dart';
@@ -11,22 +10,22 @@ class CommonBitsOp {
   CommonBitsOp([this._returnToOriginalPrecision = true]);
 
   Geometry intersection(Geometry geom0, Geometry geom1) {
-    Array<Geometry> geom = removeCommonBits2(geom0, geom1);
+    List<Geometry> geom = removeCommonBits2(geom0, geom1);
     return computeResultPrecision(geom[0].intersection(geom[1])!);
   }
 
   Geometry union(Geometry geom0, Geometry geom1) {
-    Array<Geometry> geom = removeCommonBits2(geom0, geom1);
+    final geom = removeCommonBits2(geom0, geom1);
     return computeResultPrecision(geom[0].union2(geom[1])!);
   }
 
   Geometry difference(Geometry geom0, Geometry geom1) {
-    Array<Geometry> geom = removeCommonBits2(geom0, geom1);
+    final geom = removeCommonBits2(geom0, geom1);
     return computeResultPrecision(geom[0].difference(geom[1])!);
   }
 
   Geometry symDifference(Geometry geom0, Geometry geom1) {
-    Array<Geometry> geom = removeCommonBits2(geom0, geom1);
+    final geom = removeCommonBits2(geom0, geom1);
     return computeResultPrecision(geom[0].symDifference(geom[1])!);
   }
 
@@ -49,13 +48,10 @@ class CommonBitsOp {
     return cbr.removeCommonBits(geom0.copy());
   }
 
-  Array<Geometry> removeCommonBits2(Geometry geom0, Geometry geom1) {
+  List<Geometry> removeCommonBits2(Geometry geom0, Geometry geom1) {
     cbr = CommonBitsRemover();
     cbr.add(geom0);
     cbr.add(geom1);
-    Array<Geometry> geom = Array(2);
-    geom[0] = cbr.removeCommonBits(geom0.copy());
-    geom[1] = cbr.removeCommonBits(geom1.copy());
-    return geom;
+    return [cbr.removeCommonBits(geom0.copy()), cbr.removeCommonBits(geom1.copy())];
   }
 }

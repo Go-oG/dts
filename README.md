@@ -9,7 +9,6 @@ A Dart port of the [JTS Topology Suite](https://github.com/locationtech/jts), a 
 - **Spatial Predicates**: Contains, CoveredBy, Covers, Crosses, Disjoint, Equals, Intersects, Overlaps, Touches, Within
 - **Coordinate System Support**: 2D and 3D coordinates
 - **Precision Models**: Fixed and Floating precision
-- **IO Support**: WKT (Well-Known Text) and WKB (Well-Known Binary) formats
 
 ## Installation
 
@@ -17,7 +16,7 @@ Add this to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  dts: ^0.1.2
+  dts: ^0.1.3
 ```
 
 License

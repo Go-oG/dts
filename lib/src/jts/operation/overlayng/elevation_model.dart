@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_sequence.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -13,8 +12,7 @@ class ElevationModel {
     if (geom2 != null) {
       extent.expandToInclude(geom2.getEnvelopeInternal());
     }
-    ElevationModel model =
-        ElevationModel(extent, _kDefaultCellNum, _kDefaultCellNum);
+    ElevationModel model = ElevationModel(extent, _kDefaultCellNum, _kDefaultCellNum);
     model.add(geom1);
 
     if (geom2 != null) {
@@ -34,7 +32,7 @@ class ElevationModel {
 
   double _cellSizeY = 0;
 
-  late Array<Array<ElevationCell>> _cells;
+  late List<List<ElevationCell?>> _cells;
 
   bool _isInitialized = false;
 
@@ -53,7 +51,7 @@ class ElevationModel {
     if (_cellSizeY <= 0.0) {
       _numCellY = 1;
     }
-    _cells = Array.matrix2(numCellX, numCellY);
+    _cells = List.generate(numCellX, (i) => List.filled(numCellY, null));
   }
 
   void add(Geometry geom) {
@@ -61,7 +59,7 @@ class ElevationModel {
   }
 
   void add2(double x, double y, double z) {
-    if (Double.isNaN(z)) {
+    if (z.isNaN) {
       return;
     }
 
@@ -76,7 +74,7 @@ class ElevationModel {
     double sumZ = 0.0;
     for (int i = 0; i < _cells.length; i++) {
       for (int j = 0; j < _cells[0].length; j++) {
-        ElevationCell? cell = _cells[i].get(j);
+        ElevationCell? cell = _cells[i][j];
         if (cell != null) {
           cell.compute();
           numCells++;
@@ -126,7 +124,7 @@ class ElevationModel {
       iy = (y - _extent.minY) ~/ _cellSizeY;
       iy = MathUtil.clamp(iy, 0, _numCellY - 1);
     }
-    var cell = _cells[ix].get(iy);
+    var cell = _cells[ix][iy];
     if (isCreateIfMissing && (cell == null)) {
       cell = ElevationCell();
       _cells[ix][iy] = cell;
@@ -172,8 +170,7 @@ class _CoordinateSequenceFilter implements CoordinateSequenceFilter {
       return;
     }
     double z = seq.getOrdinate(i, Coordinate.kZ);
-    parent.add2(seq.getOrdinate(i, Coordinate.kX),
-        seq.getOrdinate(i, Coordinate.kY), z);
+    parent.add2(seq.getOrdinate(i, Coordinate.kX), seq.getOrdinate(i, Coordinate.kY), z);
   }
 
   @override
@@ -198,9 +195,8 @@ class _CoordinateSequenceFilter2 implements CoordinateSequenceFilter {
       _isDone = true;
       return;
     }
-    if (Double.isNaN(seq.getZ(i))) {
-      double z = parent.getZ(
-          seq.getOrdinate(i, Coordinate.kX), seq.getOrdinate(i, Coordinate.kY));
+    if (seq.getZ(i).isNaN) {
+      double z = parent.getZ(seq.getOrdinate(i, Coordinate.kX), seq.getOrdinate(i, Coordinate.kY));
       seq.setOrdinate(i, Coordinate.kZ, z);
     }
   }

@@ -130,7 +130,7 @@ abstract class NodeBase<T> {
 
   final List<T> _items = [];
 
-  Array<QuadNode<T>?> subnode = Array(4);
+  List<QuadNode<T>?> subnode = List.filled(4, null);
 
   List<T> get items => _items;
 

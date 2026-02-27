@@ -85,14 +85,9 @@ class GeometryGraph extends PGPlanarGraph {
     return _boundaryNodes!;
   }
 
-  Array<Coordinate> getBoundaryPoints() {
+  List<Coordinate> getBoundaryPoints() {
     final coll = getBoundaryNodes();
-    Array<Coordinate> pts = Array(coll.length);
-    int i = 0;
-    for (var node in coll) {
-      pts[i++] = node.getCoordinate().copy();
-    }
-    return pts;
+    return List.generate(coll.length, (i) => coll[i].getCoordinate().copy());
   }
 
   Edge? findEdge2(LineString line) {

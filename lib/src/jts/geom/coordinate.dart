@@ -132,8 +132,7 @@ class Coordinate implements Comparable<Coordinate> {
         z = value;
         break;
       default:
-        throw IllegalArgumentException(
-            "Invalid ordinate index: $ordinateIndex");
+        throw IllegalArgumentException("Invalid ordinate index: $ordinateIndex");
     }
   }
 
@@ -149,7 +148,10 @@ class Coordinate implements Comparable<Coordinate> {
     return true;
   }
 
-  bool equals2D(Coordinate other) {
+  bool equals2D(Coordinate? other) {
+    if (other == null) {
+      return false;
+    }
     if (x != other.x) {
       return false;
     }
@@ -170,8 +172,7 @@ class Coordinate implements Comparable<Coordinate> {
   }
 
   bool equals3D(Coordinate other) {
-    return (x == other.x && y == other.y) &&
-        (z == other.z || (Double.isNaN(z) && Double.isNaN(other.z)));
+    return (x == other.x && y == other.y) && (z == other.z || (Double.isNaN(z) && Double.isNaN(other.z)));
   }
 
   bool equalInZ(Coordinate c, double tolerance) {
@@ -301,8 +302,7 @@ class CoordinateXY extends Coordinate {
         y = value;
         break;
       default:
-        throw IllegalArgumentException(
-            "Invalid ordinate index: $ordinateIndex");
+        throw IllegalArgumentException("Invalid ordinate index: $ordinateIndex");
     }
   }
 }
@@ -348,8 +348,7 @@ class CoordinateXYM extends Coordinate {
   double get z => _nullOrdinate;
 
   @override
-  set z(double z) => throw IllegalArgumentException(
-      "CoordinateXY dimension 2 does not support z-ordinate");
+  set z(double z) => throw IllegalArgumentException("CoordinateXY dimension 2 does not support z-ordinate");
 
   @override
   void setCoordinate(Coordinate other) {
@@ -385,8 +384,7 @@ class CoordinateXYM extends Coordinate {
         m = value;
         break;
       default:
-        throw IllegalArgumentException(
-            "Invalid ordinate index: $ordinateIndex");
+        throw IllegalArgumentException("Invalid ordinate index: $ordinateIndex");
     }
   }
 }
@@ -463,8 +461,7 @@ class CoordinateXYZM extends Coordinate {
         _m = value;
         break;
       default:
-        throw IllegalArgumentException(
-            "Invalid ordinate index: $ordinateIndex");
+        throw IllegalArgumentException("Invalid ordinate index: $ordinateIndex");
     }
   }
 }

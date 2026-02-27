@@ -1,6 +1,5 @@
 import 'dart:collection';
 
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -42,8 +41,7 @@ class ConformingDelaunayTriangulationBuilder {
   void create() {
     if (_subDiv != null) return;
 
-    Envelope siteEnv =
-        DelaunayTriangulationBuilder.envelope(_siteCoords.rawList);
+    Envelope siteEnv = DelaunayTriangulationBuilder.envelope(_siteCoords.rawList);
     List<Segment> segments = [];
     if (_constraintLines != null) {
       siteEnv.expandToInclude(_constraintLines!.getEnvelopeInternal());
@@ -72,7 +70,7 @@ class ConformingDelaunayTriangulationBuilder {
     final coords = geom.getCoordinates();
     for (int i = 0; i < coords.length; i++) {
       Vertex v = ConstraintVertex(coords[i]);
-      _constraintVertexMap.put(coords[i], v);
+      _constraintVertexMap[coords[i]] = v;
     }
   }
 
@@ -85,8 +83,7 @@ class ConformingDelaunayTriangulationBuilder {
     return constraintSegs;
   }
 
-  static void createConstraintSegments2(
-      LineString line, List<Segment> constraintSegs) {
+  static void createConstraintSegments2(LineString line, List<Segment> constraintSegs) {
     final coords = line.getCoordinates();
     for (int i = 1; i < coords.length; i++) {
       constraintSegs.add(Segment(coords[i - 1], coords[i]));

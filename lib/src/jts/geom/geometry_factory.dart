@@ -122,12 +122,11 @@ final class GeometryFactory {
     if (coordinates == null) {
       return createMultiPoint([]);
     }
-    Array<Point> points = Array(coordinates.size());
-    for (int i = 0; i < coordinates.size(); i++) {
+    List<Point> points = List.generate(coordinates.size(), (i) {
       final ptSeq = csFactory.create4(1, coordinates.getDimension(), coordinates.getMeasures());
       CoordinateSequences.copy(coordinates, i, ptSeq, 0, 1);
-      points[i] = createPoint3(ptSeq);
-    }
+      return createPoint3(ptSeq);
+    });
     return createMultiPoint(points.toList());
   }
 

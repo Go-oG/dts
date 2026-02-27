@@ -213,7 +213,7 @@ abstract class _NodeBase<T> {
 
   List<T> items = [];
 
-  Array<BinNode<T>?> subnode = Array(2);
+  List<BinNode<T>?> subnode = List.filled(2, null);
 
   List getItems() {
     return items;

@@ -1,4 +1,4 @@
-import 'package:d_util/d_util.dart' show CComparator, CComparator2;
+import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/edgegraph/edge_graph.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/coordinate_arrays.dart';
@@ -9,8 +9,7 @@ import 'overlay_edge_ring.dart';
 import 'overlay_label.dart';
 
 class OverlayEdge extends HalfEdge {
-  static OverlayEdge createEdge(
-      List<Coordinate> pts, OverlayLabel lbl, bool direction) {
+  static OverlayEdge createEdge(List<Coordinate> pts, OverlayLabel lbl, bool direction) {
     Coordinate origin;
     Coordinate dirPt;
     if (direction) {

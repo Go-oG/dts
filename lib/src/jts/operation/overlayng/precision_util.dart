@@ -1,4 +1,5 @@
-import 'package:d_util/d_util.dart';
+import 'dart:math';
+
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
@@ -25,7 +26,7 @@ class PrecisionUtil {
     double maxBnd = maxBoundMagnitude(a.getEnvelopeInternal());
     if (b != null) {
       double maxBndB = maxBoundMagnitude(b.getEnvelopeInternal());
-      maxBnd = Math.maxD(maxBnd, maxBndB);
+      maxBnd = max(maxBnd, maxBndB);
     }
     double scale = PrecisionUtil.safeScale(maxBnd);
     return scale;
@@ -33,24 +34,22 @@ class PrecisionUtil {
 
   static double maxBoundMagnitude(Envelope env) {
     return MathUtil.max2(
-      Math.abs(env.maxX),
-      Math.abs(env.maxY),
-      Math.abs(env.minX),
-      Math.abs(env.minY),
+      env.maxX.abs(),
+      env.maxY.abs(),
+      env.minX.abs(),
+      env.minY.abs(),
     );
   }
 
   static double precisionScale(double value, int precisionDigits) {
-    int magnitude = ((Math.log(value) / Math.log(10)) + 1.0).toInt();
+    int magnitude = ((log(value) / log(10)) + 1.0).toInt();
     int precDigits = precisionDigits - magnitude;
-    double scaleFactor = Math.pow(10.0, precDigits);
-    return scaleFactor;
+    return pow(10.0, precDigits).toDouble();
   }
 
   static double inherentScale(double value) {
     int numDec = numberOfDecimals(value);
-    double scaleFactor = Math.pow(10.0, numDec);
-    return scaleFactor;
+    return pow(10.0, numDec).toDouble();
   }
 
   static double inherentScale2(Geometry geom) {
@@ -63,7 +62,7 @@ class PrecisionUtil {
     double scale = PrecisionUtil.inherentScale2(a);
     if (b != null) {
       double scaleB = PrecisionUtil.inherentScale2(b);
-      scale = Math.maxD(scale, scaleB);
+      scale = max(scale, scaleB);
     }
     return scale;
   }

@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/line_segment.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
@@ -42,7 +41,7 @@ class TaggedLineString {
   int size() => _parentLine.getNumPoints();
 
   Coordinate getComponentPoint() {
-    if (_resultSegs.size > 0) {
+    if (_resultSegs.isNotEmpty) {
       return _resultSegs.first.p0;
     }
 
@@ -50,7 +49,7 @@ class TaggedLineString {
   }
 
   int getResultSize() {
-    int resultSegsSize = _resultSegs.size;
+    int resultSegsSize = _resultSegs.length;
     return resultSegsSize == 0 ? 0 : resultSegsSize + 1;
   }
 
@@ -59,18 +58,16 @@ class TaggedLineString {
   LineSegment getResultSegment(int i) {
     int index = i;
     if (i < 0) {
-      index = _resultSegs.size + i;
+      index = _resultSegs.length + i;
     }
-    return _resultSegs.get(index);
+    return _resultSegs[index];
   }
 
   void init() {
     final pts = _parentLine.getCoordinates();
-    _segs = Array()[pts.length - 1];
-    for (int i = 0; i < (pts.length - 1); i++) {
-      final seg = TaggedLineSegment(pts[i], pts[i + 1], _parentLine, i);
-      _segs[i] = seg;
-    }
+    _segs = List.generate(pts.length - 1, (i) {
+      return TaggedLineSegment(pts[i], pts[i + 1], _parentLine, i);
+    });
   }
 
   List<TaggedLineSegment> getSegments() => _segs;
@@ -78,20 +75,18 @@ class TaggedLineString {
   void addToResult(LineSegment seg) => _resultSegs.add(seg);
 
   LineString asLineString() {
-    return _parentLine.factory
-        .createLineString2(extractCoordinates(_resultSegs));
+    return _parentLine.factory.createLineString2(extractCoordinates(_resultSegs));
   }
 
   LinearRing asLinearRing() {
-    return _parentLine.factory
-        .createLinearRings(extractCoordinates(_resultSegs));
+    return _parentLine.factory.createLinearRings(extractCoordinates(_resultSegs));
   }
 
   static List<Coordinate> extractCoordinates(List<LineSegment> segs) {
     List<Coordinate> pts = [];
     late LineSegment seg;
-    for (int i = 0; i < segs.size; i++) {
-      seg = segs.get(i);
+    for (int i = 0; i < segs.length; i++) {
+      seg = segs[i];
       pts.add(seg.p0);
     }
     pts.add(seg.p1);

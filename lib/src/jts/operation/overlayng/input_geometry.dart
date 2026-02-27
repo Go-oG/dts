@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/locate/point_on_geometry_locator.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -6,16 +5,16 @@ import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/location.dart';
 
 class InputGeometry {
-  Array<Geometry?> geom = Array(2);
+  late List<Geometry?> geom;
 
   PointOnGeometryLocator? _ptLocatorA;
 
   PointOnGeometryLocator? _ptLocatorB;
 
-  final Array<bool> _isCollapsed = Array(2);
+  final List<bool> _isCollapsed = List.filled(2, false);
 
   InputGeometry(Geometry geomA, Geometry? geomB) {
-    geom = [geomA, geomB].toArray();
+    geom = [geomA, geomB];
   }
 
   bool isSingle() {
@@ -63,8 +62,7 @@ class InputGeometry {
   }
 
   bool isAllPoints() {
-    return ((getDimension(0) == 0) && (geom[1] != null)) &&
-        (getDimension(1) == 0);
+    return ((getDimension(0) == 0) && (geom[1] != null)) && (getDimension(1) == 0);
   }
 
   bool hasPoints() {

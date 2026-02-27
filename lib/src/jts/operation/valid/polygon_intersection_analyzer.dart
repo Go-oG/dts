@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/line_intersector.dart';
 import 'package:dts/src/jts/algorithm/polygon_node_topology.dart';
 import 'package:dts/src/jts/algorithm/robust_line_intersector.dart';
@@ -143,7 +142,7 @@ class PolygonIntersectionAnalyzer implements NSegmentIntersector {
   }
 
   static bool isAdjacentInRing(SegmentString ringSS, int segIndex0, int segIndex1) {
-    int delta = Math.abs(segIndex1 - segIndex0).toInt();
+    int delta = (segIndex1 - segIndex0).abs().toInt();
     if (delta <= 1) return true;
 
     if (delta >= (ringSS.size() - 2)) return true;

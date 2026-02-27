@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/algorithm/polygon_node_topology.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/dimension.dart';
@@ -129,7 +128,7 @@ class TopologyComputer {
     NodeSections? node = _nodeMap[nodePt];
     if (node == null) {
       node = NodeSections(nodePt);
-      _nodeMap.put(nodePt, node);
+      _nodeMap[nodePt] = node;
     }
     return node;
   }

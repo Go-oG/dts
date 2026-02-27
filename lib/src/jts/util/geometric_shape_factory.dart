@@ -1,4 +1,5 @@
-import 'package:d_util/d_util.dart';
+import 'dart:math';
+
 import 'package:dts/src/jts/algorithm/angle.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/envelope.dart';
@@ -62,7 +63,7 @@ class GeometricShapeFactory {
 
     double xSegLen = dim.getEnvelope().width / nSide;
     double ySegLen = dim.getEnvelope().height / nSide;
-    Array<Coordinate> pts = Array((4 * nSide) + 1);
+    List<Coordinate> pts = List.filled((4 * nSide) + 1, Coordinate(), growable: false);
     Envelope env = dim.getEnvelope();
     for (i = 0; i < nSide; i++) {
       double x = env.minX + (i * xSegLen);
@@ -84,10 +85,9 @@ class GeometricShapeFactory {
       double y = env.maxY - (i * ySegLen);
       pts[ipt++] = coord(x, y);
     }
-    pts[ipt++] = Coordinate.of(pts[0]);
-    LinearRing ring = geomFact.createLinearRings(pts.toList());
-    Polygon poly = geomFact.createPolygon(ring);
-    return rotate(poly);
+    pts[ipt++] = Coordinate.of(pts.first);
+    final ring = geomFact.createLinearRings(pts);
+    return rotate(geomFact.createPolygon(ring));
   }
 
   Polygon createCircle() => createEllipse();
@@ -98,18 +98,15 @@ class GeometricShapeFactory {
     double yRadius = env.height / 2.0;
     double centreX = env.minX + xRadius;
     double centreY = env.minY + yRadius;
-    Array<Coordinate> pts = Array(nPts + 1);
-    int iPt = 0;
-    for (int i = 0; i < nPts; i++) {
-      double ang = i * ((2 * Math.pi) / nPts);
+    List<Coordinate> pts = List.generate(nPts, (i) {
+      double ang = i * ((2 * pi) / nPts);
       double x = (xRadius * Angle.cosSnap(ang)) + centreX;
       double y = (yRadius * Angle.sinSnap(ang)) + centreY;
-      pts[iPt++] = coord(x, y);
-    }
-    pts[iPt] = Coordinate.of(pts[0]);
-    LinearRing ring = geomFact.createLinearRings(pts.toList());
-    Polygon poly = geomFact.createPolygon(ring);
-    return rotate(poly);
+      return coord(x, y);
+    });
+    pts.add(Coordinate.of(pts.first));
+    final ring = geomFact.createLinearRings(pts);
+    return rotate(geomFact.createPolygon(ring));
   }
 
   Polygon createSquircle() => createSupercircle(4);
@@ -118,34 +115,38 @@ class GeometricShapeFactory {
     double recipPow = 1.0 / power;
     double radius = dim.getMinSize() / 2;
     Coordinate centre = dim.getCentre();
-    double r4 = Math.pow(radius, power);
+    double r4 = pow(radius, power).toDouble();
     double y0 = radius;
-    double xyInt = Math.pow(r4 / 2, recipPow);
+    double xyInt = pow(r4 / 2, recipPow).toDouble();
     int nSegsInOct = nPts ~/ 8;
     int totPts = (nSegsInOct * 8) + 1;
-    Array<Coordinate> pts = Array(totPts);
-    double xInc = xyInt / nSegsInOct;
+    List<Coordinate> pts = List.filled(totPts, Coordinate(), growable: false);
+    final xInc = xyInt / nSegsInOct;
+    final n2 = 2 * nSegsInOct;
+    final n4 = 4 * nSegsInOct;
+    final n6 = 6 * nSegsInOct;
+    final n8 = 8 * nSegsInOct;
+
     for (int i = 0; i <= nSegsInOct; i++) {
       double x = 0.0;
       double y = y0;
       if (i != 0) {
         x = xInc * i;
-        double x4 = Math.pow(x, power);
-        y = Math.pow(r4 - x4, recipPow);
+        double x4 = pow(x, power).toDouble();
+        y = pow(r4 - x4, recipPow).toDouble();
       }
       pts[i] = coordTrans(x, y, centre);
-      pts[(2 * nSegsInOct) - i] = coordTrans(y, x, centre);
-      pts[(2 * nSegsInOct) + i] = coordTrans(y, -x, centre);
-      pts[(4 * nSegsInOct) - i] = coordTrans(x, -y, centre);
-      pts[(4 * nSegsInOct) + i] = coordTrans(-x, -y, centre);
-      pts[(6 * nSegsInOct) - i] = coordTrans(-y, -x, centre);
-      pts[(6 * nSegsInOct) + i] = coordTrans(-y, x, centre);
-      pts[(8 * nSegsInOct) - i] = coordTrans(-x, y, centre);
+      pts[n2 - i] = coordTrans(y, x, centre);
+      pts[n2 + i] = coordTrans(y, -x, centre);
+      pts[n4 - i] = coordTrans(x, -y, centre);
+      pts[n4 + i] = coordTrans(-x, -y, centre);
+      pts[n6 - i] = coordTrans(-y, -x, centre);
+      pts[n6 + i] = coordTrans(-y, x, centre);
+      pts[n8 - i] = coordTrans(-x, y, centre);
     }
-    pts[pts.length - 1] = Coordinate.of(pts[0]);
-    LinearRing ring = geomFact.createLinearRings(pts.toList());
-    Polygon poly = geomFact.createPolygon(ring);
-    return rotate(poly);
+    pts[pts.length - 1] = Coordinate.of(pts.first);
+    final ring = geomFact.createLinearRings(pts);
+    return rotate(geomFact.createPolygon(ring));
   }
 
   LineString createArc(double startAng, double angExtent) {
@@ -160,16 +161,13 @@ class GeometricShapeFactory {
     }
 
     double angInc = angSize / (nPts - 1);
-    Array<Coordinate> pts = Array(nPts);
-    int iPt = 0;
-    for (int i = 0; i < nPts; i++) {
+    List<Coordinate> pts = List.generate(nPts, (i) {
       double ang = startAng + (i * angInc);
       double x = (xRadius * Angle.cosSnap(ang)) + centreX;
       double y = (yRadius * Angle.sinSnap(ang)) + centreY;
-      pts[iPt++] = coord(x, y);
-    }
-    LineString line = geomFact.createLineString2(pts.toList());
-    return rotate(line);
+      return coord(x, y);
+    });
+    return rotate(geomFact.createLineString2(pts));
   }
 
   Polygon createArcPolygon(double startAng, double angExtent) {
@@ -184,7 +182,7 @@ class GeometricShapeFactory {
     }
 
     double angInc = angSize / (nPts - 1);
-    Array<Coordinate> pts = Array(nPts + 2);
+    List<Coordinate> pts = List.filled(nPts + 2, Coordinate());
     int iPt = 0;
     pts[iPt++] = coord(centreX, centreY);
     for (int i = 0; i < nPts; i++) {
@@ -224,9 +222,7 @@ final class Dimensions {
     width = size;
   }
 
-  double getMinSize() {
-    return Math.minD(width, height);
-  }
+  double getMinSize() => min(width, height);
 
   void setWidth(double width) {
     this.width = width;

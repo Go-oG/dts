@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/math/math.dart';
 
@@ -24,8 +23,7 @@ class AffineTransformationBuilder {
 
   late double m12;
 
-  AffineTransformationBuilder(this._src0, this._src1, this._src2, this._dest0,
-      this._dest1, this._dest2);
+  AffineTransformationBuilder(this._src0, this._src1, this._src2, this._dest0, this._dest1, this._dest2);
 
   AffineTransformation? getTransformation() {
     bool isSolvable = compute();
@@ -37,15 +35,15 @@ class AffineTransformationBuilder {
   }
 
   bool compute() {
-    Array<double> bx = [_dest0.x, _dest1.x, _dest2.x].toArray();
-    Array<double>? row0 = solve(bx);
+    List<double> bx = [_dest0.x, _dest1.x, _dest2.x];
+    List<double>? row0 = solve(bx);
     if (row0 == null) return false;
 
     m00 = row0[0];
     m01 = row0[1];
     m02 = row0[2];
-    Array<double> by = [_dest0.y, _dest1.y, _dest2.y].toArray();
-    Array<double>? row1 = solve(by);
+    List<double> by = [_dest0.y, _dest1.y, _dest2.y];
+    List<double>? row1 = solve(by);
     if (row1 == null) return false;
 
     m10 = row1[0];
@@ -54,11 +52,16 @@ class AffineTransformationBuilder {
     return true;
   }
 
-  Array<double>? solve(Array<double> b) {
-    Array<Array<double>> a = Array(3);
-    a[0] = [_src0.x, _src0.y, 1.0].toArray();
-    a[1] = [_src1.x, _src1.y, 1.0].toArray();
-    a[2] = [_src2.x, _src2.y, 1.0].toArray();
+  List<double>? solve(List<double> b) {
+    List<List<double>> a = List.generate(3, (i) {
+      if (i == 0) {
+        return [_src0.x, _src0.y, 1.0];
+      }
+      if (i == 1) {
+        return [_src1.x, _src1.y, 1.0];
+      }
+      return [_src2.x, _src2.y, 1.0];
+    });
     return Matrix.solve(a, b);
   }
 }
