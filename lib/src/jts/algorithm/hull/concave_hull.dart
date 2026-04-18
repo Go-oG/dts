@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/geometry.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
