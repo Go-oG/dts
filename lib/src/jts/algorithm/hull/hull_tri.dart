@@ -200,7 +200,7 @@ class HullTri extends Tri implements Comparable<HullTri> {
   }
 
   static bool isConnected(List<HullTri> triList, HullTri removedTri) {
-    if (triList.size == 0) {
+    if (triList.isEmpty) {
       return false;
     }
 

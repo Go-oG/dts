@@ -1,4 +1,3 @@
-import 'package:d_util/d_util.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
 import 'package:dts/src/jts/geom/geometry_factory.dart';
 import 'package:dts/src/jts/geom/line_string.dart';
@@ -42,19 +41,22 @@ class OffsetSegmentString {
   }
 
   bool isRedundant(Coordinate pt) {
-    if (_ptList.size < 1) return false;
+    if (_ptList.isEmpty) {
+      return false;
+    }
 
     Coordinate lastPt = _ptList.last;
     double ptDist = pt.distance(lastPt);
     if (ptDist < _minimimVertexDistance) {
       return true;
     }
-
     return false;
   }
 
   void closeRing() {
-    if (_ptList.size < 1) return;
+    if (_ptList.isEmpty) {
+      return;
+    }
 
     Coordinate startPt = Coordinate.of(_ptList.first);
     Coordinate lastPt = _ptList.last;

@@ -42,7 +42,7 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope> implements SpatialIndex<T>
   @override
   List<AbstractNode<Envelope>> createParentBoundables(List<Boundable<Envelope>> childBoundables, int newLevel) {
     Assert.isTrue(childBoundables.isNotEmpty);
-    int minLeafCount = Math.ceil(childBoundables.size / getNodeCapacity());
+    int minLeafCount = Math.ceil(childBoundables.length / getNodeCapacity());
     List<Boundable<Envelope>> sortedChildBoundables = List.from(childBoundables);
     sortedChildBoundables.sort(_xComparator.compare);
     List<List<Boundable<Envelope>>> vv = verticalSlices(sortedChildBoundables, Math.ceil(Math.sqrt(minLeafCount)));
@@ -70,7 +70,7 @@ class STRtree<T> extends AbstractSTRtree<T, Envelope> implements SpatialIndex<T>
   }
 
   List<List<Boundable<Envelope>>> verticalSlices(List<Boundable<Envelope>> childBoundables, int sliceCount) {
-    int sliceCapacity = Math.ceil(childBoundables.size / sliceCount);
+    int sliceCapacity = Math.ceil(childBoundables.length / sliceCount);
     List<List<Boundable<Envelope>>> slices = List.generate(sliceCount, (i) => []);
     final i = childBoundables.iterator;
     for (int j = 0; j < sliceCount; j++) {

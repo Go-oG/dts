@@ -35,17 +35,14 @@ abstract class AbstractSTRtree<T, B> {
       return;
     }
 
-    root = _itemBoundables!.isEmpty
-        ? createNode(0)
-        : createHigherLevels(_itemBoundables!, -1);
+    root = _itemBoundables!.isEmpty ? createNode(0) : createHigherLevels(_itemBoundables!, -1);
     _itemBoundables = null;
     _built = true;
   }
 
   AbstractNode<B> createNode(int level);
 
-  List<AbstractNode<B>> createParentBoundables(
-      List<Boundable<B>> childBoundables, int newLevel) {
+  List<AbstractNode<B>> createParentBoundables(List<Boundable<B>> childBoundables, int newLevel) {
     Assert.isTrue(childBoundables.isNotEmpty);
     List<AbstractNode<B>> parentBoundables = [];
     parentBoundables.add(createNode(newLevel));
@@ -53,8 +50,7 @@ abstract class AbstractSTRtree<T, B> {
     sortedChildBoundables.sort(getComparator().compare);
 
     for (var childBoundable in sortedChildBoundables) {
-      if (lastNode(parentBoundables).getChildBoundables().size ==
-          getNodeCapacity()) {
+      if (lastNode(parentBoundables).getChildBoundables().length == getNodeCapacity()) {
         parentBoundables.add(createNode(newLevel));
       }
       lastNode(parentBoundables).addChildBoundable(childBoundable);
@@ -70,16 +66,14 @@ abstract class AbstractSTRtree<T, B> {
     return a > b
         ? 1
         : a < b
-            ? -1
-            : 0;
+        ? -1
+        : 0;
   }
 
-  AbstractNode<B> createHigherLevels(
-      List<Boundable<B>> boundablesOfALevel, int level) {
+  AbstractNode<B> createHigherLevels(List<Boundable<B>> boundablesOfALevel, int level) {
     Assert.isTrue(boundablesOfALevel.isNotEmpty);
-    final parentBoundables =
-        createParentBoundables(boundablesOfALevel, level + 1);
-    if (parentBoundables.size == 1) {
+    final parentBoundables = createParentBoundables(boundablesOfALevel, level + 1);
+    if (parentBoundables.length == 1) {
       return parentBoundables.get(0);
     }
     return createHigherLevels(parentBoundables, level + 1);
@@ -140,8 +134,7 @@ abstract class AbstractSTRtree<T, B> {
   }
 
   void insert(B bounds, T item) {
-    Assert.isTrue(!_built,
-        "Cannot insert items into an STR packed R-tree after it has been built.");
+    Assert.isTrue(!_built, "Cannot insert items into an STR packed R-tree after it has been built.");
     _itemBoundables!.add(ItemBoundable(bounds, item));
   }
 
@@ -173,8 +166,7 @@ abstract class AbstractSTRtree<T, B> {
   void queryInternal(B searchBounds, AbstractNode node, List<T> matches) {
     final childBoundables = node.getChildBoundables();
     for (var childBoundable in childBoundables) {
-      if (!getIntersectsOp()
-          .intersects(childBoundable.getBounds(), searchBounds)) {
+      if (!getIntersectsOp().intersects(childBoundable.getBounds(), searchBounds)) {
         continue;
       }
       if (childBoundable is AbstractNode) {
@@ -190,8 +182,7 @@ abstract class AbstractSTRtree<T, B> {
   void eachInternal(B searchBounds, AbstractNode node, ItemVisitor<T> visitor) {
     final childBoundables = node.getChildBoundables();
     for (var childBoundable in childBoundables) {
-      if (!getIntersectsOp()
-          .intersects(childBoundable.getBounds(), searchBounds)) {
+      if (!getIntersectsOp().intersects(childBoundable.getBounds(), searchBounds)) {
         continue;
       }
       if (childBoundable is AbstractNode) {
@@ -222,7 +213,7 @@ abstract class AbstractSTRtree<T, B> {
         Assert.shouldNeverReachHere();
       }
     }
-    if (valuesTreeForNode.size <= 0) {
+    if (valuesTreeForNode.isEmpty) {
       return null;
     }
     return valuesTreeForNode;
@@ -261,8 +252,7 @@ abstract class AbstractSTRtree<T, B> {
 
     AbstractNode<B>? childToPrune;
     for (var childBoundable in node.getChildBoundables()) {
-      if (!getIntersectsOp()
-          .intersects(childBoundable.getBounds(), searchBounds)) {
+      if (!getIntersectsOp().intersects(childBoundable.getBounds(), searchBounds)) {
         continue;
       }
       if (childBoundable is AbstractNode<B>) {
@@ -288,8 +278,7 @@ abstract class AbstractSTRtree<T, B> {
     return boundables;
   }
 
-  void boundablesAtLevel2(
-      int level, AbstractNode<B> top, List<Boundable<B>> boundables) {
+  void boundablesAtLevel2(int level, AbstractNode<B> top, List<Boundable<B>> boundables) {
     Assert.isTrue(level > (-2));
     if (top.level == level) {
       boundables.add(top);

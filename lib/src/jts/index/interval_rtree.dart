@@ -43,7 +43,7 @@ class SortedPackedIntervalRTree<T> {
     List<IntervalRTreeNode<T>> dest = [];
     while (true) {
       buildLevel(src, dest);
-      if (dest.size == 1) return dest.first;
+      if (dest.length == 1) return dest.first;
 
       temp = src;
       src = dest;
@@ -54,9 +54,9 @@ class SortedPackedIntervalRTree<T> {
   void buildLevel(
       List<IntervalRTreeNode<T>> src, List<IntervalRTreeNode<T>> dest) {
     dest.clear();
-    for (int i = 0; i < src.size; i += 2) {
+    for (int i = 0; i < src.length; i += 2) {
       final n1 = src[i];
-      final n2 = ((i + 1) < src.size) ? src[i] : null;
+      final n2 = ((i + 1) < src.length) ? src[i] : null;
       if (n2 == null) {
         dest.add(n1);
       } else {

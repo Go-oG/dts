@@ -195,7 +195,7 @@ final class GeometryFactory {
     }
 
     Geometry geom0 = geomList.first;
-    bool isCollection = geomList.size > 1;
+    bool isCollection = geomList.length > 1;
     if (isCollection) {
       if (geom0 is Polygon) {
         return createMultiPolygon(geomList.cast());

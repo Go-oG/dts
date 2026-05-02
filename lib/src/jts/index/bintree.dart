@@ -296,7 +296,7 @@ abstract class _NodeBase<T> {
         subSize += subnode[i]!.size();
       }
     }
-    return subSize + items.size;
+    return subSize + items.length;
   }
 
   int nodeSize() {

@@ -226,8 +226,8 @@ abstract class NodeBase<T> {
   }
 
   void visitItems(Envelope searchEnv, ItemVisitor<T> visitor) {
-    for (int i = 0; i < _items.size; i++) {
-      visitor.visitItem(_items.get(i));
+    for(var i in _items){
+      visitor.visitItem(i);
     }
   }
 
@@ -247,7 +247,7 @@ abstract class NodeBase<T> {
     for (int i = 0; i < 4; i++) {
       subSize += subnode[i]!.size();
     }
-    return subSize + _items.size;
+    return subSize + _items.length;
   }
 
   int getNodeCount() {

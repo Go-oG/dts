@@ -29,10 +29,10 @@ class GeometryMapper {
   static Geometry flatMap(Geometry geom, int emptyDim, MapOp op) {
     List<Geometry> mapped = [];
     flatMap2(geom, op, mapped);
-    if (mapped.size == 0) {
+    if (mapped.isEmpty) {
       return geom.factory.createEmpty(emptyDim);
     }
-    if (mapped.size == 1) {
+    if (mapped.length == 1) {
       return mapped.get(0);
     }
 

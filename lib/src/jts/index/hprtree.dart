@@ -140,7 +140,7 @@ class HPRtree<T> implements SpatialIndex<T> {
   }
 
   void prepareIndex() {
-    if (_itemsToLoad.size <= _nodeCapacity) {
+    if (_itemsToLoad.length <= _nodeCapacity) {
       return;
     }
     sortItems();
@@ -155,7 +155,7 @@ class HPRtree<T> implements SpatialIndex<T> {
 
   void prepareItems() {
     int boundsIndex = 0;
-    _itemBounds = List.filled(_itemsToLoad.size * 4, 0);
+    _itemBounds = List.filled(_itemsToLoad.length * 4, 0);
     for (_Item item in _itemsToLoad) {
       Envelope envelope = item.getEnvelope();
       _itemBounds[boundsIndex++] = envelope.minX;
@@ -164,7 +164,7 @@ class HPRtree<T> implements SpatialIndex<T> {
       _itemBounds[boundsIndex++] = envelope.maxY;
     }
 
-    _itemValues = List.generate(_itemsToLoad.size, (i) {
+    _itemValues = List.generate(_itemsToLoad.length, (i) {
       return _itemsToLoad[i].getItem();
     });
 
@@ -221,7 +221,7 @@ class HPRtree<T> implements SpatialIndex<T> {
   void computeLeafNodeBounds(int nodeIndex, int blockStart) {
     for (int i = 0; i <= _nodeCapacity; i++) {
       int itemIndex = blockStart + i;
-      if (itemIndex >= _itemsToLoad.size) {
+      if (itemIndex >= _itemsToLoad.length) {
         break;
       }
 
@@ -273,7 +273,7 @@ class HPRtree<T> implements SpatialIndex<T> {
 
   List<Envelope> getBounds() {
     final nodeBounds = _nodeBounds;
-    int numNodes = nodeBounds.size ~/ 4;
+    int numNodes = nodeBounds.length ~/ 4;
     List<Envelope> bounds = List.filled(numNodes, Envelope());
 
     for (int i = numNodes - 1; i >= 0; i--) {
@@ -290,8 +290,8 @@ class HPRtree<T> implements SpatialIndex<T> {
 
   void sortItems() {
     final encoder = _Encoder(_hilbertLevel, _totalExtent);
-    List<int> hilbertValues = List.generate(_itemsToLoad.size, (i) => encoder.encode(_itemsToLoad[i].getEnvelope()));
-    quickSortItemsIntoNodes(hilbertValues, 0, _itemsToLoad.size - 1);
+    List<int> hilbertValues = List.generate(_itemsToLoad.length, (i) => encoder.encode(_itemsToLoad[i].getEnvelope()));
+    quickSortItemsIntoNodes(hilbertValues, 0, _itemsToLoad.length - 1);
   }
 
   void quickSortItemsIntoNodes(List<int> values, int lo, int hi) {

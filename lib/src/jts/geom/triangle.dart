@@ -1,4 +1,4 @@
-import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart' hide Angle;
 import 'package:dts/src/jts/algorithm/angle.dart';
 import 'package:dts/src/jts/algorithm/hcoordinate.dart';
 import 'package:dts/src/jts/algorithm/orientation.dart';

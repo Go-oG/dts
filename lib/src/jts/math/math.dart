@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:d_util/d_util.dart';
+import 'package:d_util/d_util.dart' hide Angle;
 import 'package:dts/src/jts/algorithm/angle.dart';
 import 'package:dts/src/jts/algorithm/cgalgorithms.dart';
 import 'package:dts/src/jts/geom/coordinate.dart';
