@@ -135,7 +135,7 @@ class GeometryGraph extends PGPlanarGraph {
       addCollection(g);
       return;
     }
-    throw UnSupportError();
+    throw UnsupportedError("Not support type :${g.runtimeType}");
   }
 
   void addCollection(GeometryCollection gc) {

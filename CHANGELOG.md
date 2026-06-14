@@ -1,3 +1,6 @@
+## 0.2.0
+* upgrade version
+
 ## 0.1.5
 * upgrade version 
 
